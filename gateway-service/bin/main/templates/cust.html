@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Management</title>
+    <link th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="container mt-4">
+    <h2>Customer Management</h2>
+
+    <button class="btn btn-primary mb-2" onclick="showForm()">Add Customer</button>
+
+    <table class="table table-striped" id="customerTable">
+        <thead>
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Modal Form -->
+    <div id="customerForm" style="display:none;">
+        <h4 id="formTitle">Add Customer</h4>
+        <input type="hidden" id="customerId">
+        <div class="mb-2">
+            <input class="form-control" id="name" placeholder="Name">
+        </div>
+        <div class="mb-2">
+            <input class="form-control" id="email" placeholder="Email">
+        </div>
+        <div class="mb-2">
+            <input class="form-control" id="phone" placeholder="Phone">
+        </div>
+        <button class="btn btn-success" onclick="saveCustomer()">Save</button>
+        <button class="btn btn-secondary" onclick="hideForm()">Cancel</button>
+    </div>
+</div>
+
+<script>
+    const apiUrl = '/api/customers';
+
+    async function loadCustomers() {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        const tbody = document.querySelector('#customerTable tbody');
+        tbody.innerHTML = '';
+        data.forEach(c => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td>${c.id}</td>
+            <td>${c.name}</td>
+            <td>${c.email}</td>
+            <td>${c.phone}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="editCustomer(${c.id})">Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${c.id})">Delete</button>
+            </td>
+        `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function showForm() {
+        document.getElementById('customerForm').style.display = 'block';
+        document.getElementById('formTitle').innerText = 'Add Customer';
+        document.getElementById('customerId').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+    }
+
+    function hideForm() {
+        document.getElementById('customerForm').style.display = 'none';
+    }
+
+    async function saveCustomer() {
+        const id = document.getElementById('customerId').value;
+        const customer = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value
+        };
+        if (id) {
+            await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(customer)
+            });
+        } else {
+            await fetch(apiUrl, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(customer)
+            });
+        }
+        hideForm();
+        loadCustomers();
+    }
+
+    async function editCustomer(id) {
+        const res = await fetch(`${apiUrl}/${id}`);
+        const c = await res.json();
+        document.getElementById('customerId').value = c.id;
+        document.getElementById('name').value = c.name;
+        document.getElementById('email').value = c.email;
+        document.getElementById('phone').value = c.phone;
+        document.getElementById('formTitle').innerText = 'Edit Customer';
+        document.getElementById('customerForm').style.display = 'block';
+    }
+
+    async function deleteCustomer(id) {
+        if(confirm('Are you sure?')) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            loadCustomers();
+        }
+    }
+
+    window.onload = loadCustomers;
+</script>
+</body>
+</html>

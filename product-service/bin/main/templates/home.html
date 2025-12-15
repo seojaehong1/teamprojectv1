@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 배경 이미지를 설정하거나 색상을 지정할 수 있습니다. */
+        .full-height {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container text-center d-flex align-items-center justify-content-center full-height">
+    <div>
+        <h1 class="display-3 mb-4 fw-bold">키오스크 주문 시스템</h1>
+        <p class="lead mb-5">준비되셨으면 아래 버튼을 눌러주세요.</p>
+
+        <a th:href="@{/menu}" class="btn btn-primary btn-lg px-5 py-3 shadow-lg">
+            <i class="bi bi-cart-plus-fill me-2"></i> 주문 시작
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .content {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .btn-action {
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">MSA 프로젝트</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/admin">관리자 홈</a>
+                <a class="nav-link" href="/">메인</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <h2 class="mb-4">회원 관리</h2>
+
+        <div class="table-container">
+            <div class="alert alert-warning" role="alert">
+                <strong>권한 필요:</strong> 이 페이지는 ADMIN 권한이 필요합니다.
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <tr>
+                        <td colspan="5" class="text-center">회원 목록을 불러오는 중...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 회원 수정 모달 -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">회원 정보 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="mb-3">
+                            <label for="editUsername" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="editUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="editEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRole" class="form-label">권한</label>
+                            <select class="form-select" id="editRole" required>
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" onclick="updateUser()">수정</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // JWT 토큰 가져오기
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        // 회원 목록 로드
+        async function loadUsers() {
+            const token = getToken();
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 403) {
+                    alert('관리자 권한이 필요합니다.');
+                    window.location.href = '/';
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error('회원 목록 조회 실패');
+                }
+
+                const users = await response.json();
+                renderUserTable(users);
+            } catch (error) {
+                console.error('회원 목록 로드 실패:', error);
+                document.getElementById('userTableBody').innerHTML = 
+                    '<tr><td colspan="5" class="text-center text-danger">회원 목록을 불러오는데 실패했습니다.</td></tr>';
+            }
+        }
+
+        // 회원 테이블 렌더링
+        function renderUserTable(users) {
+            const tbody = document.getElementById('userTableBody');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center">등록된 회원이 없습니다.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="badge ${user.role === 'ADMIN' ? 'bg-danger' : 'bg-primary'}">
+                            ${user.role}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-warning btn-action" onclick="openEditModal(${user.id}, '${user.username}', '${user.email}', '${user.role}')">수정</button>
+                        <button class="btn btn-sm btn-danger btn-action" onclick="deleteUser(${user.id})">삭제</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 수정 모달 열기
+        function openEditModal(userId, username, email, role) {
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editRole').value = role;
+
+            new bootstrap.Modal(document.getElementById('editUserModal')).show();
+        }
+
+        // 회원 정보 수정
+        async function updateUser() {
+            const userId = document.getElementById('editUserId').value;
+            const userData = {
+                username: document.getElementById('editUsername').value,
+                email: document.getElementById('editEmail').value,
+                role: document.getElementById('editRole').value
+            };
+
+            const token = getToken();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    alert('회원 정보가 수정되었습니다.');
+                    bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+                    loadUsers();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || '회원 정보 수정에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('회원 정보 수정 실패:', error);
+                alert('회원 정보 수정 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 회원 삭제
+        async function deleteUser(userId) {
+            if (!confirm(`회원 ID "${userId}"를 정말 삭제하시겠습니까?`)) {
+                return;
+            }
+
+            const token = getToken();
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('회원이 삭제되었습니다.');
+                    loadUsers();
+                } else {
+                    const error = await response.json();
+                    alert(error.error || '회원 삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('회원 삭제 실패:', error);
+                alert('회원 삭제 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 페이지 로드 시 회원 목록 불러오기
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+</html>
+

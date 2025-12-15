@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>☕ 게시판 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-weight: bold;">MSA 프로젝트</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">주문</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/boards">☕ 게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">⚙️ 관리자</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authNav">
+                    <li class="nav-item d-none" id="userNav">
+                        <span class="nav-link" id="username"></span>
+                    </li>
+                    <li class="nav-item d-none" id="logoutNav">
+                        <a class="nav-link" href="#" id="logoutBtn">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- 왼쪽 사이드바 -->
+            <div class="col-md-2" style="background-color: #f8f9fa; min-height: 600px; padding: 20px; border-right: 1px solid #dee2e6;">
+                <h5 style="color: #495057; margin-bottom: 20px;">☕ 관리 메뉴</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <strong style="color: #212529;">👥 사용자</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li><a href="/admin" class="text-decoration-none" style="color: #6c757d;">📊 회원 관리</a></li>
+                        </ul>
+                    </li>
+                    <li class="mb-3">
+                        <strong style="color: #212529;">📢 게시판</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li><a href="/board-manage" class="text-decoration-none fw-bold" style="color: #0d6efd;">📝 게시글 관리</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 중앙 게시판 관리 -->
+            <div class="col-md-10">
+                <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <h2 style="margin-bottom: 30px;">📢 게시판 관리</h2>
+                    
+                    <div class="alert alert-info">
+                        관리자는 모든 게시글을 삭제할 수 있습니다.
+                    </div>
+                    
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60px;">번호</th>
+                                <th>제목</th>
+                                <th style="width: 120px;">작성자</th>
+                                <th style="width: 120px;">작성일</th>
+                                <th style="width: 80px;">조회수</th>
+                                <th style="width: 80px;">좋아요</th>
+                                <th style="width: 150px;">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody id="boardList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 권한 확인
+        function checkAdminAuth() {
+            const role = localStorage.getItem('role');
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                location.href = '/login';
+                return false;
+            }
+            
+            if (role !== 'ADMIN') {
+                alert('관리자 권한이 필요합니다.');
+                location.href = '/';
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 로그인 상태 확인
+        function checkLoginStatus() {
+            const username = localStorage.getItem('username');
+            const role = localStorage.getItem('role');
+
+            if (username) {
+                document.getElementById('userNav').classList.remove('d-none');
+                document.getElementById('logoutNav').classList.remove('d-none');
+                document.getElementById('username').textContent = `${username} (${role})`;
+            }
+        }
+
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            location.href = '/login';
+        });
+
+        // 페이지 로드
+        window.onload = async function() {
+            if (!checkAdminAuth()) return;
+            
+            checkLoginStatus();
+            
+            try {
+                const response = await fetch('/api/boards');
+                if (response.ok) {
+                    const boards = await response.json();
+                    displayBoards(boards);
+                } else {
+                    alert('게시글을 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('게시글을 불러오는 중 오류가 발생했습니다.');
+            }
+        };
+
+        function displayBoards(boards) {
+            const boardList = document.getElementById('boardList');
+            boardList.innerHTML = '';
+
+            if (boards.length === 0) {
+                boardList.innerHTML = '<tr><td colspan="7" class="text-center">등록된 게시글이 없습니다.</td></tr>';
+                return;
+            }
+
+            boards.forEach((board, index) => {
+                const row = document.createElement('tr');
+                
+                const titleHtml = board.isPinned 
+                    ? `<span style="background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px; margin-right: 5px;">공지</span>${board.title}` 
+                    : board.title;
+                
+                const createdAt = new Date(board.createdAt).toLocaleDateString('ko-KR');
+                
+                row.innerHTML = `
+                    <td>${boards.length - index}</td>
+                    <td><a href="/boards/${board.id}" class="text-decoration-none">${titleHtml}</a></td>
+                    <td>${board.author}</td>
+                    <td>${createdAt}</td>
+                    <td>${board.viewCount}</td>
+                    <td>${board.likeCount}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-1" onclick="togglePin(${board.id}, ${board.isPinned})">
+                            ${board.isPinned ? '고정해제' : '상단고정'}
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick='deleteBoard(${board.id}, "${board.author}")'>삭제</button>
+                    </td>
+                `;
+                
+                boardList.appendChild(row);
+            });
+        }
+
+        // 상단 고정 토글
+        async function togglePin(boardId, isPinned) {
+            if (!confirm(isPinned ? '상단 고정을 해제하시겠습니까?' : '상단에 고정하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/boards/${boardId}/pin`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert(isPinned ? '고정이 해제되었습니다.' : '상단에 고정되었습니다.');
+                    location.reload();
+                } else {
+                    alert('작업에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
+            }
+        }
+
+        // 게시글 삭제
+        async function deleteBoard(boardId, originalAuthor) {
+            if (!confirm('정말 이 게시글을 삭제하시겠습니까?\n삭제된 게시글은 복구할 수 없습니다.')) {
+                return;
+            }
+
+            try {
+                // 관리자는 원 작성자 ID를 사용해서 삭제
+                const response = await fetch(`/api/boards/${boardId}?author=${originalAuthor}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('게시글이 삭제되었습니다.');
+                    location.reload();
+                } else {
+                    const error = await response.text();
+                    alert('삭제 실패: ' + error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
+        }
+    </script>
+</body>
+</html>

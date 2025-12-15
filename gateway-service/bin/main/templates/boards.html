@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>☕ 공지사항 게시판</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/" style="font-weight: bold;">MSA 프로젝트</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">주문</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/boards">게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rbmq1">RabbitMQ</a>
+                    </li>
+                    <li class="nav-item" id="adminMenu" style="display: none;">
+                        <a class="nav-link" href="/board-manage">⚙️ 관리</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authNav">
+                    <li class="nav-item" id="loginNav">
+                        <a class="nav-link" href="/login">로그인</a>
+                    </li>
+                    <li class="nav-item d-none" id="userNav">
+                        <span class="nav-link" id="username"></span>
+                    </li>
+                    <li class="nav-item d-none" id="logoutNav">
+                        <a class="nav-link" href="#" id="logoutBtn">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- 왼쪽 사이드바 -->
+            <div class="col-md-2" style="background-color: #f8f9fa; min-height: 600px; padding: 20px; border-right: 1px solid #dee2e6;">
+                <h5 style="color: #495057; margin-bottom: 20px;">☕ 메뉴</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <strong style="color: #212529;">📦 상품 관리</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">📋 상품 목록</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">📦 상품 재고</a></li>
+                        </ul>
+                    </li>
+                    <li class="mb-3">
+                        <strong style="color: #212529;">📋 주문 관리</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">📄 주문 내역</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">⏱️ 실시간 주문</a></li>
+                        </ul>
+                    </li>
+                    <li class="mb-3">
+                        <strong style="color: #212529;">📢 게시판</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li style="margin-bottom: 8px;"><a href="/boards" class="text-decoration-none fw-bold" style="color: #0d6efd;">📰 공지사항</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">❓ FAQ</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">💬 고객 문의</a></li>
+                        </ul>
+                    </li>
+                    <li class="mb-3">
+                        <strong style="color: #212529;">📊 통계</strong>
+                        <ul class="list-unstyled ms-3 mt-2">
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">💰 매출 현황</a></li>
+                            <li style="margin-bottom: 8px;"><a href="#" class="text-decoration-none" style="color: #6c757d;">🌟 인기 메뉴</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 중앙 게시판 -->
+            <div class="col-md-8">
+                <div class="card shadow-sm" style="border: none;">
+                    <div class="card-header bg-white border-bottom" style="padding: 1.5rem;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">📋 공지사항 게시판</h3>
+                            <button class="btn btn-primary" onclick="location.href='/board-write'">
+                                <span>✏️</span> 글쓰기
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 60px;">번호</th>
+                                    <th>제목</th>
+                                    <th style="width: 120px;">작성자</th>
+                                    <th style="width: 120px;">작성일</th>
+                                    <th style="width: 80px;" class="text-center">조회수</th>
+                                    <th style="width: 80px;" class="text-center">좋아요</th>
+                                </tr>
+                            </thead>
+                            <tbody id="boardList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오른쪽 TOP 5 -->
+            <div class="col-md-2" style="padding: 20px;">
+                <h5 class="text-center mb-3">🏆 인기 메뉴 TOP 5</h5>
+                <div class="text-center">
+                    <div style="width: 100%; height: 120px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #6c757d; font-weight: bold;">TOP 1</span>
+                    </div>
+                    <div style="width: 100%; height: 120px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #6c757d; font-weight: bold;">TOP 2</span>
+                    </div>
+                    <div style="width: 100%; height: 120px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #6c757d; font-weight: bold;">TOP 3</span>
+                    </div>
+                    <div style="width: 100%; height: 120px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #6c757d; font-weight: bold;">TOP 4</span>
+                    </div>
+                    <div style="width: 100%; height: 120px; background-color: #e9ecef; border: 2px solid #dee2e6; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #6c757d; font-weight: bold;">TOP 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 로그인 상태 확인
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            const role = localStorage.getItem('role');
+
+            if (token && username) {
+                document.getElementById('loginNav').classList.add('d-none');
+                document.getElementById('userNav').classList.remove('d-none');
+                document.getElementById('logoutNav').classList.remove('d-none');
+                document.getElementById('username').textContent = `${username} (${role})`;
+                
+                // 관리자면 관리 메뉴 보이기
+                if (role === 'ADMIN') {
+                    document.getElementById('adminMenu').style.display = 'block';
+                }
+            }
+        }
+
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            location.href = '/login';
+        });
+
+        // 페이지 로드
+        window.onload = async function() {
+            checkLoginStatus();
+            
+            try {
+                const response = await fetch('/api/boards');
+                if (response.ok) {
+                    const boards = await response.json();
+                    displayBoards(boards);
+                } else {
+                    alert('게시글을 불러오는데 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('게시글을 불러오는 중 오류가 발생했습니다.');
+            }
+        };
+
+        function displayBoards(boards) {
+            const boardList = document.getElementById('boardList');
+            boardList.innerHTML = '';
+
+            if (boards.length === 0) {
+                boardList.innerHTML = '<tr><td colspan="6" class="text-center">등록된 게시글이 없습니다.</td></tr>';
+                return;
+            }
+
+            boards.forEach((board, index) => {
+                const row = document.createElement('tr');
+                row.style.cursor = 'pointer';
+                row.onclick = () => location.href = `/boards/${board.id}`;
+                
+                const titleHtml = board.isPinned 
+                    ? `<span style="background-color: #dc3545; color: white; padding: 2px 8px; border-radius: 3px; font-size: 12px; margin-right: 5px;">공지</span>${board.title}` 
+                    : board.title;
+                
+                const createdAt = new Date(board.createdAt).toLocaleDateString('ko-KR');
+                
+                row.innerHTML = `
+                    <td>${boards.length - index}</td>
+                    <td>${titleHtml}</td>
+                    <td>${board.author}</td>
+                    <td>${createdAt}</td>
+                    <td>${board.viewCount}</td>
+                    <td>${board.likeCount}</td>
+                `;
+                
+                boardList.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

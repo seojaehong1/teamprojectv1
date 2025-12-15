@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">MSA 프로젝트</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/orders">주문</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/boards">게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rbmq1">RabbitMQ</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authNav">
+                    <li class="nav-item" id="loginNav">
+                        <a class="nav-link" href="/login">로그인</a>
+                    </li>
+                    <li class="nav-item d-none" id="userNav">
+                        <span class="nav-link" id="username"></span>
+                    </li>
+                    <li class="nav-item d-none" id="logoutNav">
+                        <a class="nav-link" href="#" id="logoutBtn">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card shadow-sm" style="border: none;">
+            <div class="card-header bg-white border-bottom" style="padding: 1.5rem;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">🛒 주문 관리</h3>
+                    <button class="btn btn-primary" onclick="showAddOrderModal()">
+                        <span>+</span> 주문 추가
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>상품 ID</th>
+                                <th>수량</th>
+                                <th>총 가격</th>
+                                <th>고객명</th>
+                                <th>이메일</th>
+                                <th>주문일</th>
+                                <th>상태</th>
+                                <th class="text-center">작업</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .container {
+            max-width: 1400px;
+        }
+        .table th {
+            font-weight: 600;
+        }
+    </style>
+
+    <!-- 주문 추가/수정 모달 -->
+    <div class="modal fade" id="orderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">주문 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="orderForm">
+                        <input type="hidden" id="orderId">
+                        <div class="mb-3">
+                            <label class="form-label">상품 ID</label>
+                            <input type="number" class="form-control" id="productId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">수량</label>
+                            <input type="number" class="form-control" id="quantity" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">총 가격</label>
+                            <input type="number" class="form-control" id="totalPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">고객명</label>
+                            <input type="text" class="form-control" id="customerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">이메일</label>
+                            <input type="email" class="form-control" id="customerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">상태</label>
+                            <select class="form-control" id="status" required>
+                                <option value="PENDING">대기</option>
+                                <option value="PROCESSING">처리중</option>
+                                <option value="COMPLETED">완료</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" onclick="saveOrder()">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/orders.js"></script>
+    <script>
+        // 로그인 상태 확인
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            const role = localStorage.getItem('role');
+
+            if (token && username) {
+                document.getElementById('loginNav').classList.add('d-none');
+                document.getElementById('userNav').classList.remove('d-none');
+                document.getElementById('logoutNav').classList.remove('d-none');
+                document.getElementById('username').textContent = `${username} (${role})`;
+            } else {
+                document.getElementById('loginNav').classList.remove('d-none');
+                document.getElementById('userNav').classList.add('d-none');
+                document.getElementById('logoutNav').classList.add('d-none');
+            }
+        }
+
+        // 로그아웃 처리
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            window.location.href = '/login';
+        });
+
+        // 페이지 로드 시 로그인 상태 확인
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</body>
+</html> 

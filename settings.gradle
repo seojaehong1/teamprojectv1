@@ -1,0 +1,10 @@
+rootProject.name = 'MSAproject_park'
+
+include 'gateway-service'
+include 'eureka-server'
+include 'product-service'
+include 'order-service'
+include 'cust-service'
+include 'member-service'
+include 'board-service'
+include 'inventory-service'

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <style>
+        .fixed-bottom-right {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .item-info { width: 40%; }
+        .item-price { text-align: right; }
+        .summary-row { text-align: right; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="mb-4">🛒 장바구니</h2>
+    <hr>
+
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <div th:if="${#lists.isEmpty(cartItems)}" class="alert alert-info text-center">
+        장바구니에 상품이 없습니다.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(cartItems)}" class="table align-middle">
+        <thead>
+        <tr>
+            <th class="item-info">상품정보</th>
+            <th>수량</th>
+            <th>단가 (옵션 제외)</th>
+            <th>옵션 추가 금액</th>
+            <th class="item-price">총 가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td class="item-info">
+                <strong th:text="${item.menuName}">메뉴 이름</strong>
+                <div class="small text-muted mt-1">
+                    <span th:each="option : ${item.cartOptions}" class="me-2">
+                        + <span th:text="${option.optionName}">옵션 이름</span>
+                    </span>
+                    <span th:if="${#lists.isEmpty(item.cartOptions)}">옵션 없음</span>
+                </div>
+            </td>
+
+            <td th:text="${item.quantity}">1</td>
+
+            <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT') + '원'}">2,500원</td>
+
+            <td th:with="totalOptionPrice=${#aggregates.sum(item.cartOptions.![optionPrice]) ?: 0}"
+                th:text="${#numbers.formatDecimal(totalOptionPrice, 0, 'COMMA', 0, 'POINT') + '원'}">1,100원</td>
+
+            <td class="item-price"
+                th:text="${#numbers.formatDecimal(item.getTotalItemPrice(), 0, 'COMMA', 0, 'POINT') + '원'}">3,600원</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr th:if="${!#lists.isEmpty(cartItems)}">
+
+    <div th:if="${!#lists.isEmpty(cartItems)}" class="row justify-content-end mt-4">
+        <div class="col-md-4">
+            <div th:with="grandTotal=${cartItems != null ? #aggregates.sum(cartItems.![getTotalItemPrice()]) : 0}">
+
+                <div class="row summary-row mb-2">
+                    <div class="col-6 text-end">상품 금액</div>
+                    <div class="col-6">
+                        <strong th:text="${#numbers.formatDecimal(grandTotal ?: 0, 0, 'COMMA', 0, 'POINT') + '원'}">10,600원</strong>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row summary-row fs-5">
+                    <div class="col-6 text-end">결제 금액</div>
+                    <div class="col-6 text-danger">
+                        <strong th:text="${#numbers.formatDecimal(grandTotal ?: 0, 0, 'COMMA', 0, 'POINT') + '원'}">10,600원</strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:if="${!#lists.isEmpty(cartItems)}" class="fixed-bottom-right">
+    <form th:action="@{/orders/place}" method="post">
+        <button type="submit" class="btn btn-primary btn-lg shadow">
+            주문하기 (결제 진행)
+        </button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

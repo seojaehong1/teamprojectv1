@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MSA 프로젝트</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .nav-link {
+            color: #333;
+        }
+        .nav-link:hover {
+            color: #0d6efd;
+        }
+        .content {
+            padding: 20px;
+        }
+        .welcome-message {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">MSA 프로젝트</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">상품</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orders">주문</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" id="authNav">
+                    <!-- 로그인 전 -->
+                    <li class="nav-item" id="loginNav">
+                        <a class="nav-link" href="/login">로그인</a>
+                    </li>
+                    <!-- 로그인 후 -->
+                    <li class="nav-item d-none" id="userNav">
+                        <span class="nav-link" id="username"></span>
+                    </li>
+                    <li class="nav-item d-none" id="logoutNav">
+                        <a class="nav-link" href="#" id="logoutBtn">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="welcome-message">
+            <h1>MSA 프로젝트에 오신 것을 환영합니다</h1>
+            <p class="lead">상품과 주문을 관리할 수 있는 마이크로서비스 아키텍처 프로젝트입니다.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 로그인 상태 확인
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            const role = localStorage.getItem('role');
+
+            if (token && username) {
+                document.getElementById('loginNav').classList.add('d-none');
+                document.getElementById('userNav').classList.remove('d-none');
+                document.getElementById('logoutNav').classList.remove('d-none');
+                document.getElementById('username').textContent = `${username} (${role})`;
+            } else {
+                document.getElementById('loginNav').classList.remove('d-none');
+                document.getElementById('userNav').classList.add('d-none');
+                document.getElementById('logoutNav').classList.add('d-none');
+            }
+        }
+
+        // 로그아웃 처리
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            window.location.href = '/login';
+        });
+
+        // 페이지 로드 시 로그인 상태 확인
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
+    </script>
+</body>
+</html> 
