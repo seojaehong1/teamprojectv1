@@ -21,7 +21,6 @@ public class OrderService {
     private final OrdersRepository ordersRepository;
     private final CartDetailService cartDetailService;
     private final CartHeaderRepository cartHeaderRepository;
-    private final InventoryMessageProducer inventoryMessageProducer;
 
     /**
      * 장바구니 데이터를 Orders, OrderItem, OrderOption 테이블에 저장하고 장바구니를 비웁니다.
@@ -89,9 +88,6 @@ public class OrderService {
         // 💡 [수정] 주문 완료 후, 해당 CartHeader를 삭제합니다.
         // 엔티티에 설정된 cascade 또는 orphanRemoval = true 설정에 따라 CartItem/CartOption도 함께 삭제됩니다.
         cartHeaderRepository.delete(cartHeader);
-
-        // 9. 재고 차감 메시지 발송 (RabbitMQ를 통한 비동기 처리)
-        inventoryMessageProducer.sendInventoryDeductionMessage(savedOrder);
 
         return savedOrder;
     }
