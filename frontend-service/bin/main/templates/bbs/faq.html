@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>FAQ - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown li {
+            margin: 0;
+        }
+        .head_login_dropdown li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .head_login_dropdown li a:hover {
+            background-color: #f5f5f5;
+            color: #D95B3B;
+        }
+        .head_login_dropdown li:first-child a,
+        .head_login_dropdown li:nth-child(2) a {
+            color: #D95B3B;
+        }
+        .head_user_name {
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                display: none;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2a2a2a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay_inner {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            padding: 60px 20px 40px;
+            box-sizing: border-box;
+        }
+        .mobile_menu_overlay_inner::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: #D95B3B;
+            z-index: 10000;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+        .mobile_menu_logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .mobile_menu_logo_icon {
+            color: #D95B3B;
+            font-size: 28px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        /* FAQ 아코디언 스타일 */
+        .faq_question {
+            cursor: pointer;
+            position: relative;
+            padding-right: 30px;
+            transition: background-color 0.2s;
+        }
+        .faq_question:hover {
+            background-color: #f5f5f5;
+        }
+        .faq_question.active {
+            background-color: #fff9e6;
+        }
+        .faq_icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #666;
+            transition: transform 0.3s;
+        }
+        .faq_question.active .faq_icon {
+            color: #D95B3B;
+        }
+        .faq_answer {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+        }
+        .faq_answer.active {
+            display: block;
+        }
+        .faq_answer_content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #666;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="../index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a class="m head_menu_down">메가 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand.html">브랜드</a></li>
+                                    <li><a href="../about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a class="m head_menu_down">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="notice.html">공지사항</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="../order/cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index.html">마이페이지</a></li>
+                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_overlay_inner">
+            <div class="mobile_menu_header">
+                <div class="mobile_menu_logo">
+                    <span class="mobile_menu_logo_text">TORI</span>
+                    <span class="mobile_menu_logo_icon">☕</span>
+                    <span class="mobile_menu_logo_text">COFFEE</span>
+                </div>
+                <button class="mobile_menu_close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile_menu_content">
+                <div class="mobile_menu_left">
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메가 스토리</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메뉴소개</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">매장</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">소식</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">이벤트</div>
+                    </div>
+                </div>
+                <div class="mobile_menu_right">
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=1">공지사항</a>
+                        <a href="/bbs/?bbs_category=4">FAQ</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=3">이벤트</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <div class="cont_box cont_head">
+                <div class="cont_boxs">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title_info">TORI NEWS</div>
+                        <div class="cont_title robo color">
+                            <h2>FAQ</h2>
+                        </div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text cont_list_map">
+                            <ul>
+                                <li>홈</li>
+                                <li>TORI 소식</li>
+                                <li>FAQ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cont_box brand01 bbs_cont_box">
+                <div class="cont_boxs text_center">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title">
+                            <b>자주하는 질문</b>
+                        </div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text">궁금하신 내용을 검색해 주세요.</div>
+                    </div>
+                    <div class="cont_tab">
+                        <ul>
+                            <li class="check"><a href="?bbs_category=4">전체</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=5">가맹문의</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=6">매장정보</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=7">스탬프</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=8">메가쿠폰</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=9">모바일상품권</a></li>
+                            <li><a href="?bbs_category=4&bbs_detail_category=10">고객센터</a></li>
+                        </ul>
+                    </div>
+                    <div class="cont_list cont_list_content cont_list_content_search">
+                        <ul>
+                            <li>
+                                <div class="board_search_wrap">
+                                    <div class="board_search">
+                                        <form method="GET">
+                                            <input type="hidden" name="bbs_category" id="bbs_category" value="4">
+                                            <input type="hidden" name="bbs_detail_category" id="bbs_detail_category" value="">
+                                            <ul>
+                                                <li class="board_search_select">
+                                                    <div class="input_select_wrap input_wrap2">
+                                                        <select name="bbs_search_category" id="bbs_search_category">
+                                                            <option value="bbs_tbl_title">제목</option>
+                                                            <option value="bbs_tbl_content">내용</option>
+                                                            <option value="bbs_tbl_name">작성자</option>
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="input_text_wrap input_wrap2">
+                                                        <label>
+                                                            <input type="text" name="bbs_search" id="bbs_search" placeholder="검색어를 입력하세요" required>
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                                <li class="board_search_btn">
+                                                    <div class="input_btn_wrap input_wrap2">
+                                                        <input type="submit" value="검색" class="btn btn1">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="board_list">
+                            <table>
+                                <colgroup>
+                                    <col class="board_w75 board_pc">
+                                    <col>
+                                    <col class="board_w150 board_pc">
+                                    <col class="board_w100">
+                                    <col class="board_w100 board_pc">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th class="board_pc">번호</th>
+                                        <th>제목</th>
+                                        <th class="board_pc">글쓴이</th>
+                                        <th>날짜</th>
+                                        <th class="board_pc">조회</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="board_pc">공지</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD0xODEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        <em>[고객센터] 9월 1일부터 인상되는 디저트 가격이 어떻게 되나요?</em>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2022-08-30</td>
+                                        <td class="board_pc">2246</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">31</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MjMmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [모바일상품권] 매장에서 모바일상품권 사용을 거부당했습니다. 사용 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">287</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">30</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MjImYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [모바일상품권] 모바일 상품권의 유효기간을 연장하고 싶은데 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">171</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">29</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MjEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [모바일상품권] 모바일 상품권 중 금액권 내 잔액 확인을 원하는데 확인 가능 한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">511</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">28</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MjAmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [모바일상품권] 음료 모바일 교환권 선물을 받았는데 메뉴 변경이 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">213</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">27</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTkmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [모바일상품권] 모바일 상품권 이용 시 현금 영수증 발급 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">151</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">26</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTgmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [메가쿠폰] 메가쿠폰 사용 시 현금 영수증 적립 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">248</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">25</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTcmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [메가쿠폰] 메가쿠폰 유효기간이 만료 되었는데 연장 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">273</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">24</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTYmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [메가쿠폰] 스탬프 리워드 쿠폰 사용 시 아메리카노 이외에 다른 메뉴로 변경 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">486</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">23</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTUmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [메가쿠폰] 스탬프 리워드 쿠폰으로 (HOT)아메리카노 1잔을 구매하면 차액 반환 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">280</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="board_pc">22</td>
+                                        <td>
+                                            <div class="text_wrap">
+                                                <div class="text">
+                                                    <a href="detail/?YmJzX2lkeD01MTQmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
+                                                        [메가쿠폰] 스탬프 리워드 쿠폰으로 디저트 또는 MD 구매도 가능한가요?
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="board_pc">TORI COFFEE</td>
+                                        <td>2025-11-18</td>
+                                        <td class="board_pc">147</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="board_page_wrap">
+                            <div class="board_page">
+                                <ul>
+                                    <li><a><span>처음</span></a></li>
+                                    <li class="board_page_check"><a><span>1</span></a></li>
+                                    <li><a href="?bbs_category=4&bbs_detail_category=&bbs_page=2&&bbs_search_category=&bbs_search=&order="><span>2</span></a></li>
+                                    <li><a href="?bbs_category=4&bbs_detail_category=&bbs_page=3&&bbs_search_category=&bbs_search=&order="><span>3</span></a></li>
+                                    <li><a href="?bbs_category=4&bbs_detail_category=&bbs_page=4&&bbs_search_category=&bbs_search=&order="><span>4</span></a></li>
+                                    <li><a href="?bbs_category=4&bbs_detail_category=&bbs_page=2"><span>다음</span></a></li>
+                                    <li><a href="?bbs_category=4&bbs_detail_category=&bbs_page=4"><span>마지막</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
+                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>창업상담 1588-0656</li>
+                                    <li>고객센터 1588-8298</li>
+                                    <li>FAX 02-325-5199</li>
+                                    <li>사업자등록번호 105-87-51367</li>
+                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                    <li>개인정보보호 책임자 이종원</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        // 로그인 드롭다운 토글
+        $(document).ready(function() {
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 모바일 메뉴 오버레이 토글
+            $('.mobile_menu_close').click(function() {
+                $('.mobile_menu_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                $('.head_wrap').removeClass('head_over');
+                $('.head_menu_wrap').removeClass('right0');
+                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+            });
+
+            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+            $('.mobile_menu_overlay').click(function(e) {
+                if ($(e.target).hasClass('mobile_menu_overlay')) {
+                    $('.mobile_menu_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    $('.head_wrap').removeClass('head_over');
+                    $('.head_menu_wrap').removeClass('right0');
+                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+                }
+            });
+
+            // 화면 회전 시 뷰포트 리셋
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    var viewport = document.querySelector('meta[name="viewport"]');
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+                }, 100);
+            });
+
+            // FAQ 아코디언 기능
+            // FAQ 답변 데이터 (실제로는 서버에서 가져와야 함)
+            const faqAnswers = {
+                'detail/?YmJzX2lkeD0xODEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '9월 1일부터 디저트 가격이 인상됩니다. 자세한 가격표는 매장에서 확인하실 수 있습니다.',
+                'detail/?YmJzX2lkeD01MjMmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일상품권은 모든 매장에서 사용 가능합니다. 매장에서 사용을 거부당한 경우 고객센터(1588-8298)로 문의해주세요.',
+                'detail/?YmJzX2lkeD01MjImYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권의 유효기간 연장은 불가능합니다. 유효기간 내에 사용해주시기 바랍니다.',
+                'detail/?YmJzX2lkeD01MjEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권 중 금액권의 잔액은 매장에서 확인 가능합니다. 매장 직원에게 문의해주세요.',
+                'detail/?YmJzX2lkeD01MjAmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '음료 모바일 교환권은 메뉴 변경이 불가능합니다. 지정된 메뉴로만 교환 가능합니다.',
+                'detail/?YmJzX2lkeD01MTkmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권 이용 시 현금 영수증 발급이 가능합니다. 매장에서 요청해주세요.',
+                'detail/?YmJzX2lkeD01MTgmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '메가쿠폰 사용 시 현금 영수증 적립이 가능합니다. 매장에서 현금 영수증을 발급받으시면 적립됩니다.',
+                'detail/?YmJzX2lkeD01MTcmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '메가쿠폰 유효기간 연장은 불가능합니다. 유효기간 내에 사용해주시기 바랍니다.',
+                'detail/?YmJzX2lkeD01MTYmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰은 아메리카노로만 교환 가능하며, 다른 메뉴로 변경은 불가능합니다.',
+                'detail/?YmJzX2lkeD01MTUmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰으로 (HOT)아메리카노 1잔을 구매하시면 차액 반환이 불가능합니다.',
+                'detail/?YmJzX2lkeD01MTQmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰은 음료 교환 전용이며, 디저트 또는 MD 구매에는 사용할 수 없습니다.'
+            };
+
+            // FAQ 테이블 행에 아코디언 기능 추가
+            $('.board_list tbody tr').each(function() {
+                const $row = $(this);
+                const $link = $row.find('a');
+                const href = $link.attr('href');
+                const answer = faqAnswers[href] || '답변 내용이 준비 중입니다.';
+                
+                // 질문 셀에 클래스 추가 및 아이콘 추가
+                const $questionCell = $row.find('td').eq(1);
+                $questionCell.addClass('faq_question');
+                
+                // 아이콘 추가
+                if ($questionCell.find('.faq_icon').length === 0) {
+                    $questionCell.append('<span class="faq_icon">▼</span>');
+                }
+                
+                // 링크 클릭 이벤트 변경
+                $link.on('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 현재 행의 답변 영역 찾기 또는 생성
+                    let $answerRow = $row.next('.faq_answer_row');
+                    
+                    if ($answerRow.length === 0) {
+                        // 답변 행이 없으면 생성
+                        $answerRow = $('<tr class="faq_answer_row"><td colspan="5" class="faq_answer"><div class="faq_answer_content">' + answer + '</div></td></tr>');
+                        $row.after($answerRow);
+                    }
+                    
+                    // 현재 행이 활성화되어 있는지 확인
+                    const isActive = $row.hasClass('faq_active');
+                    
+                    // 모든 FAQ 닫기
+                    $('.board_list tbody tr').removeClass('faq_active');
+                    $('.faq_answer_row').removeClass('active').slideUp(300);
+                    $('.faq_question').removeClass('active');
+                    $('.faq_icon').text('▼');
+                    
+                    // 현재 행이 활성화되어 있지 않으면 열기
+                    if (!isActive) {
+                        $row.addClass('faq_active');
+                        $questionCell.addClass('active');
+                        $questionCell.find('.faq_icon').text('▲');
+                        $answerRow.addClass('active').slideDown(300);
+                    }
+                });
+            });
+
+            // 로그인 상태 체크 및 UI 업데이트
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 체크
+            checkLoginStatus();
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                alert('로그아웃되었습니다');
+                window.location.href = '../login.html';
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">MSA Demo</a>
+        <div style="float: right;">
+            <a href="/products" class="btn btn-primary" style="margin-right: 1rem;">상품 관리</a>
+            <a href="/orders" class="btn btn-primary">주문 관리</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>상품 관리</h2>
+                <button class="btn btn-primary" onclick="showAddProductModal()">상품 추가</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>상품명</th>
+                            <th>설명</th>
+                            <th>가격</th>
+                            <th>재고</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상품 추가/수정 모달 -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">상품 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="mb-3">
+                            <label class="form-label">상품명</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">설명</label>
+                            <textarea class="form-control" id="productDescription"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">가격</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">재고</label>
+                            <input type="number" class="form-control" id="productStock" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/products.js"></script>
+</body>
+</html> 

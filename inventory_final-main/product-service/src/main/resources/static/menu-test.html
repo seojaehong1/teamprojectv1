@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu CRUD Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            margin: 0;
+        }
+        header {
+            padding: 16px;
+            background: #333;
+            color: white;
+            font-size: 18px;
+        }
+        main {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        #left-panel {
+            width: 35%;
+            background: white;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        #right-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .menu-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .menu-item:hover {
+            background: #f2f2f2;
+        }
+        .active {
+            background: #dce9ff !important;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0 10px;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 6px;
+            margin: 4px 0 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            background: #4caf50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.85;
+        }
+        .danger {
+            background: #d9534f;
+        }
+        .warning {
+            background: #ff9800;
+        }
+    </style>
+</head>
+<body>
+
+<header>📌 메뉴 CRUD 테스트 페이지</header>
+
+<main>
+    <!-- ▣ 왼쪽: 메뉴 리스트 -->
+    <section id="left-panel">
+        <h3>메뉴 목록</h3>
+        <button onclick="loadMenus()">🔄 새로고침</button>
+        <div id="menu-list"></div>
+    </section>
+
+    <!-- ▣ 오른쪽: 상세 & CRUD -->
+    <section id="right-panel">
+        <h3>메뉴 상세 정보</h3>
+        <div id="detail-box">메뉴를 선택하세요.</div>
+
+        <div class="section-title">메뉴 등록 (CREATE)</div>
+
+        <form id="create-form">
+            <input type="text" id="c-menuCode" placeholder="메뉴 코드" required>
+            <input type="text" id="c-menuName" placeholder="메뉴명" required>
+            <input type="text" id="c-category" placeholder="카테고리">
+            <input type="number" id="c-basePrice" placeholder="기본 가격" required>
+            <input type="text" id="c-baseVolume" placeholder="기본 용량">
+            <input type="text" id="c-allergyInfo" placeholder="알레르기 정보">
+            <input type="number" id="c-createTime" placeholder="제작 시간">
+            <textarea id="c-description" placeholder="설명"></textarea>
+
+            <button type="button" onclick="createMenu()">메뉴 등록</button>
+        </form>
+
+        <div class="section-title">메뉴 수정 (UPDATE)</div>
+        <form id="update-form">
+            <input type="text" id="u-menuName" placeholder="메뉴명">
+            <input type="text" id="u-category" placeholder="카테고리">
+            <input type="number" id="u-basePrice" placeholder="기본 가격">
+            <input type="text" id="u-baseVolume" placeholder="기본 용량">
+            <input type="text" id="u-allergyInfo" placeholder="알레르기 정보">
+            <input type="number" id="u-createTime" placeholder="제작 시간">
+            <textarea id="u-description" placeholder="설명"></textarea>
+
+            <button type="button" class="warning" onclick="updateMenu()">메뉴 수정</button>
+            <button type="button" class="danger" onclick="deleteMenu()">메뉴 삭제</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    const API = "/api/menu";
+    let selectedMenuCode = null;
+
+    // ▣ 메뉴 목록 조회
+    async function loadMenus() {
+        const res = await fetch(API);
+        const menus = await res.json();
+
+        const list = document.getElementById("menu-list");
+        list.innerHTML = "";
+
+        menus.forEach(m => {
+            const div = document.createElement("div");
+            div.className = "menu-item";
+            div.innerHTML = `${m.menuName} (${m.menuCode})`;
+            div.onclick = () => selectMenu(m.menuCode, div);
+            list.appendChild(div);
+        });
+    }
+
+    // ▣ 메뉴 선택 → 상세 조회
+    async function selectMenu(menuCode, element) {
+        selectedMenuCode = menuCode;
+
+        document.querySelectorAll(".menu-item").forEach(e => e.classList.remove("active"));
+        element.classList.add("active");
+
+        const res = await fetch(`${API}/${menuCode}`);
+        const data = await res.json();
+
+        document.getElementById("detail-box").innerHTML = `
+            <strong>${data.menuName}</strong> (${data.menuCode})<br>
+            카테고리: ${data.category || "-"}<br>
+            가격: ${data.basePrice}원<br>
+            용량: ${data.baseVolume || "-"}<br>
+            알레르기: ${data.allergyInfo || "-"}<br>
+            제작 시간: ${data.createTime || "-"} 초<br>
+            설명: ${data.description || "-"}
+        `;
+
+        // UPDATE 폼 자동 로드
+        document.getElementById("u-menuName").value = data.menuName || "";
+        document.getElementById("u-category").value = data.category || "";
+        document.getElementById("u-basePrice").value = data.basePrice || "";
+        document.getElementById("u-baseVolume").value = data.baseVolume || "";
+        document.getElementById("u-allergyInfo").value = data.allergyInfo || "";
+        document.getElementById("u-createTime").value = data.createTime || "";
+        document.getElementById("u-description").value = data.description || "";
+    }
+
+    // ▣ CREATE
+    async function createMenu() {
+        const payload = {
+            menuCode: document.getElementById("c-menuCode").value,
+            menuName: document.getElementById("c-menuName").value,
+            category: document.getElementById("c-category").value,
+            basePrice: Number(document.getElementById("c-basePrice").value),
+            baseVolume: document.getElementById("c-baseVolume").value,
+            allergyInfo: document.getElementById("c-allergyInfo").value,
+            createTime: Number(document.getElementById("c-createTime").value),
+            description: document.getElementById("c-description").value
+        };
+
+        await fetch(API, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+
+        alert("등록 완료!");
+        loadMenus();
+    }
+
+    // ▣ UPDATE
+    async function updateMenu() {
+        if (!selectedMenuCode) return alert("메뉴를 선택하세요!");
+
+        const payload = {
+            menuName: document.getElementById("u-menuName").value,
+            category: document.getElementById("u-category").value,
+            basePrice: Number(document.getElementById("u-basePrice").value),
+            baseVolume: document.getElementById("u-baseVolume").value,
+            allergyInfo: document.getElementById("u-allergyInfo").value,
+            createTime: Number(document.getElementById("u-createTime").value),
+            description: document.getElementById("u-description").value
+        };
+
+        await fetch(`${API}/${selectedMenuCode}`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(payload)
+        });
+
+        alert("수정 완료!");
+        loadMenus();
+    }
+
+    // ▣ DELETE
+    async function deleteMenu() {
+        if (!selectedMenuCode) return alert("메뉴를 선택하세요!");
+
+        if (!confirm("정말 삭제할까요?")) return;
+
+        await fetch(`${API}/${selectedMenuCode}`, { method: "DELETE" });
+
+        alert("삭제 완료!");
+        loadMenus();
+        document.getElementById("detail-box").innerHTML = "메뉴를 선택하세요.";
+    }
+
+    loadMenus();
+</script>
+
+</body>
+</html>
