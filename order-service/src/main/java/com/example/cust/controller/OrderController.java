@@ -32,16 +32,13 @@ public class OrderController {
      * 1. 장바구니 조회 API
      */
     @GetMapping("/cart")
-    public ResponseEntity<?> getCart() {
-        final String customerId = "1"; // 실무에선 토큰에서 추출
-        try {
-            CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
-            // 기획서 응답 구조에 맞추려면 cartHeader 자체를 반환하거나 필요한 필드만 DTO로 구성
-            return ResponseEntity.ok(cartHeader);
-        } catch (Exception e) {
-            log.error("장바구니 조회 오류: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회 실패");
-        }
+    public ResponseEntity<List<CartItem>> getCart() {
+        final String customerId = "1";
+
+        CartHeader cartHeader =
+                makeCartService.getOrCreateCartHeader(customerId);
+
+        return ResponseEntity.ok(cartHeader.getCartItems());
     }
 
     /**
@@ -80,9 +77,23 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
         }
     }
+    /**
+     * 4. 장바구니 상품 개수 조회 API
+     */
+    @GetMapping("/cart/count")
+    public ResponseEntity<?> getCartCount() {
+        final String customerId = "1"; // 실무에선 토큰에서 추출
+        try {
+            CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
+            int count = cartHeader.getCartItems().size();
+            return ResponseEntity.ok(Map.of("count", count));
+        } catch (Exception e) {
+            return ResponseEntity.ok(Map.of("count", 0)); // 에러 시 0개 반환
+        }
+    }
 
     /**
-     * 2. 장바구니 상품 추가 API (JSON 기반)
+     * 5. 장바구니 상품 추가 API (JSON 기반)
      */
     @PostMapping("/add")
     public ResponseEntity<String> addItemsToCart(@RequestBody List<ProductItemDto> productItems) {
@@ -101,7 +112,7 @@ public class OrderController {
     }
 
     /**
-     * 5. 테스트 데이터 생성용 API (request 필드 제거됨)
+     * 6. 테스트 데이터 생성용 API (request 필드 제거됨)
      */
     @GetMapping("/test-add")
     public ResponseEntity<?> testAdd() {
@@ -126,16 +137,44 @@ public class OrderController {
     }
 
     /**
-     * 6. 주문하기 API
+     * 7. 주문하기 API
      */
     @PostMapping("/place")
-    public ResponseEntity<String> placeOrder() {
+    public ResponseEntity<String> placeOrder(@RequestBody Map<String, String> requestBody) {
         try {
-            Orders savedOrder = orderService.placeOrder("1");
+            // 프론트엔드에서 보낸 "request" 키값을 추출
+            String requestMessage = requestBody.get("request");
+
+            // 서비스 메서드에 요청사항 전달
+            Orders savedOrder = orderService.placeOrder("1", requestMessage);
+
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("주문 완료 ID: " + savedOrder.getOrderId());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("주문 실패");
+            return ResponseEntity.internalServerError().body("주문 실패: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 8. 주문 상세 조회 API
+     * @param orderId 조회할 주문 ID
+     * @return 주문 상세 DTO (아이템 및 옵션 포함)
+     */
+    @GetMapping("/detail/{orderId}")
+    public ResponseEntity<?> getOrderDetail(@PathVariable("orderId") Integer orderId) {
+        log.info("주문 상세 조회 요청 - ID: {}", orderId);
+        try {
+            // orderService에서 데이터를 가져옵니다.
+            var orderDetail = orderService.getOrderDetail(orderId);
+
+            if (orderDetail == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("주문 내역이 없습니다.");
+            }
+
+            return ResponseEntity.ok(orderDetail);
+        } catch (Exception e) {
+            log.error("주문 상세 조회 중 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
         }
     }
 }

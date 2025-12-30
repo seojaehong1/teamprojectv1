@@ -32,20 +32,16 @@ public class OrderService {
      * @return 저장된 Orders 엔티티
      */
     @Transactional
-    public Orders placeOrder(String customerId) {
+    public Orders placeOrder(String customerId, String requestMessage) {
 
         // 1. 장바구니 헤더 및 아이템 조회
         CartHeader cartHeader = cartDetailService.getCartHeaderByCustomerId(customerId);
         if (cartHeader == null || cartHeader.getCartItems().isEmpty()) {
-            throw new IllegalArgumentException("장바구니가 비어있거나 찾을 수 없습니다.");
+            throw new IllegalArgumentException("장바구니가 비어있습니다.");
         }
 
         List<CartItem> cartItems = cartHeader.getCartItems();
-
-        // 2. 주문 총 금액 계산 (CartItem의 계산된 getTotalItemPrice() 총합 사용)
-        int totalOrderAmount = cartItems.stream()
-                .mapToInt(CartItem::getTotalItemPrice)
-                .sum();
+        int totalOrderAmount = cartItems.stream().mapToInt(CartItem::getTotalItemPrice).sum();
 
         // 3. Orders 엔티티 생성 및 기본 정보 설정
         Orders order = Orders.builder()
@@ -53,16 +49,19 @@ public class OrderService {
                 .customerId(customerId)
                 .totalAmount(totalOrderAmount)
                 .status(OrderStatus.PENDING)
+                .request(requestMessage) // 이 부분이 추가되어야 DB에 저장됩니다!
                 .build();
 
-        // 4. CartItem을 OrderItem으로 변환
+        // 4. CartItem을 OrderItem으로 변환하는 stream 부분
         List<OrderItem> orderItems = cartItems.stream()
                 .map(cartItem -> {
                     OrderItem orderItem = OrderItem.builder()
                             .menuCode(cartItem.getMenuCode())
+                            // 💡 [중요] 장바구니에 담긴 메뉴 이름을 주문 아이템에 넣어줍니다.
+                            .menuName(cartItem.getMenuName())
                             .quantity(cartItem.getQuantity())
                             .priceAtOrder(cartItem.getUnitPrice())
-                            .totalItemPrice(cartItem.getTotalItemPrice()) // 💡 계산된 Getter 사용
+                            .totalItemPrice(cartItem.getTotalItemPrice())
                             .order(order)
                             .build();
 
@@ -70,12 +69,13 @@ public class OrderService {
                     List<OrderOption> orderOptions = cartItem.getCartOptions().stream()
                             .map(cartOption -> OrderOption.builder()
                                     .optionId(cartOption.getOptionId())
-                                    .optionPriceAtOrder(cartOption.getOptionPrice()) // 💡 getOptionPrice() 사용
+                                    // 💡 [중요] 옵션 이름도 함께 넣어주어야 합니다 (nullable=false인 경우)
+                                    .optionName(cartOption.getOptionName())
+                                    .optionPriceAtOrder(cartOption.getOptionPrice())
                                     .orderItem(orderItem)
                                     .build())
                             .collect(Collectors.toList());
 
-                    // OrderItem에 OrderOption 리스트 설정
                     orderItem.getOrderOptions().addAll(orderOptions);
                     return orderItem;
                 })
@@ -143,14 +143,15 @@ public class OrderService {
                     List<OptionDto> optionDtos = item.getOrderOptions().stream()
                             .map(option -> OptionDto.builder()
                                     .optionId(option.getOptionId())
+                                    .optionName(option.getOptionName()) // 💡 엔티티에 이름이 있다면 추가
                                     .optionPriceAtOrder(option.getOptionPriceAtOrder())
-                                    // 필요한 경우 optionName 등을 추가
                                     .build())
                             .collect(Collectors.toList());
 
                     // OrderItem DTO 변환
                     return OrderItemDto.builder()
                             .menuCode(item.getMenuCode())
+                            .menuName(item.getMenuName()) // 💡 엔티티에 menuName 필드 추가 필요
                             .quantity(item.getQuantity())
                             .priceAtOrder(item.getPriceAtOrder())
                             .totalItemPrice(item.getTotalItemPrice())
@@ -159,13 +160,12 @@ public class OrderService {
                 })
                 .collect(Collectors.toList());
 
-        // OrderDetail DTO 변환
         return OrderDetailDto.builder()
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .customerId(order.getCustomerId())
                 .totalAmount(order.getTotalAmount())
-                .status(order.getStatus().getDescription()) // Enum의 설명(예: "결제 완료") 사용
+                .status(order.getStatus().getDescription())
                 .items(itemDtos)
                 .build();
     }

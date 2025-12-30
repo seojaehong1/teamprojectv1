@@ -778,407 +778,176 @@
     </a>
 
     <script>
-        AOS.init({
-            duration: 1200,
-        });
-
-        // 헤더 메뉴 호버
-        $(".head_wrap .head .head_menu > ul > li").hover(function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(this).addClass("check");
-                $(".head_menu_down_menu").stop().slideDown("fast");
-            };
-        }, function() {
-            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-        });
-
-        $(".head_wrap").hover(function() {
-            $(this).addClass("head_over");
-        }, function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(this).removeClass("head_over");
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(".head_menu_down_menu").stop().slideUp("fast");
-            }
-        });
-
-        // 모바일 메뉴
-        $(".mobile_menu_icon").click(function(){
-            $(".head_wrap").addClass("head_over");
-            $(this).toggleClass("mobile_menu_icon_open");
-            if ( $(this).is(".mobile_menu_icon_open") ) {
-                $(".head_menu_wrap").addClass("right0");
-                $(".mobile_menu_overlay").addClass("active");
-                $("body").css("overflow", "hidden");
-            } else {
-                $(".head_menu_wrap").removeClass("right0");
-                $(".mobile_menu_overlay").removeClass("active");
-                $("body").css("overflow", "");
-            }
-        });
-
-        // 로그인 드롭다운 토글
         $(document).ready(function() {
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                $('.head_login_wrap').toggleClass('active');
-            });
-
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 모바일 메뉴 오버레이 닫기
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-
-            // URL에서 주문번호 가져오기
+            // 1. URL에서 주문번호 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get('orderId');
-            
+
             if (!orderId) {
-                // 주문번호가 없으면 에러 메시지 표시
                 $('#orderInfoContainer').hide();
                 $('#orderNotFoundMessage').show();
-            } else {
-                // 주문 정보 불러오기
-                const ordersData = localStorage.getItem('orders');
-                const orders = ordersData ? JSON.parse(ordersData) : [];
-                const order = orders.find(function(o) {
-                    return o.orderId === orderId;
-                });
-                
-                if (!order) {
-                    // 주문을 찾을 수 없음
+                return;
+            }
+
+            // 2. 초기 로드
+            loadOrderDetailFromServer(orderId);
+            checkLoginStatus();
+
+            // 3. 서버 API로부터 데이터 가져오기 (localStorage 아님!)
+            async function loadOrderDetailFromServer(id) {
+                try {
+                    // 주소를 아래와 같이 정확히 입력하세요.
+                    // http://localhost:8000/api/order/detail/3 형태가 되어야 합니다.
+                    const response = await fetch(`http://localhost:8000/api/order/detail/${id}`);
+
+                    if (!response.ok) {
+                        throw new Error('주문 정보를 찾을 수 없습니다.');
+                    }
+
+                    const order = await response.json();
+                    console.log("받은 데이터:", order); // 데이터가 잘 오는지 확인용
+
+                    $('#orderNotFoundMessage').hide();
+                    $('#orderInfoContainer').show();
+                    renderOrderDetail(order);
+                } catch (error) {
+                    console.error("데이터 로드 에러:", error);
                     $('#orderInfoContainer').hide();
                     $('#orderNotFoundMessage').show();
-                } else {
-                    // 주문 정보 표시
-                    $('#orderNotFoundMessage').hide();
-                    renderOrderDetail(order);
                 }
             }
 
-            // 주문 상세 정보 렌더링 함수
+            // 4. 화면 렌더링 함수 (서버 DTO 구조에 최적화)
             function renderOrderDetail(order) {
                 const container = $('#orderInfoContainer');
                 container.empty();
-                
-                // 주문 상태에 따른 메시지
-                let statusMessage = '';
-                let statusEmoji = '';
-                switch(order.status) {
-                    case '주문완료':
-                        statusMessage = '주문이 완료되었습니다';
-                        statusEmoji = '✅';
-                        break;
-                    case '준비중':
-                        statusMessage = '주문을 준비하고 있습니다';
-                        statusEmoji = '⏳';
-                        break;
-                    case '준비완료':
-                        statusMessage = '픽업 준비가 완료되었습니다';
-                        statusEmoji = '👌';
-                        break;
-                    default:
-                        statusMessage = order.status;
-                        statusEmoji = '📦';
-                }
-                
-                // 주문 정보 HTML 생성
+
+                // 상태 메시지 설정
+                let statusEmoji = order.status === '주문완료' || order.status === 'PENDING' ? '✅' : '⏳';
+                let displayStatus = order.status === 'PENDING' ? '주문완료' : order.status;
+
                 let orderInfoHtml = `
-                    <!-- 주문 정보 -->
-                    <div class="order_store_info">
-                        주문번호 ${order.orderId}
-                    </div>
+                <div class="order_store_info">주문번호 ${order.orderId}</div>
+                <div class="order_status_message">
+                    ${displayStatus} <span style="font-size: 28px;">${statusEmoji}</span>
+                </div>
 
-                    <!-- 상태 메시지 -->
-                    <div class="order_status_message">
-                        ${statusMessage} <span style="font-size: 28px;">${statusEmoji}</span>
+                <div class="order_progress_wrap">
+                    <div class="order_progress_bar">
+                        <div class="order_progress_fill" style="width: ${order.status === 'PENDING' || order.status === '주문완료' ? '33%' : '66%'}"></div>
                     </div>
-
-                    <!-- 주문 진행 상태 바 -->
-                    <div class="order_progress_wrap">
-                        <div class="order_progress_bar">
-                            <div class="order_progress_fill"></div>
-                        </div>
-                        <div class="order_progress_steps">
-                            <div class="order_progress_step active">
-                                주문완료
-                                <div class="order_progress_time">${formatOrderDate(order.orderDate)}</div>
-                            </div>
-                            <div class="order_progress_step ${order.status === '준비중' || order.status === '준비완료' ? 'active' : ''}">
-                                준비중
-                            </div>
-                            <div class="order_progress_step ${order.status === '준비완료' ? 'active' : ''}">
-                                준비완료
-                            </div>
-                        </div>
+                    <div class="order_progress_steps">
+                        <div class="order_progress_step active">주문완료<div class="order_progress_time">${formatOrderDate(order.orderDate)}</div></div>
+                        <div class="order_progress_step ${order.status === 'PREPARING' ? 'active' : ''}">준비중</div>
+                        <div class="order_progress_step ${order.status === 'COMPLETED' ? 'active' : ''}">준비완료</div>
                     </div>
+                </div>
 
-                    <!-- 주문내역 섹션 -->
-                    <div class="order_detail_section">
-                        <div class="order_detail_section_title">
-                            <h3>주문내역 ${order.items.length}개</h3>
-                        </div>
-                `;
-                
-                // 주문 상품 목록 렌더링
-                order.items.forEach(function(item) {
-                    // 옵션 정보 수집
-                    let optionsHtml = '';
-                    if (item.options && item.options.length > 0) {
-                        optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px;">';
-                        item.options.forEach(function(option) {
-                            optionsHtml += '<div>+ ' + (option.optionName || '옵션') + ' (+' + (option.optionPrice || 0).toLocaleString() + '원)</div>';
-                        });
-                        optionsHtml += '</div>';
-                    }
-                    
-                    const itemHtml = `
-                        <div class="order_item_detail">
-                            <div class="order_item_image">
-                                <img src="${item.image || '../logo.png'}" alt="${item.name}">
-                            </div>
-                            <div class="order_item_content">
-                                <div class="order_item_name_wrap">
-                                    <div class="order_item_name">${item.name}</div>
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title">
+                        <h3>주문내역 ${order.items ? order.items.length : 0}개</h3>
+                    </div>
+            `;
+
+                // 상품 목록 반복문
+                if (order.items) {
+                    order.items.forEach(function(item) {
+                        // 1. 옵션 정보 처리 (서버 필드명: optionName, optionPriceAtOrder)
+                        let optionsHtml = '';
+                        if (item.options && item.options.length > 0) {
+                            optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px;">';
+                            item.options.forEach(function(option) {
+                                optionsHtml += `<div>+ ${option.optionName} (+${option.optionPriceAtOrder.toLocaleString()}원)</div>`;
+                            });
+                            optionsHtml += '</div>';
+                        }
+
+                        const dynamicImagePath = `/src/tem/${item.menuName}.png`;
+
+                        const itemHtml = `
+                            <div class="order_item_detail">
+                                <div class="order_item_image">
+                                    <img src="${dynamicImagePath}"
+                                         onerror="this.src='/src/tem/logo.png'"
+                                         alt="${item.menuName}"
+                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                                 </div>
-                                <div class="order_item_temp">${item.size || '기본'}</div>
-                                ${optionsHtml}
-                                <div class="order_item_price">${item.quantity}개 | ${item.price.toLocaleString()}원</div>
-                            </div>
-                        </div>
-                    `;
-                    orderInfoHtml += itemHtml;
-                });
-                
-                // 총 상품 금액 계산
-                const totalItemPrice = order.items.reduce(function(sum, item) {
-                    return sum + item.price;
-                }, 0);
-                
-                // 결제금액 섹션
-                orderInfoHtml += `
-                    </div>
-
-                    <!-- 결제금액 섹션 -->
-                    <div class="order_detail_section">
-                        <div class="order_detail_section_title">
-                            <h3>결제금액</h3>
-                        </div>
-                        <div class="order_payment_section">
-                            <div class="order_payment_item">
-                                <span>총 상품금액</span>
-                                <span>${totalItemPrice.toLocaleString()}원</span>
-                            </div>
-                            <div class="order_payment_item">
-                                <span>제휴 멤버십</span>
-                                <span>-0원</span>
-                            </div>
-                            <div class="order_payment_item">
-                                <span>쿠폰</span>
-                                <span>-0원</span>
-                            </div>
-                            <div class="order_payment_total">
-                                <span>총 결제금액</span>
-                                <span>${order.totalPrice.toLocaleString()}원</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // 주문자 정보 및 요청사항 표시
-                if (order.customerName || order.request) {
-                    orderInfoHtml += `
-                        <!-- 주문자 정보 및 요청사항 -->
-                        <div class="order_detail_section">
-                            <div class="order_detail_section_title">
-                                <h3>주문 정보</h3>
-                            </div>
-                            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
-                    `;
-                    
-                    if (order.customerName) {
-                        orderInfoHtml += `
-                            <div style="margin-bottom: 15px;">
-                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">주문자</div>
-                                <div style="font-size: 16px; color: #333; font-weight: 600;">${order.customerName}</div>
+                                <div class="order_item_content">
+                                    <div class="order_item_name_wrap">
+                                        <div class="order_item_name">${item.menuName}</div>
+                                    </div>
+                                    <div class="order_item_temp">수량: ${item.quantity}개</div>
+                                    ${optionsHtml}
+                                    <div class="order_item_price">결제금액: ${item.totalItemPrice.toLocaleString()}원</div>
+                                </div>
                             </div>
                         `;
-                    }
-                    
-                    if (order.orderDate) {
-                        orderInfoHtml += `
-                            <div style="margin-bottom: 15px;">
-                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">주문일시</div>
-                                <div style="font-size: 16px; color: #333;">${order.orderDate}</div>
-                            </div>
-                        `;
-                    }
-                    
-                    if (order.request) {
-                        orderInfoHtml += `
-                            <div>
-                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">요청사항</div>
-                                <div style="font-size: 16px; color: #333; white-space: pre-wrap;">${order.request}</div>
-                            </div>
-                        `;
-                    }
-                    
-                    orderInfoHtml += `
-                            </div>
-                        </div>
-                    `;
+                        orderInfoHtml += itemHtml;
+                    });
                 }
-                
-                // 홈으로, 주문내역보기 버튼 추가
+
+                // 결제 정보 및 요청사항
                 orderInfoHtml += `
-                    <div class="order_detail_section">
-                        <div style="display: flex; gap: 15px; justify-content: center; padding: 20px;">
-                            <a href="../index.html" style="display: inline-block; padding: 12px 30px; background: #f5f5f5; color: #333; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; text-align: center;">
-                                홈으로
-                            </a>
-                            <a href="history.html" style="display: inline-block; padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; text-align: center;">
-                                주문내역보기
-                            </a>
+                </div>
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title"><h3>결제금액</h3></div>
+                    <div class="order_payment_section">
+                        <div class="order_payment_total">
+                            <span>총 결제금액</span>
+                            <span>${order.totalAmount.toLocaleString()}원</span>
                         </div>
                     </div>
-                `;
-                
+                </div>
+
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title"><h3>주문 정보</h3></div>
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 14px; color: #666;">주문자</div>
+                            <div style="font-size: 16px; font-weight: 600;">${order.customerId}님</div>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 14px; color: #666;">주문일시</div>
+                            <div style="font-size: 16px;">${formatOrderDate(order.orderDate)}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; color: #666;">요청사항</div>
+                            <div style="font-size: 16px; color: #D95B3B; font-weight: 600;">${order.request || '없음'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order_detail_section" style="display: flex; gap: 10px; justify-content: center;">
+                    <a href="/index.html" class="btn_home" style="padding: 12px 25px; background: #eee; border-radius: 8px; text-decoration: none; color: #333;">홈으로</a>
+                    <a href="/order/history" class="btn_history" style="padding: 12px 25px; background: #D95B3B; border-radius: 8px; text-decoration: none; color: #fff;">주문내역보기</a>
+                </div>
+            `;
+
                 container.html(orderInfoHtml);
             }
-            
-            // 주문 취소 함수
-            function cancelOrder(orderId) {
-                // API 호출 (실제로는 서버에 요청)
-                // PUT /api/orders/{orderId}/cancel 또는 DELETE /api/orders/{orderId}
-                $.ajax({
-                    url: '/api/orders/' + orderId + '/cancel',
-                    method: 'PUT',
-                    data: JSON.stringify({ status: '주문취소' }),
-                    contentType: 'application/json',
-                    success: function(response) {
-                        alert('주문이 취소되었습니다.');
-                        // localStorage에서 주문 상태 업데이트
-                        const ordersData = localStorage.getItem('orders');
-                        const orders = ordersData ? JSON.parse(ordersData) : [];
-                        const orderIndex = orders.findIndex(function(o) {
-                            return o.orderId === orderId;
-                        });
-                        if (orderIndex !== -1) {
-                            orders[orderIndex].status = '주문취소';
-                            localStorage.setItem('orders', JSON.stringify(orders));
-                        }
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('주문 취소 실패:', error);
-                        // 에러 시에도 localStorage 업데이트 (테스트용)
-                        const ordersData = localStorage.getItem('orders');
-                        const orders = ordersData ? JSON.parse(ordersData) : [];
-                        const orderIndex = orders.findIndex(function(o) {
-                            return o.orderId === orderId;
-                        });
-                        if (orderIndex !== -1) {
-                            orders[orderIndex].status = '주문취소';
-                            localStorage.setItem('orders', JSON.stringify(orders));
-                        }
-                        alert('주문이 취소되었습니다.');
-                        location.reload();
-                    }
-                });
-            }
 
-            // 주문 날짜 포맷팅 함수
+            // 날짜 포맷팅 (ISO 타임스탬프 대응)
             function formatOrderDate(dateString) {
                 if (!dateString) return '';
                 const date = new Date(dateString);
-                if (isNaN(date.getTime())) {
-                    // 날짜 문자열이 이미 포맷되어 있는 경우
-                    const parts = dateString.split(' ');
-                    if (parts.length >= 2) {
-                        const datePart = parts[0].split('-');
-                        const timePart = parts[1].split(':');
-                        if (datePart.length >= 3 && timePart.length >= 2) {
-                            return datePart[1] + '.' + datePart[2] + ' ' + timePart[0] + ':' + timePart[1];
-                        }
-                    }
-                    return dateString;
-                }
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                return month + '.' + day + ' ' + hours + ':' + minutes;
+                return (date.getMonth() + 1) + '.' + date.getDate() + ' ' +
+                    String(date.getHours()).padStart(2, '0') + ':' +
+                    String(date.getMinutes()).padStart(2, '0');
             }
 
-            // 뒤로가기 버튼
-            $('.order_detail_back').on('click', function() {
-                history.back();
-            });
-
-            // 새로고침 버튼
-            $('.order_detail_refresh').on('click', function() {
-                location.reload();
-            });
-
-            // 로그인 상태 체크 및 UI 업데이트
+            // 로그인 상태 체크
             function checkLoginStatus() {
                 const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                const userName = localStorage.getItem('userName') || '사용자명';
-
+                const userName = localStorage.getItem('userName') || '고객';
                 if (isLoggedIn) {
-                    // 로그인 상태일 때
                     $('.head_login_state_guest').hide();
                     $('.head_login_state_member').show();
                     $('.head_user_name').text(userName + '님');
-                } else {
-                    // 비로그인 상태일 때
-                    $('.head_login_state_guest').show();
-                    $('.head_login_state_member').hide();
                 }
             }
 
-            // 페이지 로드 시 로그인 상태 체크
-            checkLoginStatus();
-
-            // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
-            });
+            $('.order_detail_back').on('click', function() { history.back(); });
+            $('.order_detail_refresh').on('click', function() { location.reload(); });
         });
     </script>
 </body>

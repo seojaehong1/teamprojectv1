@@ -48,13 +48,15 @@ public class CartItem {
     }
 
     public Integer getTotalItemPrice() {
-        int basePrice = this.unitPrice * this.quantity;
-        int optionPrice = 0;
+        // 1. 개별 옵션들의 가격 합계를 먼저 구합니다.
+        int totalOptionPrice = 0;
         if (this.cartOptions != null && !this.cartOptions.isEmpty()) {
-            optionPrice = this.cartOptions.stream()
+            totalOptionPrice = this.cartOptions.stream()
                     .mapToInt(CartOption::getOptionPrice)
                     .sum();
         }
-        return basePrice + optionPrice;
+
+        // 2. (메뉴 단가 + 옵션 합계)에 전체 수량을 곱합니다.
+        return (this.unitPrice + totalOptionPrice) * this.quantity;
     }
 }

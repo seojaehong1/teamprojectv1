@@ -30,6 +30,9 @@ public class OrderItem {
     @Column(name = "menu_code", nullable = false)
     private Long menuCode; // Menu Entity는 Product Module에 있으므로 String으로 유지
 
+    @Column(name = "menu_name", nullable = false)
+    private String menuName;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

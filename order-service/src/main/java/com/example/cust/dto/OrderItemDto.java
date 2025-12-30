@@ -14,6 +14,7 @@ import java.util.List;
 public class OrderItemDto {
     private Long menuCode;
     private Integer quantity;
+    private String menuName;
     private Integer priceAtOrder; // 주문 시점의 항목 기본 가격
     private Integer totalItemPrice; // 옵션 포함 해당 항목의 최종 가격
     private List<OptionDto> orderOptions; // 해당 항목에 포함된 옵션 리스트 (OrderOptionDto 통합)
