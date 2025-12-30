@@ -1010,10 +1010,10 @@
             const cart = loadCart();
             const container = $('#cartItemsContainer');
             const emptyMessage = $('#cartEmptyMessage');
-            
+
             // 기존 아이템 제거
             container.empty();
-            
+
             if (cart.length === 0) {
                 // 장바구니가 비어있음
                 container.hide();
@@ -1028,14 +1028,14 @@
                 $('.cart_select_all').show();
                 $('.cart_notice').show();
                 $('.cart_order_btn').removeClass('disabled');
-                
+
                 // 각 상품 렌더링
                 cart.forEach(function(item, index) {
                     // 단가 계산 (price는 총가격이므로)
                     const unitPrice = Math.floor(item.price / item.quantity);
                     // 소계는 price (이미 총가격)
                     const subtotal = item.price;
-                    
+
                     const cartItemHtml = `
                         <div class="cart_item" data-index="${index}">
                             <div class="cart_item_checkbox checked">
@@ -1064,20 +1064,20 @@
                             </div>
                         </div>
                     `;
-                    
+
                     container.append(cartItemHtml);
                 });
-                
+
                 // 이벤트 리스너 재등록
                 attachCartEventListeners();
-                
+
                 // 전체선택 텍스트 업데이트
                 updateSelectAll();
             }
-            
+
             // 총 금액 계산 및 업데이트
             updateTotalPrice();
-            
+
             // 헤더 장바구니 배지 업데이트
             updateCartBadge();
         }

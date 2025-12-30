@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -32,13 +33,51 @@ public class OrderController {
      */
     @GetMapping("/cart")
     public ResponseEntity<?> getCart() {
-        final String customerId = "1";
+        final String customerId = "1"; // 실무에선 토큰에서 추출
         try {
             CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
-            return ResponseEntity.ok(cartHeader.getCartItems());
+            // 기획서 응답 구조에 맞추려면 cartHeader 자체를 반환하거나 필요한 필드만 DTO로 구성
+            return ResponseEntity.ok(cartHeader);
         } catch (Exception e) {
             log.error("장바구니 조회 오류: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회 실패");
+        }
+    }
+
+    /**
+     * 2. 장바구니 상품 수량 수정 API
+     */
+    @PutMapping("/cart/items/{cartItemId}")
+    public ResponseEntity<?> updateCartItemQuantity(
+            @PathVariable Long cartItemId,
+            @RequestBody Map<String, Integer> request) {
+
+        try {
+            int quantity = request.get("quantity");
+            // cartDetailService에 수량 변경 로직이 필요합니다.
+            cartDetailService.updateQuantity(cartItemId, quantity);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "수량이 변경되었습니다.",
+                    "cartItemId", cartItemId,
+                    "quantity", quantity
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 실패");
+        }
+    }
+
+    /**
+     * 3. 장바구니 상품 삭제 API
+     */
+    @DeleteMapping("/cart/items/{cartItemId}")
+    public ResponseEntity<?> deleteCartItem(@PathVariable Long cartItemId) {
+        try {
+            // cartDetailService에 삭제 로직 필요
+            cartDetailService.deleteItem(cartItemId);
+            return ResponseEntity.ok(Map.of("message", "상품이 삭제되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
         }
     }
 
@@ -62,7 +101,7 @@ public class OrderController {
     }
 
     /**
-     * 3. 테스트 데이터 생성용 API (request 필드 제거됨)
+     * 5. 테스트 데이터 생성용 API (request 필드 제거됨)
      */
     @GetMapping("/test-add")
     public ResponseEntity<?> testAdd() {
@@ -87,7 +126,7 @@ public class OrderController {
     }
 
     /**
-     * 4. 주문하기 API
+     * 6. 주문하기 API
      */
     @PostMapping("/place")
     public ResponseEntity<String> placeOrder() {
