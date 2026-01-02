@@ -576,98 +576,63 @@
                 <a href="../../owner/order.html" class="owner_nav_item active">주문 관리</a>
                 <a href="../../owner/inventory.html" class="owner_nav_item">재고 관리</a>
             </div>
-            
-            <!-- 통계 카드 -->
+
             <div class="owner_stats">
                 <div class="owner_stat_card">
-                    <div class="owner_stat_value">12</div>
-                    <div class="owner_stat_label">대기 중인 주문</div>
+                    <div class="owner_stat_value" id="pendingCount">0</div>
+                    <div class="owner_stat_label">결제 완료</div>
                 </div>
                 <div class="owner_stat_card">
-                    <div class="owner_stat_value">5</div>
-                    <div class="owner_stat_label">준비 중인 주문</div>
+                    <div class="owner_stat_value" id="preparingCount">0</div>
+                    <div class="owner_stat_label">주문 접수</div>
                 </div>
                 <div class="owner_stat_card">
-                    <div class="owner_stat_value">28</div>
-                    <div class="owner_stat_label">오늘 완료된 주문</div>
+                    <div class="owner_stat_value" id="completedCount">0</div>
+                    <div class="owner_stat_label">준비 완료</div>
                 </div>
                 <div class="owner_stat_card">
-                    <div class="owner_stat_value">₩450,000</div>
+                    <div class="owner_stat_value" id="totalRevenue">₩0</div>
                     <div class="owner_stat_label">오늘 매출</div>
                 </div>
             </div>
-            
-            <!-- 필터 -->
-            <div class="order_filter_wrap">
-                <button class="order_filter_btn active" data-status="all">전체</button>
-                <button class="order_filter_btn" data-status="waiting">주문 대기</button>
-                <button class="order_filter_btn" data-status="preparing">준비 중</button>
-                <button class="order_filter_btn" data-status="ready">준비 완료</button>
-                <button class="order_filter_btn" data-status="completed">완료</button>
-            </div>
+
+                <div class="order_filter_wrap">
+                    <button class="order_filter_btn active" data-status="전체">전체</button>
+                    <button class="order_filter_btn" data-status="결제 완료">결제 완료</button>
+                    <button class="order_filter_btn" data-status="주문 접수">주문 접수</button>
+                    <button class="order_filter_btn" data-status="완료">준비 완료</button>
+                </div>
             
             <!-- 주문 목록 -->
             <div class="cont_text_wrap">
                 <table class="order_list_table">
                     <thead>
-                        <tr>
-                            <th>주문번호</th>
-                            <th>주문시간</th>
-                            <th>메뉴</th>
-                            <th>수량</th>
-                            <th>금액</th>
-                            <th>상태</th>
-                            <th>관리</th>
-                        </tr>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>주문시간</th>
+                        <th>메뉴</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#ORD-2025-001</td>
-                            <td>2025-12-16 14:30</td>
-                            <td>아메리카노 외 2개</td>
-                            <td>3</td>
-                            <td>₩12,000</td>
-                            <td><span class="order_status waiting">주문 대기</span></td>
-                            <td>
-                                <button class="order_action_btn primary" onclick="acceptOrder('ORD-2025-001')">접수</button>
-                                <button class="order_action_btn" onclick="cancelOrderByOwner('ORD-2025-001')" style="background: #dc3545; color: #fff; border-color: #dc3545;">취소</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-002</td>
-                            <td>2025-12-16 14:25</td>
-                            <td>카페라떼</td>
-                            <td>1</td>
-                            <td>₩4,500</td>
-                            <td><span class="order_status preparing">준비 중</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="completeOrder('ORD-2025-002')">완료</button>
-                                <button class="order_action_btn" onclick="cancelOrderByOwner('ORD-2025-002')" style="background: #dc3545; color: #fff; border-color: #dc3545;">취소</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-003</td>
-                            <td>2025-12-16 14:20</td>
-                            <td>바닐라라떼 외 1개</td>
-                            <td>2</td>
-                            <td>₩9,000</td>
-                            <td><span class="order_status ready">준비 완료</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="pickupOrder('ORD-2025-003')">픽업 완료</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-004</td>
-                            <td>2025-12-16 14:15</td>
-                            <td>카푸치노</td>
-                            <td>1</td>
-                            <td>₩4,500</td>
-                            <td><span class="order_status completed">완료</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="viewOrder('ORD-2025-004')">상세보기</button>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody>  </tbody>
+                </table>
+
+                <table class="order_list_table">
+                    <thead>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>주문시간</th>
+                        <th>메뉴</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+                    <tbody id="orderTableBody"> </tbody>
                 </table>
             </div>
             
@@ -783,21 +748,12 @@
             duration: 1200,
         });
 
-        // 로그인 드롭다운 토글
         $(document).ready(function() {
-            // 권한 체크
-            var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'owner') {
-                alert('점주 권한이 필요합니다.');
-                window.location.href = '../login.html';
-                return;
-            }
-            
-            // 사용자명 표시
+            // [1] 권한 체크 및 사용자 설정 (기존 유지)
             var userName = localStorage.getItem('userName') || '점주';
             $('.head_user_name').text(userName + '님');
-            
-            // 로그인 드롭다운 토글
+
+            // [2] 로그인 드롭다운 토글 (기존 유지)
             $('.head_login_trigger').click(function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -809,8 +765,8 @@
                     $('.head_login_wrap').removeClass('active');
                 }
             });
-            
-            // 로그아웃 버튼
+
+            // [3] 로그아웃 버튼 (기존 유지)
             $('#ownerLogoutBtn').on('click', function(e) {
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
@@ -819,187 +775,291 @@
                 }
             });
 
-            // 필터 버튼 클릭
+            // [4] 필터 버튼 클릭 이벤트 (수정됨)
             $('.order_filter_btn').click(function() {
-                $('.order_filter_btn').removeClass('active');
-                $(this).addClass('active');
+                // 모든 버튼 스타일 초기화
+                $('.order_filter_btn').removeClass('active').css({
+                    'background': '#fff',
+                    'color': '#666',
+                    'border': '1px solid #d0d0d0'
+                });
+
+                // 클릭한 버튼 활성화 스타일 (주황색)
+                $(this).addClass('active').css({
+                    'background': '#D95B3B',
+                    'color': '#fff',
+                    'border': '1px solid #D95B3B'
+                });
+
+                // 버튼의 data-status 값으로 필터링 호출
+                // HTML 예: <button class="order_filter_btn" data-status="결제 완료">결제 완료</button>
                 var status = $(this).data('status');
-                // 여기에 필터링 로직 추가
+                loadOrders(status);
             });
+
+            // [5] 초기 데이터 및 통계 로드
+            loadStatistics(); // 상단 요약 정보 (API 새로 만드신 것)
+            loadOrders('전체');
         });
+
+        /**
+         * 서버에서 주문 목록 가져오기 및 필터링
+         */
+        async function loadOrders(filterStatus = '전체') {
+            try {
+                const response = await fetch('http://localhost:8000/api/owner/order');
+                if (!response.ok) throw new Error("데이터 로드 실패");
+
+                let orders = await response.json();
+
+                // 프론트엔드 필터링 로직
+                // DB의 status 값: "결제 완료", "주문 접수", "완료"
+                if (filterStatus !== '전체') {
+                    orders = orders.filter(o => o.status === filterStatus);
+                }
+
+                renderOrderTable(orders);
+            } catch (e) {
+                console.error("오류:", e);
+                $('#orderTableBody').html('<tr><td colspan="7" style="text-align:center; padding:30px;">데이터를 불러오는 중 오류가 발생했습니다.</td></tr>');
+            }
+        }
+
+        /**
+         * 테이블 렌더링 (디자인 유지 및 버튼 제어)
+         */
+        function renderOrderTable(orders) {
+            const $tbody = $('#orderTableBody');
+            $tbody.empty();
+
+            if (!orders || orders.length === 0) {
+                $tbody.html('<tr><td colspan="7" style="text-align:center; padding:30px;">해당 내역이 없습니다.</td></tr>');
+                return;
+            }
+
+            orders.forEach(order => {
+                // 1. 상태별 클래스 지정 (CSS 디자인에 맞게)
+                let statusClass = "waiting";     // 결제 완료 (기본)
+                if (order.status === "주문 접수") statusClass = "preparing";
+                if (order.status === "완료") statusClass = "completed"; // 준비 완료
+
+                // 2. 버튼 텍스트 결정 (결제 완료 -> 접수 / 주문 접수 -> 완료)
+                let btnText = "";
+                if (order.status === "결제 완료") btnText = "접수";
+                else if (order.status === "주문 접수") btnText = "완료";
+
+                // 3. 행 구성
+                const row = `
+            <tr>
+                <td>#${order.orderId}</td>
+                <td>${formatDate(order.orderDate)}</td>
+                <td>${order.items && order.items.length > 0 ? (order.items.length > 1 ? order.items[0].menuName + ' 외 ' + (order.items.length-1) : order.items[0].menuName) : '메뉴 없음'}</td>
+                <td>${order.items ? order.items.length : 0}개</td>
+                <td>₩${(order.totalAmount || 0).toLocaleString()}</td>
+                <td><span class="order_status ${statusClass}">${order.status}</span></td>
+                <td>
+                    <div class="order_action_btns">
+                        <button class="order_action_btn" onclick="viewOrder(${order.orderId})">상세보기</button>
+                        ${btnText ? `<button class="order_action_btn primary" onclick="handleStatusChange(${order.orderId}, '${order.status}')">${btnText}</button>` : ''}
+                    </div>
+                </td>
+            </tr>
+        `;
+                $tbody.append(row);
+            });
+        }
+
+        /**
+         * 상단 대시보드 통계 정보 로드
+         */
+        // [1] 통계 데이터 반영 함수
+        async function loadStatistics() {
+            try {
+                const response = await fetch('http://localhost:8000/api/owner/total');
+                if (response.ok) {
+                    const stats = await response.json();
+
+                    // HTML의 ID들과 서버 DTO 필드명을 정확히 매칭
+                    $('#pendingCount').text(stats.pendingCount);
+                    $('#preparingCount').text(stats.preparingCount);
+                    $('#completedCount').text(stats.completedCount);
+                    $('#totalRevenue').text('₩' + stats.totalRevenue.toLocaleString());
+                }
+            } catch (e) {
+                console.error("통계 로드 오류:", e);
+            }
+        }
+
+        // [2] 주문 목록 로드 및 필터링 함수
+        async function loadOrders(filterStatus = '전체') {
+            try {
+                const response = await fetch('http://localhost:8000/api/owner/order');
+                if (!response.ok) throw new Error("데이터 로드 실패");
+
+                let orders = await response.json();
+
+                // 필터링 로직: 버튼의 data-status 값과 DB의 status 문자열 비교
+                if (filterStatus !== '전체') {
+                    // "준비 완료" 버튼은 DB의 "완료" 상태를 필터링해야 함
+                    orders = orders.filter(o => o.status === filterStatus);
+                }
+
+                renderOrderTable(orders);
+            } catch (e) {
+                console.error("오류:", e);
+            }
+        }
+
+        // 데이터를 테이블에 뿌리기 (기존 디자인 유지)
+        function renderOrderTable(orders) {
+            const $tbody = $('#orderTableBody');
+            $tbody.empty();
+
+            if (!orders || orders.length === 0) {
+                $tbody.html('<tr><td colspan="7" style="text-align:center; padding:30px;">주문 내역이 없습니다.</td></tr>');
+                return;
+            }
+
+            orders.forEach(order => {
+                // 상태별 뱃지 클래스 매핑
+                let statusClass = "waiting";
+                if (order.status === "주문 접수") statusClass = "preparing";
+                if (order.status === "완료") statusClass = "completed";
+
+                // 상태별 버튼 텍스트 설정
+                let btnText = "";
+                if (order.status === "결제 완료") btnText = "접수";
+                else if (order.status === "주문 접수") btnText = "완료";
+
+                const row = `
+                <tr>
+                    <td>#${order.orderId}</td>
+                    <td>${formatDate(order.orderDate)}</td>
+                    <td>${order.items && order.items.length > 0 ? (order.items.length > 1 ? order.items[0].menuName + ' 외 ' + (order.items.length-1) : order.items[0].menuName) : '메뉴 없음'}</td>
+                    <td>${order.items ? order.items.length : 0}개</td>
+                    <td>₩${(order.totalAmount || 0).toLocaleString()}</td>
+                    <td><span class="order_status ${statusClass}">${order.status}</span></td>
+                    <td>
+                        <div class="order_action_btns">
+                            <button class="order_action_btn" onclick="viewOrder(${order.orderId})">상세보기</button>
+                            ${btnText ? `<button class="order_action_btn primary" onclick="handleStatusChange(${order.orderId}, '${order.status}')">${btnText}</button>` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `;
+                $tbody.append(row);
+            });
+        }
 
         // 전역 변수
         var currentOrderId = '';
-        var currentAction = '';
         var currentActionText = '';
 
-        // 주문 접수
-        function acceptOrder(orderId) {
+        // 상태 변경 핸들러 (모달 띄우기)
+        function handleStatusChange(orderId, currentStatus) {
             currentOrderId = orderId;
-            currentAction = 'accept';
-            currentActionText = '주문 접수';
-            $('#orderModalTitle').text('주문 접수');
-            $('#orderModalText').text('주문을 접수하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 주문 완료
-        function completeOrder(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'complete';
-            currentActionText = '주문 준비 완료';
-            $('#orderModalTitle').text('주문 준비 완료');
-            $('#orderModalText').text('주문 준비를 완료하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 픽업 완료
-        function pickupOrder(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'pickup';
-            currentActionText = '픽업 완료';
-            $('#orderModalTitle').text('픽업 완료');
-            $('#orderModalText').text('픽업을 완료 처리하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 주문 취소
-        function cancelOrderByOwner(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'cancel';
-            currentActionText = '주문 취소';
-            $('#orderModalTitle').text('주문 취소');
-            $('#orderModalText').text('주문을 취소하시겠습니까? 취소 시 재고가 복구됩니다.');
-            $('#orderModal').addClass('show');
-        }
-
-        // 모달에서 확인 버튼 클릭
-        function confirmOrderAction() {
-            closeOrderModal();
-            
-            // 처리 완료 모달 표시
-            $('#orderSuccessModalTitle').text(currentActionText);
-            var successMessage = '';
-            if (currentAction === 'accept') {
-                successMessage = '주문이 접수되었습니다.';
-            } else if (currentAction === 'complete') {
-                successMessage = '주문 준비가 완료되었습니다.';
-            } else if (currentAction === 'pickup') {
-                successMessage = '픽업이 완료되었습니다.';
-            } else if (currentAction === 'cancel') {
-                successMessage = '주문이 취소되었습니다.';
+            if (currentStatus === "결제 완료") {
+                currentActionText = "주문 접수";
+                openActionModal(orderId, 'accept', '주문 접수', '주문을 접수하시겠습니까?');
+            } else if (currentStatus === "주문 접수") {
+                currentActionText = "준비 완료";
+                openActionModal(orderId, 'complete', '준비 완료', '상품 준비를 완료하시겠습니까?');
             }
-            $('#orderSuccessModalText').text(successMessage);
-            $('#orderSuccessModal').addClass('show');
-            
-            // 실제로는 여기서 서버에 요청을 보내고, 성공 시 페이지 새로고침
-            // setTimeout(function() {
-            //     location.reload();
-            // }, 1500);
         }
 
-        // 주문 확인 모달 닫기
-        function closeOrderModal() {
-            $('#orderModal').removeClass('show');
+        function openActionModal(id, action, title, text) {
+            $('#orderModalTitle').text(title);
+            $('#orderModalText').text(text);
+            $('#orderModal').addClass('show');
         }
 
-        // 주문 완료 모달 닫기
+        // 모달 내 '확인' 버튼 클릭 시 실제 서버 API 호출
+        async function confirmOrderAction() {
+            closeOrderModal();
+            try {
+                const response = await fetch(`http://localhost:8000/api/owner/order/${currentOrderId}/status`, {
+                    method: 'PATCH'
+                });
+
+                if (response.ok) {
+                    $('#orderSuccessModalTitle').text(currentActionText);
+                    $('#orderSuccessModalText').text(`${currentActionText} 처리가 완료되었습니다.`);
+                    $('#orderSuccessModal').addClass('show');
+                } else {
+                    alert("상태 변경에 실패했습니다.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("서버 연결 오류가 발생했습니다.");
+            }
+        }
+
+        function closeOrderModal() { $('#orderModal').removeClass('show'); }
         function closeOrderSuccessModal() {
             $('#orderSuccessModal').removeClass('show');
-            location.reload();
+            loadOrders(); // 새로고침 대신 데이터 다시 읽기
         }
 
-        // 모달 배경 클릭 시 닫기
-        $(document).on('click', '.order_modal', function(e) {
-            if ($(e.target).hasClass('order_modal')) {
-                $(this).removeClass('show');
+        // 주문 상세 조회
+        async function viewOrder(orderId) {
+            try {
+                const response = await fetch(`http://localhost:8000/api/owner/order/${orderId}`);
+                if (!response.ok) throw new Error('상세 정보 로드 실패');
+                const order = await response.json();
+
+                $('#orderDetailTime').text(formatDate(order.orderDate));
+                const detailList = $('#orderDetailList').empty();
+
+                const items = order.items || [];
+                items.forEach(item => {
+                    // [수정] 필드명을 orderOptions로 변경하여 옵션 추출
+                    let optionsText = "";
+                    if (item.orderOptions && item.orderOptions.length > 0) {
+                        const optionNames = item.orderOptions.map(opt => opt.optionName).join(", ");
+                        optionsText = `<div style="font-size: 13px; color: #888; margin-top: 4px; padding-left: 5px;">
+                                    <i class="fa-solid fa-angles-right" style="font-size: 10px;"></i> 옵션: ${optionNames}
+                               </div>`;
+                    }
+
+                    // 기존 디자인 형식을 유지하면서 옵션만 추가
+                    let itemHtml = `
+                <div class="order_detail_item" style="padding: 12px 0; border-bottom: 1px solid #f5f5f5;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="order_detail_item_name" style="font-weight: 500; color: #333;">
+                            ${item.menuName} <span style="color: #D95B3B;">${item.quantity}개</span>
+                        </div>
+                        <div class="order_detail_item_price" style="font-weight: 600; color: #333;">
+                            ₩${(item.totalItemPrice || 0).toLocaleString()}
+                        </div>
+                    </div>
+                    ${optionsText} </div>`;
+                    detailList.append(itemHtml);
+                });
+
+                // 하단 총 합계 디자인 유지
+                detailList.append(`
+            <div class="order_detail_item" style="margin-top:15px; padding-top:15px; border-top: 2px solid #333;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="order_detail_item_name"><strong style="font-size: 16px;">총 결제 금액</strong></div>
+                    <div class="order_detail_item_price">
+                        <strong style="font-size: 20px; color: #D95B3B;">₩${(order.totalAmount || 0).toLocaleString()}</strong>
+                    </div>
+                </div>
+            </div>`);
+
+                $('#orderDetailModal').addClass('show');
+            } catch (e) {
+                console.error("상세보기 오류:", e);
+                alert('상세 정보를 불러올 수 없습니다.');
             }
-        });
-
-        // 모달 내용 클릭 시 닫히지 않도록
-        $(document).on('click', '.order_modal_content', function(e) {
-            e.stopPropagation();
-        });
-
-        // 주문 상세보기
-        function viewOrder(orderId) {
-            // 주문 정보 (실제로는 서버에서 가져와야 함)
-            var orderData = {
-                'ORD-2025-004': {
-                    time: '2025-12-16 14:15',
-                    items: [
-                        { name: '카푸치노', price: 4500, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-003': {
-                    time: '2025-12-16 14:20',
-                    items: [
-                        { name: '바닐라라떼', price: 5000, quantity: 1, size: '레귤러', options: [{ optionName: '바닐라 시럽 추가', optionPrice: 500 }] },
-                        { name: '아메리카노', price: 4000, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-002': {
-                    time: '2025-12-16 14:25',
-                    items: [
-                        { name: '카페라떼', price: 4500, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-001': {
-                    time: '2025-12-16 14:30',
-                    items: [
-                        { name: '아메리카노', price: 4000, quantity: 1, size: '레귤러', options: [] },
-                        { name: '카페라떼', price: 5000, quantity: 1, size: '라지', options: [{ optionName: '우유 변경', optionPrice: 500 }] },
-                        { name: '바닐라라떼', price: 5500, quantity: 1, size: '레귤러', options: [{ optionName: '바닐라 시럽 추가', optionPrice: 500 }, { optionName: '휘핑크림 추가', optionPrice: 500 }] }
-                    ]
-                }
-            };
-            
-            var order = orderData[orderId] || orderData['ORD-2025-004'];
-            
-            // 시간 표시
-            $('#orderDetailTime').text(order.time);
-            
-            // 주문 항목 표시
-            var detailList = $('#orderDetailList');
-            detailList.empty();
-            
-            var totalPrice = 0;
-            order.items.forEach(function(item) {
-                totalPrice += item.price;
-                var detailItem = $('<div class="order_detail_item"></div>');
-                var itemName = item.name;
-                if (item.size && item.size !== '기본') {
-                    itemName += ' (' + item.size + ')';
-                }
-                detailItem.append('<div class="order_detail_item_name">' + itemName + '</div>');
-                
-                // 옵션 표시
-                if (item.options && item.options.length > 0) {
-                    var optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px; margin-left: 10px;">';
-                    item.options.forEach(function(option) {
-                        optionsHtml += '<div>+ ' + option.optionName + ' (+' + (option.optionPrice || 0).toLocaleString() + '원)</div>';
-                    });
-                    optionsHtml += '</div>';
-                    detailItem.append(optionsHtml);
-                }
-                
-                detailItem.append('<div class="order_detail_item_price">' + (item.quantity || 1) + '개 | ₩' + item.price.toLocaleString() + '</div>');
-                detailList.append(detailItem);
-            });
-            
-            // 총액 표시
-            var totalItem = $('<div class="order_detail_item" style="margin-top: 10px; padding-top: 15px; border-top: 2px solid #e0e0e0;"></div>');
-            totalItem.append('<div class="order_detail_item_name" style="font-weight: 700;">총액</div>');
-            totalItem.append('<div class="order_detail_item_price">₩' + totalPrice.toLocaleString() + '</div>');
-            detailList.append(totalItem);
-            
-            // 모달 표시
-            $('#orderDetailModal').addClass('show');
         }
 
-        // 주문 상세 모달 닫기
-        function closeOrderDetailModal() {
-            $('#orderDetailModal').removeClass('show');
+        function closeOrderDetailModal() { $('#orderDetailModal').removeClass('show'); }
+
+        function formatDate(dateString) {
+            if(!dateString) return "-";
+            const d = new Date(dateString);
+            return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
         }
     </script>
 </body>

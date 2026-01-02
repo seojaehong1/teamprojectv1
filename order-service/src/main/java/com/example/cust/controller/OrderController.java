@@ -112,30 +112,6 @@ public class OrderController {
         }
     }
 
-    /**
-     * 6. 테스트 데이터 생성용 API (request 필드 제거됨)
-     */
-    @GetMapping("/test-add")
-    public ResponseEntity<?> testAdd() {
-        final String customerId = "1";
-
-        // request 설정 없이 데이터 생성
-        ProductItemDto productItem1 = ProductItemDto.builder()
-                .customerId(customerId).menuCode(1L).menuName("아메리카노").quantity(1).unitPrice(2500)
-                .totalAmount(3100) // 2500 + 600
-                .options(List.of(
-                        OptionDto.builder().optionId(2).optionName("샷추가").optionPrice(600).optionGroupName("샷선택").build()
-                ))
-                .build();
-
-        try {
-            CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
-            List<CartItem> savedItems = cartDetailService.addItemsToCart(cartHeader, List.of(productItem1));
-            return ResponseEntity.ok(savedItems);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-    }
 
     /**
      * 7. 주문하기 API
@@ -195,4 +171,58 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 6. 테스트 데이터 생성용 API (request 필드 제거됨)
+     */
+    @GetMapping("/test-add")
+    public ResponseEntity<?> testAdd() {
+        final String customerId = "1";
+
+        // request 설정 없이 데이터 생성
+        ProductItemDto productItem1 = ProductItemDto.builder()
+                .customerId(customerId).menuCode(1L).menuName("아메리카노").quantity(1).unitPrice(2500)
+                .totalAmount(3100) // 2500 + 600
+                .options(List.of(
+                        OptionDto.builder().optionId(2).optionName("샷추가").optionPrice(600).optionGroupName("샷선택").build()
+                ))
+                .build();
+
+        try {
+            CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
+            List<CartItem> savedItems = cartDetailService.addItemsToCart(cartHeader, List.of(productItem1));
+            return ResponseEntity.ok(savedItems);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    /**
+     * 6. 테스트 데이터 생성용 API (request 필드 제거됨)
+     */
+    @GetMapping("/test-add2")
+    public ResponseEntity<?> testAdd2() {
+        //('청포도에이드', '에이드', 3500, '710mL', NULL, '산뜻한 청포도와 상쾌한 탄산의 달달한 조화가 인상적인 에이드.', 1, true),
+        //('당도선택', '바닐라시럽추가(+500)', 500, NULL, '바닐라 시럽', 20.00, 'g', '추가'),
+        final String customerId = "1";
+
+        // request 설정 없이 데이터 생성
+        ProductItemDto productItem1 = ProductItemDto.builder()
+                .customerId(customerId).menuCode(16L).menuName("청포도에이드").quantity(2).unitPrice(3500)
+                .totalAmount(1) // 2500 + 600
+                .options(List.of(
+                        OptionDto.builder().optionId(2).optionName("샷추가").optionPrice(600).optionGroupName("샷선택").build(),
+                        OptionDto.builder().optionId(6).optionName("바닐라시럽추가(+500)").optionPrice(500).optionGroupName("당도선택").build()
+                ))
+                .build();
+
+        try {
+            CartHeader cartHeader = makeCartService.getOrCreateCartHeader(customerId);
+            List<CartItem> savedItems = cartDetailService.addItemsToCart(cartHeader, List.of(productItem1));
+            return ResponseEntity.ok(savedItems);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
 }

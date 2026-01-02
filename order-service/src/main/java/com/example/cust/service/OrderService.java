@@ -161,6 +161,7 @@ public class OrderService {
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .customerId(order.getCustomerId())
+                .request(order.getRequest())
                 .totalAmount(order.getTotalAmount())
                 .status(order.getStatus().getDescription())
                 .items(itemDtos)
