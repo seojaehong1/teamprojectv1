@@ -1033,7 +1033,7 @@
             $('.cart_order_btn').on('click', function() {
                 if (!$(this).hasClass('disabled')) {
                     // 만약 파일로 실행 중이라면 'checkout.html'로, 서버 실행 중이라면 '/order/checkout'으로
-                    window.location.href = 'checkout.html';
+                    window.location.href = '/order/history';
                 } else {
                     alert("상품을 선택해주세요.");
                 }

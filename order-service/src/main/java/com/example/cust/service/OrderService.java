@@ -1,9 +1,6 @@
 package com.example.cust.service;
 
-import com.example.cust.dto.OrderDetailDto;
-import com.example.cust.dto.OrderItemDto;
-import com.example.cust.dto.OptionDto;
-import com.example.cust.dto.OrderStockMessage;
+import com.example.cust.dto.*;
 import com.example.cust.model.*;
 import com.example.cust.repository.CartHeaderRepository;
 import com.example.cust.repository.OrdersRepository;
@@ -182,5 +179,23 @@ public class OrderService {
         // 💡 [수정] deleteAllInBatch() 대신 deleteAll()을 사용합니다.
         // deleteAll()은 JPA 연관 관계(Cascade)를 따라 OrderItem, OrderOption을 먼저 삭제한 후 Orders를 삭제합니다.
         ordersRepository.deleteAll();
+    }
+
+    //주문 history 조회
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> getOrderHistoryList(String customerId) {
+        // 1. 고객의 전체 주문 목록 조회 (최신순)
+        List<Orders> orders = ordersRepository.findAllByCustomerIdOrderByOrderDateDesc(customerId);
+
+        // 2. 엔티티를 DTO로 변환
+        return orders.stream()
+                .map(order -> OrderHistoryDto.builder()
+                        .orderId(order.getOrderId())
+                        .orderDate(order.getOrderDate())
+                        .totalAmount(order.getTotalAmount())
+                        .status(order.getStatus().getDescription()) // Enum의 한글 설명값
+                        .itemCount(order.getOrderItems().size())    // Set<OrderItem>의 크기
+                        .build())
+                .collect(Collectors.toList());
     }
 }

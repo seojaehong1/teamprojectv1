@@ -1,6 +1,7 @@
 package com.example.cust.controller;
 
 import com.example.cust.dto.OptionDto;
+import com.example.cust.dto.OrderHistoryDto;
 import com.example.cust.dto.ProductItemDto;
 import com.example.cust.model.CartHeader;
 import com.example.cust.model.CartItem;
@@ -175,6 +176,23 @@ public class OrderController {
         } catch (Exception e) {
             log.error("주문 상세 조회 중 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+        }
+    }
+
+    /**
+     * 9. 주문 내역 목록 조회
+     * GET /api/order/history
+     */
+    @GetMapping("/history")
+    public ResponseEntity<List<OrderHistoryDto>> getOrderHistory() {
+        final String customerId = "1";
+        log.info("주문 내역 DTO 조회 요청 - 고객: {}", customerId);
+        try {
+            List<OrderHistoryDto> historyList = orderService.getOrderHistoryList(customerId);
+            return ResponseEntity.ok(historyList);
+        } catch (Exception e) {
+            log.error("주문 내역 조회 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
