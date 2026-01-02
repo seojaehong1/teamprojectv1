@@ -77,7 +77,7 @@ public class MenuService {
 
         // 2. 영양 정보 조회 (없을 수도 있음)
         Nutrition nutrition = nutritionRepository
-                .findById(String.valueOf(menuCode))
+                .findById(menuCode)
                 .orElse(null);
 
         NutritionDto nutritionDto = nutrition == null ? null :

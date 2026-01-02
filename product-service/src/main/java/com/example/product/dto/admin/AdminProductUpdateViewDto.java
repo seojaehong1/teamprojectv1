@@ -1,14 +1,17 @@
 package com.example.product.dto.admin;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
-public class AdminProductCreateUpdateDto {
+@Builder
+public class AdminProductUpdateViewDto {
 
-    // 1. menu
+    // menu
+    private Integer menuCode;
     private String menuName;
     private String category;
     private Integer basePrice;
@@ -16,10 +19,10 @@ public class AdminProductCreateUpdateDto {
     private String description;
     private Integer createTime;
 
-    // 2. allergy
+    // allergy
     private List<Integer> allergyIds;
 
-    // 3. nutrition
+    // nutrition
     private BigDecimal calories;
     private BigDecimal sodium;
     private BigDecimal carbs;
@@ -29,9 +32,9 @@ public class AdminProductCreateUpdateDto {
     private BigDecimal saturatedFat;
     private BigDecimal caffeine;
 
-    // 4. option
-    private List<Integer> optionIds; // option_master PK 목록
+    // option
+    private List<Integer> optionIds;
 
-    // 5. recipe
-    private List<RecipeCreateDto> recipes;
+    // recipe
+    private List<RecipeUpdateViewDto> recipes;
 }

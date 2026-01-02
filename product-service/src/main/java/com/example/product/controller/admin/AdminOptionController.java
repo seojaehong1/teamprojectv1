@@ -16,7 +16,7 @@ public class AdminOptionController {
 
     private final AdminOptionService adminOptionService;
 
-    // 옵션 전체 조회 (그룹별)
+    // 1. create 단계 option selector
     @GetMapping
     public List<OptionGroupDto> getAllOptions() {
         return adminOptionService.getAllOptionsGrouped();
