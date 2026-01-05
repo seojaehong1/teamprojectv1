@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class MenuDetailDto {
 
+    private Integer menuCode;
     private String imageUrl;
     private String menuName;
     private String description;

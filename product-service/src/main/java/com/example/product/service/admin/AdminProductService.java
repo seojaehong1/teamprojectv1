@@ -29,9 +29,35 @@ public class AdminProductService {
     // 관리자 제품 목록 조회 [GET /api/admin/products]
     public Page<AdminProductListDto> getProductList(int page, int limit) {
 
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        int safePage = Math.max(page, 1); // page 음수 처리 방어
+        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
+
+        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
 
         return menuRepository.findAll(pageable)
+                .map(menu -> AdminProductListDto.builder()
+                        .imageUrl(buildImageUrl(menu.getMenuCode()))
+                        .menuCode(menu.getMenuCode())
+                        .menuName(menu.getMenuName())
+                        .category(menu.getCategory())
+                        .basePrice(menu.getBasePrice())
+                        .build()
+                );
+    }
+
+    // 관리자 제품 검색 [GET /api/admin/products/search] ** 01.05 update
+    public Page<AdminProductListDto> searchProducts(String keyword, int page, int limit) {
+
+        if (keyword == null || keyword.isBlank()) { // 검색어 필수 처리
+            throw new IllegalArgumentException("검색어는 필수입니다.");
+        }
+
+        int safePage = Math.max(page, 1); // page 음수 처리 방어
+        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
+
+        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
+
+        return menuRepository.findByMenuNameContaining(keyword, pageable)
                 .map(menu -> AdminProductListDto.builder()
                         .imageUrl(buildImageUrl(menu.getMenuCode()))
                         .menuCode(menu.getMenuCode())
@@ -270,7 +296,9 @@ public class AdminProductService {
 
         return Arrays.stream(allergyIds.split(","))
                 .map(String::trim)
+                .filter(s -> !s.isBlank()) // 잘못된 토큰 필터 처리
                 .map(Integer::parseInt)
+                .distinct()
                 .toList();
     }
 

@@ -30,7 +30,10 @@ public class MenuService {
     // 1. 메뉴 목록 조회 [GET /api/menu/drinks]
     public Page<MenuListDto> getMenuList(String category, int page, int limit) {
 
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        int safePage = Math.max(page, 1); // page 음수 처리 방어
+        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
+
+        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
         Page<Menu> menus;
 
         if (category == null || category.isBlank() || category.equalsIgnoreCase("all")) {
@@ -41,6 +44,7 @@ public class MenuService {
 
         return menus.map(menu ->
                 MenuListDto.builder()
+                        .menuCode(menu.getMenuCode())
                         .imageUrl(buildImageUrl(menu.getMenuCode()))
                         .menuName(menu.getMenuName())
                         .description(menu.getDescription())
@@ -51,12 +55,20 @@ public class MenuService {
     // 2. 메뉴 검색 [GET /api/menu/drinks/search]
     public Page<MenuListDto> searchMenus(String keyword, int page, int limit) {
 
-        Pageable pageable = PageRequest.of(page - 1, limit);
+        if (keyword == null || keyword.isBlank()) { // 검색어 필수 처리
+            throw new IllegalArgumentException("검색어를 입력해 주세요.");
+        }
+
+        int safePage = Math.max(page, 1); // page 음수 처리 방어
+        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
+
+        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
 
         Page<Menu> menus = menuRepository.findByMenuNameContaining(keyword, pageable);
 
         return menus.map(menu ->
                 MenuListDto.builder()
+                        .menuCode(menu.getMenuCode())
                         .imageUrl(buildImageUrl(menu.getMenuCode()))
                         .menuName(menu.getMenuName())
                         .description(menu.getDescription())
@@ -93,6 +105,7 @@ public class MenuService {
                         .build();
 
         return MenuDetailDto.builder()
+                .menuCode(menu.getMenuCode())
                 .imageUrl(buildImageUrl(menu.getMenuCode()))
                 .menuName(menu.getMenuName())
                 .description(menu.getDescription())
@@ -113,7 +126,9 @@ public class MenuService {
 
         List<Integer> ids = Arrays.stream(allergyIds.split(","))
                 .map(String::trim)
+                .filter(s -> !s.isBlank()) // 잘못된 토큰 필터 처리
                 .map(Integer::parseInt)
+                .distinct()
                 .toList();
 
         return allergyRepository.findAllById(ids).stream()

@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter @Builder
 public class MenuListDto {
 
+    private Integer menuCode;
     private String imageUrl; // /images/menu/{menuCode}.jpg
     private String menuName;
     private String description;
