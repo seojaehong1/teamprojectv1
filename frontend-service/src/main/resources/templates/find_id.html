@@ -544,7 +544,8 @@
                 })
                 .then(function(data) {
                     // 아이디 찾기 성공
-                    var message = '회원님의 아이디는 <strong style="color: #D95B3B;">' + data.userId + '</strong>입니다.';
+                    var foundUserId = data.data ? data.data.userId : data.userId;
+                    var message = '회원님의 아이디는 <strong style="color: #D95B3B;">' + foundUserId + '</strong>입니다.';
                     showCustomAlert(message, function() {
                         window.location.href = '/login';
                     }, '아이디 찾기');

@@ -6,6 +6,8 @@ import com.example.member.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.concurrent.ConcurrentHashMap;
+
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;

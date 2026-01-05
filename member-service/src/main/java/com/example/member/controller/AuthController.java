@@ -197,7 +197,7 @@ public class AuthController {
             if (retryAfter != null) {
                 Map<String, Object> error = new HashMap<>();
                 error.put("success", false);
-                error.put("message", "인증번호는 3분마다 발송 가능합니다.");
+                error.put("message", "잠시 후 다시 시도해주세요. (" + retryAfter + "초 후 가능)");
                 error.put("errorCode", "TOO_MANY_REQUESTS");
                 error.put("retryAfter", retryAfter);
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);

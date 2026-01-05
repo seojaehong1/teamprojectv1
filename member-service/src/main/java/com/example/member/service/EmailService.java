@@ -79,8 +79,8 @@ public class EmailService {
         Long lastTime = lastSendTime.get(email);
         if (lastTime != null) {
             long elapsed = (System.currentTimeMillis() - lastTime) / 1000;
-            if (elapsed < 180) {
-                return 180 - elapsed;
+            if (elapsed < 60) {
+                return 60 - elapsed;
             }
         }
         return null;
