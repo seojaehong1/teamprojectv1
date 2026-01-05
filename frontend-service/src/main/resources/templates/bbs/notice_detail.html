@@ -423,7 +423,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -604,7 +604,7 @@
             </div>
 
             <div class="notice_detail_wrap">
-                <div class="notice_detail_content_wrap">
+                <div class="notice_detraail_content_wp">
                     <div class="notice_detail_header">
                         <button class="notice_detail_back" type="button" onclick="history.back()">
                             <i class="fas fa-arrow-left"></i>
@@ -618,7 +618,7 @@
                     </div>
                     
                     <div class="notice_detail_actions">
-                        <button class="notice_detail_btn" onclick="location.href='notice.html'">목록</button>
+                        <button class="notice_detail_btn" onclick="location.href='notice'">목록</button>
                     </div>
                 </div>
             </div>
@@ -795,8 +795,8 @@
             // 공지사항 상세 정보 로드
             function loadNoticeDetail() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const noticeId = urlParams.get('noticeId');
-                
+                const noticeId = urlParams.get('id') || urlParams.get('noticeId');
+
                 if (!noticeId) {
                     // 공지사항 ID가 없으면 에러 메시지 표시
                     $('#noticeDetailContent').html(`

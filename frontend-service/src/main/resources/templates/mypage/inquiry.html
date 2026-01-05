@@ -545,7 +545,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -704,30 +704,12 @@
                 <button class="inquiry_back" type="button">
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <div class="inquiry_title">내 문의내역</div>
+                <div class="inquiry_title">문의하기</div>
                 <div style="width: 40px;"></div>
             </div>
 
-            <!-- 탭 메뉴 -->
-            <div class="inquiry_tabs">
-                <button class="inquiry_tab active" data-tab="list">내 문의 목록</button>
-                <button class="inquiry_tab" data-tab="write">새 문의 작성</button>
-            </div>
-
-            <!-- 내 문의 목록 -->
-            <div class="inquiry_tab_content" id="tab_list">
-                <div class="inquiry_list" id="inquiryList">
-                    <!-- 동적으로 로드됨 -->
-                </div>
-                <div id="inquiryEmpty" style="text-align: center; padding: 40px; color: #999; display: none;">
-                    등록된 문의가 없습니다.
-                </div>
-                <!-- 페이지네이션 -->
-                <div class="inquiry_pagination" id="inquiryPagination"></div>
-            </div>
-
             <!-- 문의하기 폼 -->
-            <div class="inquiry_tab_content" id="tab_write" style="display: none;">
+            <div class="inquiry_tab_content" id="tab_write" style="display: block;">
                 <form class="inquiry_form" id="inquiryForm">
                     <div class="inquiry_form_item">
                         <label class="inquiry_form_label">
@@ -748,30 +730,10 @@
 
                     <!-- 제출/취소 버튼 -->
                     <div class="inquiry_actions">
-                        <button class="inquiry_cancel_btn" type="button" onclick="switchTab('list')">취소</button>
+                        <button class="inquiry_cancel_btn" type="button" onclick="history.back()">취소</button>
                         <button class="inquiry_submit_btn" type="submit">문의하기</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- 문의 상세 보기 -->
-            <div class="inquiry_tab_content" id="tab_detail" style="display: none;">
-                <div class="inquiry_detail">
-                    <div class="inquiry_detail_header">
-                        <h3 id="detailTitle"></h3>
-                        <span class="inquiry_status" id="detailStatus"></span>
-                    </div>
-                    <div class="inquiry_detail_date" id="detailDate"></div>
-                    <div class="inquiry_detail_content" id="detailContent"></div>
-                    <div class="inquiry_detail_answer" id="detailAnswerWrap" style="display: none;">
-                        <div class="answer_label">관리자 답변</div>
-                        <div class="answer_content" id="detailAnswer"></div>
-                        <div class="answer_date" id="detailAnswerDate"></div>
-                    </div>
-                    <div class="inquiry_actions">
-                        <button class="inquiry_cancel_btn" type="button" onclick="switchTab('list')">목록으로</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -951,149 +913,6 @@
             history.back();
         });
 
-        // 문의 관련 변수
-        var currentPage = 0;
-        var totalPages = 0;
-
-        // 탭 전환
-        function switchTab(tabName) {
-            $('.inquiry_tab').removeClass('active');
-            $('.inquiry_tab[data-tab="' + tabName + '"]').addClass('active');
-            $('.inquiry_tab_content').hide();
-            $('#tab_' + tabName).show();
-
-            if (tabName === 'list') {
-                loadMyInquiries();
-            }
-        }
-
-        // 탭 클릭 이벤트
-        $('.inquiry_tab').click(function() {
-            var tab = $(this).data('tab');
-            switchTab(tab);
-        });
-
-        // 내 문의 목록 로드
-        function loadMyInquiries() {
-            var token = localStorage.getItem('accessToken');
-            if (!token) {
-                alert('로그인이 필요합니다.');
-                window.location.href = '/login';
-                return;
-            }
-
-            var url = 'http://localhost:8000/api/inquiries/my?page=' + currentPage + '&size=10';
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(function(response) {
-                if (response.status === 401) {
-                    alert('로그인이 필요합니다.');
-                    window.location.href = '/login';
-                    return;
-                }
-                return response.json();
-            })
-            .then(function(data) {
-                if (!data) return;
-                totalPages = data.totalPages || 1;
-                renderInquiryList(data.inquiries || []);
-                renderPagination();
-            })
-            .catch(function(error) {
-                console.error('Error:', error);
-                $('#inquiryEmpty').show();
-                $('#inquiryList').empty();
-            });
-        }
-
-        // 문의 목록 렌더링
-        function renderInquiryList(inquiries) {
-            var list = $('#inquiryList');
-            var empty = $('#inquiryEmpty');
-            list.empty();
-
-            if (!inquiries || inquiries.length === 0) {
-                empty.show();
-                return;
-            }
-            empty.hide();
-
-            inquiries.forEach(function(inquiry) {
-                var statusClass = inquiry.status === 'PENDING' ? 'pending' : 'answered';
-                var statusText = inquiry.status === 'PENDING' ? '답변 대기' : '답변 완료';
-
-                var item = $('<div class="inquiry_list_item" onclick="viewInquiry(' + (inquiry.id || inquiry.inquiryId) + ')"></div>');
-                item.append('<div class="inquiry_list_title">' + escapeHtml(inquiry.title) + '</div>');
-                item.append('<div class="inquiry_list_meta"><span>' + formatDate(inquiry.createdAt) + '</span><span class="inquiry_status ' + statusClass + '">' + statusText + '</span></div>');
-                list.append(item);
-            });
-        }
-
-        // 문의 상세 보기
-        function viewInquiry(id) {
-            var token = localStorage.getItem('accessToken');
-
-            fetch('http://localhost:8000/api/inquiries/' + id, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(function(response) {
-                if (!response.ok) throw new Error('조회 실패');
-                return response.json();
-            })
-            .then(function(inquiry) {
-                $('#detailTitle').text(inquiry.title);
-                $('#detailDate').text(formatDate(inquiry.createdAt));
-                $('#detailContent').text(inquiry.content);
-
-                var statusClass = inquiry.status === 'PENDING' ? 'pending' : 'answered';
-                var statusText = inquiry.status === 'PENDING' ? '답변 대기' : '답변 완료';
-                $('#detailStatus').attr('class', 'inquiry_status ' + statusClass).text(statusText);
-
-                if (inquiry.answer) {
-                    $('#detailAnswer').text(inquiry.answer);
-                    $('#detailAnswerDate').text(formatDate(inquiry.answeredAt));
-                    $('#detailAnswerWrap').show();
-                } else {
-                    $('#detailAnswerWrap').hide();
-                }
-
-                $('.inquiry_tab_content').hide();
-                $('#tab_detail').show();
-            })
-            .catch(function(error) {
-                alert('문의 정보를 불러오지 못했습니다.');
-                console.error(error);
-            });
-        }
-
-        // 페이지네이션 렌더링
-        function renderPagination() {
-            var pagination = $('#inquiryPagination');
-            pagination.empty();
-
-            if (totalPages <= 1) return;
-
-            for (var i = 0; i < totalPages; i++) {
-                var activeClass = (i === currentPage) ? 'active' : '';
-                pagination.append('<button class="' + activeClass + '" onclick="goToPage(' + i + ')">' + (i + 1) + '</button>');
-            }
-        }
-
-        function goToPage(page) {
-            currentPage = page;
-            loadMyInquiries();
-        }
-
         // 문의 작성 폼 제출
         $('#inquiryForm').submit(function(e) {
             e.preventDefault();
@@ -1132,7 +951,8 @@
             .then(function(data) {
                 alert('문의가 등록되었습니다.');
                 $('#inquiryForm')[0].reset();
-                switchTab('list');
+                // 문의 목록 페이지로 이동
+                window.location.href = '/mypage/inquiry_list';
             })
             .catch(function(error) {
                 alert('문의 등록에 실패했습니다.');
@@ -1140,27 +960,7 @@
             });
         });
 
-        // 유틸 함수
-        function escapeHtml(text) {
-            if (!text) return '';
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            try {
-                var date = new Date(dateStr);
-                return date.getFullYear() + '-' +
-                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(date.getDate()).padStart(2, '0');
-            } catch (e) {
-                return dateStr;
-            }
-        }
-
-        // 페이지 로드 시 문의 목록 가져오기
+        // 페이지 로드 시 로그인 체크
         $(document).ready(function() {
             var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (!isLoggedIn) {
@@ -1168,7 +968,6 @@
                 window.location.href = '/login';
                 return;
             }
-            loadMyInquiries();
         });
     </script>
 </body>

@@ -258,7 +258,9 @@
         <!-- 헤더 -->
         <div class="login_header">
             <div class="login_logo">
-                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                <a href="/">
+                    <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                </a>
             </div>
         </div>
 
@@ -384,13 +386,11 @@
 
                         var userRole = data.role.toLowerCase();
 
-                        // 탭에 따라 분기 처리
+                        // 탭에 따라 분기 처리 - 모달 없이 바로 이동
                         if (loginType === 'normal') {
                             // 일반회원 탭 로그인
                             if (userRole === 'member') {
-                                showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                    window.location.href = '/';
-                                });
+                                window.location.href = '/';
                             } else if (userRole === 'store_owner' || userRole === 'admin') {
                                 showCustomModal('알림', '관리자 탭을 이용해주세요');
                                 $('#loginPassword').val('').focus();
@@ -398,28 +398,22 @@
                         } else if (loginType === 'admin') {
                             // 관리자 탭 로그인 (점주용)
                             if (userRole === 'store_owner') {
-                                showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                    window.location.href = '/owner/inventory';
-                                });
+                                window.location.href = '/owner/inventory';
                             } else if (userRole === 'admin') {
-                                showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                    window.location.href = '/admin/user';
-                                });
+                                window.location.href = '/admin/user';
                             } else if (userRole === 'member') {
                                 showCustomModal('알림', '일반회원 탭을 이용해주세요');
                                 $('#loginPassword').val('').focus();
                             }
                         } else {
                             // 탭 구조가 없는 경우 - role에 따라 자동 리다이렉트
-                            showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                if (userRole === 'admin') {
-                                    window.location.href = '/admin/user';
-                                } else if (userRole === 'store_owner') {
-                                    window.location.href = '/owner/inventory';
-                                } else {
-                                    window.location.href = '/';
-                                }
-                            });
+                            if (userRole === 'admin') {
+                                window.location.href = '/admin/user';
+                            } else if (userRole === 'store_owner') {
+                                window.location.href = '/owner/inventory';
+                            } else {
+                                window.location.href = '/';
+                            }
                         }
                     })
                     .catch(function(error) {

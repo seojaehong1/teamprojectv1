@@ -387,7 +387,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -828,24 +828,82 @@
                             return;
                         }
 
-                        // 비밀번호 변경 성공 후 회원정보도 저장
-                        localStorage.setItem('userName', name);
-                        localStorage.setItem('userEmail', email);
+                        // 비밀번호 변경 성공 후 회원정보도 API로 저장
+                        return fetch('http://localhost:8000/api/users/profile', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + accessToken
+                            },
+                            body: JSON.stringify({
+                                name: name,
+                                email: email
+                            })
+                        })
+                        .then(function(response) {
+                            return response.json().then(function(data) {
+                                return { ok: response.ok, data: data };
+                            });
+                        })
+                        .then(function(profileResult) {
+                            // localStorage 업데이트
+                            localStorage.setItem('userName', name);
+                            localStorage.setItem('userEmail', email);
 
-                        alert('회원 정보가 저장되었습니다.\n비밀번호가 변경되었습니다.');
-                        window.location.href = '/mypage/index';
+                            if (!profileResult.ok) {
+                                alert('비밀번호는 변경되었으나 회원정보 저장에 실패했습니다.');
+                            } else {
+                                alert('회원 정보가 저장되었습니다.\n비밀번호가 변경되었습니다.');
+                            }
+                            window.location.href = '/mypage/index';
+                        });
                     })
                     .catch(function(error) {
                         console.error('비밀번호 변경 오류:', error);
                         alert('비밀번호 변경 중 오류가 발생했습니다.');
                     });
                 } else {
-                    // 비밀번호 변경 없이 회원정보만 저장
-                    localStorage.setItem('userName', name);
-                    localStorage.setItem('userEmail', email);
+                    // 비밀번호 변경 없이 회원정보만 저장 (API 호출)
+                    const accessToken = localStorage.getItem('accessToken');
+                    if (!accessToken) {
+                        alert('로그인이 필요합니다.');
+                        window.location.href = '/login';
+                        return false;
+                    }
 
-                    alert('회원 정보가 저장되었습니다.');
-                    window.location.href = '/mypage/index';
+                    fetch('http://localhost:8000/api/users/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + accessToken
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email
+                        })
+                    })
+                    .then(function(response) {
+                        return response.json().then(function(data) {
+                            return { ok: response.ok, data: data };
+                        });
+                    })
+                    .then(function(result) {
+                        if (!result.ok) {
+                            alert(result.data.message || '회원 정보 수정에 실패했습니다.');
+                            return;
+                        }
+
+                        // 성공 시 localStorage도 업데이트
+                        localStorage.setItem('userName', name);
+                        localStorage.setItem('userEmail', email);
+
+                        alert('회원 정보가 저장되었습니다.');
+                        window.location.href = '/mypage/index';
+                    })
+                    .catch(function(error) {
+                        console.error('회원 정보 수정 오류:', error);
+                        alert('회원 정보 수정 중 오류가 발생했습니다.');
+                    });
                 }
             });
 
