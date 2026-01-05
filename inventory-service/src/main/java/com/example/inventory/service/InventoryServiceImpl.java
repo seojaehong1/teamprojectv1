@@ -39,7 +39,7 @@ public class InventoryServiceImpl implements InventoryService {
         Map<String, BigDecimal> requiredMap = new HashMap<>(); // 재료명 -> 필요 수량
 
         for (OrderStockRequestDto.OrderItemDto item : request.getItems()) {
-            String menuCode = item.getMenuCode();
+            Long menuCode = item.getMenuCode();
             int qty = Optional.ofNullable(item.getQuantity()).orElse(1);
 
             // 레시피 기준 기본 재료
