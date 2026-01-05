@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>주문내역 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown ul li {
+            margin: 0;
+        }
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .head_login_dropdown ul li a:hover {
+            background: #f5f5f5;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                right: 50px;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #D95B3B;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .mobile_menu_logo img {
+            height: 30px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        /* 주문내역 스타일 */
+        .order_tab_wrap {
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .order_tab {
+            display: flex;
+            gap: 0;
+        }
+        .order_tab li {
+            flex: 1;
+            text-align: center;
+        }
+        .order_tab li a {
+            display: block;
+            padding: 15px 20px;
+            color: #666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s;
+        }
+        .order_tab li.check a {
+            color: #333;
+            font-weight: 700;
+            border-bottom-color: #333;
+        }
+        .order_filter_wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 0 0 20px;
+        }
+        .order_filter_btn {
+            padding: 8px 20px !important;
+            border: 1px solid #d0d0d0 !important;
+            border-radius: 20px !important;
+            background: #fff !important;
+            color: #666 !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+        }
+        .order_filter_btn:hover {
+            border-color: #D95B3B !important;
+            color: #D95B3B !important;
+        }
+        .order_filter_btn.active {
+            background: #D95B3B !important;
+            color: #fff !important;
+            border-color: #D95B3B !important;
+        }
+        .order_filter_icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: auto;
+        }
+        .order_filter_icon:hover {
+            border-color: #333;
+            color: #333;
+        }
+        .order_list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .order_item {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .order_item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .order_status_tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .order_status_tag.status_completed {
+            background: #4caf50;
+            color: #fff;
+        }
+        .order_status_tag.status_shipping {
+            background: #2196f3;
+            color: #fff;
+        }
+        .order_status_tag.status_delivered {
+            background: #9e9e9e;
+            color: #fff;
+        }
+        .order_item {
+            cursor: pointer;
+        }
+        .order_item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .order_item_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .order_item_id {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        .order_item_date {
+            font-size: 12px;
+            color: #999;
+        }
+        .order_item_footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .order_item_count {
+            font-size: 14px;
+            color: #666;
+        }
+        .order_item_price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_item_name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .order_item_info {
+            font-size: 14px;
+            color: #999;
+        }
+        .order_empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .order_empty i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+        /* 조회조건 선택 오버레이 */
+        .order_filter_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .order_filter_overlay.active {
+            display: flex;
+        }
+        .order_filter_modal {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .order_filter_modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+        .order_filter_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_filter_modal_close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .order_filter_modal_close:hover {
+            color: #333;
+        }
+        .order_filter_modal_item {
+            margin-bottom: 30px;
+        }
+        .order_filter_modal_label {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 12px;
+            display: block;
+            font-weight: 500;
+        }
+        .order_filter_modal_select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            background: #fff;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        .order_filter_modal_period_btns {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .order_filter_modal .order_filter_modal_period_btn,
+        .order_filter_overlay .order_filter_modal_period_btn,
+        button.order_filter_modal_period_btn {
+            flex: 1 !important;
+            padding: 12px 15px !important;
+            border: 1px solid #d0d0d0 !important;
+            border-radius: 20px !important;
+            background: #fff !important;
+            color: #666 !important;
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            transition: all 0.3s !important;
+        }
+        .order_filter_modal .order_filter_modal_period_btn:hover,
+        .order_filter_overlay .order_filter_modal_period_btn:hover,
+        button.order_filter_modal_period_btn:hover {
+            border-color: #D95B3B !important;
+            color: #D95B3B !important;
+        }
+        .order_filter_modal .order_filter_modal_period_btn.active,
+        .order_filter_overlay .order_filter_modal_period_btn.active,
+        button.order_filter_modal_period_btn.active {
+            background: #D95B3B !important;
+            color: #fff !important;
+            border-color: #D95B3B !important;
+        }
+        .order_filter_modal_date_wrap {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .order_filter_modal_date_input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #333;
+            background: #fff;
+            transition: border-color 0.3s;
+        }
+        .order_filter_modal_date_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .order_filter_modal_date_arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .order_filter_modal_info {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .order_filter_modal_checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+        .order_filter_modal_checkbox_wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .order_filter_modal_checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 24px;
+            height: 24px;
+            margin: 0;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .order_filter_modal_checkbox_custom {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #d0d0d0;
+            border-radius: 4px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .order_filter_modal_checkbox_custom:hover {
+            border-color: #D95B3B;
+        }
+        .order_filter_modal_checkbox input[type="checkbox"]:checked + .order_filter_modal_checkbox_custom {
+            background: #D95B3B;
+            border-color: #D95B3B;
+        }
+        .order_filter_modal_checkbox input[type="checkbox"]:checked + .order_filter_modal_checkbox_custom::after {
+            content: '✓';
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .order_filter_modal_checkbox label {
+            font-size: 15px;
+            color: #333;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 400;
+            margin-left: 0;
+        }
+        .order_filter_modal_submit {
+            width: 100%;
+            padding: 18px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .order_filter_modal_submit:hover {
+            background: #C74A2A;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="../index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand.html" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand.html">브랜드</a></li>
+                                    <li><a href="../about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a class="m head_menu_down">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/notice.html">공지사항</a></li>
+                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index.html">마이페이지</a></li>
+                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_header">
+            <div class="mobile_menu_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+            <button class="mobile_menu_close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile_menu_content">
+            <div class="mobile_menu_left">
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">토리 스토리</div>
+                    <div class="mobile_menu_sub">
+                        <a href="../about/brand.html">브랜드</a>
+                        <a href="../about/bi.html">BI</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메뉴소개</div>
+                    <div class="mobile_menu_sub">
+                        <a href="../menu/drink.html">음료</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">매장</div>
+                    <div class="mobile_menu_sub">
+                        <a href="../about/map.html">오시는 길</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">소식</div>
+                    <div class="mobile_menu_sub">
+                        <a href="../bbs/notice.html">공지사항</a>
+                        <a href="../bbs/faq.html">FAQ</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">이벤트</div>
+                    <div class="mobile_menu_sub">
+                        <a href="../bbs/event.html">이벤트</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_right">
+                <!-- 추가 메뉴가 필요하면 여기에 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <div class="cont_box cont_head">
+                <div class="cont_boxs">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title_info">ORDER HISTORY</div>
+                        <div class="cont_title robo color">
+                            <h2>주문내역</h2>
+                        </div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text cont_list_map">
+                            <ul>
+                                <li>홈</li>
+                                <li>주문내역</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cont_box">
+                <div class="cont_boxs">
+                    <!-- 탭 메뉴 -->
+                    <div class="order_tab_wrap">
+                        <div class="cont_tab">
+                            <ul class="order_tab">
+                                <li class="check"><a href="#order">오더</a></li>
+                                <li><a href="#reservation">홀케이크·MD 예약</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 필터 영역 -->
+                    <div class="order_filter_wrap">
+                        <button class="order_filter_btn" data-period="1">1개월</button>
+                        <button class="order_filter_btn" data-period="3">3개월</button>
+                        <button class="order_filter_btn" data-period="6">6개월</button>
+                        <div class="order_filter_icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                    </div>
+
+                    <!-- 주문 목록 -->
+                    <div class="cont_list">
+                        <ul class="order_list" id="orderListContainer">
+                            <!-- 주문 목록이 동적으로 생성됩니다 -->
+                        </ul>
+                    </div>
+
+                    <!-- 주문이 없을 때 -->
+                    <div class="order_empty" id="orderEmptyMessage" style="display: none;">
+                        <i class="far fa-inbox"></i>
+                        <div class="cont_text">주문 내역이 없습니다.</div>
+                    </div>
+
+                    <!-- 페이지네이션 -->
+                    <div class="board_page_wrap">
+                        <div class="board_page">
+                            <ul>
+                                <li><a><span>처음</span></a></li>
+                                <li class="board_page_check"><a><span>1</span></a></li>
+                                <li><a><span>2</span></a></li>
+                                <li><a><span>다음</span></a></li>
+                                <li><a><span>마지막</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 조회조건 선택 오버레이 -->
+    <div class="order_filter_overlay">
+        <div class="order_filter_modal">
+            <div class="order_filter_modal_header">
+                <div class="order_filter_modal_title">조회조건 선택</div>
+                <button class="order_filter_modal_close" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="order_filter_modal_item">
+                <label class="order_filter_modal_label">주문상태(전체)</label>
+                <select class="order_filter_modal_select" id="order_status_select">
+                    <option value="">선택하세요</option>
+                    <option value="all">전체</option>
+                    <option value="completed">픽업완료</option>
+                    <option value="preparing">준비중</option>
+                    <option value="ordered">주문완료</option>
+                </select>
+            </div>
+            <div class="order_filter_modal_item">
+                <label class="order_filter_modal_label">기간</label>
+                <div class="order_filter_modal_period_btns">
+                    <button class="order_filter_modal_period_btn" data-period="1">1개월</button>
+                    <button class="order_filter_modal_period_btn" data-period="3">3개월</button>
+                    <button class="order_filter_modal_period_btn" data-period="6">6개월</button>
+                </div>
+                <div class="order_filter_modal_date_wrap">
+                    <input type="text" class="order_filter_modal_date_input" value="2025.11.16" readonly>
+                    <div class="order_filter_modal_date_arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <input type="text" class="order_filter_modal_date_input" value="2025.12.16" readonly>
+                </div>
+                <div class="order_filter_modal_info">
+                    * 기간은 최대 5년까지, 1년 단위로 조회할 수 있습니다.
+                </div>
+            </div>
+            <div class="order_filter_modal_checkbox">
+                <label for="reservation_only" style="display: flex; align-items: center; cursor: pointer;">
+                    <div class="order_filter_modal_checkbox_wrapper" style="position: relative;">
+                        <input type="checkbox" id="reservation_only">
+                        <span class="order_filter_modal_checkbox_custom"></span>
+                    </div>
+                    <span style="margin-left: 12px;">예약 주문만 보기</span>
+                </label>
+            </div>
+            <button class="order_filter_modal_submit" type="button">조회하기</button>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
+                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>창업상담 1588-0656</li>
+                                    <li>고객센터 1588-8298</li>
+                                    <li>FAX 02-325-5199</li>
+                                    <li>사업자등록번호 105-87-51367</li>
+                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                    <li>개인정보보호 책임자 이종원</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        // 로그인 상태 체크 및 UI 업데이트
+        $(document).ready(function() {
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 체크
+            checkLoginStatus();
+
+            // 로그인 상태일 때 드롭다운 토글 기능
+            $(document).on('click', '.head_login_state_member .head_login_trigger', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const $loginWrap = $(this).closest('.head_login_wrap');
+                $loginWrap.toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                alert('로그아웃되었습니다');
+                window.location.href = '../login.html';
+            });
+
+            // 모바일 메뉴 오버레이 닫기
+            $('.mobile_menu_close').click(function() {
+                $('.mobile_menu_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                $('.head_wrap').removeClass('head_over');
+                $('.head_menu_wrap').removeClass('right0');
+                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+            });
+
+            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+            $('.mobile_menu_overlay').click(function(e) {
+                if ($(e.target).hasClass('mobile_menu_overlay')) {
+                    $('.mobile_menu_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    $('.head_wrap').removeClass('head_over');
+                    $('.head_menu_wrap').removeClass('right0');
+                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+                }
+            });
+
+            // 탭 전환
+            $('.order_tab li a').click(function(e) {
+                e.preventDefault();
+                $('.order_tab li').removeClass('check');
+                $(this).parent().addClass('check');
+            });
+
+            // 필터 버튼 클릭
+            $(document).on('click', '.order_filter_btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var $clickedBtn = $(this);
+                
+                // 모든 버튼 초기화
+                $('.order_filter_btn').removeClass('active');
+                $('.order_filter_btn').each(function() {
+                    var btn = this;
+                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
+                    btn.style.setProperty('background', '#fff', 'important');
+                    btn.style.setProperty('color', '#666', 'important');
+                });
+                
+                // 클릭한 버튼만 활성화
+                $clickedBtn.addClass('active');
+                var clickedBtnElement = $clickedBtn[0];
+                clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
+                clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
+                clickedBtnElement.style.setProperty('color', '#fff', 'important');
+                
+                // 강제로 스타일 재적용
+                setTimeout(function() {
+                    clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
+                    clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
+                    clickedBtnElement.style.setProperty('color', '#fff', 'important');
+                }, 10);
+                
+                // 여기에 필터링 로직 추가 가능
+            });
+            
+            // 페이지 로드 시 필터 버튼 초기화
+            $('.order_filter_btn').each(function() {
+                var btn = this;
+                if (!$(btn).hasClass('active')) {
+                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
+                    btn.style.setProperty('background', '#fff', 'important');
+                    btn.style.setProperty('color', '#666', 'important');
+                }
+            });
+
+            // 필터 아이콘 클릭 - 조회조건 오버레이 열기
+            $('.order_filter_icon').click(function() {
+                // 모달 열 때 초기화
+                $('.order_filter_modal_period_btn').removeClass('active');
+                // 스타일 강제 적용 (인라인 스타일로 우선순위 높임)
+                $('.order_filter_modal_period_btn').each(function() {
+                    var btn = this;
+                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
+                    btn.style.setProperty('background', '#fff', 'important');
+                    btn.style.setProperty('color', '#666', 'important');
+                });
+                $('#order_status_select').val('');
+                $('#reservation_only').prop('checked', false).trigger('change');
+                $('.order_filter_overlay').addClass('active');
+                $('body').css('overflow', 'hidden');
+                
+                // 모달이 열린 후 버튼 이벤트 재바인딩
+                setTimeout(function() {
+                    $('.order_filter_modal_period_btn').off('click.periodBtn').on('click.periodBtn', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        var $clickedBtn = $(this);
+                        
+                        // 모든 버튼 초기화
+                        $('.order_filter_modal_period_btn').removeClass('active');
+                        $('.order_filter_modal_period_btn').each(function() {
+                            var btn = this;
+                            btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
+                            btn.style.setProperty('background', '#fff', 'important');
+                            btn.style.setProperty('color', '#666', 'important');
+                        });
+                        
+                        // 클릭한 버튼만 활성화
+                        $clickedBtn.addClass('active');
+                        var clickedBtnElement = $clickedBtn[0];
+                        clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
+                        clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
+                        clickedBtnElement.style.setProperty('color', '#fff', 'important');
+                    });
+                }, 100);
+            });
+
+            // 조회조건 오버레이 닫기
+            $('.order_filter_modal_close, .order_filter_overlay').click(function(e) {
+                if ($(e.target).hasClass('order_filter_overlay') || $(e.target).closest('.order_filter_modal_close').length) {
+                    $('.order_filter_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                }
+            });
+
+            // 모달 내부 클릭 시 닫기 방지
+            $('.order_filter_modal').click(function(e) {
+                e.stopPropagation();
+            });
+
+            // 조회조건 모달 내 기간 버튼 클릭
+            $(document).on('click', '.order_filter_modal_period_btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                var $clickedBtn = $(this);
+                
+                // 모든 버튼 초기화
+                $('.order_filter_modal_period_btn').removeClass('active');
+                $('.order_filter_modal_period_btn').each(function() {
+                    var btn = this;
+                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
+                    btn.style.setProperty('background', '#fff', 'important');
+                    btn.style.setProperty('color', '#666', 'important');
+                });
+                
+                // 클릭한 버튼만 활성화
+                $clickedBtn.addClass('active');
+                var clickedBtnElement = $clickedBtn[0];
+                clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
+                clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
+                clickedBtnElement.style.setProperty('color', '#fff', 'important');
+                
+                // 강제로 스타일 재적용
+                setTimeout(function() {
+                    clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
+                    clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
+                    clickedBtnElement.style.setProperty('color', '#fff', 'important');
+                }, 10);
+            });
+
+            // 체크박스 클릭 이벤트
+            $('#reservation_only').on('change', function() {
+                const $customCheckbox = $(this).siblings('.order_filter_modal_checkbox_custom');
+                if ($(this).is(':checked')) {
+                    $customCheckbox.addClass('checked');
+                } else {
+                    $customCheckbox.removeClass('checked');
+                }
+            }).trigger('change'); // 초기 상태 반영
+
+            // 조회하기 버튼 클릭
+            $('.order_filter_modal_submit').click(function() {
+                // 기간이 선택되지 않았으면 전체 기간으로 조회
+                // 선택된 기간이 있으면 해당 기간으로 조회
+                $('.order_filter_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                // 여기에 조회 로직 추가 가능
+            });
+
+            // 화면 회전 시 뷰포트 리셋
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    var viewport = document.querySelector('meta[name="viewport"]');
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+                }, 100);
+            });
+
+            // 주문 목록 로드 및 렌더링
+            function loadOrderHistory() {
+                // localStorage에서 주문 목록 가져오기
+                const ordersJson = localStorage.getItem('orders');
+                const orders = ordersJson ? JSON.parse(ordersJson) : [];
+
+                const $orderListContainer = $('#orderListContainer');
+                const $orderEmptyMessage = $('#orderEmptyMessage');
+
+                // 기존 목록 초기화
+                $orderListContainer.empty();
+
+                if (orders.length === 0) {
+                    // 주문이 없을 때
+                    $orderListContainer.hide();
+                    $orderEmptyMessage.show();
+                    return;
+                }
+
+                // 주문이 있을 때
+                $orderListContainer.show();
+                $orderEmptyMessage.hide();
+
+                // 주문일시 기준으로 내림차순 정렬 (최신 주문이 위로)
+                orders.sort(function(a, b) {
+                    const dateA = new Date(a.orderDate);
+                    const dateB = new Date(b.orderDate);
+                    return dateB - dateA;
+                });
+
+                // 각 주문을 렌더링
+                orders.forEach(function(order) {
+                    const orderItem = createOrderItem(order);
+                    $orderListContainer.append(orderItem);
+                });
+            }
+
+            // 주문 아이템 HTML 생성
+            function createOrderItem(order) {
+                // 주문 상태별 색상 클래스
+                let statusClass = '';
+                let statusText = order.status || '주문완료';
+                
+                if (statusText === '주문완료') {
+                    statusClass = 'status_completed';
+                } else if (statusText === '배송중') {
+                    statusClass = 'status_shipping';
+                } else if (statusText === '배송완료') {
+                    statusClass = 'status_delivered';
+                }
+
+                // 주문일시 포맷팅
+                const orderDate = formatOrderDate(order.orderDate);
+                
+                // 총 금액 포맷팅
+                const totalPrice = formatPrice(order.totalPrice || 0);
+                
+                // 상품 개수
+                const itemCount = order.items ? order.items.length : 0;
+                
+                // 첫 번째 상품명 (여러 개일 경우 "외 N개" 표시)
+                let firstItemName = '';
+                let itemInfo = '';
+                if (order.items && order.items.length > 0) {
+                    const firstItem = order.items[0];
+                    firstItemName = firstItem.name || '상품';
+                    if (order.items.length > 1) {
+                        firstItemName += ' 외 ' + (order.items.length - 1) + '개';
+                    }
+                    // 옵션 정보 추가
+                    if (firstItem.options && firstItem.options.length > 0) {
+                        const optionNames = firstItem.options.map(function(opt) {
+                            return opt.optionName || '옵션';
+                        }).join(', ');
+                        itemInfo = '<div style="font-size: 12px; color: #999; margin-top: 5px;">옵션: ' + optionNames + '</div>';
+                    }
+                } else {
+                    firstItemName = '상품';
+                }
+
+                const $item = $('<li>').addClass('order_item').attr('data-order-id', order.orderId);
+                
+                $item.html(`
+                    <div class="order_item_header">
+                        <div>
+                            <div class="order_status_tag ${statusClass}">${statusText}</div>
+                            <div class="order_item_id">주문번호: ${order.orderId}</div>
+                        </div>
+                        <div class="order_item_date">${orderDate}</div>
+                    </div>
+                    <div class="order_item_name">${firstItemName}</div>
+                    ${itemInfo}
+                    <div class="order_item_footer">
+                        <div class="order_item_count">총 ${itemCount}개 상품</div>
+                        <div class="order_item_price">${totalPrice}원</div>
+                    </div>
+                `);
+
+                // 주문 클릭 시 상세 페이지로 이동
+                $item.on('click', function() {
+                    window.location.href = 'detail.html?orderId=' + order.orderId;
+                });
+
+                return $item;
+            }
+
+            // 주문일시 포맷팅 함수
+            function formatOrderDate(dateString) {
+                if (!dateString) return '';
+                
+                try {
+                    const date = new Date(dateString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    
+                    return `${year}.${month}.${day} ${hours}:${minutes}`;
+                } catch (e) {
+                    return dateString;
+                }
+            }
+
+            // 가격 포맷팅 함수
+            function formatPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            // 페이지 로드 시 주문 목록 로드
+            loadOrderHistory();
+        });
+    </script>
+</body>
+</html>
+

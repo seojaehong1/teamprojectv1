@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>문의 관리 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <style>
+        /* 헤더 고정 해제 - 스크롤 시 사라지도록 */
+        .head_wrap {
+            position: static !important;
+            position: relative !important;
+        }
+        .head_wrap.head_fixed {
+            position: static !important;
+            position: relative !important;
+        }
+        .head_wrap .head {
+            position: relative !important;
+        }
+        /* 로고 중복 방지 - 모든 가상 요소 및 배경 이미지 제거 */
+        .head_wrap .head_logo,
+        .head_wrap .head .head_logo {
+            display: block !important;
+            visibility: visible !important;
+            position: relative !important;
+            z-index: 1 !important;
+            background: none !important;
+            background-image: none !important;
+        }
+        .head_wrap .head_logo::before,
+        .head_wrap .head_logo::after,
+        .head_wrap .head .head_logo::before,
+        .head_wrap .head .head_logo::after {
+            display: none !important;
+            content: "" !important;
+            background: none !important;
+            background-image: none !important;
+        }
+        .head_wrap .head_logo a,
+        .head_wrap .head .head_logo a {
+            display: block !important;
+            background: none !important;
+            background-image: none !important;
+        }
+        .head_wrap .head_logo a::before,
+        .head_wrap .head_logo a::after,
+        .head_wrap .head .head_logo a::before,
+        .head_wrap .head .head_logo a::after {
+            display: none !important;
+            content: "" !important;
+            background: none !important;
+            background-image: none !important;
+        }
+        .head_wrap .head_logo img,
+        .head_wrap .head .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px !important;
+            height: auto !important;
+            width: auto !important;
+            position: relative !important;
+            background: none !important;
+            background-image: none !important;
+        }
+        .head_wrap .head_logo .head_logo_img,
+        .head_wrap .head .head_logo .head_logo_img {
+            display: block !important;
+            visibility: visible !important;
+        }
+        /* 중복 로고 요소 숨기기 */
+        .head_wrap .head_logo + .head_logo,
+        .head_wrap .head .head_logo + .head_logo {
+            display: none !important;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown ul li {
+            margin: 0;
+        }
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .head_login_dropdown ul li a:hover {
+            background: #f5f5f5;
+        }
+        
+        /* 문의 관리 스타일 */
+        .admin_wrap {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            background: #fff;
+            min-height: calc(100vh - 200px);
+            padding-top: 100px; /* 헤더 높이만큼 여백 추가 */
+        }
+        .admin_content_wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .admin_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .admin_title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+        .admin_nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .admin_nav_item {
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .admin_nav_item:hover {
+            border-color: #333;
+            color: #333;
+        }
+        .admin_nav_item.active {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+        
+        /* 문의 관리 툴바 */
+        .inquiry_toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .inquiry_search {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .inquiry_search_input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .inquiry_search_btn {
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .inquiry_filter {
+            display: flex;
+            gap: 10px;
+        }
+        .inquiry_filter_select {
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+        }
+        
+        /* 문의 목록 */
+        .inquiry_list_table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .inquiry_list_table thead {
+            background: #f9f9f9;
+        }
+        .inquiry_list_table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .inquiry_list_table td {
+            padding: 15px;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .inquiry_list_table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .inquiry_status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .inquiry_status.waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .inquiry_status.answered {
+            background: #d4edda;
+            color: #155724;
+        }
+        .inquiry_status.completed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        .inquiry_action_btn {
+            padding: 6px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 5px;
+        }
+        .inquiry_action_btn:hover {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+        .inquiry_action_btn.answer {
+            background: #D95B3B;
+            border-color: #D95B3B;
+            color: #fff;
+        }
+        .inquiry_action_btn.answer:hover {
+            background: #C74A2A;
+        }
+        .inquiry_action_btn.view {
+            background: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+        }
+        .inquiry_action_btn.view:hover {
+            background: #138496;
+        }
+        .inquiry_action_btn.delete {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: #fff;
+        }
+        .inquiry_action_btn.delete:hover {
+            background: #c82333;
+        }
+        
+        /* 문의 답변 폼 */
+        .inquiry_answer_form_wrap {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: none;
+        }
+        .inquiry_answer_form_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .inquiry_answer_form_title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        .inquiry_answer_form_close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+        .inquiry_answer_form_close:hover {
+            color: #333;
+        }
+        .inquiry_answer_form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .inquiry_answer_form_item {
+            display: flex;
+            flex-direction: column;
+        }
+        .inquiry_answer_form_label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .inquiry_answer_form_input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .inquiry_answer_form_input:focus {
+            outline: none;
+            border-color: #333;
+        }
+        .inquiry_answer_form_textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .inquiry_answer_form_textarea:focus {
+            outline: none;
+            border-color: #333;
+        }
+        .inquiry_answer_form_view {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+        }
+        .inquiry_answer_form_view_title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .inquiry_answer_form_view_content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .inquiry_answer_form_actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        .inquiry_answer_form_btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .inquiry_answer_form_btn.cancel {
+            background: #fff !important;
+            background-color: #fff !important;
+            color: #666 !important;
+            border: 2px solid #ddd !important;
+        }
+        .inquiry_answer_form_btn.cancel:hover {
+            background: #f5f5f5 !important;
+            background-color: #f5f5f5 !important;
+        }
+        .inquiry_answer_form_btn.save {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .inquiry_answer_form_btn.save:hover {
+            background: #C74A2A;
+        }
+        
+        /* 문의 보기 모달 */
+        .inquiry_view_modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .inquiry_view_modal.active {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .inquiry_view_modal_content {
+            background: #fff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .inquiry_view_modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .inquiry_view_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .inquiry_view_modal_close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .inquiry_view_modal_item {
+            margin-bottom: 20px;
+        }
+        .inquiry_view_modal_label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .inquiry_view_modal_text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            padding: 12px 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+        .inquiry_view_modal_answer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        .inquiry_view_modal_answer_label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .inquiry_view_modal_answer_text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            padding: 12px 15px;
+            background: #fffef0;
+            border-radius: 8px;
+            border: 1px solid #D95B3B;
+            white-space: pre-wrap;
+        }
+        
+        /* 삭제 확인 모달 */
+        .delete_modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            z-index: 10001;
+            overflow: auto;
+        }
+        .delete_modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .delete_modal_content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px 25px 20px;
+            max-width: 360px;
+            width: calc(100% - 40px);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: relative;
+            margin: auto;
+            transform: translateY(-60px);
+        }
+        .delete_modal_title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        .delete_modal_text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .delete_modal_buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .delete_modal_btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .delete_modal_btn.cancel {
+            background: #fff !important;
+            background-color: #fff !important;
+            color: #666 !important;
+            border: 2px solid #ddd !important;
+        }
+        .delete_modal_btn.cancel:hover {
+            background: #f5f5f5 !important;
+            background-color: #f5f5f5 !important;
+        }
+        .delete_modal_btn.confirm {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .delete_modal_btn.confirm:hover {
+            background: #C74A2A;
+        }
+        .delete_modal_btn.close {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background: #D95B3B !important;
+            background-color: #D95B3B !important;
+            background-image: none !important;
+            color: #fff !important;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            opacity: 1 !important;
+        }
+        .delete_modal_btn.close:hover {
+            background: #C74A2A !important;
+            background-color: #C74A2A !important;
+            opacity: 1 !important;
+        }
+        
+        @media (max-width: 768px) {
+            .admin_header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .inquiry_toolbar {
+                flex-direction: column;
+            }
+            .inquiry_search {
+                width: 100%;
+            }
+            .inquiry_list_table {
+                font-size: 12px;
+            }
+            .inquiry_list_table th,
+            .inquiry_list_table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body>
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="user.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="user.html" class="pc">회원 관리</a>
+                        </li>
+                        <li>
+                            <a href="product.html" class="pc">상품 관리</a>
+                        </li>
+                        <li>
+                            <a href="notice.html" class="pc">공지사항 관리</a>
+                        </li>
+                        <li>
+                            <a href="inquiry.html" class="pc">문의 관리</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <div class="head_user_item head_login_wrap">
+                        <div class="head_login_state head_login_state_member">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">Admin</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="#" id="adminLogoutBtn">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="admin_wrap">
+        <div class="admin_content_wrap">
+            <div class="admin_header">
+                <div class="admin_title">문의 관리</div>
+            </div>
+            
+            <!-- 네비게이션 -->
+            <div class="admin_nav">
+                <a href="user.html" class="admin_nav_item">회원 관리</a>
+                <a href="product.html" class="admin_nav_item">상품 관리</a>
+                <a href="notice.html" class="admin_nav_item">공지사항 관리</a>
+                <a href="inquiry.html" class="admin_nav_item active">문의 관리</a>
+            </div>
+            
+            <!-- 검색 및 필터 -->
+            <div class="inquiry_toolbar">
+                <div class="inquiry_search">
+                    <input type="text" class="inquiry_search_input" placeholder="제목, 내용, 작성자로 검색...">
+                    <button class="inquiry_search_btn">검색</button>
+                </div>
+                <div class="inquiry_filter">
+                    <select class="inquiry_filter_select" id="statusFilter">
+                        <option value="">전체 상태</option>
+                        <option value="waiting">답변 대기</option>
+                        <option value="answered">답변 완료</option>
+                        <option value="completed">처리 완료</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 문의 답변 폼 -->
+            <div class="inquiry_answer_form_wrap" id="inquiryAnswerFormWrap" style="display: none;">
+                <div class="inquiry_answer_form_header">
+                    <div class="inquiry_answer_form_title">문의 답변</div>
+                    <button class="inquiry_answer_form_close" onclick="hideInquiryAnswerForm()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="inquiryAnswerForm" class="inquiry_answer_form">
+                    <div class="inquiry_answer_form_item">
+                        <label class="inquiry_answer_form_label">문의 제목</label>
+                        <div class="inquiry_answer_form_view">
+                            <div class="inquiry_answer_form_view_title" id="inquiryViewTitle">배송 문의드립니다</div>
+                        </div>
+                    </div>
+                    <div class="inquiry_answer_form_item">
+                        <label class="inquiry_answer_form_label">문의 내용</label>
+                        <div class="inquiry_answer_form_view">
+                            <div class="inquiry_answer_form_view_content" id="inquiryViewContent">언제 배송되는지 궁금합니다.</div>
+                        </div>
+                    </div>
+                    <div class="inquiry_answer_form_item">
+                        <label class="inquiry_answer_form_label">답변</label>
+                        <textarea class="inquiry_answer_form_textarea" id="inquiryAnswer" required placeholder="답변 내용을 입력하세요"></textarea>
+                    </div>
+                    <div class="inquiry_answer_form_actions">
+                        <button type="button" class="inquiry_answer_form_btn cancel" onclick="hideInquiryAnswerForm()">취소</button>
+                        <button type="submit" class="inquiry_answer_form_btn save">저장</button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 문의 목록 -->
+            <div class="cont_text_wrap" id="inquiryListWrap">
+                <table class="inquiry_list_table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>상태</th>
+                            <th>작성일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>배송 문의드립니다</td>
+                            <td>홍길동</td>
+                            <td><span class="inquiry_status waiting">답변 대기</span></td>
+                            <td>2024-01-15</td>
+                            <td>
+                                <button class="inquiry_action_btn answer" onclick="answerInquiry(2)">답변</button>
+                                <button class="inquiry_action_btn view" onclick="viewInquiry(2)">보기</button>
+                                <button class="inquiry_action_btn delete" onclick="deleteInquiry(2)">삭제</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>회원 정보 수정 문의</td>
+                            <td>김사용자</td>
+                            <td><span class="inquiry_status answered">답변 완료</span></td>
+                            <td>2024-01-10</td>
+                            <td>
+                                <button class="inquiry_action_btn view" onclick="viewInquiry(1)">보기</button>
+                                <button class="inquiry_action_btn delete" onclick="deleteInquiry(1)">삭제</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- 페이지네이션 -->
+            <div class="board_page_wrap">
+                <div class="board_page">
+                    <ul>
+                        <li><a><span>처음</span></a></li>
+                        <li class="board_page_check"><a><span>1</span></a></li>
+                        <li><a><span>2</span></a></li>
+                        <li><a><span>다음</span></a></li>
+                        <li><a><span>마지막</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
+                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>창업상담 1588-0656</li>
+                                    <li>고객센터 1588-8298</li>
+                                    <li>FAX 02-325-5199</li>
+                                    <li>사업자등록번호 105-87-51367</li>
+                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                    <li>개인정보보호 책임자 이종원</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <!-- 문의 보기 모달 -->
+    <div class="inquiry_view_modal" id="inquiryViewModal">
+        <div class="inquiry_view_modal_content">
+            <div class="inquiry_view_modal_header">
+                <div class="inquiry_view_modal_title">문의 상세</div>
+                <button class="inquiry_view_modal_close" onclick="closeInquiryViewModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="inquiry_view_modal_item">
+                <div class="inquiry_view_modal_label">제목</div>
+                <div class="inquiry_view_modal_text" id="inquiryViewModalTitle">배송 문의드립니다</div>
+            </div>
+            <div class="inquiry_view_modal_item">
+                <div class="inquiry_view_modal_label">작성자</div>
+                <div class="inquiry_view_modal_text" id="inquiryViewModalAuthor">홍길동</div>
+            </div>
+            <div class="inquiry_view_modal_item">
+                <div class="inquiry_view_modal_label">작성일</div>
+                <div class="inquiry_view_modal_text" id="inquiryViewModalDate">2024-01-15</div>
+            </div>
+            <div class="inquiry_view_modal_item">
+                <div class="inquiry_view_modal_label">문의 내용</div>
+                <div class="inquiry_view_modal_text" id="inquiryViewModalContent">언제 배송되는지 궁금합니다.</div>
+            </div>
+            <div class="inquiry_view_modal_answer" id="inquiryViewModalAnswerWrap" style="display: none;">
+                <div class="inquiry_view_modal_answer_label">답변</div>
+                <div class="inquiry_view_modal_answer_text" id="inquiryViewModalAnswer">답변 내용이 여기에 표시됩니다.</div>
+            </div>
+            <div style="margin-top: 20px; text-align: right;">
+                <button type="button" class="inquiry_answer_form_btn save" onclick="closeInquiryViewModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div class="delete_modal" id="deleteModal">
+        <div class="delete_modal_content">
+            <div class="delete_modal_title">삭제 확인</div>
+            <div class="delete_modal_text">
+                정말 삭제하시겠습니까?
+            </div>
+            <div class="delete_modal_buttons">
+                <button type="button" class="delete_modal_btn cancel" onclick="closeDeleteModal()">취소</button>
+                <button type="button" class="delete_modal_btn confirm" onclick="confirmDelete()">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 완료 모달 -->
+    <div class="delete_modal" id="deleteSuccessModal">
+        <div class="delete_modal_content">
+            <div class="delete_modal_title">완료</div>
+            <div class="delete_modal_text">
+                문의가 삭제되었습니다.
+            </div>
+            <button type="button" class="delete_modal_btn close" onclick="closeDeleteSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
+        </div>
+    </div>
+
+    <!-- 답변 저장 완료 모달 -->
+    <div class="delete_modal" id="answerSuccessModal">
+        <div class="delete_modal_content">
+            <div class="delete_modal_title">완료</div>
+            <div class="delete_modal_text">
+                답변이 저장되었습니다.
+            </div>
+            <button type="button" class="delete_modal_btn close" onclick="closeAnswerSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 권한 체크
+        $(document).ready(function() {
+            var userRole = localStorage.getItem('userRole');
+            if (userRole !== 'admin') {
+                alert('관리자 권한이 필요합니다.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // 사용자명 표시
+            var userName = localStorage.getItem('userName') || 'Admin';
+            $('.head_user_name').text(userName);
+            
+            // 로그인 드롭다운 토글
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+            
+            // 로그아웃 버튼
+            $('#adminLogoutBtn').on('click', function(e) {
+                e.preventDefault();
+                if (confirm('로그아웃하시겠습니까?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // 필터 변경
+            $('#statusFilter').change(function() {
+                // 필터링 로직
+            });
+        });
+
+        // 스크롤바 너비 계산
+        function getScrollbarWidth() {
+            const outer = document.createElement('div');
+            outer.style.visibility = 'hidden';
+            outer.style.overflow = 'scroll';
+            outer.style.msOverflowStyle = 'scrollbar';
+            document.body.appendChild(outer);
+            const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            outer.parentNode.removeChild(outer);
+            return scrollbarWidth;
+        }
+
+        // 모달 열기 (스크롤바 고정)
+        function openModal(modalId) {
+            const scrollbarWidth = getScrollbarWidth();
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = scrollbarWidth + 'px';
+            $(modalId).addClass('show');
+            $(modalId).addClass('active');
+        }
+
+        // 모달 닫기 (스크롤바 복원)
+        function closeModal(modalId) {
+            $(modalId).removeClass('show');
+            $(modalId).removeClass('active');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
+        // 문의 답변 폼 표시
+        function answerInquiry(id) {
+            // 실제로는 서버에서 문의 정보를 가져와서 폼에 채워야 함
+            // 예시 데이터
+            const inquiryData = {
+                1: { 
+                    title: '회원 정보 수정 문의', 
+                    content: '회원 정보를 수정하고 싶은데 어떻게 해야 하나요?',
+                    answer: '회원정보 페이지에서 수정 가능합니다.'
+                },
+                2: { 
+                    title: '배송 문의드립니다', 
+                    content: '언제 배송되는지 궁금합니다.',
+                    answer: ''
+                }
+            };
+            
+            const inquiry = inquiryData[id] || { title: '', content: '', answer: '' };
+            $('#inquiryViewTitle').text(inquiry.title);
+            $('#inquiryViewContent').text(inquiry.content);
+            $('#inquiryAnswer').val(inquiry.answer || '');
+            $('#inquiryAnswerForm').data('inquiryId', id);
+            $('#inquiryAnswerFormWrap').slideDown();
+            $('#inquiryListWrap').hide();
+            $('html, body').animate({ scrollTop: $('.inquiry_answer_form_wrap').offset().top - 100 }, 300);
+        }
+
+        // 문의 답변 폼 숨기기
+        function hideInquiryAnswerForm() {
+            $('#inquiryAnswerFormWrap').slideUp();
+            $('#inquiryListWrap').show();
+            $('#inquiryAnswerForm')[0].reset();
+        }
+
+        // 문의 보기 모달 표시
+        function viewInquiry(id) {
+            // 실제로는 서버에서 문의 정보를 가져와서 모달에 채워야 함
+            // 예시 데이터
+            const inquiryData = {
+                1: { 
+                    title: '회원 정보 수정 문의', 
+                    author: '김사용자',
+                    date: '2024-01-10',
+                    content: '회원 정보를 수정하고 싶은데 어떻게 해야 하나요?',
+                    answer: '회원정보 페이지에서 수정 가능합니다.'
+                },
+                2: { 
+                    title: '배송 문의드립니다', 
+                    author: '홍길동',
+                    date: '2024-01-15',
+                    content: '언제 배송되는지 궁금합니다.',
+                    answer: ''
+                }
+            };
+            
+            const inquiry = inquiryData[id] || { title: '', author: '', date: '', content: '', answer: '' };
+            $('#inquiryViewModalTitle').text(inquiry.title);
+            $('#inquiryViewModalAuthor').text(inquiry.author);
+            $('#inquiryViewModalDate').text(inquiry.date);
+            $('#inquiryViewModalContent').text(inquiry.content);
+            
+            if (inquiry.answer) {
+                $('#inquiryViewModalAnswer').text(inquiry.answer);
+                $('#inquiryViewModalAnswerWrap').show();
+            } else {
+                $('#inquiryViewModalAnswerWrap').hide();
+            }
+            
+            openModal('#inquiryViewModal');
+        }
+
+        // 문의 보기 모달 닫기
+        function closeInquiryViewModal() {
+            closeModal('#inquiryViewModal');
+        }
+
+        // 문의 삭제
+        let deleteInquiryId = null;
+        function deleteInquiry(id) {
+            deleteInquiryId = id;
+            openModal('#deleteModal');
+        }
+
+        // 삭제 확인
+        function confirmDelete() {
+            if (deleteInquiryId) {
+                // 문의 삭제 로직
+                closeModal('#deleteModal');
+                openModal('#deleteSuccessModal');
+            }
+        }
+
+        // 삭제 모달 닫기
+        function closeDeleteModal() {
+            closeModal('#deleteModal');
+            deleteInquiryId = null;
+        }
+
+        // 삭제 완료 모달 닫기
+        function closeDeleteSuccessModal() {
+            closeModal('#deleteSuccessModal');
+            location.reload();
+        }
+
+        // 답변 저장 완료 모달 닫기
+        function closeAnswerSuccessModal() {
+            closeModal('#answerSuccessModal');
+            location.reload();
+        }
+
+        // 문의 답변 폼 제출
+        $(document).ready(function() {
+            $('#inquiryAnswerForm').submit(function(e) {
+                e.preventDefault();
+                const inquiryId = $(this).data('inquiryId');
+                // 답변 저장 로직
+                hideInquiryAnswerForm();
+                openModal('#answerSuccessModal');
+            });
+
+            // 모달 외부 클릭 시 닫기
+            $(document).on('click', '.inquiry_view_modal', function(e) {
+                if ($(e.target).hasClass('inquiry_view_modal')) {
+                    closeInquiryViewModal();
+                }
+            });
+
+            $(document).on('click', '.delete_modal', function(e) {
+                if ($(e.target).hasClass('delete_modal')) {
+                    closeDeleteModal();
+                    closeDeleteSuccessModal();
+                    closeAnswerSuccessModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

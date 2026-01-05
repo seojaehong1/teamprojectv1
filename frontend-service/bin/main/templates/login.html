@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>로그인 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 로그인 페이지 스타일 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+        .login_wrap {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+        .login_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .login_logo {
+            display: flex;
+            align-items: center;
+        }
+        .login_logo img {
+            height: 40px;
+            max-width: 100%;
+        }
+        .login_content {
+            background: #fff;
+        }
+        .login_options {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .login_type {
+            display: flex;
+            gap: 20px;
+        }
+        .login_type_item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .login_type_item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            position: relative;
+            margin: 0;
+            background: #fff;
+        }
+        .login_type_item input[type="radio"]:checked {
+            background: #D95B3B;
+            border-color: #D95B3B;
+        }
+        .login_type_item input[type="radio"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        .login_type_item label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+        }
+        .login_form {
+            margin-bottom: 20px;
+        }
+        .login_form_item {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .login_form_input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .login_form_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .login_form_input::placeholder {
+            color: #999;
+        }
+        .login_form_item_password {
+            position: relative;
+        }
+        .login_submit_btn {
+            width: 100%;
+            padding: 16px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login_submit_btn:hover {
+            background: #C74A2A;
+        }
+        .login_links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .login_links a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            position: relative;
+        }
+        .login_links a:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -10px;
+            color: #ccc;
+        }
+        .login_links a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .login_wrap {
+                padding: 20px;
+            }
+            .login_header {
+                margin-bottom: 30px;
+            }
+            .login_options {
+                justify-content: flex-start;
+            }
+            .login_type {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+        
+        /* 커스텀 모달 스타일 */
+        .custom_modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom_modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .custom_modal_content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .custom_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .custom_modal_message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .custom_modal_buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .custom_modal_btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom_modal_btn_primary {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .custom_modal_btn_primary:hover {
+            background: #C74A2A;
+        }
+        .custom_modal_btn_secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .custom_modal_btn_secondary:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login_wrap">
+        <!-- 헤더 -->
+        <div class="login_header">
+            <div class="login_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+        </div>
+
+        <!-- 로그인 콘텐츠 -->
+        <div class="login_content">
+            <!-- 로그인 옵션 -->
+            <div class="login_options">
+                <div class="login_type">
+                    <div class="login_type_item">
+                        <input type="radio" id="loginTypeNormal" name="loginType" value="normal" checked>
+                        <label for="loginTypeNormal">일반회원</label>
+                    </div>
+                    <div class="login_type_item">
+                        <input type="radio" id="loginTypeAdmin" name="loginType" value="admin">
+                        <label for="loginTypeAdmin">관리자</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 로그인 폼 -->
+            <form class="login_form" id="loginForm">
+                <div class="login_form_item">
+                    <input type="text" class="login_form_input" id="loginId" placeholder="아이디" required>
+                </div>
+                <div class="login_form_item login_form_item_password">
+                    <input type="password" class="login_form_input" id="loginPassword" placeholder="비밀번호" required>
+                </div>
+                <button type="submit" class="login_submit_btn">로그인</button>
+            </form>
+
+            <!-- 하단 링크 -->
+            <div class="login_links">
+                <a href="find_id.html">아이디 찾기</a>
+                <a href="find_password.html">비밀번호 찾기</a>
+                <a href="signup.html">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 로그인 폼 제출
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // 입력값 가져오기
+                var loginId = $('#loginId').val().trim();
+                var password = $('#loginPassword').val().trim();
+                
+                // 유효성 검사
+                var isValid = true;
+                var errorMessage = '';
+                
+                // 아이디/이메일 입력 확인
+                if (!loginId) {
+                    isValid = false;
+                    errorMessage = '아이디를 입력하세요';
+                    showCustomModal('알림', errorMessage);
+                    $('#loginId').focus();
+                    return false;
+                }
+                
+                // 이메일 형식 체크 (@ 포함 여부)
+                if (loginId.indexOf('@') !== -1) {
+                    // 이메일 형식인 경우 기본적인 이메일 형식 체크
+                    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(loginId)) {
+                        isValid = false;
+                        errorMessage = '올바른 이메일 형식을 입력하세요';
+                        showCustomModal('알림', errorMessage);
+                        $('#loginId').focus();
+                        return false;
+                    }
+                }
+                
+                // 비밀번호 입력 확인
+                if (!password) {
+                    isValid = false;
+                    errorMessage = '비밀번호를 입력하세요';
+                    showCustomModal('알림', errorMessage);
+                    $('#loginPassword').focus();
+                    return false;
+                }
+                
+                // 모든 유효성 검사 통과
+                if (isValid) {
+                    // localStorage에서 users 배열 확인
+                    var users = JSON.parse(localStorage.getItem('users') || '[]');
+                    
+                    // 로그인 타입 가져오기 (탭이 있으면)
+                    var loginTypeRadio = $('input[name="loginType"]:checked');
+                    var loginType = loginTypeRadio.length > 0 ? loginTypeRadio.val() : 'normal';
+                    
+                    // users 배열에서 사용자 찾기
+                    var foundUser = users.find(function(user) {
+                        // username 또는 email로 매칭
+                        return (user.username && user.username.toLowerCase() === loginId.toLowerCase()) ||
+                               (user.email && user.email.toLowerCase() === loginId.toLowerCase());
+                    });
+                    
+                    // 하드코딩된 관리자 계정도 체크 (관리자 탭일 때만)
+                    var isHardcodedAdmin = (loginId === 'admin' && password === 'admin1234');
+                    
+                    // 사용자 확인
+                    if (foundUser || isHardcodedAdmin) {
+                        var user = foundUser || null;
+                        var userRole = null;
+                        var userName = null;
+                        var passwordMatch = false;
+                        
+                        if (isHardcodedAdmin && loginType === 'admin') {
+                            // 하드코딩된 관리자 계정
+                            userRole = 'admin';
+                            userName = 'Admin';
+                            passwordMatch = true;
+                        } else if (foundUser) {
+                            // users 배열에서 찾은 사용자
+                            // 비밀번호 확인
+                            if (foundUser.password === password) {
+                                passwordMatch = true;
+                                userRole = foundUser.role || 'user';
+                                userName = foundUser.name || foundUser.username || loginId;
+                            }
+                        }
+                        
+                        if (passwordMatch) {
+                            // 비밀번호 일치 - 로그인 성공
+                            // localStorage에 로그인 상태 저장
+                            localStorage.setItem('isLoggedIn', 'true');
+                            localStorage.setItem('userName', userName);
+                            localStorage.setItem('userRole', userRole);
+                            
+                            // 탭에 따라 분기 처리
+                            if (loginType === 'normal') {
+                                // 일반회원 탭 로그인
+                                if (userRole === 'user') {
+                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
+                                        window.location.href = 'index.html';
+                                    });
+                                } else if (userRole === 'owner' || userRole === 'admin') {
+                                    showCustomModal('알림', '관리자 탭을 이용해주세요');
+                                    $('#loginPassword').val('').focus();
+                                }
+                            } else if (loginType === 'admin') {
+                                // 관리자 탭 로그인 (점주용)
+                                if (userRole === 'owner') {
+                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
+                                        window.location.href = 'owner/inventory.html';
+                                    });
+                                } else if (userRole === 'admin') {
+                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
+                                        window.location.href = 'admin/user.html';
+                                    });
+                                } else if (userRole === 'user') {
+                                    showCustomModal('알림', '일반회원 탭을 이용해주세요');
+                                    $('#loginPassword').val('').focus();
+                                }
+                            } else {
+                                // 탭 구조가 없는 경우 - role에 따라 자동 리다이렉트
+                                showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
+                                    if (userRole === 'admin') {
+                                        window.location.href = 'admin/user.html';
+                                    } else if (userRole === 'owner') {
+                                        window.location.href = 'owner/inventory.html';
+                                    } else {
+                                        window.location.href = 'index.html';
+                                    }
+                                });
+                            }
+                        } else {
+                            // 비밀번호 불일치
+                            showCustomModal('로그인 실패', '아이디 또는 비밀번호가 일치하지 않습니다.');
+                            $('#loginPassword').val('').focus();
+                        }
+                    } else {
+                        // 사용자를 찾을 수 없는 경우
+                        showCustomModal('로그인 실패', '아이디 또는 비밀번호가 일치하지 않습니다.');
+                        $('#loginPassword').val('').focus();
+                    }
+                }
+            });
+
+        });
+        
+        // 커스텀 모달 함수
+        function showCustomModal(title, message, onConfirm) {
+            var modal = $('#customModal');
+            $('#customModalTitle').text(title || '알림');
+            $('#customModalMessage').text(message || '');
+            
+            var confirmBtn = $('#customModalConfirm');
+            confirmBtn.off('click').on('click', function() {
+                modal.removeClass('show');
+                if (onConfirm) {
+                    onConfirm();
+                }
+            });
+            
+            modal.addClass('show');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        $('#customModal').on('click', function(e) {
+            if ($(e.target).is('#customModal')) {
+                $(this).removeClass('show');
+            }
+        });
+    </script>
+    
+    <!-- 커스텀 모달 -->
+    <div id="customModal" class="custom_modal">
+        <div class="custom_modal_content">
+            <div class="custom_modal_title" id="customModalTitle">알림</div>
+            <div class="custom_modal_message" id="customModalMessage"></div>
+            <div class="custom_modal_buttons">
+                <button class="custom_modal_btn custom_modal_btn_primary" id="customModalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

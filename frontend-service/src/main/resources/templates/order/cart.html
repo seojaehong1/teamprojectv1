@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>장바구니 - TORI COFFEE</title>
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
@@ -16,7 +16,7 @@
     <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
         .head_wrap .head {
@@ -139,7 +139,7 @@
                 right: 50px;
             }
         }
-        
+
         /* 네비게이션 메뉴 hover 스타일 */
         .head_menu > ul > li > a.pc:hover,
         .head_menu > ul > li.check > a.pc,
@@ -147,14 +147,14 @@
             background: #D95B3B !important;
             color: #ffffff !important;
         }
-        
+
         /* 드롭다운 서브메뉴 hover 스타일 */
         .head_menu_down_menu a:hover,
         .head_menu_down_menu li:hover > a {
             background: #D95B3B !important;
             color: #ffffff !important;
         }
-        
+
         /* 모바일 메뉴 오버레이 */
         .mobile_menu_overlay {
             position: fixed;
@@ -603,7 +603,7 @@
             }
         }
     </style>
-    
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
@@ -611,7 +611,7 @@
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
 </head>
 <body>
-    
+
     <!-- 헤더 -->
     <div class="head_wrap">
         <div class="head">
@@ -795,7 +795,7 @@
         <div id="cartItemsContainer">
             <!-- 동적으로 생성됨 -->
         </div>
-        
+
         <!-- 장바구니 비어있음 메시지 -->
         <div id="cartEmptyMessage" style="display: none; padding: 60px 20px; text-align: center;">
             <div style="font-size: 16px; color: #999; margin-bottom: 20px;">장바구니가 비어있습니다</div>
@@ -881,419 +881,186 @@
     </a>
 
     <script>
-        AOS.init({
-            duration: 1200,
-        });
+        // AOS 초기화
+        AOS.init({ duration: 1200 });
 
-        // 헤더 메뉴 호버
-        $(".head_wrap .head .head_menu > ul > li").hover(function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(this).addClass("check");
-                $(".head_menu_down_menu").stop().slideDown("fast");
-            };
-        }, function() {
-            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-        });
-
-        $(".head_wrap").hover(function() {
-            $(this).addClass("head_over");
-        }, function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(this).removeClass("head_over");
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(".head_menu_down_menu").stop().slideUp("fast");
-            }
-        });
-
-        // 모바일 메뉴
-        $(".mobile_menu_icon").click(function(){
-            $(".head_wrap").addClass("head_over");
-            $(this).toggleClass("mobile_menu_icon_open");
-            if ( $(this).is(".mobile_menu_icon_open") ) {
-                $(".head_menu_wrap").addClass("right0");
-                $(".mobile_menu_overlay").addClass("active");
-                $("body").css("overflow", "hidden");
-            } else {
-                $(".head_menu_wrap").removeClass("right0");
-                $(".mobile_menu_overlay").removeClass("active");
-                $("body").css("overflow", "");
-            }
-        });
-
-        // 로그인 드롭다운 토글
-        $(document).ready(function() {
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                $('.head_login_wrap').toggleClass('active');
-            });
-
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 모바일 메뉴 오버레이 닫기
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-        });
-
-        // 전체선택 체크박스 토글
-        $('.cart_checkbox').click(function() {
-            $(this).toggleClass('checked');
-            const checkbox = $(this).find('input[type="checkbox"]');
-            checkbox.prop('checked', $(this).hasClass('checked'));
-        });
-        
-        // 개별 아이템 체크박스는 renderCart의 attachCartEventListeners에서 처리
-
-        // 전체선택과 개별 체크박스는 renderCart의 attachCartEventListeners에서 처리
-
-        // 수량 조절 (기존 코드는 renderCart의 attachCartEventListeners에서 처리)
-
-        // 삭제 모달 변수는 renderCart 함수 아래에서 정의됨
-
-        // 모달 취소 버튼
-        $('.cart_delete_modal_cancel').off('click').on('click', function() {
-            closeDeleteModal();
-        });
-
-        // 모달 배경 클릭 시 닫기
-        $('.cart_delete_modal').off('click').on('click', function(e) {
-            if ($(e.target).hasClass('cart_delete_modal')) {
-                closeDeleteModal();
-            }
-        });
-
-        // 아이템 삭제와 선택삭제는 renderCart의 attachCartEventListeners에서 처리
-
-        // 뒤로가기
-        $('.cart_back').click(function() {
-            history.back();
-        });
-
-        // 장바구니 데이터 불러오기
-        function loadCart() {
-            const cartData = localStorage.getItem('cart');
-            const cart = cartData ? JSON.parse(cartData) : [];
-            return cart;
-        }
-
-        // 장바구니 목록 렌더링
-        function renderCart() {
-            const cart = loadCart();
+        // 1. 전역 함수로 등록 (외부 onclick 호출 대응)
+        async function renderCart() {
+            const cart = await loadCartFromServer();
             const container = $('#cartItemsContainer');
             const emptyMessage = $('#cartEmptyMessage');
-            
-            // 기존 아이템 제거
+            const orderBtn = $('.cart_order_btn');
+
             container.empty();
-            
-            if (cart.length === 0) {
-                // 장바구니가 비어있음
+
+            if (!cart || cart.length === 0) {
                 container.hide();
                 emptyMessage.show();
                 $('.cart_select_all').hide();
-                $('.cart_notice').hide();
-                $('.cart_order_btn').addClass('disabled').text('주문하기');
+                orderBtn.addClass('disabled').text('주문하기');
             } else {
-                // 장바구니에 상품이 있음
                 container.show();
                 emptyMessage.hide();
                 $('.cart_select_all').show();
-                $('.cart_notice').show();
-                $('.cart_order_btn').removeClass('disabled');
-                
-                // 각 상품 렌더링
-                cart.forEach(function(item, index) {
-                    // 단가 계산 (price는 총가격이므로)
-                    const unitPrice = Math.floor(item.price / item.quantity);
-                    // 소계는 price (이미 총가격)
-                    const subtotal = item.price;
-                    
+
+                cart.forEach(function(item) {
+                    // 서버에서 준 수량 포함 최종 가격 사용
+                    const price = item.totalItemPrice;
+                    const optionsText = (item.cartOptions && item.cartOptions.length > 0)
+                        ? item.cartOptions.map(o => o.optionName).join(', ')
+                        : '없음';
+
+                    const menuName = item.menuName; // 서버에서 받아온 메뉴 이름
+                    const imagePath = `/src/tem/${menuName}.png`; // static 이후의 경로만 지정
+
                     const cartItemHtml = `
-                        <div class="cart_item" data-index="${index}">
-                            <div class="cart_item_checkbox checked">
-                                <input type="checkbox" class="item_checkbox" checked data-index="${index}">
-                                <i class="fas fa-check"></i>
+                    <div class="cart_item" data-id="${item.cartItemId}">
+                        <div class="cart_item_checkbox checked">
+                            <input type="checkbox" class="item_checkbox" checked>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="cart_item_image">
+                            <img src="${imagePath}" onerror="this.src='/src/tem/default.png'" alt="${menuName}">
+                        </div>
+                        <div class="cart_item_content">
+                            <div class="cart_item_header">
+                                <div class="cart_item_name">${item.menuName}</div>
+                                <button class="cart_item_delete" type="button" onclick="deleteItemFromServer(${item.cartItemId})">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
-                            <div class="cart_item_image">
-                                <img src="${item.image || '../logo.png'}" alt="${item.name}">
+                            <div class="cart_item_temp" style="font-size: 12px; color: #888; margin-top: 4px;">
+                                <i class="fas fa-plus-circle" style="font-size: 10px;"></i> 옵션:
+                                <span class="option_text" style="color: #555;">${optionsText}</span>
                             </div>
-                            <div class="cart_item_content">
-                                <div class="cart_item_header">
-                                    <div class="cart_item_name">${item.name}</div>
-                                    <button class="cart_item_delete" type="button" data-index="${index}">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                            <div class="cart_item_control" style="margin-top: 10px;">
+                                <div class="cart_item_quantity">
+                                    <button class="cart_quantity_btn minus" type="button" onclick="updateQty(${item.cartItemId}, ${item.quantity - 1})">-</button>
+                                    <span class="cart_quantity_num">${item.quantity}</span>
+                                    <button class="cart_quantity_btn plus" type="button" onclick="updateQty(${item.cartItemId}, ${item.quantity + 1})">+</button>
                                 </div>
-                                <div class="cart_item_temp">${item.size || '기본'}</div>
-                                <div class="cart_item_control">
-                                    <div class="cart_item_quantity">
-                                        <button class="cart_quantity_btn minus" type="button" data-index="${index}">-</button>
-                                        <span class="cart_quantity_num">${item.quantity}</span>
-                                        <button class="cart_quantity_btn plus" type="button" data-index="${index}">+</button>
-                                    </div>
-                                    <div class="cart_item_price">${subtotal.toLocaleString()}원</div>
-                                </div>
+                                <div class="cart_item_price" style="font-weight: bold; color: #333;">${price.toLocaleString()}원</div>
                             </div>
                         </div>
-                    `;
-                    
+                    </div>`;
                     container.append(cartItemHtml);
                 });
-                
-                // 이벤트 리스너 재등록
-                attachCartEventListeners();
-                
-                // 전체선택 텍스트 업데이트
-                updateSelectAll();
+
+                // 렌더링 직후 금액 계산 및 이벤트 재연결
+                calculateCheckedTotal();
+                attachCheckboxEvents();
             }
-            
-            // 총 금액 계산 및 업데이트
-            updateTotalPrice();
-            
-            // 헤더 장바구니 배지 업데이트
-            updateCartBadge();
         }
 
-        // 총 금액 계산 및 업데이트
-        function updateTotalPrice() {
-            const cart = loadCart();
-            let totalPrice = 0;
-            
-            cart.forEach(function(item) {
-                totalPrice += item.price; // price는 이미 총가격
+        async function loadCartFromServer() {
+            try {
+                const response = await fetch('http://localhost:8000/api/order/cart');
+                return await response.json();
+            } catch (error) {
+                console.error("데이터 로드 실패:", error);
+                return [];
+            }
+        }
+
+        function calculateCheckedTotal() {
+            let total = 0;
+            let checkedCount = 0;
+            const items = $('.cart_item');
+
+            items.each(function() {
+                if ($(this).find('.item_checkbox').is(':checked')) {
+                    const priceText = $(this).find('.cart_item_price').text();
+                    const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+                    if (!isNaN(price)) {
+                        total += price;
+                        checkedCount++;
+                    }
+                }
             });
-            
-            if (cart.length > 0) {
-                $('.cart_order_btn').text(totalPrice.toLocaleString() + '원 주문하기');
+
+            const orderBtn = $('.cart_order_btn');
+            if (total > 0) {
+                orderBtn.removeClass('disabled').html(`<span style="font-weight:bold; margin-right:5px;">${total.toLocaleString()}원</span> 주문하기`);
+            } else {
+                orderBtn.addClass('disabled').text('주문하기');
             }
+            $('.cart_select_text').text(`전체선택 ${checkedCount}/${items.length}`);
         }
 
-        // 헤더 장바구니 배지 업데이트
-        function updateCartBadge() {
-            const cart = loadCart();
-            const totalQuantity = cart.reduce(function(sum, item) {
-                return sum + item.quantity;
-            }, 0);
-            
-            $('.head_user_badge').text(totalQuantity);
-        }
-
-        // 장바구니 이벤트 리스너 연결
-        function attachCartEventListeners() {
-            // 체크박스 토글
-            $('.cart_item_checkbox').off('click').on('click', function() {
+        // 체크박스 클릭 이벤트 바인딩 함수
+        function attachCheckboxEvents() {
+            $('.cart_item_checkbox, .cart_checkbox').off('click').on('click', function() {
                 $(this).toggleClass('checked');
-                const checkbox = $(this).find('input[type="checkbox"]');
-                checkbox.prop('checked', $(this).hasClass('checked'));
-                updateSelectAll();
-            });
-
-            // 수량 증가
-            $('.cart_quantity_btn.plus').off('click').on('click', function() {
-                const index = $(this).data('index');
-                const cart = loadCart();
-                
-                if (cart[index]) {
-                    cart[index].quantity += 1;
-                    // 총가격 재계산 (단가 * 수량)
-                    const unitPrice = Math.floor(cart[index].price / (cart[index].quantity - 1));
-                    cart[index].price = unitPrice * cart[index].quantity;
-                    
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    renderCart();
+                const isChecked = $(this).hasClass('checked');
+                if ($(this).hasClass('cart_checkbox')) {
+                    $('.cart_item_checkbox').toggleClass('checked', isChecked);
+                    $('.item_checkbox').prop('checked', isChecked);
+                } else {
+                    $(this).find('.item_checkbox').prop('checked', isChecked);
                 }
-            });
-
-            // 수량 감소
-            $('.cart_quantity_btn.minus').off('click').on('click', function() {
-                const index = $(this).data('index');
-                const cart = loadCart();
-                
-                if (cart[index] && cart[index].quantity > 1) {
-                    cart[index].quantity -= 1;
-                    // 총가격 재계산 (단가 * 수량)
-                    const unitPrice = Math.floor(cart[index].price / (cart[index].quantity + 1));
-                    cart[index].price = unitPrice * cart[index].quantity;
-                    
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    renderCart();
-                }
-            });
-
-            // 아이템 삭제
-            $('.cart_item_delete').off('click').on('click', function() {
-                const index = $(this).data('index');
-                openDeleteModal('item', $(this), index);
+                calculateCheckedTotal();
             });
         }
 
-        // 삭제 모달 변수 수정
-        let deleteAction = null;
-        let deleteTarget = null;
-        let deleteIndex = null;
-
-        // 모달 열기 (수정)
-        function openDeleteModal(action, target, index) {
-            deleteAction = action;
-            deleteTarget = target;
-            deleteIndex = index;
-            $('.cart_delete_modal').addClass('active');
-            $('body').css('overflow', 'hidden');
-        }
-
-        // 모달 닫기
-        function closeDeleteModal() {
-            $('.cart_delete_modal').removeClass('active');
-            $('body').css('overflow', '');
-            deleteAction = null;
-            deleteTarget = null;
-            deleteIndex = null;
-        }
-
-        // 모달 확인 버튼 (수정)
-        $('.cart_delete_modal_confirm').off('click').on('click', function() {
-            if (deleteAction === 'item' && deleteIndex !== null) {
-                // 개별 아이템 삭제
-                const cart = loadCart();
-                cart.splice(deleteIndex, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
+        // 수량/삭제 전역 등록
+        window.updateQty = async function(cartItemId, newQuantity) {
+            if (newQuantity < 1) return;
+            try {
+                await fetch(`http://localhost:8000/api/order/cart/items/${cartItemId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity: newQuantity })
+                });
                 renderCart();
-            } else if (deleteAction === 'selected') {
-                // 선택된 아이템 삭제
-                const cart = loadCart();
-                const checkedIndices = [];
-                $('.cart_item_checkbox.checked').each(function() {
-                    const index = $(this).find('input[type="checkbox"]').data('index');
-                    if (index !== undefined) {
-                        checkedIndices.push(index);
+            } catch (e) { console.error(e); }
+        };
+
+        window.deleteItemFromServer = async function(cartItemId) {
+            if (!confirm("삭제하시겠습니까?")) return;
+            try {
+                await fetch(`http://localhost:8000/api/order/cart/items/${cartItemId}`, { method: 'DELETE' });
+                renderCart();
+            } catch (e) { console.error(e); }
+        };
+
+        $(document).ready(function() {
+            renderCart();
+
+            // 헤더 마우스 오버 등 UI 이벤트
+            $(".head_wrap").hover(function() { $(this).addClass("head_over"); }, function() { $(this).removeClass("head_over"); });
+
+            // 주문하기 버튼 클릭 (이동 경로 수정)
+            $('.cart_order_btn').on('click', function() {
+                if (!$(this).hasClass('disabled')) {
+                    // 만약 파일로 실행 중이라면 'checkout.html'로, 서버 실행 중이라면 '/order/checkout'으로
+                    window.location.href = '/order/checkout';
+                } else {
+                    alert("상품을 선택해주세요.");
+                }
+            });
+
+            $('.cart_back').click(function() { history.back(); });
+
+            // [1] 장바구니 카운트 API 호출 함수
+            async function updateCartBadge() {
+                try {
+                    // 컨트롤러의 @RequestMapping("/api/order")와 @GetMapping("/cart/count") 합쳐진 주소
+                    const response = await fetch('http://localhost:8000/api/order/cart/count');
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 헤더의 .head_user_badge 요소에 숫자 넣기
+                        $('.head_user_badge').text(data.count);
                     }
-                });
-                // 역순으로 삭제 (인덱스 변경 방지)
-                checkedIndices.sort((a, b) => b - a).forEach(function(index) {
-                    cart.splice(index, 1);
-                });
-                localStorage.setItem('cart', JSON.stringify(cart));
-                renderCart();
-            }
-            closeDeleteModal();
-        });
-
-        // 선택삭제 (수정)
-        $('.cart_delete_btn').off('click').on('click', function() {
-            const checkedItems = $('.cart_item_checkbox.checked').length;
-            if (checkedItems > 0) {
-                openDeleteModal('selected', null, null);
-            }
-        });
-
-        // 전체선택 텍스트 업데이트
-        function updateSelectAll() {
-            const totalItems = $('.cart_item').length;
-            const checkedItems = $('.cart_item_checkbox.checked').length;
-            $('.cart_select_text').text('전체선택 ' + checkedItems + '/' + totalItems);
-        }
-
-        // 개별 체크박스 변경 시 전체선택 업데이트 (수정)
-        $(document).on('change', '.item_checkbox', function() {
-            const totalItems = $('.item_checkbox').length;
-            const checkedItems = $('.item_checkbox:checked').length;
-            $('#selectAll').prop('checked', totalItems === checkedItems);
-            $('.cart_checkbox').toggleClass('checked', totalItems === checkedItems);
-            updateSelectAll();
-        });
-
-        // 전체선택 (수정)
-        $('#selectAll').off('change').on('change', function() {
-            const isChecked = $(this).prop('checked');
-            $('.item_checkbox').prop('checked', isChecked);
-            $('.cart_item_checkbox').toggleClass('checked', isChecked);
-            $('.cart_checkbox').toggleClass('checked', isChecked);
-            updateSelectAll();
-        });
-
-            // 주문하기 버튼 클릭 이벤트
-            function goToCheckout() {
-                const cart = loadCart();
-                
-                // 장바구니가 비어있으면
-                if (cart.length === 0) {
-                    alert('장바구니가 비어있습니다');
-                    return;
+                } catch (e) {
+                    console.error("배지 업데이트 실패:", e);
                 }
-                
-                // 장바구니에 상품이 있으면 checkout.html로 이동
-                window.location.href = 'checkout.html';
             }
 
-            // 페이지 로드 시 장바구니 렌더링
+            // 페이지 로드 시 실행
             $(document).ready(function() {
-                renderCart();
-
-                // 주문하기 버튼 클릭 이벤트
-                $('.cart_order_btn').off('click').on('click', function() {
-                    // disabled 상태가 아니면 클릭 처리
-                    if (!$(this).hasClass('disabled')) {
-                        goToCheckout();
-                    }
-                });
-
-                // 로그인 상태 체크 및 UI 업데이트
-                function checkLoginStatus() {
-                    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                    const userName = localStorage.getItem('userName') || '사용자명';
-
-                    if (isLoggedIn) {
-                        // 로그인 상태일 때
-                        $('.head_login_state_guest').hide();
-                        $('.head_login_state_member').show();
-                        $('.head_user_name').text(userName + '님');
-                    } else {
-                        // 비로그인 상태일 때
-                        $('.head_login_state_guest').show();
-                        $('.head_login_state_member').hide();
-                    }
-                }
-
-                // 페이지 로드 시 로그인 상태 체크
-                checkLoginStatus();
-
-                // 로그아웃 버튼 클릭 이벤트
-                $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                    e.preventDefault();
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userName');
-                    alert('로그아웃되었습니다');
-                    window.location.href = '../login.html';
-                });
+                updateCartBadge();
             });
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>주문 상세 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown ul li {
+            margin: 0;
+        }
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .head_login_dropdown ul li a:hover {
+            background: #f5f5f5;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                right: 50px;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #D95B3B;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .mobile_menu_logo img {
+            height: 30px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        /* 주문 상세 스타일 */
+        .order_detail_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .order_detail_back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .order_detail_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_detail_refresh {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .order_detail_refresh:hover {
+            color: #333;
+        }
+        .order_store_info {
+            color: #0066cc;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .order_status_message {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .order_status_message emoji {
+            font-size: 28px;
+            margin-left: 10px;
+        }
+        .order_progress_wrap {
+            margin-bottom: 40px;
+            background: transparent !important;
+        }
+        .order_progress_steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e0e0e0;
+            background: transparent !important;
+        }
+        .order_progress_step {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+            padding-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background: transparent !important;
+        }
+        .order_progress_step.active {
+            color: #333;
+            font-weight: 700;
+        }
+        .order_progress_step.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #D95B3B;
+            border-radius: 10px;
+        }
+        .order_progress_time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            background: transparent !important;
+        }
+        .order_progress_bar {
+            display: none;
+        }
+        .order_progress_fill {
+            display: none;
+        }
+        .order_detail_section {
+            margin-bottom: 30px;
+        }
+        .order_detail_section_title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .order_detail_section_title h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+        .order_detail_section_title a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+        }
+        .order_detail_section_title a:hover {
+            color: #333;
+        }
+        .order_item_detail {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .order_item_image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .order_item_image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .order_item_content {
+            flex: 1;
+        }
+        .order_item_name_wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .order_item_name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_item_favorite {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+        }
+        .order_item_favorite:hover {
+            color: #d32f2f;
+        }
+        .order_item_temp {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .order_item_price {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        .order_payment_section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .order_payment_item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .order_payment_item:last-child {
+            margin-bottom: 0;
+        }
+        .order_payment_total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_stamp_section {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .order_stamp_message {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .order_stamp_info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .order_stamp_badge {
+            width: 80px;
+            height: 80px;
+            background: #D95B3B;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border: 3px solid #333;
+        }
+        .order_stamp_badge img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+    <!-- 푸터 노란색 제거 (TORI COFFEE 색상 적용) -->
+    <style>
+        .foot_menu_wrap {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu_wrap *,
+        .foot_menu_wrap::before,
+        .foot_menu_wrap::after {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu a {
+            color: #fff !important;
+        }
+        .foot_menu a:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="../index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a class="m head_menu_down">메가 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand.html">브랜드</a></li>
+                                    <li><a href="../about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a class="m head_menu_down">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/notice.html">공지사항</a></li>
+                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index.html">마이페이지</a></li>
+                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_header">
+            <div class="mobile_menu_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+            <button class="mobile_menu_close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile_menu_content">
+            <div class="mobile_menu_left">
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메가 스토리</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메뉴소개</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">매장</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">소식</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=1">공지사항</a>
+                        <a href="/bbs/?bbs_category=4">FAQ</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">이벤트</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=3">이벤트</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_right">
+                <!-- 추가 메뉴가 필요하면 여기에 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <!-- 주문 상세 헤더 -->
+            <div class="order_detail_header">
+                <button class="order_detail_back" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="order_detail_title">주문내역</div>
+                <button class="order_detail_refresh" type="button">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+
+            <div class="cont_box">
+                <div class="cont_boxs">
+                    <!-- 주문 정보 (동적으로 생성됨) -->
+                    <div id="orderInfoContainer">
+                        <!-- 주문 정보가 여기에 표시됨 -->
+                    </div>
+
+                    <!-- 주문을 찾을 수 없음 메시지 -->
+                    <div id="orderNotFoundMessage" style="display: none; padding: 60px 20px; text-align: center;">
+                        <div style="font-size: 16px; color: #999; margin-bottom: 20px;">주문을 찾을 수 없습니다</div>
+                        <a href="../index.html" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">홈으로 가기</a>
+                    </div>
+
+                        </div>
+                            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
+                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>창업상담 1588-0656</li>
+                                    <li>고객센터 1588-8298</li>
+                                    <li>FAX 02-325-5199</li>
+                                    <li>사업자등록번호 105-87-51367</li>
+                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                    <li>개인정보보호 책임자 이종원</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        // 로그인 드롭다운 토글
+        $(document).ready(function() {
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 모바일 메뉴 오버레이 닫기
+            $('.mobile_menu_close').click(function() {
+                $('.mobile_menu_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                $('.head_wrap').removeClass('head_over');
+                $('.head_menu_wrap').removeClass('right0');
+                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+            });
+
+            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+            $('.mobile_menu_overlay').click(function(e) {
+                if ($(e.target).hasClass('mobile_menu_overlay')) {
+                    $('.mobile_menu_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    $('.head_wrap').removeClass('head_over');
+                    $('.head_menu_wrap').removeClass('right0');
+                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+                }
+            });
+
+            // 화면 회전 시 뷰포트 리셋
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    var viewport = document.querySelector('meta[name="viewport"]');
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+                }, 100);
+            });
+
+            // URL에서 주문번호 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+            
+            if (!orderId) {
+                // 주문번호가 없으면 에러 메시지 표시
+                $('#orderInfoContainer').hide();
+                $('#orderNotFoundMessage').show();
+            } else {
+                // 주문 정보 불러오기
+                const ordersData = localStorage.getItem('orders');
+                const orders = ordersData ? JSON.parse(ordersData) : [];
+                const order = orders.find(function(o) {
+                    return o.orderId === orderId;
+                });
+                
+                if (!order) {
+                    // 주문을 찾을 수 없음
+                    $('#orderInfoContainer').hide();
+                    $('#orderNotFoundMessage').show();
+                } else {
+                    // 주문 정보 표시
+                    $('#orderNotFoundMessage').hide();
+                    renderOrderDetail(order);
+                }
+            }
+
+            // 주문 상세 정보 렌더링 함수
+            function renderOrderDetail(order) {
+                const container = $('#orderInfoContainer');
+                container.empty();
+                
+                // 주문 상태에 따른 메시지
+                let statusMessage = '';
+                let statusEmoji = '';
+                switch(order.status) {
+                    case '주문완료':
+                        statusMessage = '주문이 완료되었습니다';
+                        statusEmoji = '✅';
+                        break;
+                    case '준비중':
+                        statusMessage = '주문을 준비하고 있습니다';
+                        statusEmoji = '⏳';
+                        break;
+                    case '준비완료':
+                        statusMessage = '픽업 준비가 완료되었습니다';
+                        statusEmoji = '👌';
+                        break;
+                    default:
+                        statusMessage = order.status;
+                        statusEmoji = '📦';
+                }
+                
+                // 주문 정보 HTML 생성
+                let orderInfoHtml = `
+                    <!-- 주문 정보 -->
+                    <div class="order_store_info">
+                        주문번호 ${order.orderId}
+                    </div>
+
+                    <!-- 상태 메시지 -->
+                    <div class="order_status_message">
+                        ${statusMessage} <span style="font-size: 28px;">${statusEmoji}</span>
+                    </div>
+
+                    <!-- 주문 진행 상태 바 -->
+                    <div class="order_progress_wrap">
+                        <div class="order_progress_bar">
+                            <div class="order_progress_fill"></div>
+                        </div>
+                        <div class="order_progress_steps">
+                            <div class="order_progress_step active">
+                                주문완료
+                                <div class="order_progress_time">${formatOrderDate(order.orderDate)}</div>
+                            </div>
+                            <div class="order_progress_step ${order.status === '준비중' || order.status === '준비완료' ? 'active' : ''}">
+                                준비중
+                            </div>
+                            <div class="order_progress_step ${order.status === '준비완료' ? 'active' : ''}">
+                                준비완료
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 주문내역 섹션 -->
+                    <div class="order_detail_section">
+                        <div class="order_detail_section_title">
+                            <h3>주문내역 ${order.items.length}개</h3>
+                        </div>
+                `;
+                
+                // 주문 상품 목록 렌더링
+                order.items.forEach(function(item) {
+                    // 옵션 정보 수집
+                    let optionsHtml = '';
+                    if (item.options && item.options.length > 0) {
+                        optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px;">';
+                        item.options.forEach(function(option) {
+                            optionsHtml += '<div>+ ' + (option.optionName || '옵션') + ' (+' + (option.optionPrice || 0).toLocaleString() + '원)</div>';
+                        });
+                        optionsHtml += '</div>';
+                    }
+                    
+                    const itemHtml = `
+                        <div class="order_item_detail">
+                            <div class="order_item_image">
+                                <img src="${item.image || '../logo.png'}" alt="${item.name}">
+                            </div>
+                            <div class="order_item_content">
+                                <div class="order_item_name_wrap">
+                                    <div class="order_item_name">${item.name}</div>
+                                </div>
+                                <div class="order_item_temp">${item.size || '기본'}</div>
+                                ${optionsHtml}
+                                <div class="order_item_price">${item.quantity}개 | ${item.price.toLocaleString()}원</div>
+                            </div>
+                        </div>
+                    `;
+                    orderInfoHtml += itemHtml;
+                });
+                
+                // 총 상품 금액 계산
+                const totalItemPrice = order.items.reduce(function(sum, item) {
+                    return sum + item.price;
+                }, 0);
+                
+                // 결제금액 섹션
+                orderInfoHtml += `
+                    </div>
+
+                    <!-- 결제금액 섹션 -->
+                    <div class="order_detail_section">
+                        <div class="order_detail_section_title">
+                            <h3>결제금액</h3>
+                        </div>
+                        <div class="order_payment_section">
+                            <div class="order_payment_item">
+                                <span>총 상품금액</span>
+                                <span>${totalItemPrice.toLocaleString()}원</span>
+                            </div>
+                            <div class="order_payment_item">
+                                <span>제휴 멤버십</span>
+                                <span>-0원</span>
+                            </div>
+                            <div class="order_payment_item">
+                                <span>쿠폰</span>
+                                <span>-0원</span>
+                            </div>
+                            <div class="order_payment_total">
+                                <span>총 결제금액</span>
+                                <span>${order.totalPrice.toLocaleString()}원</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // 주문자 정보 및 요청사항 표시
+                if (order.customerName || order.request) {
+                    orderInfoHtml += `
+                        <!-- 주문자 정보 및 요청사항 -->
+                        <div class="order_detail_section">
+                            <div class="order_detail_section_title">
+                                <h3>주문 정보</h3>
+                            </div>
+                            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                    `;
+                    
+                    if (order.customerName) {
+                        orderInfoHtml += `
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">주문자</div>
+                                <div style="font-size: 16px; color: #333; font-weight: 600;">${order.customerName}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (order.orderDate) {
+                        orderInfoHtml += `
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">주문일시</div>
+                                <div style="font-size: 16px; color: #333;">${order.orderDate}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    if (order.request) {
+                        orderInfoHtml += `
+                            <div>
+                                <div style="font-size: 14px; color: #666; margin-bottom: 5px;">요청사항</div>
+                                <div style="font-size: 16px; color: #333; white-space: pre-wrap;">${order.request}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    orderInfoHtml += `
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // 홈으로, 주문내역보기 버튼 추가
+                orderInfoHtml += `
+                    <div class="order_detail_section">
+                        <div style="display: flex; gap: 15px; justify-content: center; padding: 20px;">
+                            <a href="../index.html" style="display: inline-block; padding: 12px 30px; background: #f5f5f5; color: #333; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; text-align: center;">
+                                홈으로
+                            </a>
+                            <a href="history.html" style="display: inline-block; padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; text-decoration: none; text-align: center;">
+                                주문내역보기
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                container.html(orderInfoHtml);
+            }
+            
+            // 주문 취소 함수
+            function cancelOrder(orderId) {
+                // API 호출 (실제로는 서버에 요청)
+                // PUT /api/orders/{orderId}/cancel 또는 DELETE /api/orders/{orderId}
+                $.ajax({
+                    url: '/api/orders/' + orderId + '/cancel',
+                    method: 'PUT',
+                    data: JSON.stringify({ status: '주문취소' }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        alert('주문이 취소되었습니다.');
+                        // localStorage에서 주문 상태 업데이트
+                        const ordersData = localStorage.getItem('orders');
+                        const orders = ordersData ? JSON.parse(ordersData) : [];
+                        const orderIndex = orders.findIndex(function(o) {
+                            return o.orderId === orderId;
+                        });
+                        if (orderIndex !== -1) {
+                            orders[orderIndex].status = '주문취소';
+                            localStorage.setItem('orders', JSON.stringify(orders));
+                        }
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('주문 취소 실패:', error);
+                        // 에러 시에도 localStorage 업데이트 (테스트용)
+                        const ordersData = localStorage.getItem('orders');
+                        const orders = ordersData ? JSON.parse(ordersData) : [];
+                        const orderIndex = orders.findIndex(function(o) {
+                            return o.orderId === orderId;
+                        });
+                        if (orderIndex !== -1) {
+                            orders[orderIndex].status = '주문취소';
+                            localStorage.setItem('orders', JSON.stringify(orders));
+                        }
+                        alert('주문이 취소되었습니다.');
+                        location.reload();
+                    }
+                });
+            }
+
+            // 주문 날짜 포맷팅 함수
+            function formatOrderDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    // 날짜 문자열이 이미 포맷되어 있는 경우
+                    const parts = dateString.split(' ');
+                    if (parts.length >= 2) {
+                        const datePart = parts[0].split('-');
+                        const timePart = parts[1].split(':');
+                        if (datePart.length >= 3 && timePart.length >= 2) {
+                            return datePart[1] + '.' + datePart[2] + ' ' + timePart[0] + ':' + timePart[1];
+                        }
+                    }
+                    return dateString;
+                }
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return month + '.' + day + ' ' + hours + ':' + minutes;
+            }
+
+            // 뒤로가기 버튼
+            $('.order_detail_back').on('click', function() {
+                history.back();
+            });
+
+            // 새로고침 버튼
+            $('.order_detail_refresh').on('click', function() {
+                location.reload();
+            });
+
+            // 로그인 상태 체크 및 UI 업데이트
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 체크
+            checkLoginStatus();
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                alert('로그아웃되었습니다');
+                window.location.href = '../login.html';
+            });
+        });
+    </script>
+</body>
+</html>
+
