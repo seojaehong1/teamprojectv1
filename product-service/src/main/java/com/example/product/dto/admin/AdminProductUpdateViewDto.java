@@ -11,10 +11,10 @@ import java.util.List;
 public class AdminProductUpdateViewDto {
 
     // menu
-    private Integer menuCode;
+    private Long menuCode;
     private String menuName;
     private String category;
-    private Integer basePrice;
+    private BigDecimal basePrice;
     private String baseVolume;
     private String description;
     private Integer createTime;

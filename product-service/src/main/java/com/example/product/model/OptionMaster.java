@@ -3,6 +3,8 @@ package com.example.product.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "option_master")
 @Getter @Setter
@@ -23,7 +25,7 @@ public class OptionMaster {
     private String optionName;
 
     @Column(name = "default_price", nullable = false)
-    private Integer defaultPrice;
+    private BigDecimal defaultPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_material_id")

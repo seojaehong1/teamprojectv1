@@ -15,7 +15,7 @@ public class Nutrition {
 
     @Id
     @Column(name = "menu_code")
-    private Integer menuCode;
+    private Long menuCode;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)

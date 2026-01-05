@@ -16,7 +16,7 @@ public class OptionController {
 
     @GetMapping
     public List<OptionGroupDto> getMenuOptions(
-            @RequestParam Integer menuCode
+            @RequestParam Long menuCode
     ) {
         return optionService.getOptionsByMenu(menuCode);
     }

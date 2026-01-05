@@ -108,9 +108,9 @@ public class AdminProductService {
         saveRecipes(menu, dto.getRecipes());
     }
 
-    // 관리자 제품 수정 화면용 조회 [GET /api/admin/products/{menuCdoe}]
+    // 관리자 제품 수정 화면용 조회 [GET /api/admin/products/{menuCode}]
     @Transactional
-    public AdminProductUpdateViewDto getProductForUpdate(Integer menuCode) {
+    public AdminProductUpdateViewDto getProductForUpdate(Long menuCode) {
 
         // 1. menu 조회
         Menu menu = menuRepository.findById(menuCode)
@@ -171,7 +171,7 @@ public class AdminProductService {
 
     // 관리자 제품 수정 [PUT /api/admin/products/{menuCode}]
     @Transactional
-    public void updateProduct(Integer menuCode, AdminProductCreateUpdateDto dto) {
+    public void updateProduct(Long menuCode, AdminProductCreateUpdateDto dto) {
 
         // 0. 기존 메뉴 조회
         Menu menu = menuRepository.findById(menuCode)
@@ -218,7 +218,7 @@ public class AdminProductService {
 
     // 관리자 제품 삭제 [DELETE /api/admin/products/{menuCode}]
     @Transactional
-    public void deleteProduct(Integer menuCode) {
+    public void deleteProduct(Long menuCode) {
 
         // 0. 메뉴 존재 여부 확인
         Menu menu = menuRepository.findById(menuCode)
@@ -303,7 +303,7 @@ public class AdminProductService {
     }
 
     // 이미지 경로 생성
-    private String buildImageUrl(Integer menuCode) {
+    private String buildImageUrl(Long menuCode) {
         return "/images/menu/" + menuCode + ".jpg";
     }
 }

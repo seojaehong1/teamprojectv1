@@ -36,7 +36,7 @@ public class MenuController {
 
     // 3. 메뉴 상세 조회
     @GetMapping("/{menuCode}")
-    public MenuDetailDto getMenuDetail(@PathVariable Integer menuCode) {
+    public MenuDetailDto getMenuDetail(@PathVariable Long menuCode) {
         return menuService.getMenuDetail(menuCode);
     }
 }

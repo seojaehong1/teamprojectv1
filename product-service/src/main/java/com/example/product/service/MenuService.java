@@ -77,7 +77,7 @@ public class MenuService {
     }
 
     // 3. 메뉴 상세 조회 [GET /api/menu/drinks/{menuCode}]
-    public MenuDetailDto getMenuDetail(Integer menuCode) {
+    public MenuDetailDto getMenuDetail(Long menuCode) {
 
         Menu menu = menuRepository.findById(menuCode)
                 .orElseThrow(() ->
@@ -136,7 +136,7 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    private String buildImageUrl(Integer menuCode) {
+    private String buildImageUrl(Long menuCode) {
         return "/images/menu/" + menuCode + ".jpg";
     }
 

@@ -37,7 +37,7 @@ public class AdminProductController {
     // 3. 관리자 제품 수정 [PUT /api/admin/products/{menuCode}]
     @PutMapping("/{menuCode}")
     public void updateProduct(
-            @PathVariable Integer menuCode,
+            @PathVariable Long menuCode,
             @RequestBody AdminProductCreateUpdateDto dto
     ) {
         adminProductService.updateProduct(menuCode, dto);
@@ -46,7 +46,7 @@ public class AdminProductController {
     // 3-1. 관리자 제품 수정을 위한 조회 [GET /api/admin/products/{menuCode}]
     @GetMapping("/{menuCode}")
     public AdminProductUpdateViewDto getProductForUpdate(
-            @PathVariable Integer menuCode
+            @PathVariable Long menuCode
     ) {
         return adminProductService.getProductForUpdate(menuCode);
     }
@@ -54,9 +54,19 @@ public class AdminProductController {
     // 4. 관리자 제품 삭제 [DELETE /api/admin/products/{menuCode}]
     @DeleteMapping("/{menuCode}")
     public Map<String, String> deleteProduct(
-            @PathVariable Integer menuCode
+            @PathVariable Long menuCode
     ) {
         adminProductService.deleteProduct(menuCode);
         return Map.of("message", "제품이 삭제되었습니다.");
+    }
+
+    // 5. 관리자 제품 검색 [GET /api/admin/products/search] ** 01.05 update
+    @GetMapping("/search")
+    public Page<AdminProductListDto> searchProducts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int limit
+    ) {
+        return adminProductService.searchProducts(keyword, page, limit);
     }
 }

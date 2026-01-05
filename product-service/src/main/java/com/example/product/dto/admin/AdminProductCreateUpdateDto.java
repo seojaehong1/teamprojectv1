@@ -11,7 +11,7 @@ public class AdminProductCreateUpdateDto {
     // 1. menu
     private String menuName;
     private String category;
-    private Integer basePrice;
+    private BigDecimal basePrice;
     private String baseVolume;
     private String description;
     private Integer createTime;

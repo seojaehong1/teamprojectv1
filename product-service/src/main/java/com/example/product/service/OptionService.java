@@ -21,7 +21,7 @@ public class OptionService {
     private final OptionMasterRepository optionMasterRepository;
 
     //옵션 조회 [GET /api/menu/options?menuCode=?]
-    public List<OptionGroupDto> getOptionsByMenu(Integer menuCode) {
+    public List<OptionGroupDto> getOptionsByMenu(Long menuCode) {
 
         // 1. 메뉴에 연결된 옵션 그룹 조회
         List<MenuOption> menuOptions =
