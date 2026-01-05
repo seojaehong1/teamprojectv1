@@ -700,7 +700,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="user.html">
+                <a href="/admin/user">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -708,16 +708,16 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="user.html" class="pc">회원 관리</a>
+                            <a href="/admin/user" class="pc">회원 관리</a>
                         </li>
                         <li>
-                            <a href="product.html" class="pc">상품 관리</a>
+                            <a href="/admin/product" class="pc">상품 관리</a>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">공지사항 관리</a>
+                            <a href="/admin/notice" class="pc">공지사항 관리</a>
                         </li>
                         <li>
-                            <a href="inquiry.html" class="pc">문의 관리</a>
+                            <a href="/admin/inquiry" class="pc">문의 관리</a>
                         </li>
                     </ul>
                 </div>
@@ -751,10 +751,10 @@
             
             <!-- 네비게이션 -->
             <div class="admin_nav">
-                <a href="user.html" class="admin_nav_item">회원 관리</a>
-                <a href="product.html" class="admin_nav_item">상품 관리</a>
-                <a href="notice.html" class="admin_nav_item">공지사항 관리</a>
-                <a href="inquiry.html" class="admin_nav_item active">문의 관리</a>
+                <a href="/admin/user" class="admin_nav_item">회원 관리</a>
+                <a href="/admin/product" class="admin_nav_item">상품 관리</a>
+                <a href="/admin/notice" class="admin_nav_item">공지사항 관리</a>
+                <a href="/admin/inquiry" class="admin_nav_item active">문의 관리</a>
             </div>
             
             <!-- 검색 및 필터 -->
@@ -766,9 +766,8 @@
                 <div class="inquiry_filter">
                     <select class="inquiry_filter_select" id="statusFilter">
                         <option value="">전체 상태</option>
-                        <option value="waiting">답변 대기</option>
-                        <option value="answered">답변 완료</option>
-                        <option value="completed">처리 완료</option>
+                        <option value="PENDING">답변 대기</option>
+                        <option value="ANSWERED">답변 완료</option>
                     </select>
                 </div>
             </div>
@@ -818,43 +817,20 @@
                             <th>관리</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>2</td>
-                            <td>배송 문의드립니다</td>
-                            <td>홍길동</td>
-                            <td><span class="inquiry_status waiting">답변 대기</span></td>
-                            <td>2024-01-15</td>
-                            <td>
-                                <button class="inquiry_action_btn answer" onclick="answerInquiry(2)">답변</button>
-                                <button class="inquiry_action_btn view" onclick="viewInquiry(2)">보기</button>
-                                <button class="inquiry_action_btn delete" onclick="deleteInquiry(2)">삭제</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>회원 정보 수정 문의</td>
-                            <td>김사용자</td>
-                            <td><span class="inquiry_status answered">답변 완료</span></td>
-                            <td>2024-01-10</td>
-                            <td>
-                                <button class="inquiry_action_btn view" onclick="viewInquiry(1)">보기</button>
-                                <button class="inquiry_action_btn delete" onclick="deleteInquiry(1)">삭제</button>
-                            </td>
-                        </tr>
+                    <tbody id="inquiryListBody">
+                        <!-- 동적으로 로드됨 -->
                     </tbody>
                 </table>
+                <div id="inquiryListEmpty" style="display: none; text-align: center; padding: 40px; color: #999;">
+                    등록된 문의가 없습니다.
+                </div>
             </div>
-            
+
             <!-- 페이지네이션 -->
             <div class="board_page_wrap">
                 <div class="board_page">
-                    <ul>
-                        <li><a><span>처음</span></a></li>
-                        <li class="board_page_check"><a><span>1</span></a></li>
-                        <li><a><span>2</span></a></li>
-                        <li><a><span>다음</span></a></li>
-                        <li><a><span>마지막</span></a></li>
+                    <ul id="inquiryPagination">
+                        <!-- 동적으로 로드됨 -->
                     </ul>
                 </div>
             </div>
@@ -997,7 +973,7 @@
             var userRole = localStorage.getItem('userRole');
             if (userRole !== 'admin') {
                 alert('관리자 권한이 필요합니다.');
-                window.location.href = 'login.html';
+                window.location.href = '/admin/login';
                 return;
             }
             
@@ -1023,15 +999,164 @@
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
                     localStorage.clear();
-                    window.location.href = 'login.html';
+                    window.location.href = '/';
                 }
             });
 
             // 필터 변경
             $('#statusFilter').change(function() {
-                // 필터링 로직
+                loadInquiries();
             });
+
+            // 검색 버튼 클릭
+            $('.inquiry_search_btn').click(function() {
+                loadInquiries();
+            });
+
+            // 검색 입력 엔터키
+            $('.inquiry_search_input').on('keypress', function(e) {
+                if (e.which === 13) {
+                    loadInquiries();
+                }
+            });
+
+            // 문의 목록 로드
+            loadInquiries();
         });
+
+        // 문의 목록 로드 (API 연동)
+        var currentPage = 0;
+        var totalPages = 0;
+
+        function loadInquiries() {
+            var token = localStorage.getItem('accessToken');
+            var status = $('#statusFilter').val();
+            var keyword = $('.inquiry_search_input').val().trim();
+
+            var url = 'http://localhost:8000/api/admin/inquiries?page=' + currentPage + '&size=10';
+            if (status) {
+                url += '&status=' + status.toUpperCase();
+            }
+            if (keyword) {
+                url += '&keyword=' + encodeURIComponent(keyword);
+            }
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('문의 목록을 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                totalPages = data.totalPages || 1;
+                renderInquiryList(data.inquiries || []);
+                renderPagination();
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                $('#inquiryListEmpty').show();
+            });
+        }
+
+        // 문의 목록 렌더링
+        function renderInquiryList(inquiries) {
+            var tbody = $('#inquiryListBody');
+            var emptyMessage = $('#inquiryListEmpty');
+
+            tbody.empty();
+
+            if (!inquiries || inquiries.length === 0) {
+                emptyMessage.show();
+                return;
+            }
+
+            emptyMessage.hide();
+
+            inquiries.forEach(function(inquiry, index) {
+                var row = $('<tr></tr>');
+
+                row.append('<td>' + (inquiry.id || (currentPage * 10 + index + 1)) + '</td>');
+                row.append('<td>' + escapeHtml(inquiry.title || '') + '</td>');
+                row.append('<td>' + escapeHtml(inquiry.userId || inquiry.author || '-') + '</td>');
+
+                // 상태 표시
+                var statusText = '답변 대기';
+                var statusClass = 'waiting';
+                if (inquiry.status === 'ANSWERED') {
+                    statusText = '답변 완료';
+                    statusClass = 'answered';
+                } else if (inquiry.status === 'COMPLETED') {
+                    statusText = '처리 완료';
+                    statusClass = 'completed';
+                }
+                row.append('<td><span class="inquiry_status ' + statusClass + '">' + statusText + '</span></td>');
+
+                row.append('<td>' + formatDate(inquiry.createdAt) + '</td>');
+
+                var actionCell = $('<td></td>');
+                if (inquiry.status !== 'ANSWERED') {
+                    actionCell.append('<button class="inquiry_action_btn answer" onclick="answerInquiry(' + inquiry.id + ')">답변</button>');
+                }
+                actionCell.append('<button class="inquiry_action_btn view" onclick="viewInquiry(' + inquiry.id + ')">보기</button>');
+                actionCell.append('<button class="inquiry_action_btn delete" onclick="deleteInquiry(' + inquiry.id + ')">삭제</button>');
+                row.append(actionCell);
+
+                tbody.append(row);
+            });
+        }
+
+        // 페이지네이션 렌더링
+        function renderPagination() {
+            var ul = $('#inquiryPagination');
+            ul.empty();
+
+            if (totalPages <= 1) return;
+
+            // 처음 버튼
+            ul.append('<li><a onclick="goToPage(0)" style="cursor:pointer;"><span>처음</span></a></li>');
+
+            // 페이지 번호
+            for (var i = 0; i < totalPages; i++) {
+                var activeClass = (i === currentPage) ? 'board_page_check' : '';
+                ul.append('<li class="' + activeClass + '"><a onclick="goToPage(' + i + ')" style="cursor:pointer;"><span>' + (i + 1) + '</span></a></li>');
+            }
+
+            // 마지막 버튼
+            ul.append('<li><a onclick="goToPage(' + (totalPages - 1) + ')" style="cursor:pointer;"><span>마지막</span></a></li>');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadInquiries();
+        }
+
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                var date = new Date(dateStr);
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+            } catch (e) {
+                return dateStr;
+            }
+        }
 
         // 스크롤바 너비 계산
         function getScrollbarWidth() {
@@ -1062,31 +1187,36 @@
             document.body.style.paddingRight = '';
         }
 
-        // 문의 답변 폼 표시
+        // 문의 답변 폼 표시 (API 연동)
         function answerInquiry(id) {
-            // 실제로는 서버에서 문의 정보를 가져와서 폼에 채워야 함
-            // 예시 데이터
-            const inquiryData = {
-                1: { 
-                    title: '회원 정보 수정 문의', 
-                    content: '회원 정보를 수정하고 싶은데 어떻게 해야 하나요?',
-                    answer: '회원정보 페이지에서 수정 가능합니다.'
-                },
-                2: { 
-                    title: '배송 문의드립니다', 
-                    content: '언제 배송되는지 궁금합니다.',
-                    answer: ''
+            var token = localStorage.getItem('accessToken');
+
+            fetch('http://localhost:8000/api/admin/inquiries/' + id, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
                 }
-            };
-            
-            const inquiry = inquiryData[id] || { title: '', content: '', answer: '' };
-            $('#inquiryViewTitle').text(inquiry.title);
-            $('#inquiryViewContent').text(inquiry.content);
-            $('#inquiryAnswer').val(inquiry.answer || '');
-            $('#inquiryAnswerForm').data('inquiryId', id);
-            $('#inquiryAnswerFormWrap').slideDown();
-            $('#inquiryListWrap').hide();
-            $('html, body').animate({ scrollTop: $('.inquiry_answer_form_wrap').offset().top - 100 }, 300);
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('문의 정보를 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(inquiry) {
+                $('#inquiryViewTitle').text(inquiry.title || '');
+                $('#inquiryViewContent').text(inquiry.content || '');
+                $('#inquiryAnswer').val(inquiry.answer || '');
+                $('#inquiryAnswerForm').data('inquiryId', id);
+                $('#inquiryAnswerFormWrap').slideDown();
+                $('#inquiryListWrap').hide();
+                $('html, body').animate({ scrollTop: $('.inquiry_answer_form_wrap').offset().top - 100 }, 300);
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                alert('문의 정보를 불러오는데 실패했습니다.');
+            });
         }
 
         // 문의 답변 폼 숨기기
@@ -1096,41 +1226,42 @@
             $('#inquiryAnswerForm')[0].reset();
         }
 
-        // 문의 보기 모달 표시
+        // 문의 보기 모달 표시 (API 연동)
         function viewInquiry(id) {
-            // 실제로는 서버에서 문의 정보를 가져와서 모달에 채워야 함
-            // 예시 데이터
-            const inquiryData = {
-                1: { 
-                    title: '회원 정보 수정 문의', 
-                    author: '김사용자',
-                    date: '2024-01-10',
-                    content: '회원 정보를 수정하고 싶은데 어떻게 해야 하나요?',
-                    answer: '회원정보 페이지에서 수정 가능합니다.'
-                },
-                2: { 
-                    title: '배송 문의드립니다', 
-                    author: '홍길동',
-                    date: '2024-01-15',
-                    content: '언제 배송되는지 궁금합니다.',
-                    answer: ''
+            var token = localStorage.getItem('accessToken');
+
+            fetch('http://localhost:8000/api/admin/inquiries/' + id, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
                 }
-            };
-            
-            const inquiry = inquiryData[id] || { title: '', author: '', date: '', content: '', answer: '' };
-            $('#inquiryViewModalTitle').text(inquiry.title);
-            $('#inquiryViewModalAuthor').text(inquiry.author);
-            $('#inquiryViewModalDate').text(inquiry.date);
-            $('#inquiryViewModalContent').text(inquiry.content);
-            
-            if (inquiry.answer) {
-                $('#inquiryViewModalAnswer').text(inquiry.answer);
-                $('#inquiryViewModalAnswerWrap').show();
-            } else {
-                $('#inquiryViewModalAnswerWrap').hide();
-            }
-            
-            openModal('#inquiryViewModal');
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('문의 정보를 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(inquiry) {
+                $('#inquiryViewModalTitle').text(inquiry.title || '');
+                $('#inquiryViewModalAuthor').text(inquiry.userId || inquiry.author || '-');
+                $('#inquiryViewModalDate').text(formatDate(inquiry.createdAt));
+                $('#inquiryViewModalContent').text(inquiry.content || '');
+
+                if (inquiry.answer) {
+                    $('#inquiryViewModalAnswer').text(inquiry.answer);
+                    $('#inquiryViewModalAnswerWrap').show();
+                } else {
+                    $('#inquiryViewModalAnswerWrap').hide();
+                }
+
+                openModal('#inquiryViewModal');
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                alert('문의 정보를 불러오는데 실패했습니다.');
+            });
         }
 
         // 문의 보기 모달 닫기
@@ -1145,12 +1276,35 @@
             openModal('#deleteModal');
         }
 
-        // 삭제 확인
+        // 삭제 확인 (API 연동)
         function confirmDelete() {
             if (deleteInquiryId) {
-                // 문의 삭제 로직
-                closeModal('#deleteModal');
-                openModal('#deleteSuccessModal');
+                var token = localStorage.getItem('accessToken');
+
+                fetch('http://localhost:8000/api/admin/inquiries/' + deleteInquiryId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('삭제에 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    closeModal('#deleteModal');
+                    openModal('#deleteSuccessModal');
+                    deleteInquiryId = null;
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    closeModal('#deleteModal');
+                    alert(error.message || '삭제에 실패했습니다.');
+                    deleteInquiryId = null;
+                });
             }
         }
 
@@ -1172,14 +1326,43 @@
             location.reload();
         }
 
-        // 문의 답변 폼 제출
+        // 문의 답변 폼 제출 (API 연동)
         $(document).ready(function() {
             $('#inquiryAnswerForm').submit(function(e) {
                 e.preventDefault();
                 const inquiryId = $(this).data('inquiryId');
-                // 답변 저장 로직
-                hideInquiryAnswerForm();
-                openModal('#answerSuccessModal');
+                var token = localStorage.getItem('accessToken');
+                var answerContent = $('#inquiryAnswer').val().trim();
+
+                if (!answerContent) {
+                    alert('답변 내용을 입력해주세요.');
+                    return;
+                }
+
+                fetch('http://localhost:8000/api/admin/inquiries/' + inquiryId + '/answer', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ answer: answerContent })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || '답변 저장에 실패했습니다.');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    hideInquiryAnswerForm();
+                    openModal('#answerSuccessModal');
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    alert(error.message || '답변 저장에 실패했습니다.');
+                });
             });
 
             // 모달 외부 클릭 시 닫기

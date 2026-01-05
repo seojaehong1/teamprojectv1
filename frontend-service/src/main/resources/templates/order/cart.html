@@ -616,7 +616,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="../index">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -624,49 +624,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="../bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="../bbs/notice">공지사항</a></li>
+                                    <li><a href="../bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="../bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="../bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -678,7 +678,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="cart.html" class="head_user_link">
+                        <a href="cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -687,7 +687,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -700,8 +700,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="history">주문/배송조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -799,7 +799,7 @@
         <!-- 장바구니 비어있음 메시지 -->
         <div id="cartEmptyMessage" style="display: none; padding: 60px 20px; text-align: center;">
             <div style="font-size: 16px; color: #999; margin-bottom: 20px;">장바구니가 비어있습니다</div>
-            <a href="../menu/drink.html" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">메뉴 보러가기</a>
+            <a href="../menu/drink" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">메뉴 보러가기</a>
         </div>
 
             <!-- 안내 문구 -->
@@ -1291,7 +1291,7 @@
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('userName');
                     alert('로그아웃되었습니다');
-                    window.location.href = '../login.html';
+                    window.location.href = '/';
                 });
             });
     </script>

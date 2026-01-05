@@ -684,7 +684,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="user.html">
+                <a href="user">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -692,16 +692,16 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="user.html" class="pc">회원 관리</a>
+                            <a href="user" class="pc">회원 관리</a>
                         </li>
                         <li>
-                            <a href="product.html" class="pc">상품 관리</a>
+                            <a href="product" class="pc">상품 관리</a>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">공지사항 관리</a>
+                            <a href="notice" class="pc">공지사항 관리</a>
                         </li>
                         <li>
-                            <a href="inquiry.html" class="pc">문의 관리</a>
+                            <a href="inquiry" class="pc">문의 관리</a>
                         </li>
                     </ul>
                 </div>
@@ -735,10 +735,10 @@
             
             <!-- 네비게이션 -->
             <div class="admin_nav">
-                <a href="user.html" class="admin_nav_item active">회원 관리</a>
-                <a href="product.html" class="admin_nav_item">상품 관리</a>
-                <a href="notice.html" class="admin_nav_item">공지사항 관리</a>
-                <a href="inquiry.html" class="admin_nav_item">문의 관리</a>
+                <a href="user" class="admin_nav_item active">회원 관리</a>
+                <a href="product" class="admin_nav_item">상품 관리</a>
+                <a href="notice" class="admin_nav_item">공지사항 관리</a>
+                <a href="inquiry" class="admin_nav_item">문의 관리</a>
             </div>
             
             <!-- 검색 및 필터 -->
@@ -751,8 +751,8 @@
                     <select class="user_filter_select" id="roleFilter">
                         <option value="">전체 권한</option>
                         <option value="admin">관리자</option>
-                        <option value="owner">점주</option>
-                        <option value="user">일반 사용자</option>
+                        <option value="store_owner">점주</option>
+                        <option value="member">일반 사용자</option>
                     </select>
                 </div>
             </div>
@@ -957,7 +957,7 @@
             var userRole = localStorage.getItem('userRole');
             if (userRole !== 'admin') {
                 showCustomAlert('관리자 권한이 필요합니다.', function() {
-                    window.location.href = 'login.html';
+                    window.location.href = '/admin/login';
                 });
                 return;
             }
@@ -984,7 +984,7 @@
                 e.preventDefault();
                 showCustomConfirm('로그아웃하시겠습니까?', function() {
                     localStorage.clear();
-                    window.location.href = 'login.html';
+                    window.location.href = '/';
                 });
             });
 
@@ -1009,162 +1009,232 @@
             loadUsers();
         });
         
-        // 사용자 목록 로드
+        // 사용자 목록 로드 (API 연동)
+        var currentPage = 0;
+        var totalPages = 0;
+
         function loadUsers() {
-            var users = JSON.parse(localStorage.getItem('users') || '[]');
             var filterRole = $('#roleFilter').val();
-            var searchTerm = $('.user_search_input').val().toLowerCase().trim();
-            var filteredUsers = users;
-            
-            // 필터 적용
+            var searchTerm = $('.user_search_input').val().trim();
+
+            var url = 'http://localhost:8000/api/admin/users?page=' + currentPage + '&size=10';
             if (filterRole) {
-                filteredUsers = filteredUsers.filter(function(user) {
-                    return user.role === filterRole;
-                });
+                url += '&userType=' + filterRole;
             }
-            
-            // 검색 적용
             if (searchTerm) {
-                filteredUsers = filteredUsers.filter(function(user) {
-                    var name = (user.name || user.userName || '').toLowerCase();
-                    var email = (user.email || user.id || '').toLowerCase();
-                    return name.indexOf(searchTerm) !== -1 || email.indexOf(searchTerm) !== -1;
-                });
+                url += '&keyword=' + encodeURIComponent(searchTerm);
             }
-            
-            // 사용자 목록 렌더링
-            renderUserList(filteredUsers);
+
+            var token = localStorage.getItem('accessToken');
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('회원 목록을 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                totalPages = data.totalPages || 0;
+                renderUserList(data.users || []);
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showCustomAlert('회원 목록을 불러오는데 실패했습니다.');
+            });
         }
         
         // 사용자 목록 렌더링
         function renderUserList(users) {
             var tbody = $('#userListBody');
             var emptyMessage = $('#userListEmpty');
-            
+
             tbody.empty();
-            
-            if (users.length === 0) {
+
+            if (!users || users.length === 0) {
                 emptyMessage.show();
                 return;
             }
-            
+
             emptyMessage.hide();
-            
+
             users.forEach(function(user, index) {
                 var roleText = '';
                 var roleClass = '';
-                
-                switch(user.role) {
+                var userType = (user.userType || user.role || 'member').toLowerCase();
+
+                switch(userType) {
                     case 'admin':
                         roleText = '관리자';
                         roleClass = 'admin';
                         break;
+                    case 'store_owner':
                     case 'owner':
                         roleText = '점주';
                         roleClass = 'owner';
                         break;
+                    case 'member':
                     case 'user':
                     default:
                         roleText = '일반 회원';
                         roleClass = 'user';
                         break;
                 }
-                
+
                 var row = $('<tr></tr>');
-                row.append('<td>' + (index + 1) + '</td>');
-                row.append('<td>' + (user.name || user.userName || '이름 없음') + '</td>');
-                row.append('<td>' + (user.email || user.id || '이메일 없음') + '</td>');
+                row.append('<td>' + (currentPage * 10 + index + 1) + '</td>');
+                row.append('<td>' + escapeHtml(user.name || '이름 없음') + '</td>');
+                row.append('<td>' + escapeHtml(user.email || '이메일 없음') + '</td>');
                 row.append('<td><span class="user_role ' + roleClass + '">' + roleText + '</span></td>');
-                row.append('<td>' + (user.joinDate || user.createdAt || '-') + '</td>');
-                
+                row.append('<td>' + formatDate(user.createdAt) + '</td>');
+
                 // 관리 버튼
                 var actionCell = $('<td></td>');
-                actionCell.append('<button class="user_action_btn edit" onclick="editUser(\'' + user.id + '\')">수정</button>');
-                
+                var userId = user.userId || user.id;
+                actionCell.append('<button class="user_action_btn edit" onclick="editUser(\'' + userId + '\')">수정</button>');
+
                 // 일반 회원에게만 점주 전환 버튼 표시
-                if (user.role === 'user') {
-                    actionCell.append('<button class="user_action_btn promote" onclick="promoteToOwner(\'' + user.id + '\')">점주 전환</button>');
+                if (userType === 'member' || userType === 'user') {
+                    actionCell.append('<button class="user_action_btn promote" onclick="promoteToOwner(\'' + userId + '\')">점주 전환</button>');
                 }
-                
-                actionCell.append('<button class="user_action_btn delete" onclick="deleteUser(\'' + user.id + '\')">삭제</button>');
+
+                // 관리자 계정은 삭제 버튼 숨김
+                if (userType !== 'admin') {
+                    actionCell.append('<button class="user_action_btn delete" onclick="deleteUser(\'' + userId + '\')">삭제</button>');
+                }
                 row.append(actionCell);
-                
+
                 tbody.append(row);
             });
         }
+
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                var date = new Date(dateStr);
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+            } catch (e) {
+                return dateStr;
+            }
+        }
         
-        // 점주로 전환
+        // 점주로 전환 (API 연동)
         function promoteToOwner(userId) {
             showCustomConfirm('이 회원을 점주로 전환하시겠습니까?', function() {
-                var users = JSON.parse(localStorage.getItem('users') || '[]');
-                var userIndex = users.findIndex(function(user) {
-                    return user.id === userId || user.email === userId;
-                });
-                
-                if (userIndex !== -1) {
-                    users[userIndex].role = 'owner';
-                    localStorage.setItem('users', JSON.stringify(users));
+                var token = localStorage.getItem('accessToken');
+
+                fetch('http://localhost:8000/api/admin/users/' + userId + '/role', {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userType: 'store_owner' })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || '권한 변경에 실패했습니다.');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
                     showCustomAlert('점주로 전환되었습니다.', function() {
-                        loadUsers(); // 목록 새로고침
+                        loadUsers();
                     });
-                } else {
-                    showCustomAlert('사용자를 찾을 수 없습니다.');
-                }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    showCustomAlert(error.message || '점주 전환에 실패했습니다.');
+                });
             });
         }
 
-        // 사용자 수정
+        // 사용자 수정 (API 연동)
         function editUser(userId) {
-            var users = JSON.parse(localStorage.getItem('users') || '[]');
-            var user = users.find(function(u) {
-                return u.id === userId || u.email === userId;
+            var token = localStorage.getItem('accessToken');
+
+            fetch('http://localhost:8000/api/admin/users/' + userId, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('사용자 정보를 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(user) {
+                $('#userName').val(user.name || '');
+                $('#userEmail').val(user.email || '');
+                // userType 매핑 수정
+                var roleValue = user.userType || 'member';
+                if (roleValue === 'store_owner') roleValue = 'owner';
+                if (roleValue === 'member') roleValue = 'user';
+                $('#userRole').val(roleValue);
+                $('#userForm').data('userId', userId);
+
+                // 취소 버튼 스타일 강제 적용
+                $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
+                    'background': '#fff',
+                    'background-color': '#fff',
+                    'color': '#666',
+                    'border': '2px solid #ddd'
+                });
+
+                $('#userModal').addClass('active');
+
+                // 모달이 열릴 때마다 버튼 스타일 강제 적용
+                setTimeout(function() {
+                    $('.user_modal_btn.cancel').attr('style',
+                        'background: #fff !important; ' +
+                        'background-color: #fff !important; ' +
+                        'color: #666 !important; ' +
+                        'border: 2px solid #ddd !important; ' +
+                        'padding: 12px 30px !important; ' +
+                        'border-radius: 8px !important; ' +
+                        'font-size: 16px !important; ' +
+                        'min-width: 100px !important; ' +
+                        'cursor: pointer !important;'
+                    );
+                    $('.user_modal_btn.save').attr('style',
+                        'background: #D95B3B !important; ' +
+                        'background-color: #D95B3B !important; ' +
+                        'color: white !important; ' +
+                        'border: none !important; ' +
+                        'padding: 12px 30px !important; ' +
+                        'border-radius: 8px !important; ' +
+                        'font-size: 16px !important; ' +
+                        'min-width: 100px !important; ' +
+                        'cursor: pointer !important;'
+                    );
+                }, 10);
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showCustomAlert('사용자 정보를 불러오는데 실패했습니다.');
             });
-            
-            if (!user) {
-                showCustomAlert('사용자를 찾을 수 없습니다.');
-                return;
-            }
-            
-            $('#userName').val(user.name || user.userName || '');
-            $('#userEmail').val(user.email || user.id || '');
-            $('#userRole').val(user.role || 'user');
-            $('#userForm').data('userId', userId);
-            
-            // 취소 버튼 스타일 강제 적용 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                'background': '#fff',
-                'background-color': '#fff',
-                'color': '#666',
-                'border': '2px solid #ddd'
-            });
-            
-            $('#userModal').addClass('active');
-            
-            // 모달이 열릴 때마다 버튼 스타일 강제 적용
-            setTimeout(function() {
-                $('.user_modal_btn.cancel').attr('style', 
-                    'background: #fff !important; ' +
-                    'background-color: #fff !important; ' +
-                    'color: #666 !important; ' +
-                    'border: 2px solid #ddd !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-                $('.user_modal_btn.save').attr('style',
-                    'background: #D95B3B !important; ' +
-                    'background-color: #D95B3B !important; ' +
-                    'color: white !important; ' +
-                    'border: none !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-            }, 10);
         }
 
         // 스크롤바 너비 계산
@@ -1227,18 +1297,37 @@
             openModal('#deleteModal');
         }
 
-        // 삭제 확인
+        // 삭제 확인 (API 연동)
         function confirmDelete() {
             if (deleteUserId) {
-                var users = JSON.parse(localStorage.getItem('users') || '[]');
-                users = users.filter(function(user) {
-                    return user.id !== deleteUserId && user.email !== deleteUserId;
+                var token = localStorage.getItem('accessToken');
+
+                fetch('http://localhost:8000/api/admin/users/' + deleteUserId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || '삭제에 실패했습니다.');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    closeModal('#deleteModal');
+                    openModal('#deleteSuccessModal');
+                    deleteUserId = null;
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    closeModal('#deleteModal');
+                    showCustomAlert(error.message || '삭제에 실패했습니다.');
+                    deleteUserId = null;
                 });
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                closeModal('#deleteModal');
-                openModal('#deleteSuccessModal');
-                deleteUserId = null;
             }
         }
 
@@ -1311,11 +1400,15 @@
             $('#userForm').submit(function(e) {
                 e.preventDefault();
                 var userId = $(this).data('userId');
-                var users = JSON.parse(localStorage.getItem('users') || '[]');
-                var userIndex = users.findIndex(function(user) {
-                    return user.id === userId || user.email === userId;
-                });
-                
+
+                // 이메일 형식 검증
+                var email = $('#userEmail').val().trim();
+                var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    showCustomAlert('올바른 이메일 형식을 입력해주세요. (예: example@domain.com)');
+                    return;
+                }
+
                 // 비밀번호 확인
                 const newPassword = $('#userPassword').val();
                 const passwordConfirm = $('#userPasswordConfirm').val();
@@ -1327,32 +1420,40 @@
                     showCustomAlert('비밀번호는 8자 이상이어야 합니다.');
                     return;
                 }
-                
-                if (userIndex !== -1) {
-                    users[userIndex].name = $('#userName').val();
-                    users[userIndex].userName = $('#userName').val();
-                    users[userIndex].email = $('#userEmail').val();
-                    users[userIndex].role = $('#userRole').val();
-                    if (newPassword) {
-                        users[userIndex].password = newPassword; // 실제로는 해시화해야 함
-                    }
-                    localStorage.setItem('users', JSON.stringify(users));
-                } else {
-                    // 새 사용자 추가
-                    var newUser = {
-                        id: userId || Date.now().toString(),
-                        name: $('#userName').val(),
-                        userName: $('#userName').val(),
-                        email: $('#userEmail').val(),
-                        role: $('#userRole').val(),
-                        joinDate: new Date().toISOString().split('T')[0]
-                    };
-                    users.push(newUser);
-                    localStorage.setItem('users', JSON.stringify(users));
+
+                var token = localStorage.getItem('accessToken');
+                var updateData = {
+                    name: $('#userName').val(),
+                    email: email
+                };
+                if (newPassword) {
+                    updateData.password = newPassword;
                 }
-                
-                closeUserModal();
-                openModal('#editSuccessModal');
+
+                fetch('http://localhost:8000/api/admin/users/' + userId, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updateData)
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || '수정에 실패했습니다.');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    closeUserModal();
+                    openModal('#editSuccessModal');
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    showCustomAlert(error.message || '수정에 실패했습니다.');
+                });
             });
 
             // 모달 외부 클릭 시 닫기

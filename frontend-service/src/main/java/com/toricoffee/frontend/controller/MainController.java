@@ -11,6 +11,114 @@ public class MainController {
         return "index";
     }
 
-    // about, admin, bbs, mypage, owner, policy 등은 일단 그대로 유지
-    // (나중에 필요하면 분리)
+    // About 페이지
+    @GetMapping("/about/brand")
+    public String brand() {
+        return "about/brand";
+    }
+
+    @GetMapping("/about/bi")
+    public String bi() {
+        return "about/bi";
+    }
+
+    @GetMapping("/about/map")
+    public String map() {
+        return "about/map";
+    }
+
+    // BBS 페이지
+    @GetMapping("/bbs/notice")
+    public String notice() {
+        return "bbs/notice";
+    }
+
+    @GetMapping("/bbs/notice_detail")
+    public String noticeDetail() {
+        return "bbs/notice_detail";
+    }
+
+    @GetMapping("/bbs/faq")
+    public String faq() {
+        return "bbs/faq";
+    }
+
+    @GetMapping("/bbs/event")
+    public String event() {
+        return "bbs/event";
+    }
+
+    // Mypage 페이지
+    @GetMapping("/mypage/index")
+    public String mypage() {
+        return "mypage/index";
+    }
+
+    @GetMapping("/mypage/edit")
+    public String mypageEdit() {
+        return "mypage/edit";
+    }
+
+    @GetMapping("/mypage/inquiry")
+    public String mypageInquiry() {
+        return "mypage/inquiry";
+    }
+
+    @GetMapping("/mypage/inquiry_detail")
+    public String mypageInquiryDetail() {
+        return "mypage/inquiry_detail";
+    }
+
+    @GetMapping("/mypage/inquiry_list")
+    public String mypageInquiryList() {
+        return "mypage/inquiry_list";
+    }
+
+    // Admin 페이지
+    @GetMapping("/admin/login")
+    public String adminLogin() {
+        return "admin/login";
+    }
+
+    @GetMapping("/admin/user")
+    public String adminUser() {
+        return "admin/user";
+    }
+
+    @GetMapping("/admin/product")
+    public String adminProduct() {
+        return "admin/product";
+    }
+
+    @GetMapping("/admin/notice")
+    public String adminNotice() {
+        return "admin/notice";
+    }
+
+    @GetMapping("/admin/inquiry")
+    public String adminInquiry() {
+        return "admin/inquiry";
+    }
+
+    // Owner 페이지
+    @GetMapping("/owner/inventory")
+    public String ownerInventory() {
+        return "owner/inventory";
+    }
+
+    @GetMapping("/owner/order")
+    public String ownerOrder() {
+        return "owner/order";
+    }
+
+    // Policy 페이지
+    @GetMapping("/policy/privacy_policy")
+    public String privacyPolicy() {
+        return "policy/privacy_policy";
+    }
+
+    @GetMapping("/policy/service_policy")
+    public String servicePolicy() {
+        return "policy/service_policy";
+    }
 }

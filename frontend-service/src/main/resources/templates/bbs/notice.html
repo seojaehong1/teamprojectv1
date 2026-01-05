@@ -293,7 +293,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="../index">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -301,49 +301,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">소식</a>
+                            <a href="notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="notice.html">공지사항</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
+                                    <li><a href="notice">공지사항</a></li>
+                                    <li><a href="faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="event.html" class="pc">이벤트</a>
+                            <a href="event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="event.html">이벤트</a></li>
+                                    <li><a href="event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -355,7 +355,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -364,7 +364,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -377,8 +377,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문/배송조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -521,7 +521,7 @@
                     </div>
                     <div class="cont_text_wrap">
                         <div class="board_list">
-                            <table>
+                            <table id="noticeTable">
                                 <colgroup>
                                     <col class="board_w75 board_pc">
                                     <col>
@@ -538,136 +538,18 @@
                                         <th class="board_pc">조회</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="noticeListBody">
+                                    <!-- API에서 동적으로 로드됨 -->
                                     <tr>
-                                        <td class="board_pc">공지</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="notice_detail.html?noticeId=490&title=TORI COFFEE 앱 업그레이드 오픈 안내&content=TORI COFFEE 앱이 새롭게 업그레이드되어 오픈되었습니다.%0A%0A주요 변경사항:%0A- 더 빠른 주문 처리 속도%0A- 개선된 사용자 인터페이스%0A- 새로운 메뉴 정보 제공%0A%0A많은 이용 부탁드립니다.&authorName=TORI COFFEE&createdAt=2025-10-19&isPinned=true">
-                                                        <em>TORI COFFEE 앱 업그레이드 오픈 안내</em>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-10-19</td>
-                                        <td class="board_pc">1053</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">공지</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="notice_detail.html?noticeId=194&title=TORI COFFEE 원두 관련 공지&content=TORI COFFEE는 100%% 프리미엄 아라비카 원두만을 사용합니다.%0A%0A원두 품질 관리:%0A- 엄선된 원두만을 사용%0A- 정기적인 품질 검사 실시%0A- 신선한 원두 보관 시스템%0A%0A고객님께 최고의 커피를 제공하기 위해 노력하겠습니다.&authorName=TORI COFFEE&createdAt=2023-02-21&isPinned=true">
-                                                        <em>TORI COFFEE 원두 관련 공지</em>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2023-02-21</td>
-                                        <td class="board_pc">1866</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">6</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD00MTAmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        TORI COFFEE 샌드위치·샐러드 원산지 표시 (25.6.9 ver)
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-06-09</td>
-                                        <td class="board_pc">832</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">5</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0zNDEmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        TORI COFFEE 원산지 표시 (25.12.11ver)
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2024-11-07</td>
-                                        <td class="board_pc">1105</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">4</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0zMjEmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        한가위 맞이 탄소중립포인트 2배 적립 이벤트
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2024-09-05</td>
-                                        <td class="board_pc">735</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">3</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0zMTYmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        탄소중립실천포인트제 8월 인센티브 지급 일정 조정 안내
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2024-08-02</td>
-                                        <td class="board_pc">689</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">2</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0xOTkmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        탄소중립실천포인트제 도입 안내
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2023-03-16</td>
-                                        <td class="board_pc">1148</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">1</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0xOTgmYmJzX2NhdGVnb3J5PTEmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        TORI COFFEE 영양성분표 (25.12.11 ver)
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2023-03-14</td>
-                                        <td class="board_pc">64411</td>
+                                        <td colspan="5" style="text-align:center;padding:50px;">로딩 중...</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="board_page_wrap">
                             <div class="board_page">
-                                <ul>
-                                    <li><a><span>처음</span></a></li>
-                                    <li class="board_page_check"><a><span>1</span></a></li>
-                                    <li><a><span>마지막</span></a></li>
+                                <ul id="noticePagination">
+                                    <!-- 동적으로 로드됨 -->
                                 </ul>
                             </div>
                         </div>
@@ -736,6 +618,106 @@
         AOS.init({
             duration: 1200,
         });
+
+        // 공지사항 목록 로드 함수 (전역 스코프)
+        function loadNotices(page, keyword) {
+            page = page || 1;
+            keyword = keyword || '';
+
+            var url = 'http://localhost:8000/api/notices?page=' + page + '&limit=10';
+            if (keyword) {
+                url += '&keyword=' + encodeURIComponent(keyword);
+            }
+
+            fetch(url)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    // 테이블 tbody 초기화
+                    var tbody = $('#noticeListBody');
+                    tbody.empty();
+
+                    // 공지사항 목록 렌더링
+                    if (data.notices && data.notices.length > 0) {
+                        data.notices.forEach(function(notice, index) {
+                            var noticeId = notice.id || notice.noticeId;
+                            var displayNum = notice.isPinned ? '공지' : noticeId;
+                            var titleText = notice.isPinned ? '<em>' + escapeHtml(notice.title) + '</em>' : escapeHtml(notice.title);
+
+                            var row = '<tr>' +
+                                '<td class="board_pc">' + displayNum + '</td>' +
+                                '<td>' +
+                                '<div class="text_wrap">' +
+                                '<div class="text">' +
+                                '<a href="notice_detail?id=' + noticeId + '">' +
+                                titleText +
+                                '</a>' +
+                                '</div>' +
+                                '</div>' +
+                                '</td>' +
+                                '<td class="board_pc">' + escapeHtml(notice.author || '관리자') + '</td>' +
+                                '<td>' + formatDate(notice.createdAt) + '</td>' +
+                                '<td class="board_pc">' + (notice.viewCount || 0).toLocaleString() + '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="5" style="text-align:center;padding:50px;">등록된 공지사항이 없습니다.</td></tr>');
+                    }
+
+                    // 페이지네이션 렌더링
+                    renderPagination(data.currentPage, data.totalPages);
+                })
+                .catch(function(error) {
+                    console.error('공지사항 로드 오류:', error);
+                    $('#noticeListBody').html('<tr><td colspan="5" style="text-align:center;padding:50px;color:#dc3545;">공지사항을 불러오는데 실패했습니다.</td></tr>');
+                });
+        }
+
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                var date = new Date(dateStr);
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        // 페이지네이션 렌더링 함수
+        function renderPagination(currentPage, totalPages) {
+            var paginationUl = $('#noticePagination');
+            paginationUl.empty();
+
+            if (totalPages <= 1) return;
+
+            // 처음 버튼
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(1)"><span>처음</span></a></li>');
+
+            // 페이지 번호
+            for (var i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationUl.append('<li class="board_page_check"><a><span>' + i + '</span></a></li>');
+                } else {
+                    paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + i + ')"><span>' + i + '</span></a></li>');
+                }
+            }
+
+            // 마지막 버튼
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + totalPages + ')"><span>마지막</span></a></li>');
+        }
 
         // 헤더 메뉴 호버
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
@@ -840,9 +822,22 @@
                 e.preventDefault();
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('userName');
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userRole');
                 alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                window.location.href = '/';
             });
+
+            // 검색 폼 제출 처리
+            $('.board_search form').on('submit', function(e) {
+                e.preventDefault();
+                var keyword = $('#bbs_search').val();
+                loadNotices(1, keyword);
+            });
+
+            // 페이지 로드 시 공지사항 목록 가져오기
+            loadNotices(1);
         });
     </script>
 </body>

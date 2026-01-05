@@ -630,7 +630,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="inventory.html">
+                <a href="inventory">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -638,10 +638,10 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="order.html" class="pc">주문 관리</a>
+                            <a href="order" class="pc">주문 관리</a>
                         </li>
                         <li>
-                            <a href="inventory.html" class="pc">재고 관리</a>
+                            <a href="inventory" class="pc">재고 관리</a>
                         </li>
                     </ul>
                 </div>
@@ -675,8 +675,8 @@
             
             <!-- 네비게이션 -->
             <div class="owner_nav">
-                <a href="../../owner/order.html" class="owner_nav_item">주문 관리</a>
-                <a href="../../owner/inventory.html" class="owner_nav_item active">재고 관리</a>
+                <a href="../../owner/order" class="owner_nav_item">주문 관리</a>
+                <a href="../../owner/inventory" class="owner_nav_item active">재고 관리</a>
             </div>
             
             <!-- 검색 및 추가 -->
@@ -913,14 +913,14 @@
             var userRole = localStorage.getItem('userRole');
             if (userRole !== 'owner') {
                 alert('점주 권한이 필요합니다.');
-                window.location.href = '../login.html';
+                window.location.href = '/';
                 return;
             }
-            
+
             // 사용자명 표시
             var userName = localStorage.getItem('userName') || '점주';
             $('.head_user_name').text(userName + '님');
-            
+
             // 로그인 드롭다운 토글
             $('.head_login_trigger').click(function(e) {
                 e.preventDefault();
@@ -933,13 +933,13 @@
                     $('.head_login_wrap').removeClass('active');
                 }
             });
-            
+
             // 로그아웃 버튼
             $('#ownerLogoutBtn').on('click', function(e) {
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
                     localStorage.clear();
-                    window.location.href = '../login.html';
+                    window.location.href = '/';
                 }
             });
 

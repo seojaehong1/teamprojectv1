@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>이벤트 - 메가MGC커피</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <style>
+        .head_wrap .head { position: relative; }
+        .head_logo { display: block !important; visibility: visible !important; }
+        .head_logo img { display: block !important; visibility: visible !important; max-height: 60px; height: auto; }
+        .head_user_wrap { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 1000; }
+        .head_user_menu { display: flex; align-items: center; gap: 20px; }
+        .head_user_item { position: relative; }
+        .head_user_link { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #333; cursor: pointer; position: relative; padding: 5px 10px; }
+        .head_user_link:hover { color: #000; }
+        .head_user_link i { font-size: 20px; margin-bottom: 5px; }
+        .head_user_text { font-size: 12px; font-weight: 400; }
+        .head_user_badge { position: absolute; top: 0; right: 5px; background: #333; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .head_login_wrap { position: relative; }
+        .head_login_dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 150px; display: none; z-index: 1001; }
+        .head_login_wrap.active .head_login_dropdown { display: block; }
+        .head_login_dropdown::before { content: ''; position: absolute; top: -8px; right: 20px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid #fff; }
+        .head_login_dropdown ul { list-style: none; margin: 0; padding: 8px 0; }
+        .head_login_dropdown ul li { margin: 0; }
+        .head_login_dropdown ul li a { display: block; padding: 10px 20px; color: #333; text-decoration: none; font-size: 14px; transition: background 0.2s; }
+        .head_login_dropdown ul li a:hover { background: #f5f5f5; }
+        @media (max-width: 768px) { .head_user_wrap { right: 50px; } }
+    </style>
+    
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="/"><img src="https://img.79plus.co.kr/megahp/common/img/new_logo_b.png" alt="메가MGC커피 로고"></a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li><a href="/about/brand/" class="pc">메가 스토리</a></li>
+                        <li><a href="/menu/?menu_category1=1&menu_category2=1" class="pc">메뉴소개</a></li>
+                        <li><a href="/about/map/" class="pc">매장</a></li>
+                        <li><a href="/bbs/?bbs_category=1" class="pc">소식</a></li>
+                        <li><a href="/bbs/?bbs_category=3" class="pc">이벤트</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <div class="head_user_item head_cart">
+                        <a href="#" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <div class="head_user_item head_login_wrap">
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="#">로그인</a></li>
+                                    <li><a href="#">회원가입</a></li>
+                                    <li><a href="#">마이페이지</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <div class="cont_box cont_head">
+                <div class="cont_boxs">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title_info">MEGA NEWS</div>
+                        <div class="cont_title robo color"><h2>MEGA EVENT</h2></div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text cont_list_map">
+                            <ul><li>홈</li><li>메가소식</li><li>이벤트</li></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cont_box brand01 bbs_cont_box">
+                <div class="cont_boxs text_center">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title"><b>메가MGC커피 이벤트</b></div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text">다양한 이벤트를 확인하고 참여해보세요!</div>
+                    </div>
+                    <div class="cont_tab">
+                        <ul>
+                            <li class="check"><a href="?bbs_category=3">전체</a></li>
+                            <li><a href="?bbs_category=3&bbs_detail_category=11">메뉴 이벤트</a></li>
+                            <li><a href="?bbs_category=3&bbs_detail_category=12">제휴 이벤트</a></li>
+                            <li><a href="?bbs_category=3&bbs_detail_category=13">제휴 혜택</a></li>
+                        </ul>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_list cont_list4 cont_list_m cont_list_m2 cont_gallery_list board_list_gallery">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251216113829_1783511236593_5kixivMOaX.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 슈퍼주니어 팬사인회 응모 프리퀀시 이벤트</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251210221948_1783026516097_f_r7MqK63Z.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 두 번째 겨울시즌 출시 기념 이벤트</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251210154143_1783002392404_b1fqvuxZZ0.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[제휴] 메가MGC커피 X KT구독팩 OTT 구독하면 커피 3잔 무료!</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251210111438_1782986206967_wwjFjPAE2G.png" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 틱톡 라이트 첫 가입 이라면? 메가MGC커피 금액권 증정!</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251208175839_1782836162251_nbVkX3K3Ae.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[출시] MGC x 가나디 키링&쿠앤크 케이크 세트 예약 안내</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251203192233_1782404926727_y1Lafr6liC.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 12월 메가MGC커피 X 하나페이 아이스아메리카노 최대 50% 할인</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251127153354_1781867487226_16EN91pCyF.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 메가MGC커피 신메뉴 출시 이벤트</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img src="/images/event/20251127153137_1781867348353_UDZQq28fHu.jpg" alt="이벤트 이미지">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap"><div class="text text1">[이벤트] 메가MGC커피 겨울 시즌 한정 이벤트</div></div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap"><div class="text text2">메가MGC커피</div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul><li><div class="foot_logo"><img src="https://img.79plus.co.kr/megahp/common/img/logo_w.png" alt="메가MGC커피 로고"></div></li></ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>고객센터 1588-8298</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 1200 });
+        
+        $(document).ready(function() {
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

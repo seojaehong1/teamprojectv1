@@ -327,16 +327,16 @@
                 <div class="find_id_result_title">회원님의 아이디는</div>
                 <div class="find_id_result_id" id="foundUserId">user1234</div>
                 <div class="find_id_links">
-                    <a href="login.html">로그인</a>
-                    <a href="signup.html">회원가입</a>
+                    <a href="/login">로그인</a>
+                    <a href="/signup">회원가입</a>
                 </div>
             </div>
 
             <!-- 하단 링크 -->
             <div class="find_id_links">
-                <a href="login.html">로그인</a>
-                <a href="signup.html">회원가입</a>
-                <a href="find_password.html">비밀번호 찾기</a>
+                <a href="/login">로그인</a>
+                <a href="/signup">회원가입</a>
+                <a href="/find_password">비밀번호 찾기</a>
             </div>
         </div>
     </div>
@@ -395,55 +395,107 @@
             // 인증번호 발송 버튼 클릭
             $('#emailSendBtn').on('click', function() {
                 var email = $('#findIdEmail').val().trim();
-                
+                var sendBtn = $(this);
+
                 // 이메일 형식 검증
                 if (!email) {
                     $('#emailError').text('이메일을 입력해주세요.').addClass('show');
                     $('#findIdEmail').focus();
                     return;
                 }
-                
+
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
                     $('#emailError').text('올바른 이메일 형식을 입력해주세요.').addClass('show');
                     $('#findIdEmail').focus();
                     return;
                 }
-                
-                // 인증번호 발송
-                emailAuthSent = true;
+
                 $('#emailError').removeClass('show');
-                $('#findIdEmailCode').prop('disabled', false);
-                $('#emailVerifyBtn').prop('disabled', false);
-                $('#emailCodeSuccess').removeClass('show');
-                $('#emailCodeError').removeClass('show');
-                
-                // 인증번호 발송 알림 제거 (알럿창 삭제)
+                sendBtn.prop('disabled', true).text('발송중...');
+
+                // 서버에 인증번호 발송 요청
+                fetch('http://localhost:8000/api/auth/email/send-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        purpose: 'find-id'
+                    })
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    emailAuthSent = true;
+                    $('#findIdEmailCode').prop('disabled', false);
+                    $('#emailVerifyBtn').prop('disabled', false);
+                    $('#emailCodeSuccess').removeClass('show');
+                    $('#emailCodeError').removeClass('show');
+                    sendBtn.text('재발송');
+                    showCustomAlert('인증번호가 발송되었습니다.<br>이메일을 확인해주세요.', null, '인증번호 발송');
+
+                    setTimeout(function() {
+                        sendBtn.prop('disabled', false);
+                    }, 180000);
+                })
+                .catch(function(error) {
+                    console.error('인증번호 발송 오류:', error);
+                    $('#emailError').text('인증번호 발송에 실패했습니다.').addClass('show');
+                    sendBtn.prop('disabled', false).text('인증번호 발송');
+                });
             });
             
             // 인증번호 확인 버튼 클릭
             $('#emailVerifyBtn').on('click', function() {
                 var code = $('#findIdEmailCode').val().trim();
-                
+                var email = $('#findIdEmail').val().trim();
+                var verifyBtn = $(this);
+
                 if (!code) {
                     $('#emailCodeError').text('인증번호를 입력해주세요.').addClass('show');
                     $('#emailCodeSuccess').removeClass('show');
                     return;
                 }
-                
-                if (code === authCode) {
+
+                verifyBtn.prop('disabled', true).text('확인중...');
+
+                // 서버에 인증번호 확인 요청
+                fetch('http://localhost:8000/api/auth/email/verify-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        verificationCode: code
+                    })
+                })
+                .then(function(response) {
+                    return response.json().then(function(data) {
+                        if (!response.ok) {
+                            throw new Error(data.message || '인증번호 확인 실패');
+                        }
+                        return data;
+                    });
+                })
+                .then(function(data) {
                     emailAuthVerified = true;
                     $('#emailCodeError').removeClass('show');
                     $('#emailCodeSuccess').addClass('show');
                     $('#findIdEmailCode').prop('disabled', true);
-                    $('#emailVerifyBtn').prop('disabled', true);
-                    // 커스텀 모달로 인증 완료 표시
+                    verifyBtn.prop('disabled', true).text('인증완료');
                     showCustomAlert('이메일 인증이 완료되었습니다!', null, '인증 완료');
-                } else {
-                    $('#emailCodeError').text('인증번호가 일치하지 않습니다.').addClass('show');
+                })
+                .catch(function(error) {
+                    console.error('인증번호 확인 오류:', error);
+                    $('#emailCodeError').text(error.message).addClass('show');
                     $('#emailCodeSuccess').removeClass('show');
+                    verifyBtn.prop('disabled', false).text('인증번호 확인');
                     $('#findIdEmailCode').focus();
-                }
+                });
             });
             
             // 아이디 찾기 버튼 클릭
@@ -472,24 +524,35 @@
                     showCustomAlert('이메일 인증을 완료해주세요.', null, '아이디 찾기');
                     return;
                 }
-                
-                // localStorage에서 사용자 검색
-                var users = JSON.parse(localStorage.getItem('users') || '[]');
-                var foundUser = users.find(function(user) {
-                    return user.email && user.email.toLowerCase() === email.toLowerCase() &&
-                           user.name && user.name === name;
-                });
-                
-                if (foundUser) {
+
+                // 서버에 아이디 찾기 요청
+                fetch('http://localhost:8000/api/auth/find-userid', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email
+                    })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('가입된 정보가 없습니다');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
                     // 아이디 찾기 성공
-                    var message = '회원님의 아이디는 <strong style="color: #D95B3B;">' + foundUser.username + '</strong>입니다.';
+                    var message = '회원님의 아이디는 <strong style="color: #D95B3B;">' + data.userId + '</strong>입니다.';
                     showCustomAlert(message, function() {
-                        window.location.href = 'login.html';
+                        window.location.href = '/login';
                     }, '아이디 찾기');
-                } else {
-                    // 아이디 찾기 실패
+                })
+                .catch(function(error) {
+                    console.error('아이디 찾기 오류:', error);
                     showCustomAlert('가입된 정보가 없습니다.', null, '아이디 찾기');
-                }
+                });
             });
             
             // 초기화: 인증번호 입력란 비활성화
