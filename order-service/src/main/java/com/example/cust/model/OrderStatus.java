@@ -8,7 +8,11 @@ public enum OrderStatus {
     PREPARING("주문 접수"),
 
     /** 상품이 고객에게 전달될 준비가 완료된 상태 */
-    COMPLETED("주문 완료");
+    COMPLETED("주문 완료"),
+
+    /** 주문이 취소된 상태 */
+    CANCELED("주문 취소"); // 추가된 상태
+
 
     private final String description;
 

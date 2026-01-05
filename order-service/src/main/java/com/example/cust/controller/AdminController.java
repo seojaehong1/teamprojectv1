@@ -57,4 +57,15 @@ public class AdminController {
         OrderTotalDto stats = ownerService.getOrderTotals();
         return ResponseEntity.ok(stats);
     }
+
+    /**
+     * 주문 취소
+     * PATCH /api/owner/order/{orderId}/cancel
+     */
+    @PatchMapping("/order/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Integer orderId) {
+        log.info("주문 취소 요청 - ID: {}", orderId);
+        ownerService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
 }

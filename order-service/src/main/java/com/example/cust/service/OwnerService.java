@@ -136,4 +136,20 @@ public class OwnerService {
                 .totalRevenue(totalRevenue)
                 .build();
     }
+
+    /**
+     * 주문 취소 처리
+     */
+    @Transactional
+    public void cancelOrder(Integer orderId) {
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 주문이 없습니다. ID: " + orderId));
+
+        // 이미 완료된 주문은 취소할 수 없도록 방어 로직 (선택 사항)
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new IllegalStateException("이미 완료된 주문은 취소할 수 없습니다.");
+        }
+
+        order.setStatus(OrderStatus.CANCELED);
+    }
 }

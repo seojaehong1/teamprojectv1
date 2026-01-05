@@ -513,6 +513,18 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px solid #e0e0e0;
+        }/* 취소 상태 뱃지 스타일 */
+        .order_status.canceled {
+            background: #e9ecef;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        /* 버튼 간격 조정 */
+        .order_action_btns {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-start;
         }
     </style>
     
@@ -828,27 +840,33 @@
         /**
          * 테이블 렌더링 (디자인 유지 및 버튼 제어)
          */
+        /**
+         * 테이블 렌더링 (취소 버튼 로직 포함 통합 버전)
+         */
         function renderOrderTable(orders) {
             const $tbody = $('#orderTableBody');
             $tbody.empty();
 
             if (!orders || orders.length === 0) {
-                $tbody.html('<tr><td colspan="7" style="text-align:center; padding:30px;">해당 내역이 없습니다.</td></tr>');
+                $tbody.html('<tr><td colspan="7" style="text-align:center; padding:30px;">주문 내역이 없습니다.</td></tr>');
                 return;
             }
 
             orders.forEach(order => {
-                // 1. 상태별 클래스 지정 (CSS 디자인에 맞게)
-                let statusClass = "waiting";     // 결제 완료 (기본)
+                // [1] 상태별 뱃지 클래스 설정
+                let statusClass = "waiting";
                 if (order.status === "주문 접수") statusClass = "preparing";
-                if (order.status === "완료") statusClass = "completed"; // 준비 완료
+                if (order.status === "완료") statusClass = "completed";
+                if (order.status === "주문 취소") statusClass = "canceled"; // 취소 상태 대응
 
-                // 2. 버튼 텍스트 결정 (결제 완료 -> 접수 / 주문 접수 -> 완료)
+                // [2] 상태별 버튼 텍스트 설정 (접수/완료)
                 let btnText = "";
                 if (order.status === "결제 완료") btnText = "접수";
                 else if (order.status === "주문 접수") btnText = "완료";
 
-                // 3. 행 구성
+                // [3] 취소 버튼 노출 조건: '완료'나 '주문 취소'가 아닐 때만 노출
+                const showCancelBtn = (order.status !== "완료" && order.status !== "주문 취소");
+
                 const row = `
             <tr>
                 <td>#${order.orderId}</td>
@@ -858,9 +876,10 @@
                 <td>₩${(order.totalAmount || 0).toLocaleString()}</td>
                 <td><span class="order_status ${statusClass}">${order.status}</span></td>
                 <td>
-                    <div class="order_action_btns">
+                    <div class="order_action_btns" style="display: flex; gap: 5px;">
                         <button class="order_action_btn" onclick="viewOrder(${order.orderId})">상세보기</button>
                         ${btnText ? `<button class="order_action_btn primary" onclick="handleStatusChange(${order.orderId}, '${order.status}')">${btnText}</button>` : ''}
+                        ${showCancelBtn ? `<button class="order_action_btn" style="background: #fff; color: #dc3545; border: 1px solid #dc3545;" onclick="handleCancelOrder(${order.orderId})">취소</button>` : ''}
                     </div>
                 </td>
             </tr>
@@ -910,47 +929,6 @@
             }
         }
 
-        // 데이터를 테이블에 뿌리기 (기존 디자인 유지)
-        function renderOrderTable(orders) {
-            const $tbody = $('#orderTableBody');
-            $tbody.empty();
-
-            if (!orders || orders.length === 0) {
-                $tbody.html('<tr><td colspan="7" style="text-align:center; padding:30px;">주문 내역이 없습니다.</td></tr>');
-                return;
-            }
-
-            orders.forEach(order => {
-                // 상태별 뱃지 클래스 매핑
-                let statusClass = "waiting";
-                if (order.status === "주문 접수") statusClass = "preparing";
-                if (order.status === "완료") statusClass = "completed";
-
-                // 상태별 버튼 텍스트 설정
-                let btnText = "";
-                if (order.status === "결제 완료") btnText = "접수";
-                else if (order.status === "주문 접수") btnText = "완료";
-
-                const row = `
-                <tr>
-                    <td>#${order.orderId}</td>
-                    <td>${formatDate(order.orderDate)}</td>
-                    <td>${order.items && order.items.length > 0 ? (order.items.length > 1 ? order.items[0].menuName + ' 외 ' + (order.items.length-1) : order.items[0].menuName) : '메뉴 없음'}</td>
-                    <td>${order.items ? order.items.length : 0}개</td>
-                    <td>₩${(order.totalAmount || 0).toLocaleString()}</td>
-                    <td><span class="order_status ${statusClass}">${order.status}</span></td>
-                    <td>
-                        <div class="order_action_btns">
-                            <button class="order_action_btn" onclick="viewOrder(${order.orderId})">상세보기</button>
-                            ${btnText ? `<button class="order_action_btn primary" onclick="handleStatusChange(${order.orderId}, '${order.status}')">${btnText}</button>` : ''}
-                        </div>
-                    </td>
-                </tr>
-            `;
-                $tbody.append(row);
-            });
-        }
-
         // 전역 변수
         var currentOrderId = '';
         var currentActionText = '';
@@ -976,8 +954,16 @@
         // 모달 내 '확인' 버튼 클릭 시 실제 서버 API 호출
         async function confirmOrderAction() {
             closeOrderModal();
+
             try {
-                const response = await fetch(`http://localhost:8000/api/owner/order/${currentOrderId}/status`, {
+                // [수정 포인트] 기존 /status 경로는 유지하되, 취소일 때만 경로를 /cancel로 변경
+                let url = `http://localhost:8000/api/owner/order/${currentOrderId}/status`;
+
+                if (currentActionText === "주문 취소") {
+                    url = `http://localhost:8000/api/owner/order/${currentOrderId}/cancel`;
+                }
+
+                const response = await fetch(url, {
                     method: 'PATCH'
                 });
 
@@ -985,8 +971,12 @@
                     $('#orderSuccessModalTitle').text(currentActionText);
                     $('#orderSuccessModalText').text(`${currentActionText} 처리가 완료되었습니다.`);
                     $('#orderSuccessModal').addClass('show');
+
+                    // 데이터 갱신을 위해 추가 (필수)
+                    loadStatistics();
+                    loadOrders($('.order_filter_btn.active').data('status') || '전체');
                 } else {
-                    alert("상태 변경에 실패했습니다.");
+                    alert("처리에 실패했습니다.");
                 }
             } catch (e) {
                 console.error(e);
@@ -1060,6 +1050,12 @@
             if(!dateString) return "-";
             const d = new Date(dateString);
             return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        }
+
+        function handleCancelOrder(orderId) {
+            currentOrderId = orderId;
+            currentActionText = "주문 취소";
+            openActionModal(orderId, 'cancel', '주문 취소', '정말로 이 주문을 취소하시겠습니까?');
         }
     </script>
 </body>
