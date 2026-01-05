@@ -1,8 +1,0 @@
-rootProject.name = 'msaV1'
-
-include 'gateway-service'
-include 'eureka-server'
-include 'product-service'
-include 'order-service'
-include 'inventory-service'
-include 'member-service'

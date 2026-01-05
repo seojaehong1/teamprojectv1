@@ -21,7 +21,7 @@ public class OrderStockRequestDto { // Order-service로부터 주문 정보를 �
     @AllArgsConstructor
     @Builder
     public static class OrderItemDto {
-        private String menuCode;
+        private Long menuCode;
         private Integer quantity;
         private List<Integer> optionIds;
     }
