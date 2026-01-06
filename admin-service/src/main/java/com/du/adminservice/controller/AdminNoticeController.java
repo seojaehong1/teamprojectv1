@@ -18,6 +18,23 @@ public class AdminNoticeController {
         this.restTemplate = new RestTemplate();
     }
 
+    // 공통 헤더 생성 헬퍼 메서드
+    private HttpHeaders createAdminHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-User-Role", "ADMIN");
+        return headers;
+    }
+
+    // isPinned → isImportant 변환 헬퍼 메서드
+    private Map<String, Object> convertNoticeData(Map<String, Object> request) {
+        Map<String, Object> noticeData = new java.util.HashMap<>(request);
+        if (noticeData.containsKey("isPinned")) {
+            noticeData.put("isImportant", noticeData.get("isPinned"));
+        }
+        return noticeData;
+    }
+
     // 공지사항 목록 조회 (board-service에서 가져옴)
     @GetMapping
     public ResponseEntity<?> getNoticeList(
@@ -59,20 +76,7 @@ public class AdminNoticeController {
             HttpServletRequest httpRequest) {
         try {
             String url = BOARD_SERVICE_URL + "/api/notices/admin";
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-User-Role", "ADMIN");
-
-            // isPinned를 board-service 형식에 맞게 변환 (isImportant로 변환)
-            Map<String, Object> noticeData = new java.util.HashMap<>(request);
-            // 프론트엔드에서 isPinned로 보내면 isImportant로 변환
-            if (noticeData.containsKey("isPinned")) {
-                noticeData.put("isImportant", noticeData.get("isPinned"));
-            }
-
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(noticeData, headers);
-
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(convertNoticeData(request), createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
 
@@ -89,19 +93,7 @@ public class AdminNoticeController {
             @RequestBody Map<String, Object> request) {
         try {
             String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id;
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-User-Role", "ADMIN");
-
-            // isPinned를 isImportant로 변환
-            Map<String, Object> noticeData = new java.util.HashMap<>(request);
-            if (noticeData.containsKey("isPinned")) {
-                noticeData.put("isImportant", noticeData.get("isPinned"));
-            }
-
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(noticeData, headers);
-
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(convertNoticeData(request), createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
 
@@ -116,14 +108,8 @@ public class AdminNoticeController {
     public ResponseEntity<?> deleteNotice(@PathVariable Long id) {
         try {
             String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id;
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-User-Role", "ADMIN");
-
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-
+            HttpEntity<?> entity = new HttpEntity<>(createAdminHeaders());
             restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
-
             return ResponseEntity.ok(Map.of("message", "공지사항이 삭제되었습니다."));
 
         } catch (Exception e) {
@@ -137,12 +123,7 @@ public class AdminNoticeController {
     public ResponseEntity<?> togglePin(@PathVariable Long id) {
         try {
             String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id + "/toggle-pin";
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-User-Role", "ADMIN");
-
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-
+            HttpEntity<?> entity = new HttpEntity<>(createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PATCH, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
 

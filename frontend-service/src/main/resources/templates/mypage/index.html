@@ -895,15 +895,47 @@
                 $('body').css('overflow', '');
             }
 
-            function handleWithdraw() {
-                // 모든 localStorage 데이터 삭제
-                localStorage.clear();
-                
-                // 회원탈퇴 완료 알림
-                alert('회원탈퇴가 완료되었습니다');
-                
-                // 메인 페이지로 이동
-                window.location.href = '../index.html';
+            async function handleWithdraw() {
+                const token = localStorage.getItem('accessToken');
+
+                if (!token) {
+                    alert('로그인이 필요합니다.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/users/withdraw', {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // 모든 localStorage 데이터 삭제
+                        localStorage.clear();
+
+                        // 회원탈퇴 완료 알림
+                        alert('회원탈퇴가 완료되었습니다.');
+
+                        // 메인 페이지로 이동
+                        window.location.href = '/';
+                    } else {
+                        // 관리자 탈퇴 방지 등 에러 처리
+                        if (result.code === 'ADMIN_CANNOT_WITHDRAW') {
+                            alert('관리자 계정은 탈퇴할 수 없습니다.');
+                        } else {
+                            alert(result.message || '회원탈퇴에 실패했습니다.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('회원탈퇴 오류:', error);
+                    alert('회원탈퇴 처리 중 오류가 발생했습니다.');
+                }
             }
 
             // 회원 탈퇴 버튼 클릭 이벤트 - 모달 표시

@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 public class NoticeService {
     
@@ -18,9 +16,11 @@ public class NoticeService {
         this.noticeRepository = noticeRepository;
     }
     
-    // 전체 공지사항 조회 (고정 공지 먼저)
-    public List<Notice> getAllNotices() {
-        return noticeRepository.findAllOrderByPinnedAndCreatedAt();
+    // 관리자 권한 검증 헬퍼 메서드
+    private void validateAdminRole(String role) {
+        if (!"ADMIN".equalsIgnoreCase(role)) {
+            throw new RuntimeException("관리자 권한이 필요합니다.");
+        }
     }
 
     // 페이징 처리된 공지사항 조회
@@ -48,18 +48,14 @@ public class NoticeService {
     // 공지사항 작성 (관리자 전용)
     @Transactional
     public Notice createNotice(Notice notice, String role) {
-        if (!"ADMIN".equalsIgnoreCase(role)) {
-            throw new RuntimeException("관리자만 공지사항을 작성할 수 있습니다.");
-        }
+        validateAdminRole(role);
         return noticeRepository.save(notice);
     }
 
     // 공지사항 수정 (관리자 전용)
     @Transactional
     public Notice updateNotice(Long id, Notice updatedNotice, String role) {
-        if (!"ADMIN".equalsIgnoreCase(role)) {
-            throw new RuntimeException("관리자만 공지사항을 수정할 수 있습니다.");
-        }
+        validateAdminRole(role);
 
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));
@@ -76,9 +72,7 @@ public class NoticeService {
     // 공지사항 삭제 (관리자 전용)
     @Transactional
     public void deleteNotice(Long id, String role) {
-        if (!"ADMIN".equalsIgnoreCase(role)) {
-            throw new RuntimeException("관리자만 공지사항을 삭제할 수 있습니다.");
-        }
+        validateAdminRole(role);
 
         if (!noticeRepository.existsById(id)) {
             throw new RuntimeException("공지사항을 찾을 수 없습니다.");
@@ -90,9 +84,7 @@ public class NoticeService {
     // 공지 고정 토글 (관리자 전용)
     @Transactional
     public Notice togglePinned(Long id, String role) {
-        if (!"ADMIN".equalsIgnoreCase(role)) {
-            throw new RuntimeException("관리자만 공지 고정을 설정할 수 있습니다.");
-        }
+        validateAdminRole(role);
 
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("공지사항을 찾을 수 없습니다."));

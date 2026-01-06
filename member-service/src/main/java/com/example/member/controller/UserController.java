@@ -121,4 +121,45 @@ public class UserController {
                     .body(ApiResponse.error("서버 오류가 발생했습니다.", "INTERNAL_SERVER_ERROR"));
         }
     }
+
+    // 회원 탈퇴 API
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ApiResponse<?>> withdrawMember(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.error("로그인이 필요합니다.", "UNAUTHORIZED"));
+            }
+
+            String token = authHeader.substring(7);
+
+            if (!jwtUtil.validateAccessToken(token)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponse.error("로그인이 필요합니다.", "UNAUTHORIZED"));
+            }
+
+            String userId = jwtUtil.getUserIdFromToken(token);
+            Member member = memberService.getMemberByUserId(userId);
+
+            // 관리자는 탈퇴 불가
+            if ("admin".equalsIgnoreCase(member.getUserType())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ApiResponse.error("관리자 계정은 탈퇴할 수 없습니다.", "ADMIN_CANNOT_WITHDRAW"));
+            }
+
+            // 회원 삭제
+            memberService.deleteMember(userId);
+
+            return ResponseEntity.ok(ApiResponse.success("회원탈퇴가 완료되었습니다.", null));
+
+        } catch (RuntimeException e) {
+            if ("USER_NOT_FOUND".equals(e.getMessage())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("사용자를 찾을 수 없습니다.", "USER_NOT_FOUND"));
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("서버 오류가 발생했습니다.", "INTERNAL_SERVER_ERROR"));
+        }
+    }
 }

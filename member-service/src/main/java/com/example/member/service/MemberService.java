@@ -6,7 +6,6 @@ import com.example.member.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 import java.security.SecureRandom;
@@ -48,7 +47,6 @@ public class MemberService {
         // enum 값을 직접 지정 (예: 회원가입 시 기본값으로 MEMBER 부여)
 
         // @CreationTimestamp가 있으므로 member.setCreatedAt(createdAt)은 생략해도 자동으로 들어갑니다.
-        memberRepository.save(member);
         return memberRepository.save(member);
     }
 
