@@ -415,7 +415,7 @@
                 sendBtn.prop('disabled', true).text('발송중...');
 
                 // 서버에 인증번호 발송 요청
-                fetch('http://localhost:8000/api/auth/email/send-code', {
+                fetch('/api/auth/email/send-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -463,7 +463,7 @@
                 verifyBtn.prop('disabled', true).text('확인중...');
 
                 // 서버에 인증번호 확인 요청
-                fetch('http://localhost:8000/api/auth/email/verify-code', {
+                fetch('/api/auth/email/verify-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -526,7 +526,7 @@
                 }
 
                 // 서버에 아이디 찾기 요청
-                fetch('http://localhost:8000/api/auth/find-userid', {
+                fetch('/api/auth/find-userid', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

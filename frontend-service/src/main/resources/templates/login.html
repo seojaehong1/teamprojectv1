@@ -354,7 +354,7 @@
                     var loginType = loginTypeRadio.length > 0 ? loginTypeRadio.val() : 'normal';
 
                     // 서버에 로그인 요청
-                    fetch('http://localhost:8000/api/auth/login', {
+                    fetch('/api/auth/login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

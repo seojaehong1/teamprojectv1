@@ -624,7 +624,7 @@
             page = page || 1;
             keyword = keyword || '';
 
-            var url = 'http://localhost:8000/api/notices?page=' + page + '&limit=10';
+            var url = '/api/notices?page=' + page + '&limit=10';
             if (keyword) {
                 url += '&keyword=' + encodeURIComponent(keyword);
             }

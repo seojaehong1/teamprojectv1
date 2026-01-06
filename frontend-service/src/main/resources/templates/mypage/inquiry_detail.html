@@ -827,7 +827,7 @@
                 }
 
                 // API 호출하여 문의 상세 정보 가져오기
-                fetch('http://localhost:8000/api/inquiries/' + inquiryId, {
+                fetch('/api/inquiries/' + inquiryId, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

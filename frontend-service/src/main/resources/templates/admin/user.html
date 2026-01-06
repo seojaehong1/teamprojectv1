@@ -1017,7 +1017,7 @@
             var filterRole = $('#roleFilter').val();
             var searchTerm = $('.user_search_input').val().trim();
 
-            var url = 'http://localhost:8000/api/admin/users?page=' + currentPage + '&size=10';
+            var url = '/api/admin/users?page=' + currentPage + '&size=10';
             if (filterRole) {
                 url += '&userType=' + filterRole;
             }
@@ -1041,8 +1041,10 @@
                 return response.json();
             })
             .then(function(data) {
-                totalPages = data.totalPages || 0;
-                renderUserList(data.users || []);
+                // API가 배열을 직접 반환하거나 users 배열을 반환하는 경우 모두 처리
+                var users = Array.isArray(data) ? data : (data.users || []);
+                totalPages = data.totalPages || Math.ceil(users.length / 10) || 0;
+                renderUserList(users);
             })
             .catch(function(error) {
                 console.error('Error:', error);
@@ -1089,7 +1091,7 @@
 
                 var row = $('<tr></tr>');
                 row.append('<td>' + (currentPage * 10 + index + 1) + '</td>');
-                row.append('<td>' + escapeHtml(user.name || '이름 없음') + '</td>');
+                row.append('<td>' + escapeHtml(user.name || user.username || '이름 없음') + '</td>');
                 row.append('<td>' + escapeHtml(user.email || '이메일 없음') + '</td>');
                 row.append('<td><span class="user_role ' + roleClass + '">' + roleText + '</span></td>');
                 row.append('<td>' + formatDate(user.createdAt) + '</td>');
@@ -1140,7 +1142,7 @@
             showCustomConfirm('이 회원을 점주로 전환하시겠습니까?', function() {
                 var token = localStorage.getItem('accessToken');
 
-                fetch('http://localhost:8000/api/admin/users/' + userId + '/role', {
+                fetch('/api/admin/users/' + userId + '/role', {
                     method: 'PATCH',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1172,7 +1174,7 @@
         function editUser(userId) {
             var token = localStorage.getItem('accessToken');
 
-            fetch('http://localhost:8000/api/admin/users/' + userId, {
+            fetch('/api/admin/users/' + userId, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -1186,10 +1188,10 @@
                 return response.json();
             })
             .then(function(user) {
-                $('#userName').val(user.name || '');
+                $('#userName').val(user.name || user.username || '');
                 $('#userEmail').val(user.email || '');
                 // userType 매핑 수정
-                var roleValue = user.userType || 'member';
+                var roleValue = user.userType || user.role || 'member';
                 if (roleValue === 'store_owner') roleValue = 'owner';
                 if (roleValue === 'member') roleValue = 'user';
                 $('#userRole').val(roleValue);
@@ -1302,7 +1304,7 @@
             if (deleteUserId) {
                 var token = localStorage.getItem('accessToken');
 
-                fetch('http://localhost:8000/api/admin/users/' + deleteUserId, {
+                fetch('/api/admin/users/' + deleteUserId, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1422,15 +1424,24 @@
                 }
 
                 var token = localStorage.getItem('accessToken');
+                var nameValue = $('#userName').val();
+
+                // role 값 변환 (프론트 -> 백엔드)
+                var roleValue = $('#userRole').val();
+                if (roleValue === 'owner') roleValue = 'store_owner';
+                if (roleValue === 'user') roleValue = 'member';
+
                 var updateData = {
-                    name: $('#userName').val(),
-                    email: email
+                    name: nameValue,
+                    username: nameValue,
+                    email: email,
+                    role: roleValue
                 };
                 if (newPassword) {
                     updateData.password = newPassword;
                 }
 
-                fetch('http://localhost:8000/api/admin/users/' + userId, {
+                fetch('/api/admin/users/' + userId, {
                     method: 'PUT',
                     headers: {
                         'Authorization': 'Bearer ' + token,

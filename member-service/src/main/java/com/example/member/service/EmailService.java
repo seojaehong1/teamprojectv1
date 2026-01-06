@@ -38,6 +38,7 @@ public class EmailService {
         System.out.println("Verification Code: " + code);
         System.out.println("========================================");
 
+
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(toEmail);

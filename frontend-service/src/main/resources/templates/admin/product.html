@@ -1356,7 +1356,7 @@
                     return;
                 }
 
-                const response = await fetch(`http://localhost:8000/api/admin/products/${menuCode}`, {
+                const response = await fetch(`/api/admin/products/${menuCode}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1443,7 +1443,7 @@
                     return;
                 }
 
-                const response = await fetch(`http://localhost:8000/api/admin/products/${deleteProductId}`, {
+                const response = await fetch(`/api/admin/products/${deleteProductId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1547,7 +1547,7 @@
                     let url, method;
                     if (productId) {
                         // 수정
-                        url = `http://localhost:8000/api/admin/products/${productId}`;
+                        url = `/api/admin/products/${productId}`;
                         method = 'PUT';
                     } else {
                         // 신규 등록 - menuCode 필요
@@ -1557,7 +1557,7 @@
                             return;
                         }
                         formData.append('menuCode', menuCode);
-                        url = `http://localhost:8000/api/admin/products`;
+                        url = `/api/admin/products`;
                         method = 'POST';
                     }
 

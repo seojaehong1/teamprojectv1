@@ -67,6 +67,10 @@ public class AdminController {
                         response.setUsername(member.getName());
                         response.setEmail(member.getEmail());
                         response.setRole(member.getUserType());
+                        // createdAt 포맷팅
+                        if (member.getCreatedAt() != null) {
+                            response.setCreatedAt(member.getCreatedAt().toString());
+                        }
                         return response;
                     })
                     .collect(Collectors.toList());
@@ -97,6 +101,10 @@ public class AdminController {
             response.setUsername(member.getName());
             response.setEmail(member.getEmail());
             response.setRole(member.getUserType());
+            // createdAt 포맷팅
+            if (member.getCreatedAt() != null) {
+                response.setCreatedAt(member.getCreatedAt().toString());
+            }
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
@@ -108,7 +116,7 @@ public class AdminController {
     }
 
     // 회원 정보 수정 (PUT /api/admin/users/{id})
-    // - 관리자가 회원의 이름, 이메일, 권한 수정
+    // - 관리자가 회원의 이름, 이메일, 권한, 비밀번호 수정
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable String id,
@@ -118,13 +126,25 @@ public class AdminController {
             // JWT 토큰 검증 및 ADMIN 권한 확인
             validateAdminToken(authHeader);
 
+            // name 또는 username 필드 지원 (호환성)
+            String nameValue = request.get("name");
+            if (nameValue == null || nameValue.isEmpty()) {
+                nameValue = request.get("username");
+            }
+
             // 회원 정보 수정
             Member member = memberService.updateMember(
                     id,
-                    request.get("username"),
+                    nameValue,
                     request.get("email"),
                     request.get("role")
             );
+
+            // 비밀번호가 전달된 경우 비밀번호도 변경
+            String newPassword = request.get("password");
+            if (newPassword != null && !newPassword.isEmpty()) {
+                memberService.resetPassword(id, newPassword);
+            }
 
             // 수정 완료 응답
             Map<String, Object> response = Map.of(
@@ -167,20 +187,84 @@ public class AdminController {
         }
     }
 
+    // 회원 권한 변경 (PATCH /api/admin/users/{id}/role)
+    // - 일반 회원을 점주로 전환하는 등의 권한 변경
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<?> updateUserRole(
+            @PathVariable String id,
+            @RequestBody Map<String, String> request,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        try {
+            // JWT 토큰 검증 및 ADMIN 권한 확인
+            validateAdminToken(authHeader);
+
+            // userType 또는 role 필드에서 새로운 권한 추출
+            String newRole = request.get("userType");
+            if (newRole == null || newRole.isEmpty()) {
+                newRole = request.get("role");
+            }
+            if (newRole == null || newRole.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "변경할 권한을 지정해주세요."));
+            }
+
+            // 회원 권한 업데이트 (이름, 이메일은 null로 전달하여 변경하지 않음)
+            Member member = memberService.updateMemberRole(id, newRole);
+
+            // 응답 생성
+            Map<String, Object> response = Map.of(
+                    "message", "권한이 변경되었습니다.",
+                    "id", member.getUserId(),
+                    "username", member.getName(),
+                    "email", member.getEmail(),
+                    "role", member.getUserType(),
+                    "userType", member.getUserType()
+            );
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            // 권한/토큰 관련 에러는 403, 나머지는 400 응답
+            if (e.getMessage().contains("권한") || e.getMessage().contains("토큰")) {
+                return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
+            }
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
     // 응답 DTO 클래스 (비밀번호 제외하고 반환)
     public static class MemberResponse {
         private String id;
+        private String userId;
         private String username;
+        private String name;
         private String email;
         private String role;
+        private String userType;
+        private String createdAt;
 
         public String getId() { return id; }
-        public void setId(String id) { this.id = id; }
+        public void setId(String id) {
+            this.id = id;
+            this.userId = id;  // userId도 함께 설정
+        }
+        public String getUserId() { return userId; }
+        public void setUserId(String userId) { this.userId = userId; }
         public String getUsername() { return username; }
-        public void setUsername(String username) { this.username = username; }
+        public void setUsername(String username) {
+            this.username = username;
+            this.name = username;  // name도 함께 설정
+        }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
         public String getRole() { return role; }
-        public void setRole(String role) { this.role = role; }
+        public void setRole(String role) {
+            this.role = role;
+            this.userType = role;  // userType도 함께 설정
+        }
+        public String getUserType() { return userType; }
+        public void setUserType(String userType) { this.userType = userType; }
+        public String getCreatedAt() { return createdAt; }
+        public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
     }
 }

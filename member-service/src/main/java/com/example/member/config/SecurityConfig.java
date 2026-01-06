@@ -23,6 +23,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/api/users/**")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/admin/**")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signup")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
@@ -37,6 +38,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:8000");
         configuration.addAllowedOrigin("http://localhost:8004");
+        configuration.addAllowedOrigin("http://localhost:8005"); // frontend-service
+        configuration.addAllowedOrigin("http://localhost:8006"); // board-service
+        configuration.addAllowedOrigin("http://localhost:8007"); // admin-service
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

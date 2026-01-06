@@ -1033,7 +1033,7 @@
             var status = $('#statusFilter').val();
             var keyword = $('.inquiry_search_input').val().trim();
 
-            var url = 'http://localhost:8000/api/admin/inquiries?page=' + currentPage + '&size=10';
+            var url = '/api/admin/inquiries?page=' + currentPage + '&size=10';
             if (status) {
                 url += '&status=' + status.toUpperCase();
             }
@@ -1191,7 +1191,7 @@
         function answerInquiry(id) {
             var token = localStorage.getItem('accessToken');
 
-            fetch('http://localhost:8000/api/admin/inquiries/' + id, {
+            fetch('/api/admin/inquiries/' + id, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -1230,7 +1230,7 @@
         function viewInquiry(id) {
             var token = localStorage.getItem('accessToken');
 
-            fetch('http://localhost:8000/api/admin/inquiries/' + id, {
+            fetch('/api/admin/inquiries/' + id, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -1281,7 +1281,7 @@
             if (deleteInquiryId) {
                 var token = localStorage.getItem('accessToken');
 
-                fetch('http://localhost:8000/api/admin/inquiries/' + deleteInquiryId, {
+                fetch('/api/admin/inquiries/' + deleteInquiryId, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1339,7 +1339,7 @@
                     return;
                 }
 
-                fetch('http://localhost:8000/api/admin/inquiries/' + inquiryId + '/answer', {
+                fetch('/api/admin/inquiries/' + inquiryId + '/answer', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + token,

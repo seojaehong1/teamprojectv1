@@ -492,7 +492,7 @@
                 sendBtn.prop('disabled', true).text('발송중...');
 
                 // 서버에 인증번호 발송 요청
-                fetch('http://localhost:8000/api/auth/email/send-code', {
+                fetch('/api/auth/email/send-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -503,11 +503,20 @@
                     })
                 })
                 .then(function(response) {
-                    return response.json().then(function(data) {
-                        if (!response.ok) {
-                            throw new Error(data.message || '인증번호 발송에 실패했습니다');
+                    // 응답 텍스트를 먼저 확인
+                    return response.text().then(function(text) {
+                        try {
+                            var data = text ? JSON.parse(text) : {};
+                            if (!response.ok) {
+                                throw new Error(data.message || '인증번호 발송에 실패했습니다');
+                            }
+                            return data;
+                        } catch (e) {
+                            if (!response.ok) {
+                                throw new Error('인증번호 발송에 실패했습니다');
+                            }
+                            return {};
                         }
-                        return data;
                     });
                 })
                 .then(function(data) {
@@ -561,7 +570,7 @@
                 verifyBtn.prop('disabled', true).text('확인중...');
 
                 // 서버에 인증번호 확인 요청
-                fetch('http://localhost:8000/api/auth/email/verify-code', {
+                fetch('/api/auth/email/verify-code', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -572,11 +581,19 @@
                     })
                 })
                 .then(function(response) {
-                    return response.json().then(function(data) {
-                        if (!response.ok) {
-                            throw new Error(data.message || '인증번호 확인에 실패했습니다');
+                    return response.text().then(function(text) {
+                        try {
+                            var data = text ? JSON.parse(text) : {};
+                            if (!response.ok) {
+                                throw new Error(data.message || '인증번호 확인에 실패했습니다');
+                            }
+                            return data;
+                        } catch (e) {
+                            if (!response.ok) {
+                                throw new Error('인증번호 확인에 실패했습니다');
+                            }
+                            return {};
                         }
-                        return data;
                     });
                 })
                 .then(function(data) {
@@ -722,7 +739,7 @@
                 // 모든 검증 통과
                 if (isValid) {
                     // 서버에 회원가입 요청
-                    fetch('http://localhost:8000/api/auth/register', {
+                    fetch('/api/auth/register', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -736,12 +753,20 @@
                         })
                     })
                     .then(function(response) {
-                        if (!response.ok) {
-                            return response.json().then(function(data) {
-                                throw new Error(data.message || '회원가입에 실패했습니다');
-                            });
-                        }
-                        return response.json();
+                        return response.text().then(function(text) {
+                            try {
+                                var data = text ? JSON.parse(text) : {};
+                                if (!response.ok) {
+                                    throw new Error(data.message || '회원가입에 실패했습니다');
+                                }
+                                return data;
+                            } catch (e) {
+                                if (!response.ok) {
+                                    throw new Error('회원가입에 실패했습니다');
+                                }
+                                return {};
+                            }
+                        });
                     })
                     .then(function(data) {
                         // 회원가입 성공 알림 (커스텀 모달)

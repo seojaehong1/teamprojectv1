@@ -886,7 +886,7 @@
 
         function loadNotices() {
             var token = localStorage.getItem('accessToken');
-            var url = 'http://localhost:8000/api/admin/notices?page=' + currentPage + '&size=10';
+            var url = '/api/admin/notices?page=' + currentPage + '&size=10';
             if (searchKeyword) {
                 url += '&keyword=' + encodeURIComponent(searchKeyword);
             }
@@ -1064,7 +1064,7 @@
         async function editNotice(id) {
             try {
                 var token = localStorage.getItem('accessToken');
-                const res = await fetch('http://localhost:8000/api/admin/notices/' + id, {
+                const res = await fetch('/api/admin/notices/' + id, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1119,7 +1119,7 @@
             if (deleteNoticeId) {
                 var token = localStorage.getItem('accessToken');
 
-                fetch('http://localhost:8000/api/admin/notices/' + deleteNoticeId, {
+                fetch('/api/admin/notices/' + deleteNoticeId, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -1177,11 +1177,11 @@
                     isPinned: $('#noticeImportant').is(':checked')
                 };
 
-                var url = 'http://localhost:8000/api/admin/notices';
+                var url = '/api/admin/notices';
                 var method = 'POST';
 
                 if (noticeId) {
-                    url = 'http://localhost:8000/api/admin/notices/' + noticeId;
+                    url = '/api/admin/notices/' + noticeId;
                     method = 'PUT';
                 }
 

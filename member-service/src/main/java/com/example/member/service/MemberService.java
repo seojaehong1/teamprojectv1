@@ -223,6 +223,19 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    // 회원 권한만 변경 (점주 전환 등)
+    @Transactional
+    public Member updateMemberRole(String userId, String newRole) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        if (newRole != null && !newRole.isEmpty()) {
+            member.setUserType(newRole.toLowerCase());
+        }
+
+        return memberRepository.save(member);
+    }
+
     @Transactional
     public void deleteMember(String userId) {
         memberRepository.deleteByUserId(userId);

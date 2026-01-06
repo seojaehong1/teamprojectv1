@@ -797,7 +797,7 @@
                         return false;
                     }
 
-                    fetch('http://localhost:8000/api/auth/change-password', {
+                    fetch('/api/auth/change-password', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -829,7 +829,7 @@
                         }
 
                         // 비밀번호 변경 성공 후 회원정보도 API로 저장
-                        return fetch('http://localhost:8000/api/users/profile', {
+                        return fetch('/api/users/profile', {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -871,7 +871,7 @@
                         return false;
                     }
 
-                    fetch('http://localhost:8000/api/users/profile', {
+                    fetch('/api/users/profile', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

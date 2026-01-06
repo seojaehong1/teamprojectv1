@@ -37,9 +37,27 @@ teamprojectv1/
 | product-service | 8001 |
 | order-service | 8002 |
 | member-service | 8004 |
-| frontend-service | 8005 |
+| frontend-service | 8005 (메인 진입점) |
+| board-service | 8006 |
+| admin-service | 8007 |
+| inventory-service | 8008 |
 
-## API Routes (via Gateway)
+## API Routes
+
+### Frontend-service 프록시 (권장 - localhost:8005)
+Frontend-service에서 각 서비스로 API 요청을 프록시합니다:
+- `/api/auth/**` -> member-service (8004)
+- `/api/users/**` -> member-service (8004)
+- `/api/notices/**` -> board-service (8006)
+- `/api/boards/**` -> board-service (8006)
+- `/api/comments/**` -> board-service (8006)
+- `/api/admin/**` -> admin-service (8007)
+- `/api/inquiries/**` -> admin-service (8007)
+- `/api/products/**` -> product-service (8002)
+- `/api/orders/**` -> order-service (8003)
+- `/api/inventory/**` -> inventory-service (8008)
+
+### Gateway 라우팅 (localhost:8000)
 - `/api/products/**` -> product-service
 - `/api/orders/**` -> order-service
 - `/api/customers/**` -> cust-service
