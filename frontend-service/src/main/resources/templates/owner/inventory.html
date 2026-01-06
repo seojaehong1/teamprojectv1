@@ -638,10 +638,10 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="order.html" class="pc">주문 관리</a>
+                            <a href="/order" class="pc">주문 관리</a>
                         </li>
                         <li>
-                            <a href="inventory.html" class="pc">재고 관리</a>
+                            <a href="/inventory" class="pc">재고 관리</a>
                         </li>
                     </ul>
                 </div>
@@ -675,8 +675,8 @@
             
             <!-- 네비게이션 -->
             <div class="owner_nav">
-                <a href="../../owner/order.html" class="owner_nav_item">주문 관리</a>
-                <a href="../../owner/inventory.html" class="owner_nav_item active">재고 관리</a>
+                <a href="/owner/order" class="owner_nav_item">주문 관리</a>
+                <a href="/owner/inventory" class="owner_nav_item active">재고 관리</a>
             </div>
             
             <!-- 검색 및 추가 -->
@@ -779,29 +779,15 @@
             <form id="inventoryForm">
                 <div class="inventory_modal_form_item">
                     <label class="inventory_modal_label">재고명</label>
-                    <select class="inventory_modal_input" id="inventoryName" required>
-                        <option value="">선택하세요</option>
-                        <option value="아메리카노 원두">아메리카노 원두</option>
-                        <option value="우유">우유</option>
-                        <option value="시럽">시럽</option>
-                        <option value="컵">컵</option>
-                        <option value="라떼 원두">라떼 원두</option>
-                        <option value="바닐라 시럽">바닐라 시럽</option>
-                        <option value="카라멜 시럽">카라멜 시럽</option>
-                        <option value="헤이즐넛 시럽">헤이즐넛 시럽</option>
-                    </select>
+                    <input type="text" class="inventory_modal_input" id="inventoryName" placeholder="재고명을 입력하세요" required>
                 </div>
                 <div class="inventory_modal_form_item">
                     <label class="inventory_modal_label">현재 재고</label>
-                    <input type="number" class="inventory_modal_input" id="inventoryStock" readonly style="background: #f5f5f5;" value="0">
-                </div>
-                <div class="inventory_modal_form_item" id="inventoryAddAmountItem">
-                    <label class="inventory_modal_label">추가할 재고량</label>
-                    <input type="number" class="inventory_modal_input" id="inventoryAddAmount" min="1" placeholder="추가할 재고량을 입력하세요">
+                    <input type="number" class="inventory_modal_input" id="inventoryStock" step="0.01" placeholder="현재 재고량을 입력하세요" required>
                 </div>
                 <div class="inventory_modal_form_item">
                     <label class="inventory_modal_label">단위</label>
-                    <input type="text" class="inventory_modal_input" id="inventoryUnit" readonly style="background: #f5f5f5;">
+                    <input type="text" class="inventory_modal_input" id="inventoryUnit" placeholder="단위(예: kg, g, 개)를 입력하세요" required>
                 </div>
                 <div class="inventory_modal_actions">
                     <button type="button" class="inventory_modal_btn cancel" onclick="closeInventoryModal()">취소</button>
@@ -907,20 +893,22 @@
             duration: 1200,
         });
 
-        // 로그인 드롭다운 토글
+        const API_BASE_URL = 'http://localhost:8000/api/owner/inventory';
+
         $(document).ready(function() {
-            // 권한 체크
-            var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'owner') {
-                alert('점주 권한이 필요합니다.');
-                window.location.href = '../login.html';
-                return;
-            }
-            
-            // 사용자명 표시
+            // 1. 초기 데이터 로드
+            loadInventoryList();
+
+            // 사용자 권한 및 이름 설정 (기존 로직 유지)
+            // var userRole = localStorage.getItem('userRole');
+            // if (userRole !== 'owner') {
+            //     alert('점주 권한이 필요합니다.');
+            //     window.location.href = '../login.html';
+            //     return;
+            // }
             var userName = localStorage.getItem('userName') || '점주';
             $('.head_user_name').text(userName + '님');
-            
+
             // 로그인 드롭다운 토글
             $('.head_login_trigger').click(function(e) {
                 e.preventDefault();
@@ -933,8 +921,8 @@
                     $('.head_login_wrap').removeClass('active');
                 }
             });
-            
-            // 로그아웃 버튼
+
+            // 로그아웃
             $('#ownerLogoutBtn').on('click', function(e) {
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
@@ -943,205 +931,196 @@
                 }
             });
 
-            // 재고명 선택 시 단위 및 현재 재고 자동 설정
-            $('#inventoryName').change(function() {
-                const inventoryName = $(this).val();
-                const unitMap = {
-                    '아메리카노 원두': 'kg',
-                    '라떼 원두': 'kg',
-                    '우유': 'L',
-                    '시럽': '병',
-                    '바닐라 시럽': '병',
-                    '카라멜 시럽': '병',
-                    '헤이즐넛 시럽': '병',
-                    '컵': '개'
-                };
-                const stockMap = {
-                    '아메리카노 원두': 5,
-                    '라떼 원두': 3,
-                    '우유': 15,
-                    '시럽': 50,
-                    '바닐라 시럽': 30,
-                    '카라멜 시럽': 25,
-                    '헤이즐넛 시럽': 20,
-                    '컵': 200
-                };
-                $('#inventoryUnit').val(unitMap[inventoryName] || '');
-                $('#inventoryStock').val(stockMap[inventoryName] || 0);
-            });
-
-            // 재고 수정 폼 제출
+            // 폼 제출 (추가 또는 수정)
             $('#inventoryForm').on('submit', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                
-                // 재고 추가 모드일 때는 추가할 재고량 필수
-                if ($('#inventoryAddAmountItem').is(':visible')) {
-                    if (!$('#inventoryAddAmount').val() || $('#inventoryAddAmount').val() <= 0) {
-                        alert('추가할 재고량을 입력해주세요.');
-                        return false;
-                    }
+                const mode = $('#inventoryModalTitle').text();
+
+                if (mode === '재고 추가') {
+                    addStock();
+                } else {
+                    updateStock();
                 }
-                
-                // 재고 저장 로직
-                // 재고 수정 모달 닫기
-                $('#inventoryModal').removeClass('active');
-                document.body.style.overflow = '';
-                document.body.style.paddingRight = '';
-                
-                // 완료 모달 열기
-                setTimeout(function() {
-                    const scrollbarWidth = getScrollbarWidth();
-                    document.body.style.overflow = 'hidden';
-                    document.body.style.paddingRight = scrollbarWidth + 'px';
-                    $('#inventorySuccessModal').addClass('show');
-                }, 200);
-                
-                return false;
+            });
+
+            // 검색 버튼 클릭 이벤트 추가
+            $('.inventory_search_btn').on('click', function() {
+                filterInventory();
+            });
+
+            // 엔터키 입력 시 검색 이벤트 추가
+            $('.inventory_search_input').on('keypress', function(e) {
+                if (e.which === 13) {
+                    filterInventory();
+                }
             });
         });
 
-        // 스크롤바 너비 계산
-        function getScrollbarWidth() {
-            const outer = document.createElement('div');
-            outer.style.visibility = 'hidden';
-            outer.style.overflow = 'scroll';
-            outer.style.msOverflowStyle = 'scrollbar';
-            document.body.appendChild(outer);
-            const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            outer.parentNode.removeChild(outer);
-            return scrollbarWidth;
-        }
+        // [GET] 재고 목록 조회
+        async function loadInventoryList() {
+            try {
+                const response = await fetch(API_BASE_URL);
+                if (!response.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
 
-        // 모달 열기 (스크롤바 고정)
-        function openModal(modalId) {
-            const scrollbarWidth = getScrollbarWidth();
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = scrollbarWidth + 'px';
-            if (modalId === '#inventoryModal') {
-                $(modalId).addClass('active');
-            } else {
-                $(modalId).addClass('show');
+                const data = await response.json();
+                const $tbody = $('.inventory_list_table tbody');
+                $tbody.empty();
+
+                data.forEach(item => {
+                    $tbody.append(`
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 14px; color: #333;">${item.ingredientName}</span>
+                                <span style="font-size: 14px; color: #666; white-space: nowrap;">
+                                    현재 재고량 <strong style="color: #333;">${item.stockQty} ${item.baseUnit}</strong>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="inventory_action_btn edit" onclick="openEditModal(${item.ingredientId}, '${item.ingredientName}', ${item.stockQty}, '${item.baseUnit}')">수정</button>
+                        </td>
+                    </tr>
+                `);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('재고 목록을 가져오는 중 오류가 발생했습니다.');
             }
         }
 
-        // 모달 닫기 (스크롤바 복원)
-        function closeModal(modalId) {
-            if (modalId === '#inventoryModal') {
-                $(modalId).removeClass('active');
-            } else {
-                $(modalId).removeClass('show');
+        // [PUT] 재고 추가 (새로운 재고
+        async function addStock() {
+            const name = $('#inventoryName').val();
+            const qty = $('#inventoryStock').val();
+            const unit = $('#inventoryUnit').val();
+
+            try {
+                // 주소가 컨트롤러의 @RequestMapping("/api/owner/inventory")와 일치해야 합니다.
+                const response = await fetch('http://localhost:8000/api/owner/inventory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ingredientName: name,
+                        stockQty: parseFloat(qty),
+                        baseUnit: unit
+                    })
+                });
+
+                if (response.ok) {
+                    openInventorySuccessModal();
+                } else {
+                    // 404가 뜨면 이 메시지가 출력됩니다.
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Error Response:', errorData);
+                    alert('재고 추가에 실패했습니다. (사유: ' + response.status + ')');
+                }
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                alert('서버와 통신할 수 없습니다.');
             }
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
         }
 
-        // 재고 추가 모달 열기
+        // [PUT] 재고 수정 (수량 직접 설정)
+        async function updateStock() {
+            const id = $('#inventoryForm').data('inventoryId');
+            const stockQty = $('#inventoryStock').val();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stockQty: parseFloat(stockQty) })
+                });
+
+                if (response.ok) {
+                    openInventorySuccessModal();
+                }
+            } catch (error) {
+                alert('재고 수정 실패');
+            }
+        }
+
+        // 재료 이름으로 목록 필터링하는 함수
+        function filterInventory() {
+            const searchTerm = $('.inventory_search_input').val().toLowerCase(); // 검색어 소문자 변환
+            const $rows = $('.inventory_list_table tbody tr'); // 테이블의 모든 행
+
+            $rows.each(function() {
+                // 첫 번째 td 안의 재료 이름 텍스트 가져오기
+                const ingredientName = $(this).find('td:first-child span:first-child').text().toLowerCase();
+
+                if (ingredientName.includes(searchTerm)) {
+                    $(this).show(); // 검색어가 포함되어 있으면 표시
+                } else {
+                    $(this).hide(); // 포함되어 있지 않으면 숨김
+                }
+            });
+
+            // 검색 결과가 없을 경우에 대한 처리 (선택 사항)
+            if ($rows.filter(':visible').length === 0) {
+                if ($('.no-result-msg').length === 0) {
+                    $('.inventory_list_table tbody').append('<tr class="no-result-msg"><td colspan="2" style="text-align:center; padding: 20px;">검색 결과가 없습니다.</td></tr>');
+                }
+            } else {
+                $('.no-result-msg').remove();
+            }
+        }
+
+        // 모달 제어 함수들
         function openAddModal() {
             $('#inventoryForm')[0].reset();
             $('#inventoryModalTitle').text('재고 추가');
-            $('#inventoryStock').val(0);
-            $('#inventoryAddAmountItem').show();
-            $('#inventoryAddAmount').show();
-            $('#inventoryAddAmount').attr('required', 'required');
+
+            // 모든 필드 입력 가능하게 설정
+            $('#inventoryName').prop('disabled', false);
+            $('#inventoryStock').prop('readonly', false).css('background', '#fff');
+            $('#inventoryUnit').prop('readonly', false).css('background', '#fff');
+
+            // 추가할 재고량 필드가 HTML에 남아있다면 숨김 처리
+            $('#inventoryAddAmountItem').hide();
+
             openModal('#inventoryModal');
         }
 
-        // 재고 수정 모달 열기
-        function editInventory(id) {
-            // 실제로는 서버에서 재고 정보를 가져와서 폼에 채워야 함
-            // 예시 데이터
-            const inventoryData = {
-                1: { name: '아메리카노 원두', stock: 5, unit: 'kg' },
-                2: { name: '우유', stock: 15, unit: 'L' },
-                3: { name: '시럽', stock: 50, unit: '병' },
-                4: { name: '컵', stock: 200, unit: '개' }
-            };
-            
-            const inventory = inventoryData[id] || { name: '', stock: 0, unit: '' };
-            $('#inventoryName').val(inventory.name);
-            $('#inventoryStock').val(inventory.stock);
-            $('#inventoryUnit').val(inventory.unit);
+        function openEditModal(id, name, stock, unit) {
             $('#inventoryModalTitle').text('재고 수정');
-            $('#inventoryStock').prop('readonly', false).css('background', '#fff');
+
+            // 1. 해당 이름의 옵션이 있는지 확인
+            if ($("#inventoryName option[value='" + name + "']").length === 0) {
+                // 2. 옵션이 없다면 임시로 추가 (수정 모드이므로 보여주기 위함)
+                $('#inventoryName').append(`<option value="${name}">${name}</option>`);
+            }
+
+            $('#inventoryName').val(name).prop('disabled', true);
+            $('#inventoryStock').val(stock).prop('readonly', false).css('background', '#fff');
+            $('#inventoryUnit').val(unit);
             $('#inventoryAddAmountItem').hide();
-            $('#inventoryAddAmount').hide();
             $('#inventoryForm').data('inventoryId', id);
             openModal('#inventoryModal');
         }
 
-        // 재고 저장 완료 모달 열기
-        function openInventorySuccessModal() {
-            // 기존 모달이 있으면 먼저 닫기
-            $('#inventoryModal').removeClass('active');
-            // 완료 모달 열기
-            const scrollbarWidth = getScrollbarWidth();
+        function openModal(modalId) {
+            $(modalId).addClass('active').addClass('show');
             document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = scrollbarWidth + 'px';
+        }
+
+        function closeModal(modalId) {
+            $(modalId).removeClass('active').removeClass('show');
+            document.body.style.overflow = '';
+        }
+
+        function closeInventoryModal() { closeModal('#inventoryModal'); }
+
+        function openInventorySuccessModal() {
+            closeInventoryModal();
             $('#inventorySuccessModal').addClass('show');
         }
 
-        // 재고 저장 완료 모달 닫기
         function closeInventorySuccessModal() {
             $('#inventorySuccessModal').removeClass('show');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
             location.reload();
         }
-
-        // 재고 삭제
-        let deleteInventoryId = null;
-        function deleteInventory(id) {
-            deleteInventoryId = id;
-            openModal('#inventoryDeleteModal');
-        }
-
-        // 삭제 확인
-        function confirmInventoryDelete() {
-            if (deleteInventoryId) {
-                // 재고 삭제 로직
-                closeModal('#inventoryDeleteModal');
-                openModal('#inventoryDeleteSuccessModal');
-            }
-        }
-
-        // 삭제 모달 닫기
-        function closeInventoryDeleteModal() {
-            closeModal('#inventoryDeleteModal');
-            deleteInventoryId = null;
-        }
-
-        // 삭제 완료 모달 닫기
-        function closeInventoryDeleteSuccessModal() {
-            closeModal('#inventoryDeleteSuccessModal');
-            location.reload();
-        }
-
-        // 모달 닫기
-        function closeInventoryModal() {
-            closeModal('#inventoryModal');
-        }
-
-        // 모달 외부 클릭 시 닫기
-        $(document).on('click', '.inventory_modal_overlay', function(e) {
-            if ($(e.target).hasClass('inventory_modal_overlay')) {
-                closeInventoryModal();
-            }
-        });
-
-        $(document).on('click', '.inventory_success_modal', function(e) {
-            if ($(e.target).hasClass('inventory_success_modal')) {
-                closeInventorySuccessModal();
-                closeInventoryDeleteSuccessModal();
-            }
-        });
-
-        $(document).on('click', '.inventory_delete_modal', function(e) {
-            if ($(e.target).hasClass('inventory_delete_modal')) {
-                closeInventoryDeleteModal();
-            }
-        });
-
     </script>
 </body>
 </html>

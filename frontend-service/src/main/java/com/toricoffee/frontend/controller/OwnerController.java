@@ -19,4 +19,8 @@ public class OwnerController {
     public String orderCheckout() {
         return "owner/order";
     }
+
+    @GetMapping("/inventory")
+    public String inventoryCheckout() {return "owner/inventory";}
+
 }
