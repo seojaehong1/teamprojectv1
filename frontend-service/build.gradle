@@ -3,5 +3,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // PATCH 메서드 지원을 위한 Apache HttpClient
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
 }
 

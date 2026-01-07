@@ -258,7 +258,9 @@
         <!-- 헤더 -->
         <div class="login_header">
             <div class="login_logo">
-                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                <a href="/">
+                    <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                </a>
             </div>
         </div>
 
@@ -291,9 +293,9 @@
 
             <!-- 하단 링크 -->
             <div class="login_links">
-                <a href="find_id.html">아이디 찾기</a>
-                <a href="find_password.html">비밀번호 찾기</a>
-                <a href="signup.html">회원가입</a>
+                <a href="/find_id">아이디 찾기</a>
+                <a href="/find_password">비밀번호 찾기</a>
+                <a href="/signup">회원가입</a>
             </div>
         </div>
     </div>
@@ -347,99 +349,78 @@
                 
                 // 모든 유효성 검사 통과
                 if (isValid) {
-                    // localStorage에서 users 배열 확인
-                    var users = JSON.parse(localStorage.getItem('users') || '[]');
-                    
                     // 로그인 타입 가져오기 (탭이 있으면)
                     var loginTypeRadio = $('input[name="loginType"]:checked');
                     var loginType = loginTypeRadio.length > 0 ? loginTypeRadio.val() : 'normal';
-                    
-                    // users 배열에서 사용자 찾기
-                    var foundUser = users.find(function(user) {
-                        // username 또는 email로 매칭
-                        return (user.username && user.username.toLowerCase() === loginId.toLowerCase()) ||
-                               (user.email && user.email.toLowerCase() === loginId.toLowerCase());
-                    });
-                    
-                    // 하드코딩된 관리자 계정도 체크 (관리자 탭일 때만)
-                    var isHardcodedAdmin = (loginId === 'admin' && password === 'admin1234');
-                    
-                    // 사용자 확인
-                    if (foundUser || isHardcodedAdmin) {
-                        var user = foundUser || null;
-                        var userRole = null;
-                        var userName = null;
-                        var passwordMatch = false;
-                        
-                        if (isHardcodedAdmin && loginType === 'admin') {
-                            // 하드코딩된 관리자 계정
-                            userRole = 'admin';
-                            userName = 'Admin';
-                            passwordMatch = true;
-                        } else if (foundUser) {
-                            // users 배열에서 찾은 사용자
-                            // 비밀번호 확인
-                            if (foundUser.password === password) {
-                                passwordMatch = true;
-                                userRole = foundUser.role || 'user';
-                                userName = foundUser.name || foundUser.username || loginId;
-                            }
+
+                    // 서버에 로그인 요청
+                    fetch('/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            userId: loginId,
+                            password: password,
+                            userType: loginType
+                        })
+                    })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('로그인 실패');
                         }
-                        
-                        if (passwordMatch) {
-                            // 비밀번호 일치 - 로그인 성공
-                            // localStorage에 로그인 상태 저장
-                            localStorage.setItem('isLoggedIn', 'true');
-                            localStorage.setItem('userName', userName);
-                            localStorage.setItem('userRole', userRole);
-                            
-                            // 탭에 따라 분기 처리
-                            if (loginType === 'normal') {
-                                // 일반회원 탭 로그인
-                                if (userRole === 'user') {
-                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                        window.location.href = 'index.html';
-                                    });
-                                } else if (userRole === 'owner' || userRole === 'admin') {
-                                    showCustomModal('알림', '관리자 탭을 이용해주세요');
-                                    $('#loginPassword').val('').focus();
-                                }
-                            } else if (loginType === 'admin') {
-                                // 관리자 탭 로그인 (점주용)
-                                if (userRole === 'owner') {
-                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                        window.location.href = 'owner/inventory.html';
-                                    });
-                                } else if (userRole === 'admin') {
-                                    showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                        window.location.href = 'admin/user.html';
-                                    });
-                                } else if (userRole === 'user') {
-                                    showCustomModal('알림', '일반회원 탭을 이용해주세요');
-                                    $('#loginPassword').val('').focus();
-                                }
-                            } else {
-                                // 탭 구조가 없는 경우 - role에 따라 자동 리다이렉트
-                                showCustomModal('로그인 성공', '로그인에 성공했습니다.', function() {
-                                    if (userRole === 'admin') {
-                                        window.location.href = 'admin/user.html';
-                                    } else if (userRole === 'owner') {
-                                        window.location.href = 'owner/inventory.html';
-                                    } else {
-                                        window.location.href = 'index.html';
-                                    }
-                                });
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        // null 체크 및 서버에서 받은 토큰과 사용자 정보 저장
+                        if (!data || !data.accessToken || !data.role) {
+                            throw new Error('서버 응답이 올바르지 않습니다.');
+                        }
+
+                        localStorage.setItem('accessToken', data.accessToken);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userName', data.username || data.userId || '사용자');
+                        localStorage.setItem('userId', data.userId || '');
+                        localStorage.setItem('userEmail', data.email || '');
+                        localStorage.setItem('userRole', data.role.toLowerCase());
+
+                        var userRole = data.role.toLowerCase();
+
+                        // 탭에 따라 분기 처리 - 모달 없이 바로 이동
+                        if (loginType === 'normal') {
+                            // 일반회원 탭 로그인
+                            if (userRole === 'member') {
+                                window.location.href = '/';
+                            } else if (userRole === 'store_owner' || userRole === 'admin') {
+                                showCustomModal('알림', '관리자 탭을 이용해주세요');
+                                $('#loginPassword').val('').focus();
+                            }
+                        } else if (loginType === 'admin') {
+                            // 관리자 탭 로그인 (점주용)
+                            if (userRole === 'store_owner') {
+                                window.location.href = '/owner/inventory';
+                            } else if (userRole === 'admin') {
+                                window.location.href = '/admin/user';
+                            } else if (userRole === 'member') {
+                                showCustomModal('알림', '일반회원 탭을 이용해주세요');
+                                $('#loginPassword').val('').focus();
                             }
                         } else {
-                            // 비밀번호 불일치
-                            showCustomModal('로그인 실패', '아이디 또는 비밀번호가 일치하지 않습니다.');
-                            $('#loginPassword').val('').focus();
+                            // 탭 구조가 없는 경우 - role에 따라 자동 리다이렉트
+                            if (userRole === 'admin') {
+                                window.location.href = '/admin/user';
+                            } else if (userRole === 'store_owner') {
+                                window.location.href = '/owner/inventory';
+                            } else {
+                                window.location.href = '/';
+                            }
                         }
-                    } else {
-                        // 사용자를 찾을 수 없는 경우
+                    })
+                    .catch(function(error) {
+                        console.error('로그인 오류:', error);
                         showCustomModal('로그인 실패', '아이디 또는 비밀번호가 일치하지 않습니다.');
                         $('#loginPassword').val('').focus();
-                    }
+                    });
                 }
             });
 

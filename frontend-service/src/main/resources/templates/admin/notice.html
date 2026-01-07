@@ -616,7 +616,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="user.html">
+                <a href="/admin/user">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -624,16 +624,16 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="user.html" class="pc">회원 관리</a>
+                            <a href="/admin/user" class="pc">회원 관리</a>
                         </li>
                         <li>
-                            <a href="product.html" class="pc">상품 관리</a>
+                            <a href="/admin/product" class="pc">상품 관리</a>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">공지사항 관리</a>
+                            <a href="/admin/notice" class="pc">공지사항 관리</a>
                         </li>
                         <li>
-                            <a href="inquiry.html" class="pc">문의 관리</a>
+                            <a href="/admin/inquiry" class="pc">문의 관리</a>
                         </li>
                     </ul>
                 </div>
@@ -667,16 +667,21 @@
             
             <!-- 네비게이션 -->
             <div class="admin_nav">
-                <a href="user.html" class="admin_nav_item">회원 관리</a>
-                <a href="product.html" class="admin_nav_item">상품 관리</a>
-                <a href="notice.html" class="admin_nav_item active">공지사항 관리</a>
-                <a href="inquiry.html" class="admin_nav_item">문의 관리</a>
+                <a href="/admin/user" class="admin_nav_item">회원 관리</a>
+                <a href="/admin/product" class="admin_nav_item">상품 관리</a>
+                <a href="/admin/notice" class="admin_nav_item active">공지사항 관리</a>
+                <a href="/admin/inquiry" class="admin_nav_item">문의 관리</a>
             </div>
             
             <!-- 검색 및 추가 -->
             <div class="notice_toolbar">
                 <div class="notice_search">
-                    <input type="text" class="notice_search_input" placeholder="제목, 내용으로 검색...">
+                    <select class="notice_search_type" id="noticeSearchType" style="padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="author">작성자</option>
+                    </select>
+                    <input type="text" class="notice_search_input" placeholder="검색어를 입력하세요...">
                     <button class="notice_search_btn">검색</button>
                 </div>
                 <button class="notice_add_btn" onclick="showAddForm()">
@@ -727,64 +732,20 @@
                             <th>관리</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="notice_important">공지</span></td>
-                            <td>TORI COFFEE 앱 업그레이드 오픈 안내</td>
-                            <td>관리자</td>
-                            <td>1,053</td>
-                            <td>2025-10-19</td>
-                            <td>
-                                <button class="notice_action_btn edit" onclick="editNotice(1)">수정</button>
-                                <button class="notice_action_btn delete" onclick="deleteNotice(1)">삭제</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="notice_important">공지</span></td>
-                            <td>TORI COFFEE 원두 관련 공지</td>
-                            <td>관리자</td>
-                            <td>1,866</td>
-                            <td>2023-02-21</td>
-                            <td>
-                                <button class="notice_action_btn edit" onclick="editNotice(2)">수정</button>
-                                <button class="notice_action_btn delete" onclick="deleteNotice(2)">삭제</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>TORI COFFEE 샌드위치·샐러드 원산지 표시</td>
-                            <td>관리자</td>
-                            <td>832</td>
-                            <td>2025-06-09</td>
-                            <td>
-                                <button class="notice_action_btn edit" onclick="editNotice(3)">수정</button>
-                                <button class="notice_action_btn delete" onclick="deleteNotice(3)">삭제</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>TORI COFFEE 원산지 표시</td>
-                            <td>관리자</td>
-                            <td>1,105</td>
-                            <td>2024-11-07</td>
-                            <td>
-                                <button class="notice_action_btn edit" onclick="editNotice(4)">수정</button>
-                                <button class="notice_action_btn delete" onclick="deleteNotice(4)">삭제</button>
-                            </td>
-                        </tr>
+                    <tbody id="noticeListBody">
+                        <!-- 동적으로 로드됨 -->
                     </tbody>
                 </table>
+                <div id="noticeListEmpty" style="display: none; text-align: center; padding: 40px; color: #999;">
+                    등록된 공지사항이 없습니다.
+                </div>
             </div>
-            
+
             <!-- 페이지네이션 -->
             <div class="board_page_wrap">
                 <div class="board_page">
-                    <ul>
-                        <li><a><span>처음</span></a></li>
-                        <li class="board_page_check"><a><span>1</span></a></li>
-                        <li><a><span>2</span></a></li>
-                        <li><a><span>다음</span></a></li>
-                        <li><a><span>마지막</span></a></li>
+                    <ul id="noticePagination">
+                        <!-- 동적으로 로드됨 -->
                     </ul>
                 </div>
             </div>
@@ -890,9 +851,9 @@
         // 권한 체크
         $(document).ready(function() {
             var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin') {
-                alert('관리자 권한이 필요합니다.');
-                window.location.href = 'login.html';
+            if (userRole !== 'admin' && userRole !== 'store_owner') {
+                alert('관리자 또는 점주 권한이 필요합니다.');
+                window.location.href = '/admin/login';
                 return;
             }
             
@@ -918,7 +879,156 @@
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
                     localStorage.clear();
-                    window.location.href = 'login.html';
+                    window.location.href = '/';
+                }
+            });
+        });
+
+        // 공지사항 목록 로드 (API 연동)
+        var currentPage = 1;
+        var totalPages = 0;
+        var searchKeyword = '';
+        var searchType = 'title';
+
+        function loadNotices() {
+            var token = localStorage.getItem('accessToken');
+            // API Gateway를 통해 admin-service 호출
+            var url = '/api/admin/notices?page=' + currentPage + '&size=10';
+            if (searchKeyword) {
+                url += '&keyword=' + encodeURIComponent(searchKeyword);
+                url += '&searchType=' + searchType;
+            }
+
+            console.log('[Notice Search] URL:', url);
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('공지사항 목록을 불러오는데 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                totalPages = data.totalPages || 1;
+                renderNoticeList(data.notices || data.content || []);
+                renderPagination();
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                $('#noticeListEmpty').show();
+            });
+        }
+
+        // 공지사항 목록 렌더링
+        function renderNoticeList(notices) {
+            var tbody = $('#noticeListBody');
+            var emptyMessage = $('#noticeListEmpty');
+
+            tbody.empty();
+
+            if (!notices || notices.length === 0) {
+                emptyMessage.show();
+                return;
+            }
+
+            emptyMessage.hide();
+
+            notices.forEach(function(notice, index) {
+                var row = $('<tr></tr>');
+
+                // 중요 공지 표시
+                if (notice.isPinned || notice.important) {
+                    row.append('<td><span class="notice_important">공지</span></td>');
+                    row.append('<td>[공지] ' + escapeHtml(notice.title || '') + '</td>');
+                } else {
+                    row.append('<td>' + (notice.id || (currentPage - 1) * 10 + index + 1) + '</td>');
+                    row.append('<td>' + escapeHtml(notice.title || '') + '</td>');
+                }
+
+                row.append('<td>' + escapeHtml(notice.author || '관리자') + '</td>');
+                row.append('<td>' + (notice.viewCount || 0).toLocaleString() + '</td>');
+                row.append('<td>' + formatDate(notice.createdAt) + '</td>');
+
+                var actionCell = $('<td></td>');
+                actionCell.append('<button class="notice_action_btn edit" onclick="editNotice(' + notice.id + ')">수정</button>');
+                actionCell.append('<button class="notice_action_btn delete" onclick="deleteNotice(' + notice.id + ')">삭제</button>');
+                row.append(actionCell);
+
+                tbody.append(row);
+            });
+        }
+
+        // 페이지네이션 렌더링
+        function renderPagination() {
+            var ul = $('#noticePagination');
+            ul.empty();
+
+            if (totalPages <= 1) return;
+
+            // 처음 버튼
+            ul.append('<li><a onclick="goToPage(1)" style="cursor:pointer;"><span>처음</span></a></li>');
+
+            // 페이지 번호
+            for (var i = 1; i <= totalPages; i++) {
+                var activeClass = (i === currentPage) ? 'board_page_check' : '';
+                ul.append('<li class="' + activeClass + '"><a onclick="goToPage(' + i + ')" style="cursor:pointer;"><span>' + i + '</span></a></li>');
+            }
+
+            // 마지막 버튼
+            ul.append('<li><a onclick="goToPage(' + totalPages + ')" style="cursor:pointer;"><span>마지막</span></a></li>');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadNotices();
+        }
+
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                var date = new Date(dateStr);
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        // 페이지 로드 시 공지사항 목록 가져오기
+        $(document).ready(function() {
+            loadNotices();
+
+            // 검색 버튼 클릭
+            $('.notice_search_btn').click(function() {
+                searchKeyword = $('.notice_search_input').val().trim();
+                searchType = $('#noticeSearchType').val();
+                currentPage = 1;
+                loadNotices();
+            });
+
+            // 검색 입력 엔터키
+            $('.notice_search_input').on('keypress', function(e) {
+                if (e.which === 13) {
+                    searchKeyword = $(this).val().trim();
+                    searchType = $('#noticeSearchType').val();
+                    currentPage = 1;
+                    loadNotices();
                 }
             });
         });
@@ -961,43 +1071,46 @@
             $('html, body').animate({ scrollTop: $('.notice_form_wrap').offset().top - 100 }, 300);
         }
 
-        // 공지사항 수정 폼 표시
-        function editNotice(id) {
-            // 실제로는 서버에서 공지사항 정보를 가져와서 폼에 채워야 함
-            // 예시 데이터
-            const noticeData = {
-                1: { 
-                    title: 'TORI COFFEE 앱 업그레이드 오픈 안내', 
-                    content: 'TORI COFFEE 앱이 새롭게 업그레이드되었습니다.\n더 편리한 기능들을 만나보세요.',
-                    important: true
-                },
-                2: { 
-                    title: 'TORI COFFEE 원두 관련 공지', 
-                    content: '원두 관련 공지사항입니다.',
-                    important: true
-                },
-                3: { 
-                    title: 'TORI COFFEE 샌드위치·샐러드 원산지 표시', 
-                    content: '샌드위치 및 샐러드 원산지 표시 관련 공지입니다.',
-                    important: false
-                },
-                4: { 
-                    title: 'TORI COFFEE 원산지 표시', 
-                    content: '원산지 표시 관련 공지입니다.',
-                    important: false
+
+        // 공지사항 수정 폼 표시 (API 연동)
+        async function editNotice(id) {
+            try {
+                var token = localStorage.getItem('accessToken');
+                const res = await fetch('/api/admin/notices/' + id, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!res.ok) {
+                    throw new Error('공지 조회 실패');
                 }
-            };
-            
-            const notice = noticeData[id] || { title: '', content: '', important: false };
-            $('#noticeTitle').val(notice.title);
-            $('#noticeContent').val(notice.content);
-            $('#noticeImportant').prop('checked', notice.important);
-            $('#noticeFormTitle').text('공지사항 수정');
-            $('#noticeForm').data('noticeId', id);
-            $('#noticeFormWrap').slideDown();
-            $('#noticeListWrap').hide();
-            $('html, body').animate({ scrollTop: $('.notice_form_wrap').offset().top - 100 }, 300);
+
+                const notice = await res.json();
+
+                document.querySelector('#noticeTitle').value = notice.title ?? '';
+                document.querySelector('#noticeContent').value = notice.content ?? '';
+                document.querySelector('#noticeImportant').checked = !!notice.isPinned || !!notice.important;
+
+                document.querySelector('#noticeFormTitle').innerText = '공지사항 수정';
+                document.querySelector('#noticeForm').dataset.noticeId = notice.id;
+
+                $('#noticeFormWrap').slideDown();
+                $('#noticeListWrap').hide();
+
+                window.scrollTo({
+                    top: document.querySelector('.notice_form_wrap').offsetTop - 100,
+                    behavior: 'smooth'
+                });
+
+            } catch (e) {
+                alert('공지사항 정보를 불러오지 못했습니다.');
+                console.error(e);
+            }
         }
+
 
         // 공지사항 폼 숨기기
         function hideNoticeForm() {
@@ -1013,12 +1126,35 @@
             openModal('#deleteModal');
         }
 
-        // 삭제 확인
+        // 삭제 확인 (API 연동)
         function confirmDelete() {
             if (deleteNoticeId) {
-                // 공지사항 삭제 로직
-                closeModal('#deleteModal');
-                openModal('#deleteSuccessModal');
+                var token = localStorage.getItem('accessToken');
+
+                fetch('/api/admin/notices/' + deleteNoticeId, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('삭제에 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    closeModal('#deleteModal');
+                    openModal('#deleteSuccessModal');
+                    deleteNoticeId = null;
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    closeModal('#deleteModal');
+                    alert(error.message || '삭제에 실패했습니다.');
+                    deleteNoticeId = null;
+                });
             }
         }
 
@@ -1040,18 +1176,49 @@
             location.reload();
         }
 
-        // 공지사항 폼 제출
+        // 공지사항 폼 제출 (API 연동)
         $(document).ready(function() {
             $('#noticeForm').submit(function(e) {
                 e.preventDefault();
-                const noticeId = $(this).data('noticeId');
-                // 공지사항 저장 로직
-                hideNoticeForm();
+                const noticeId = $(this).data('noticeId') || document.querySelector('#noticeForm').dataset.noticeId;
+                var token = localStorage.getItem('accessToken');
+
+                var noticeData = {
+                    title: $('#noticeTitle').val(),
+                    content: $('#noticeContent').val(),
+                    isPinned: $('#noticeImportant').is(':checked')
+                };
+
+                var url = '/api/admin/notices';
+                var method = 'POST';
+
                 if (noticeId) {
-                    openModal('#saveSuccessModal');
-                } else {
-                    openModal('#saveSuccessModal');
+                    url = '/api/admin/notices/' + noticeId;
+                    method = 'PUT';
                 }
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(noticeData)
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('저장에 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    hideNoticeForm();
+                    openModal('#saveSuccessModal');
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    alert(error.message || '저장에 실패했습니다.');
+                });
             });
 
             // 모달 외부 클릭 시 닫기

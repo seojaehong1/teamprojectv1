@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for file in about/*.html bbs/*.html menu/*.html mypage/*.html order/*.html policy/*.html index.html)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(then sed -i \"s|window.location.href = ''/login'';|window.location.href = ''/'';|g\" \"$file\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for file in owner/*.html)",
+      "Bash(./gradlew clean build:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(./gradlew compileJava:*)",
+      "Bash(grep:*)",
+      "Bash(./gradlew:*)"
+    ]
+  }
+}
