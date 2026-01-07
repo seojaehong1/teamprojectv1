@@ -505,18 +505,21 @@
                 .then(function(response) {
                     // 응답 텍스트를 먼저 확인
                     return response.text().then(function(text) {
+                        var data = {};
                         try {
-                            var data = text ? JSON.parse(text) : {};
-                            if (!response.ok) {
-                                throw new Error(data.message || '인증번호 발송에 실패했습니다');
-                            }
-                            return data;
+                            data = text ? JSON.parse(text) : {};
                         } catch (e) {
-                            if (!response.ok) {
-                                throw new Error('인증번호 발송에 실패했습니다');
-                            }
-                            return {};
+                            console.error('JSON 파싱 오류:', e);
                         }
+
+                        if (!response.ok) {
+                            // 중복 이메일 체크
+                            if (response.status === 409 || data.errorCode === 'DUPLICATE_EMAIL') {
+                                throw new Error('이미 등록된 이메일입니다.');
+                            }
+                            throw new Error(data.message || '인증번호 발송에 실패했습니다.');
+                        }
+                        return data;
                     });
                 })
                 .then(function(data) {
@@ -548,7 +551,12 @@
                 })
                 .catch(function(error) {
                     console.error('인증번호 발송 오류:', error);
-                    $('#emailError').text(error.message).addClass('show');
+                    // 중복 이메일인 경우 명확한 메시지 표시
+                    var errorMsg = error.message;
+                    if (errorMsg.includes('이미 등록된') || errorMsg.includes('DUPLICATE')) {
+                        errorMsg = '이미 등록된 이메일입니다.';
+                    }
+                    $('#emailError').text(errorMsg).addClass('show');
                     sendBtn.prop('disabled', false).text('인증번호 발송');
                 });
             });

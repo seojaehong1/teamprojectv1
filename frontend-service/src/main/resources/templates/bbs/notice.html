@@ -619,14 +619,26 @@
             duration: 1200,
         });
 
+        // 현재 검색 상태를 저장할 전역 변수
+        var currentSearchKeyword = '';
+        var currentSearchType = 'title';
+
         // 공지사항 목록 로드 함수 (전역 스코프)
-        function loadNotices(page, keyword) {
+        function loadNotices(page, keyword, searchType) {
             page = page || 1;
-            keyword = keyword || '';
+
+            // 검색 상태 유지: keyword와 searchType이 전달되지 않으면 현재 상태 사용
+            if (typeof keyword !== 'undefined' && keyword !== null) {
+                currentSearchKeyword = keyword;
+            }
+            if (typeof searchType !== 'undefined' && searchType !== null) {
+                currentSearchType = searchType;
+            }
 
             var url = '/api/notices?page=' + page + '&limit=10';
-            if (keyword) {
-                url += '&keyword=' + encodeURIComponent(keyword);
+            if (currentSearchKeyword) {
+                url += '&keyword=' + encodeURIComponent(currentSearchKeyword);
+                url += '&searchType=' + currentSearchType;
             }
 
             fetch(url)
@@ -663,8 +675,15 @@
                             tbody.append(row);
                         });
                     } else {
-                        tbody.append('<tr><td colspan="5" style="text-align:center;padding:50px;">등록된 공지사항이 없습니다.</td></tr>');
+                        var noResultMsg = '등록된 공지사항이 없습니다.';
+                        if (currentSearchKeyword) {
+                            noResultMsg = '"' + escapeHtml(currentSearchKeyword) + '" 검색 결과가 없습니다. <a href="javascript:void(0)" onclick="resetSearch()" style="color:#D95B3B;text-decoration:underline;">전체 목록 보기</a>';
+                        }
+                        tbody.append('<tr><td colspan="5" style="text-align:center;padding:50px;">' + noResultMsg + '</td></tr>');
                     }
+
+                    // 검색 상태 표시
+                    updateSearchStatus(data.totalItems || 0);
 
                     // 페이지네이션 렌더링
                     renderPagination(data.currentPage, data.totalPages);
@@ -673,6 +692,37 @@
                     console.error('공지사항 로드 오류:', error);
                     $('#noticeListBody').html('<tr><td colspan="5" style="text-align:center;padding:50px;color:#dc3545;">공지사항을 불러오는데 실패했습니다.</td></tr>');
                 });
+        }
+
+        // 검색 상태 표시 함수
+        function updateSearchStatus(totalItems) {
+            // 검색 상태 표시 영역이 없으면 생성
+            var statusDiv = $('#searchStatus');
+            if (statusDiv.length === 0) {
+                $('.board_search_wrap').after('<div id="searchStatus" style="text-align:center;padding:10px 0;font-size:14px;color:#666;"></div>');
+                statusDiv = $('#searchStatus');
+            }
+
+            if (currentSearchKeyword) {
+                var searchTypeText = {
+                    'title': '제목',
+                    'content': '내용',
+                    'author': '작성자'
+                };
+                var typeText = searchTypeText[currentSearchType] || '제목';
+                statusDiv.html('<span style="color:#333;font-weight:500;">"' + escapeHtml(currentSearchKeyword) + '"</span> (' + typeText + ') 검색 결과: <span style="color:#D95B3B;font-weight:600;">' + totalItems + '건</span> &nbsp; <a href="javascript:void(0)" onclick="resetSearch()" style="color:#666;text-decoration:underline;font-size:12px;">전체 목록 보기</a>');
+            } else {
+                statusDiv.empty();
+            }
+        }
+
+        // 검색 초기화 함수
+        function resetSearch() {
+            currentSearchKeyword = '';
+            currentSearchType = 'title';
+            $('#bbs_search').val('');
+            $('#bbs_search_category').val('bbs_tbl_title');
+            loadNotices(1, '', 'title');
         }
 
         // HTML 이스케이프 함수
@@ -704,19 +754,19 @@
             if (totalPages <= 1) return;
 
             // 처음 버튼
-            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(1)"><span>처음</span></a></li>');
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(1, null, null)"><span>처음</span></a></li>');
 
             // 페이지 번호
             for (var i = 1; i <= totalPages; i++) {
                 if (i === currentPage) {
                     paginationUl.append('<li class="board_page_check"><a><span>' + i + '</span></a></li>');
                 } else {
-                    paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + i + ')"><span>' + i + '</span></a></li>');
+                    paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + i + ', null, null)"><span>' + i + '</span></a></li>');
                 }
             }
 
             // 마지막 버튼
-            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + totalPages + ')"><span>마지막</span></a></li>');
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + totalPages + ', null, null)"><span>마지막</span></a></li>');
         }
 
         // 헤더 메뉴 호버
@@ -833,7 +883,17 @@
             $('.board_search form').on('submit', function(e) {
                 e.preventDefault();
                 var keyword = $('#bbs_search').val();
-                loadNotices(1, keyword);
+                var searchCategory = $('#bbs_search_category').val();
+
+                // 검색 카테고리 매핑
+                var searchType = 'title';
+                if (searchCategory === 'bbs_tbl_content') {
+                    searchType = 'content';
+                } else if (searchCategory === 'bbs_tbl_name') {
+                    searchType = 'author';
+                }
+
+                loadNotices(1, keyword, searchType);
             });
 
             // 페이지 로드 시 공지사항 목록 가져오기
