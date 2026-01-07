@@ -676,7 +676,12 @@
             <!-- 검색 및 추가 -->
             <div class="notice_toolbar">
                 <div class="notice_search">
-                    <input type="text" class="notice_search_input" placeholder="제목, 내용으로 검색...">
+                    <select class="notice_search_type" id="noticeSearchType" style="padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; margin-right: 10px;">
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="author">작성자</option>
+                    </select>
+                    <input type="text" class="notice_search_input" placeholder="검색어를 입력하세요...">
                     <button class="notice_search_btn">검색</button>
                 </div>
                 <button class="notice_add_btn" onclick="showAddForm()">
@@ -846,8 +851,8 @@
         // 권한 체크
         $(document).ready(function() {
             var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin') {
-                alert('관리자 권한이 필요합니다.');
+            if (userRole !== 'admin' && userRole !== 'store_owner') {
+                alert('관리자 또는 점주 권한이 필요합니다.');
                 window.location.href = '/admin/login';
                 return;
             }
@@ -883,13 +888,18 @@
         var currentPage = 1;
         var totalPages = 0;
         var searchKeyword = '';
+        var searchType = 'title';
 
         function loadNotices() {
             var token = localStorage.getItem('accessToken');
+            // API Gateway를 통해 admin-service 호출
             var url = '/api/admin/notices?page=' + currentPage + '&size=10';
             if (searchKeyword) {
                 url += '&keyword=' + encodeURIComponent(searchKeyword);
+                url += '&searchType=' + searchType;
             }
+
+            console.log('[Notice Search] URL:', url);
 
             fetch(url, {
                 method: 'GET',
@@ -1007,6 +1017,7 @@
             // 검색 버튼 클릭
             $('.notice_search_btn').click(function() {
                 searchKeyword = $('.notice_search_input').val().trim();
+                searchType = $('#noticeSearchType').val();
                 currentPage = 1;
                 loadNotices();
             });
@@ -1015,6 +1026,7 @@
             $('.notice_search_input').on('keypress', function(e) {
                 if (e.which === 13) {
                     searchKeyword = $(this).val().trim();
+                    searchType = $('#noticeSearchType').val();
                     currentPage = 1;
                     loadNotices();
                 }

@@ -8,6 +8,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,17 @@ public class ApiProxyController {
     }
 
     // ==================== Board Service 프록시 ====================
+
+    @RequestMapping(value = "/notices", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
+    public ResponseEntity<?> proxyNoticesRoot(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body) {
+        System.out.println("[Proxy] ========================================");
+        System.out.println("[Proxy] Notices Root - routing to BOARD_SERVICE: " + BOARD_SERVICE_URL);
+        System.out.println("[Proxy] Method: " + request.getMethod());
+        System.out.println("[Proxy] URI: " + request.getRequestURI());
+        System.out.println("[Proxy] Query: " + request.getQueryString());
+        System.out.println("[Proxy] ========================================");
+        return proxyRequest(request, body, BOARD_SERVICE_URL);
+    }
 
     @RequestMapping(value = "/notices/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
     public ResponseEntity<?> proxyNotices(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body) {
@@ -186,8 +198,9 @@ public class ApiProxyController {
                 entity = new HttpEntity<>(headers);
             }
 
-            // 요청 전송
-            ResponseEntity<Object> response = restTemplate.exchange(targetUrl, method, entity, Object.class);
+            // 요청 전송 - URI 객체를 사용해서 이중 인코딩 방지
+            URI targetUri = URI.create(targetUrl);
+            ResponseEntity<Object> response = restTemplate.exchange(targetUri, method, entity, Object.class);
             System.out.println("[Proxy] Response Status: " + response.getStatusCode());
             System.out.println("[Proxy] Response Body: " + response.getBody());
             return ResponseEntity.status(response.getStatusCode()).body(response.getBody());

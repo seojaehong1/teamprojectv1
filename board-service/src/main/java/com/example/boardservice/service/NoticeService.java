@@ -30,7 +30,29 @@ public class NoticeService {
 
     // 제목으로 공지사항 검색
     public Page<Notice> searchNoticesByTitle(String keyword, Pageable pageable) {
-        return noticeRepository.searchByTitleContaining(keyword, pageable);
+        String searchPattern = "%" + keyword + "%";
+        System.out.println("[NoticeService] 제목 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        Page<Notice> result = noticeRepository.searchByTitleContaining(searchPattern, pageable);
+        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건, 내용: " + result.getContent().size() + "건");
+        return result;
+    }
+
+    // 내용으로 공지사항 검색
+    public Page<Notice> searchNoticesByContent(String keyword, Pageable pageable) {
+        String searchPattern = "%" + keyword + "%";
+        System.out.println("[NoticeService] 내용 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        Page<Notice> result = noticeRepository.searchByContentContaining(searchPattern, pageable);
+        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건");
+        return result;
+    }
+
+    // 작성자로 공지사항 검색
+    public Page<Notice> searchNoticesByAuthor(String keyword, Pageable pageable) {
+        String searchPattern = "%" + keyword + "%";
+        System.out.println("[NoticeService] 작성자 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        Page<Notice> result = noticeRepository.searchByAuthorContaining(searchPattern, pageable);
+        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건");
+        return result;
     }
     
     // 공지사항 상세 조회 (조회수 증가)

@@ -31,7 +31,15 @@ public interface NoticeRepository extends JpaRepository<com.example.boardservice
     @Query("UPDATE Notice n SET n.viewCount = n.viewCount + 1 WHERE n.noticeId = :id")
     void incrementViewCount(@Param("id") Long id);
 
-    // 제목으로 검색 (고정 공지 먼저, 최신순)
-    @Query("SELECT n FROM Notice n WHERE n.title LIKE %:keyword% ORDER BY n.isPinned DESC, n.createdAt DESC")
+    // 제목으로 검색 (고정 공지 먼저, 최신순) - 부분 일치 검색
+    @Query("SELECT n FROM Notice n WHERE LOWER(n.title) LIKE LOWER(:keyword) ORDER BY n.isPinned DESC, n.createdAt DESC")
     Page<com.example.boardservice.model.Notice> searchByTitleContaining(@Param("keyword") String keyword, Pageable pageable);
+
+    // 내용으로 검색 (고정 공지 먼저, 최신순) - 부분 일치 검색
+    @Query("SELECT n FROM Notice n WHERE LOWER(n.content) LIKE LOWER(:keyword) ORDER BY n.isPinned DESC, n.createdAt DESC")
+    Page<com.example.boardservice.model.Notice> searchByContentContaining(@Param("keyword") String keyword, Pageable pageable);
+
+    // 작성자로 검색 (고정 공지 먼저, 최신순) - 부분 일치 검색
+    @Query("SELECT n FROM Notice n WHERE LOWER(n.author) LIKE LOWER(:keyword) ORDER BY n.isPinned DESC, n.createdAt DESC")
+    Page<com.example.boardservice.model.Notice> searchByAuthorContaining(@Param("keyword") String keyword, Pageable pageable);
 }

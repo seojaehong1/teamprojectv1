@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,6 +44,14 @@ public class AdminProductController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category) {
         try {
+            // URL 디코딩 처리 (한글 검색어 지원)
+            String decodedKeyword = null;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+            }
+
+            System.out.println("[AdminProductController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
+
             // 페이지 크기 제한 (최대 50)
             if (size > 50) size = 50;
             if (size < 1) size = 10;
@@ -50,14 +60,14 @@ public class AdminProductController {
             Page<Product> productPage;
 
             if (category != null && !category.trim().isEmpty()) {
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    productPage = productRepository.searchProductsByCategory(category, keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    productPage = productRepository.searchProductsByCategory(category, decodedKeyword, pageable);
                 } else {
                     productPage = productRepository.findByCategory(category, pageable);
                 }
             } else {
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    productPage = productRepository.searchProducts(keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    productPage = productRepository.searchProducts(decodedKeyword, pageable);
                 } else {
                     productPage = productRepository.findAll(pageable);
                 }

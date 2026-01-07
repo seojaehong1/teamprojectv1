@@ -205,26 +205,53 @@
                     return false;
                 }
                 
-                // 하드코딩된 관리자 계정 확인
-                const ADMIN_ID = 'admin';
-                const ADMIN_PASSWORD = 'admin1234';
-                
-                // 관리자 계정 확인
-                if (adminId === ADMIN_ID && adminPassword === ADMIN_PASSWORD) {
-                    // 로그인 성공
-                    // localStorage에 관리자 로그인 정보 저장
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userName', 'Admin');
-                    localStorage.setItem('userRole', 'admin');
-                    
-                    // 관리자 페이지로 이동
-                    window.location.href = 'user.html';
-                } else {
-                    // 로그인 실패
-                    alert('관리자 정보가 일치하지 않습니다');
+                // API를 통한 로그인 인증
+                fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: adminId,
+                        password: adminPassword
+                    })
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('로그인 실패');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // 토큰에서 역할 확인
+                    var token = data.accessToken || data.token;
+                    var role = data.role || data.userType || '';
+                    var userName = data.name || data.userName || adminId;
+
+                    // admin 또는 store_owner만 허용
+                    if (role.toLowerCase() === 'admin' || role.toLowerCase() === 'store_owner') {
+                        // 로그인 성공
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userName', userName);
+                        localStorage.setItem('userRole', role.toLowerCase());
+                        localStorage.setItem('accessToken', token);
+                        localStorage.setItem('userId', adminId);
+
+                        // 관리자 페이지로 이동
+                        window.location.href = 'user';
+                    } else {
+                        // 권한 없음
+                        alert('관리자 또는 점주 권한이 필요합니다.');
+                        $('#adminPassword').val('');
+                        $('#adminPassword').focus();
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Login error:', error);
+                    alert('아이디 또는 비밀번호가 일치하지 않습니다.');
                     $('#adminPassword').val('');
                     $('#adminPassword').focus();
-                }
+                });
             });
         });
     </script>

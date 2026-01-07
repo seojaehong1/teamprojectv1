@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,8 @@ public class NoticeController {
     public ResponseEntity<?> getAllNotices(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "title") String searchType) {
 
         // page는 1부터 시작, 내부적으로 0부터 시작하는 인덱스로 변환
         int pageIndex = Math.max(0, page - 1);
@@ -43,9 +46,27 @@ public class NoticeController {
         Page<Notice> noticePage;
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            noticePage = noticeService.searchNoticesByTitle(keyword.trim(), pageable);
+            // URL 디코딩 처리 (한글 검색어 지원)
+            String decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+            System.out.println("[NoticeController] 검색 요청 - keyword: " + decodedKeyword + ", searchType: " + searchType);
+            
+            // 검색 타입에 따라 다른 검색 수행
+            switch (searchType.toLowerCase()) {
+                case "content":
+                    noticePage = noticeService.searchNoticesByContent(decodedKeyword, pageable);
+                    break;
+                case "author":
+                    noticePage = noticeService.searchNoticesByAuthor(decodedKeyword, pageable);
+                    break;
+                case "title":
+                default:
+                    noticePage = noticeService.searchNoticesByTitle(decodedKeyword, pageable);
+                    break;
+            }
+            System.out.println("[NoticeController] 검색 결과 - 총 " + noticePage.getTotalElements() + "건");
         } else {
             noticePage = noticeService.getAllNoticesWithPaging(pageable);
+            System.out.println("[NoticeController] 전체 목록 조회 - 총 " + noticePage.getTotalElements() + "건");
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -54,6 +75,7 @@ public class NoticeController {
         response.put("totalPages", noticePage.getTotalPages());
         response.put("totalItems", noticePage.getTotalElements());
 
+        System.out.println("[NoticeController] 응답 데이터 - notices 개수: " + noticePage.getContent().size());
         return ResponseEntity.ok(response);
     }
     
@@ -86,7 +108,7 @@ public class NoticeController {
                 role = httpRequest.getHeader("X-User-Role");
             }
             if (userId == null) {
-                userId = "admin"; // admin-service에서 호출 시 기본값
+                userId = "관리자"; // admin-service에서 호출 시 기본값
             }
 
             if (!"ADMIN".equalsIgnoreCase(role)) {
@@ -112,7 +134,7 @@ public class NoticeController {
             Notice notice = new Notice();
             notice.setTitle(request.getTitle().trim());
             notice.setContent(request.getContent().trim());
-            notice.setAuthor(userId);
+            notice.setAuthor("관리자"); // 항상 "관리자"로 설정
             notice.setIsPinned(request.getIsImportant() != null ? request.getIsImportant() : false);
 
             Notice savedNotice = noticeService.createNotice(notice, role);

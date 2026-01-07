@@ -174,6 +174,30 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    // 전체 회원 조회 (admin 최상단, 나머지 최신순)
+    public List<Member> findAllOrderByAdminFirst() {
+        return memberRepository.findAllOrderByAdminFirst();
+    }
+
+    // 키워드로 검색 (이름, 이메일)
+    public List<Member> searchByKeyword(String keyword) {
+        String pattern = "%" + keyword + "%";
+        System.out.println("[MemberService] searchByKeyword - keyword: " + keyword + ", pattern: " + pattern);
+        return memberRepository.searchByKeyword(pattern);
+    }
+
+    // 회원 유형별 조회
+    public List<Member> findByUserTypeOrderByAdminFirst(String userType) {
+        return memberRepository.findByUserTypeOrderByAdminFirst(userType);
+    }
+
+    // 회원 유형 + 키워드 검색
+    public List<Member> searchByUserTypeAndKeyword(String userType, String keyword) {
+        String pattern = "%" + keyword + "%";
+        System.out.println("[MemberService] searchByUserTypeAndKeyword - userType: " + userType + ", keyword: " + keyword + ", pattern: " + pattern);
+        return memberRepository.searchByUserTypeAndKeyword(userType, pattern);
+    }
+
     public Optional<Member> getMemberById(String userId) {
         return memberRepository.findById(userId);
     }

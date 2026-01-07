@@ -955,8 +955,8 @@
             });
             
             var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin') {
-                showCustomAlert('관리자 권한이 필요합니다.', function() {
+            if (userRole !== 'admin' && userRole !== 'store_owner') {
+                showCustomAlert('관리자 또는 점주 권한이 필요합니다.', function() {
                     window.location.href = '/admin/login';
                 });
                 return;
@@ -1017,6 +1017,7 @@
             var filterRole = $('#roleFilter').val();
             var searchTerm = $('.user_search_input').val().trim();
 
+            // API Gateway를 통해 admin-service 호출
             var url = '/api/admin/users?page=' + currentPage + '&size=10';
             if (filterRole) {
                 url += '&userType=' + filterRole;

@@ -1209,8 +1209,8 @@
         // 권한 체크
         $(document).ready(function() {
             var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin') {
-                alert('관리자 권한이 필요합니다.');
+            if (userRole !== 'admin' && userRole !== 'store_owner') {
+                alert('관리자 또는 점주 권한이 필요합니다.');
                 window.location.href = '/admin/login';
                 return;
             }

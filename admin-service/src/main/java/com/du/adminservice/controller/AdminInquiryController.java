@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +48,21 @@ public class AdminInquiryController {
             HttpServletRequest httpRequest) {
         try {
             validateAdminRole(httpRequest);
+
+            // URL 디코딩 처리 (한글 검색어 지원)
+            String decodedKeyword = null;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+            }
+
+            // 디버그 로그
+            System.out.println("[AdminInquiryController] ========================================");
+            System.out.println("[AdminInquiryController] keyword (원본): " + keyword);
+            System.out.println("[AdminInquiryController] keyword (디코딩): " + decodedKeyword);
+            System.out.println("[AdminInquiryController] status: " + status);
+            System.out.println("[AdminInquiryController] page: " + page + ", size: " + size);
+            System.out.println("[AdminInquiryController] ========================================");
+
             // 페이지 크기 제한 (최대 50)
             if (size > 50) size = 50;
             if (size < 1) size = 10;
@@ -55,20 +72,26 @@ public class AdminInquiryController {
 
             if (status != null && !status.trim().isEmpty()) {
                 // 상태 필터가 있으면 해당 상태만 조회 (작성일 내림차순)
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    inquiryPage = inquiryRepository.searchInquiriesByStatus(status.toUpperCase(), keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    System.out.println("[AdminInquiryController] Searching by status AND keyword");
+                    inquiryPage = inquiryRepository.searchInquiriesByStatus(status.toUpperCase(), decodedKeyword, pageable);
                 } else {
+                    System.out.println("[AdminInquiryController] Filtering by status only");
                     inquiryPage = inquiryRepository.findByStatus(status.toUpperCase(),
                         PageRequest.of(page, size, Sort.by("createdAt").descending()));
                 }
             } else {
                 // 전체 조회: 답변대기 우선, 작성일 내림차순
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    inquiryPage = inquiryRepository.searchInquiries(keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    System.out.println("[AdminInquiryController] Searching by keyword only");
+                    inquiryPage = inquiryRepository.searchInquiries(decodedKeyword, pageable);
                 } else {
+                    System.out.println("[AdminInquiryController] Getting all inquiries");
                     inquiryPage = inquiryRepository.findAllOrderByStatusAndCreatedAt(pageable);
                 }
             }
+
+            System.out.println("[AdminInquiryController] Found " + inquiryPage.getTotalElements() + " inquiries");
 
             Map<String, Object> response = new HashMap<>();
             response.put("inquiries", inquiryPage.getContent());

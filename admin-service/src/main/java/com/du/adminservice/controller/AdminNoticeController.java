@@ -5,6 +5,9 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @RestController
@@ -40,12 +43,20 @@ public class AdminNoticeController {
     public ResponseEntity<?> getNoticeList(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "title") String searchType) {
         try {
             String url = BOARD_SERVICE_URL + "/api/notices?page=" + page + "&limit=" + size;
             if (keyword != null && !keyword.trim().isEmpty()) {
-                url += "&keyword=" + keyword;
+                // 먼저 URL 디코딩 (프론트엔드에서 이미 인코딩되어 올 수 있음)
+                String decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+                // 다시 인코딩해서 board-service로 전달
+                String encodedKeyword = URLEncoder.encode(decodedKeyword, StandardCharsets.UTF_8);
+                url += "&keyword=" + encodedKeyword + "&searchType=" + searchType;
+                System.out.println("[AdminNoticeController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
             }
+
+            System.out.println("[AdminNoticeController] Calling board-service: " + url);
 
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
             return ResponseEntity.ok(response.getBody());

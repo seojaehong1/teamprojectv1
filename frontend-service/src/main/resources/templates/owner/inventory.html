@@ -909,9 +909,9 @@
 
         // 로그인 드롭다운 토글
         $(document).ready(function() {
-            // 권한 체크
+            // 권한 체크 (store_owner 또는 admin)
             var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'owner') {
+            if (userRole !== 'store_owner' && userRole !== 'admin') {
                 alert('점주 권한이 필요합니다.');
                 window.location.href = '/';
                 return;

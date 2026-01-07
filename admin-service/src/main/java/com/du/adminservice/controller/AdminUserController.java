@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +36,14 @@ public class AdminUserController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String userType) {
         try {
+            // URL 디코딩 처리 (한글 검색어 지원)
+            String decodedKeyword = null;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+            }
+
+            System.out.println("[AdminUserController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
+
             // 페이지 크기 제한 (최대 50)
             if (size > 50) size = 50;
             if (size < 1) size = 10;
@@ -43,14 +53,14 @@ public class AdminUserController {
             Page<Member> memberPage;
 
             if (userType != null && !userType.trim().isEmpty()) {
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    memberPage = memberRepository.searchMembersByType(userType, keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    memberPage = memberRepository.searchMembersByType(userType, decodedKeyword, pageable);
                 } else {
                     memberPage = memberRepository.findByUserTypeOrderByAdminFirst(userType, pageable);
                 }
             } else {
-                if (keyword != null && !keyword.trim().isEmpty()) {
-                    memberPage = memberRepository.searchMembers(keyword, pageable);
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    memberPage = memberRepository.searchMembers(decodedKeyword, pageable);
                 } else {
                     memberPage = memberRepository.findAllOrderByAdminFirst(pageable);
                 }

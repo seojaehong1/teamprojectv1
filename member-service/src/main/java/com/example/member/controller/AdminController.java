@@ -6,6 +6,8 @@ import com.example.member.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,14 +54,55 @@ public class AdminController {
     // 전체 회원 목록 조회 (GET /api/admin/users)
     // - admin.html의 loadUsers()에서 호출
     // - 관리자 페이지에서 회원 테이블 표시용
+    // - keyword: 이름 또는 이메일로 검색
+    // - userType: 회원 유형 필터 (admin, member, store_owner)
     @GetMapping
-    public ResponseEntity<?> getAllUsers(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+    public ResponseEntity<?> getAllUsers(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String userType) {
         try {
             // JWT 토큰 검증 및 ADMIN 권한 확인
             validateAdminToken(authHeader);
             
-            // 전체 회원 조회 후 응답 DTO로 변환 (비밀번호 제외)
-            List<MemberResponse> users = memberService.getAllMembers().stream()
+            // URL 디코딩 처리 (한글 검색어 지원)
+            String decodedKeyword = null;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
+            }
+
+            // 디버그 로그
+            System.out.println("[AdminController] ========================================");
+            System.out.println("[AdminController] keyword (원본): " + keyword);
+            System.out.println("[AdminController] keyword (디코딩): " + decodedKeyword);
+            System.out.println("[AdminController] userType: " + userType);
+            System.out.println("[AdminController] ========================================");
+
+            // 회원 목록 조회 (검색 및 필터 적용)
+            List<Member> members;
+
+            if (userType != null && !userType.trim().isEmpty()) {
+                // 회원 유형 필터가 있는 경우
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    System.out.println("[AdminController] Searching by userType AND keyword");
+                    members = memberService.searchByUserTypeAndKeyword(userType, decodedKeyword);
+                } else {
+                    System.out.println("[AdminController] Filtering by userType only");
+                    members = memberService.findByUserTypeOrderByAdminFirst(userType);
+                }
+            } else {
+                // 전체 조회
+                if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
+                    System.out.println("[AdminController] Searching by keyword only");
+                    members = memberService.searchByKeyword(decodedKeyword);
+                } else {
+                    System.out.println("[AdminController] Getting all users");
+                    members = memberService.findAllOrderByAdminFirst();
+                }
+            }
+
+            // 응답 DTO로 변환 (비밀번호 제외)
+            List<MemberResponse> users = members.stream()
                     .map(member -> {
                         // Member 엔티티 -> MemberResponse DTO 변환
                         MemberResponse response = new MemberResponse();

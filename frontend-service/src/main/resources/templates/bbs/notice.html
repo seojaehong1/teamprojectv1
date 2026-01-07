@@ -1,905 +1,1119 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
     <title>공지사항 - TORI COFFEE</title>
-    
+
     <!-- CSS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
-    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051"
+    />
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}" />
+    <link
+      rel="stylesheet"
+      href="https://img.79plus.co.kr/megahp/common/css/animate.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045"
+    />
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
-        .head_wrap .head {
-            position: relative;
-        }
-        /* 로고 표시 보장 */
-        .head_logo {
-            display: block !important;
-            visibility: visible !important;
-        }
-        .head_logo img {
-            display: block !important;
-            visibility: visible !important;
-            max-height: 60px;
-            height: auto;
-        }
+      .head_wrap .head {
+        position: relative;
+      }
+      /* 로고 표시 보장 */
+      .head_logo {
+        display: block !important;
+        visibility: visible !important;
+      }
+      .head_logo img {
+        display: block !important;
+        visibility: visible !important;
+        max-height: 60px;
+        height: auto;
+      }
+      .head_user_wrap {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000;
+      }
+      .head_user_menu {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .head_user_item {
+        position: relative;
+      }
+      .head_user_link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #333;
+        cursor: pointer;
+        position: relative;
+        padding: 5px 10px;
+      }
+      .head_user_link:hover {
+        color: #000;
+      }
+      .head_user_link i {
+        font-size: 20px;
+        margin-bottom: 5px;
+      }
+      .head_user_text {
+        font-size: 12px;
+        font-weight: 400;
+      }
+      .head_user_badge {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        background: #333;
+        color: #fff;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .head_login_wrap {
+        position: relative;
+      }
+      .head_login_dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 10px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        min-width: 150px;
+        display: none;
+        z-index: 1001;
+      }
+      .head_login_wrap.active .head_login_dropdown {
+        display: block;
+      }
+      .head_login_dropdown::before {
+        content: "";
+        position: absolute;
+        top: -8px;
+        right: 20px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #fff;
+      }
+      .head_login_dropdown ul {
+        list-style: none;
+        margin: 0;
+        padding: 8px 0;
+      }
+      .head_login_dropdown li {
+        margin: 0;
+      }
+      .head_login_dropdown li a {
+        display: block;
+        padding: 10px 20px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.2s;
+      }
+      .head_login_dropdown li a:hover {
+        background-color: #f5f5f5;
+        color: #d95b3b;
+      }
+      .head_login_dropdown li:first-child a,
+      .head_login_dropdown li:nth-child(2) a {
+        color: #d95b3b;
+      }
+      .head_user_name {
+        font-weight: 500;
+      }
+      @media (max-width: 768px) {
         .head_user_wrap {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
+          display: none;
         }
-        .head_user_menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .head_user_item {
-            position: relative;
-        }
-        .head_user_link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: #333;
-            cursor: pointer;
-            position: relative;
-            padding: 5px 10px;
-        }
-        .head_user_link:hover {
-            color: #000;
-        }
-        .head_user_link i {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-        .head_user_text {
-            font-size: 12px;
-            font-weight: 400;
-        }
-        .head_user_badge {
-            position: absolute;
-            top: 0;
-            right: 5px;
-            background: #333;
-            color: #fff;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .head_login_wrap {
-            position: relative;
-        }
-        .head_login_dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            min-width: 150px;
-            display: none;
-            z-index: 1001;
-        }
-        .head_login_wrap.active .head_login_dropdown {
-            display: block;
-        }
-        .head_login_dropdown::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #fff;
-        }
-        .head_login_dropdown ul {
-            list-style: none;
-            margin: 0;
-            padding: 8px 0;
-        }
-        .head_login_dropdown li {
-            margin: 0;
-        }
-        .head_login_dropdown li a {
-            display: block;
-            padding: 10px 20px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        .head_login_dropdown li a:hover {
-            background-color: #f5f5f5;
-            color: #D95B3B;
-        }
-        .head_login_dropdown li:first-child a,
-        .head_login_dropdown li:nth-child(2) a {
-            color: #D95B3B;
-        }
-        .head_user_name {
-            font-weight: 500;
-        }
-        @media (max-width: 768px) {
-            .head_user_wrap {
-                display: none;
-            }
-        }
-        
-        /* 네비게이션 메뉴 hover 스타일 */
-        .head_menu > ul > li > a.pc:hover,
-        .head_menu > ul > li.check > a.pc,
-        .head_menu > ul > li > a.pc.active {
-            background: #D95B3B !important;
-            color: #ffffff !important;
-        }
-        
-        /* 드롭다운 서브메뉴 hover 스타일 */
-        .head_menu_down_menu a:hover,
-        .head_menu_down_menu li:hover > a {
-            background: #D95B3B !important;
-            color: #ffffff !important;
-        }
-        
-        /* 모바일 메뉴 오버레이 */
-        .mobile_menu_overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #2a2a2a;
-            z-index: 9999;
-            display: none;
-            overflow-y: auto;
-        }
-        .mobile_menu_overlay.active {
-            display: block;
-        }
-        .mobile_menu_overlay_inner {
-            position: relative;
-            width: 100%;
-            min-height: 100%;
-            padding: 60px 20px 40px;
-            box-sizing: border-box;
-        }
-        .mobile_menu_overlay_inner::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 4px;
-            height: 100%;
-            background: #D95B3B;
-            z-index: 10000;
-        }
-        .mobile_menu_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 60px;
-            padding: 0 20px;
-        }
-        .mobile_menu_logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #fff;
-            font-size: 24px;
-            font-weight: 900;
-            letter-spacing: 2px;
-        }
-        .mobile_menu_logo_icon {
-            color: #D95B3B;
-            font-size: 28px;
-        }
-        .mobile_menu_close {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 28px;
-            cursor: pointer;
-            padding: 5px;
-            line-height: 1;
-        }
-        .mobile_menu_close:hover {
-            color: #D95B3B;
-        }
+      }
+
+      /* 네비게이션 메뉴 hover 스타일 */
+      .head_menu > ul > li > a.pc:hover,
+      .head_menu > ul > li.check > a.pc,
+      .head_menu > ul > li > a.pc.active {
+        background: #d95b3b !important;
+        color: #ffffff !important;
+      }
+
+      /* 드롭다운 서브메뉴 hover 스타일 */
+      .head_menu_down_menu a:hover,
+      .head_menu_down_menu li:hover > a {
+        background: #d95b3b !important;
+        color: #ffffff !important;
+      }
+
+      /* 모바일 메뉴 오버레이 */
+      .mobile_menu_overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #2a2a2a;
+        z-index: 9999;
+        display: none;
+        overflow-y: auto;
+      }
+      .mobile_menu_overlay.active {
+        display: block;
+      }
+      .mobile_menu_overlay_inner {
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+        padding: 60px 20px 40px;
+        box-sizing: border-box;
+      }
+      .mobile_menu_overlay_inner::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 4px;
+        height: 100%;
+        background: #d95b3b;
+        z-index: 10000;
+      }
+      .mobile_menu_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 60px;
+        padding: 0 20px;
+      }
+      .mobile_menu_logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 2px;
+      }
+      .mobile_menu_logo_icon {
+        color: #d95b3b;
+        font-size: 28px;
+      }
+      .mobile_menu_close {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 5px;
+        line-height: 1;
+      }
+      .mobile_menu_close:hover {
+        color: #d95b3b;
+      }
+      .mobile_menu_content {
+        display: flex;
+        gap: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .mobile_menu_left {
+        flex: 0 0 200px;
+      }
+      .mobile_menu_right {
+        flex: 1;
+      }
+      .mobile_menu_item {
+        margin-bottom: 30px;
+      }
+      .mobile_menu_main {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 10px 0;
+      }
+      .mobile_menu_main:hover {
+        color: #d95b3b;
+      }
+      .mobile_menu_sub {
+        margin-bottom: 30px;
+      }
+      .mobile_menu_sub a {
+        display: block;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        padding: 8px 0 8px 20px;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .mobile_menu_sub a:hover {
+        color: #d95b3b;
+      }
+      @media (max-width: 768px) {
         .mobile_menu_content {
-            display: flex;
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+          flex-direction: column;
+          gap: 20px;
         }
         .mobile_menu_left {
-            flex: 0 0 200px;
+          flex: none;
         }
         .mobile_menu_right {
-            flex: 1;
+          flex: none;
         }
-        .mobile_menu_item {
-            margin-bottom: 30px;
-        }
-        .mobile_menu_main {
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 10px 0;
-        }
-        .mobile_menu_main:hover {
-            color: #D95B3B;
-        }
-        .mobile_menu_sub {
-            margin-bottom: 30px;
-        }
-        .mobile_menu_sub a {
-            display: block;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 400;
-            padding: 8px 0 8px 20px;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .mobile_menu_sub a:hover {
-            color: #D95B3B;
-        }
-        @media (max-width: 768px) {
-            .mobile_menu_content {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .mobile_menu_left {
-                flex: none;
-            }
-            .mobile_menu_right {
-                flex: none;
-            }
-        }
+      }
     </style>
-    
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
-</head>
-<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
-    
+  </head>
+  <body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
     <!-- 헤더 -->
     <div class="head_wrap">
-        <div class="head">
-            <div class="head_logo">
-                <a href="/">
-                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
-                </a>
-            </div>
-            <div class="head_menu_wrap">
-                <div class="head_menu">
-                    <ul>
-                        <li>
-                            <a href="../about/brand" class="pc">메가 스토리</a>
-                            <a class="m head_menu_down">메가 스토리</a>
-                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
-                                <ul>
-                                    <li><a href="../about/brand">브랜드</a></li>
-                                    <li><a href="../about/bi">BI</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="../menu/drink" class="pc">메뉴소개</a>
-                            <a class="m head_menu_down">메뉴소개</a>
-                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
-                                <ul>
-                                    <li><a href="../menu/drink">음료</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="../about/map" class="pc">매장</a>
-                            <a class="m head_menu_down">매장</a>
-                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
-                                <ul>
-                                    <li><a href="../about/map">오시는 길</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="notice" class="pc">소식</a>
-                            <a class="m head_menu_down">소식</a>
-                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
-                                <ul>
-                                    <li><a href="notice">공지사항</a></li>
-                                    <li><a href="faq">FAQ</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="event" class="pc">이벤트</a>
-                            <a class="m head_menu_down">이벤트</a>
-                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
-                                <ul>
-                                    <li><a href="event">이벤트</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <!-- 로그인/장바구니 영역 -->
-            <div class="head_user_wrap">
-                <div class="head_user_menu">
-                    <!-- 장바구니 아이콘 -->
-                    <div class="head_user_item head_cart">
-                        <a href="../order/cart" class="head_user_link">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="head_user_badge">0</span>
-                        </a>
-                    </div>
-                    <!-- 로그인/사용자 영역 -->
-                    <div class="head_user_item head_login_wrap">
-                        <!-- 비로그인 상태 -->
-                        <div class="head_login_state head_login_state_guest">
-                            <a href="../login" class="head_user_link">
-                                <i class="far fa-user"></i>
-                                <span class="head_user_text">로그인</span>
-                            </a>
-                        </div>
-                        <!-- 로그인 상태 (숨김 처리) -->
-                        <div class="head_login_state head_login_state_member" style="display:none;">
-                            <a href="#" class="head_user_link head_login_trigger">
-                                <i class="far fa-user"></i>
-                                <span class="head_user_text head_user_name">사용자명님</span>
-                            </a>
-                            <div class="head_login_dropdown">
-                                <ul>
-                                    <li><a href="../mypage/index">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
-                                    <li><a href="#">로그아웃</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mobile_menu_icon_wrap m t">
-                <div class="mobile_menu_icon">
-                    <div class="mobile_menu_icon_bar bar_black"></div>
-                </div>
-            </div>
+      <div class="head">
+        <div class="head_logo">
+          <a href="/">
+            <img
+              alt="TORI COFFEE 로고"
+              class="head_logo_img"
+              th:src="@{/logo/logo.png}"
+            />
+          </a>
         </div>
+        <div class="head_menu_wrap">
+          <div class="head_menu">
+            <ul>
+              <li>
+                <a href="../about/brand" class="pc">메가 스토리</a>
+                <a class="m head_menu_down">메가 스토리</a>
+                <div
+                  class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1"
+                >
+                  <ul>
+                    <li><a href="../about/brand">브랜드</a></li>
+                    <li><a href="../about/bi">BI</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="../menu/drink" class="pc">메뉴소개</a>
+                <a class="m head_menu_down">메뉴소개</a>
+                <div
+                  class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1"
+                >
+                  <ul>
+                    <li><a href="../menu/drink">음료</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="../about/map" class="pc">매장</a>
+                <a class="m head_menu_down">매장</a>
+                <div
+                  class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1"
+                >
+                  <ul>
+                    <li><a href="../about/map">오시는 길</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="notice" class="pc">소식</a>
+                <a class="m head_menu_down">소식</a>
+                <div
+                  class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1"
+                >
+                  <ul>
+                    <li><a href="notice">공지사항</a></li>
+                    <li><a href="faq">FAQ</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <a href="event" class="pc">이벤트</a>
+                <a class="m head_menu_down">이벤트</a>
+                <div
+                  class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1"
+                >
+                  <ul>
+                    <li><a href="event">이벤트</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- 로그인/장바구니 영역 -->
+        <div class="head_user_wrap">
+          <div class="head_user_menu">
+            <!-- 장바구니 아이콘 -->
+            <div class="head_user_item head_cart">
+              <a href="../order/cart" class="head_user_link">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="head_user_badge">0</span>
+              </a>
+            </div>
+            <!-- 로그인/사용자 영역 -->
+            <div class="head_user_item head_login_wrap">
+              <!-- 비로그인 상태 -->
+              <div class="head_login_state head_login_state_guest">
+                <a href="../login" class="head_user_link">
+                  <i class="far fa-user"></i>
+                  <span class="head_user_text">로그인</span>
+                </a>
+              </div>
+              <!-- 로그인 상태 (숨김 처리) -->
+              <div
+                class="head_login_state head_login_state_member"
+                style="display: none"
+              >
+                <a href="#" class="head_user_link head_login_trigger">
+                  <i class="far fa-user"></i>
+                  <span class="head_user_text head_user_name">사용자명님</span>
+                </a>
+                <div class="head_login_dropdown">
+                  <ul>
+                    <li><a href="../mypage/index">마이페이지</a></li>
+                    <li><a href="../order/history">주문/배송조회</a></li>
+                    <li><a href="#">로그아웃</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mobile_menu_icon_wrap m t">
+          <div class="mobile_menu_icon">
+            <div class="mobile_menu_icon_bar bar_black"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 모바일 메뉴 오버레이 -->
     <div class="mobile_menu_overlay">
-        <div class="mobile_menu_overlay_inner">
-            <div class="mobile_menu_header">
-                <div class="mobile_menu_logo">
-                    <span class="mobile_menu_logo_text">TORI</span>
-                    <span class="mobile_menu_logo_icon">☕</span>
-                    <span class="mobile_menu_logo_text">COFFEE</span>
-                </div>
-                <button class="mobile_menu_close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="mobile_menu_content">
-                <div class="mobile_menu_left">
-                    <div class="mobile_menu_item">
-                        <div class="mobile_menu_main">메가 스토리</div>
-                    </div>
-                    <div class="mobile_menu_item">
-                        <div class="mobile_menu_main">메뉴소개</div>
-                    </div>
-                    <div class="mobile_menu_item">
-                        <div class="mobile_menu_main">매장</div>
-                    </div>
-                    <div class="mobile_menu_item">
-                        <div class="mobile_menu_main">소식</div>
-                    </div>
-                    <div class="mobile_menu_item">
-                        <div class="mobile_menu_main">이벤트</div>
-                    </div>
-                </div>
-                <div class="mobile_menu_right">
-                    <div class="mobile_menu_sub">
-                        <a href="/about/brand/">브랜드</a>
-                        <a href="/about/bi/">BI</a>
-                        <a href="/about/map/">오시는 길</a>
-                    </div>
-                    <div class="mobile_menu_sub">
-                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
-                    </div>
-                    <div class="mobile_menu_sub">
-                        <a href="/about/map/">오시는 길</a>
-                    </div>
-                    <div class="mobile_menu_sub">
-                        <a href="/bbs/?bbs_category=1">공지사항</a>
-                        <a href="/bbs/?bbs_category=4">FAQ</a>
-                    </div>
-                    <div class="mobile_menu_sub">
-                        <a href="/bbs/?bbs_category=3">이벤트</a>
-                    </div>
-                </div>
-            </div>
+      <div class="mobile_menu_overlay_inner">
+        <div class="mobile_menu_header">
+          <div class="mobile_menu_logo">
+            <span class="mobile_menu_logo_text">TORI</span>
+            <span class="mobile_menu_logo_icon">☕</span>
+            <span class="mobile_menu_logo_text">COFFEE</span>
+          </div>
+          <button class="mobile_menu_close">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
+        <div class="mobile_menu_content">
+          <div class="mobile_menu_left">
+            <div class="mobile_menu_item">
+              <div class="mobile_menu_main">메가 스토리</div>
+            </div>
+            <div class="mobile_menu_item">
+              <div class="mobile_menu_main">메뉴소개</div>
+            </div>
+            <div class="mobile_menu_item">
+              <div class="mobile_menu_main">매장</div>
+            </div>
+            <div class="mobile_menu_item">
+              <div class="mobile_menu_main">소식</div>
+            </div>
+            <div class="mobile_menu_item">
+              <div class="mobile_menu_main">이벤트</div>
+            </div>
+          </div>
+          <div class="mobile_menu_right">
+            <div class="mobile_menu_sub">
+              <a href="/about/brand/">브랜드</a>
+              <a href="/about/bi/">BI</a>
+              <a href="/about/map/">오시는 길</a>
+            </div>
+            <div class="mobile_menu_sub">
+              <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+            </div>
+            <div class="mobile_menu_sub">
+              <a href="/about/map/">오시는 길</a>
+            </div>
+            <div class="mobile_menu_sub">
+              <a href="/bbs/?bbs_category=1">공지사항</a>
+              <a href="/bbs/?bbs_category=4">FAQ</a>
+            </div>
+            <div class="mobile_menu_sub">
+              <a href="/bbs/?bbs_category=3">이벤트</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 메인 콘텐츠 -->
     <div class="cont_wrap bbs_wrap">
-        <div class="cont">
-            <div class="cont_box cont_head">
-                <div class="cont_boxs">
-                    <div class="cont_title_wrap">
-                        <div class="cont_title_info">TORI NEWS</div>
-                        <div class="cont_title robo color">
-                            <h2>TORI NOTICE</h2>
-                        </div>
-                    </div>
-                    <div class="cont_text_wrap">
-                        <div class="cont_text cont_list_map">
-                            <ul>
-                                <li>홈</li>
-                                <li>TORI 소식</li>
-                                <li>공지사항</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+      <div class="cont">
+        <div class="cont_box cont_head">
+          <div class="cont_boxs">
+            <div class="cont_title_wrap">
+              <div class="cont_title_info">TORI NEWS</div>
+              <div class="cont_title robo color">
+                <h2>TORI NOTICE</h2>
+              </div>
             </div>
-
-            <div class="cont_box brand01 bbs_cont_box">
-                <div class="cont_boxs text_center">
-                    <div class="cont_title_wrap">
-                        <div class="cont_title">
-                            <b>TORI COFFEE 공지사항</b>
-                        </div>
-                    </div>
-                    <div class="cont_text_wrap">
-                        <div class="cont_text">TORI COFFEE 소식을 알려드립니다.</div>
-                    </div>
-                    <div class="cont_list cont_list_content cont_list_content_search">
-                        <ul>
-                            <li>
-                                <div class="board_search_wrap">
-                                    <div class="board_search">
-                                        <form method="GET">
-                                            <input type="hidden" name="bbs_category" id="bbs_category" value="1">
-                                            <input type="hidden" name="bbs_detail_category" id="bbs_detail_category" value="">
-                                            <ul>
-                                                <li class="board_search_select">
-                                                    <div class="input_select_wrap input_wrap2">
-                                                        <select name="bbs_search_category" id="bbs_search_category">
-                                                            <option value="bbs_tbl_title">제목</option>
-                                                            <option value="bbs_tbl_content">내용</option>
-                                                            <option value="bbs_tbl_name">작성자</option>
-                                                        </select>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="input_text_wrap input_wrap2">
-                                                        <label>
-                                                            <input type="text" name="bbs_search" id="bbs_search" placeholder="검색어를 입력하세요" required>
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li class="board_search_btn">
-                                                    <div class="input_btn_wrap input_wrap2">
-                                                        <input type="submit" value="검색" class="btn btn1">
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </form>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="cont_text_wrap">
-                        <div class="board_list">
-                            <table id="noticeTable">
-                                <colgroup>
-                                    <col class="board_w75 board_pc">
-                                    <col>
-                                    <col class="board_w150 board_pc">
-                                    <col class="board_w100">
-                                    <col class="board_w100 board_pc">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th class="board_pc">번호</th>
-                                        <th>제목</th>
-                                        <th class="board_pc">글쓴이</th>
-                                        <th>날짜</th>
-                                        <th class="board_pc">조회</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="noticeListBody">
-                                    <!-- API에서 동적으로 로드됨 -->
-                                    <tr>
-                                        <td colspan="5" style="text-align:center;padding:50px;">로딩 중...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="board_page_wrap">
-                            <div class="board_page">
-                                <ul id="noticePagination">
-                                    <!-- 동적으로 로드됨 -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="cont_text_wrap">
+              <div class="cont_text cont_list_map">
+                <ul>
+                  <li>홈</li>
+                  <li>TORI 소식</li>
+                  <li>공지사항</li>
+                </ul>
+              </div>
             </div>
+          </div>
         </div>
+
+        <div class="cont_box brand01 bbs_cont_box">
+          <div class="cont_boxs text_center">
+            <div class="cont_title_wrap">
+              <div class="cont_title">
+                <b>TORI COFFEE 공지사항</b>
+              </div>
+            </div>
+            <div class="cont_text_wrap">
+              <div class="cont_text">TORI COFFEE 소식을 알려드립니다.</div>
+            </div>
+            <div class="cont_list cont_list_content cont_list_content_search">
+              <ul>
+                <li>
+                  <div class="board_search_wrap">
+                    <div class="board_search">
+                      <form method="GET" onsubmit="return false;">
+                        <input
+                          type="hidden"
+                          name="bbs_category"
+                          id="bbs_category"
+                          value="1"
+                        />
+                        <input
+                          type="hidden"
+                          name="bbs_detail_category"
+                          id="bbs_detail_category"
+                          value=""
+                        />
+                        <ul>
+                          <li class="board_search_select">
+                            <div class="input_select_wrap input_wrap2">
+                              <select
+                                name="bbs_search_category"
+                                id="bbs_search_category"
+                              >
+                                <option value="bbs_tbl_title">제목</option>
+                                <option value="bbs_tbl_content">내용</option>
+                                <option value="bbs_tbl_name">작성자</option>
+                              </select>
+                            </div>
+                          </li>
+                          <li>
+                            <div class="input_text_wrap input_wrap2">
+                              <label>
+                                <input
+                                  type="text"
+                                  name="bbs_search"
+                                  id="bbs_search"
+                                  placeholder="검색어를 입력하세요"
+                                  required
+                                />
+                              </label>
+                            </div>
+                          </li>
+                          <li class="board_search_btn">
+                            <div class="input_btn_wrap input_wrap2">
+                              <input
+                                type="submit"
+                                value="검색"
+                                class="btn btn1"
+                              />
+                            </div>
+                          </li>
+                        </ul>
+                      </form>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="cont_text_wrap">
+              <div class="board_list">
+                <table id="noticeTable">
+                  <colgroup>
+                    <col class="board_w75 board_pc" />
+                    <col />
+                    <col class="board_w150 board_pc" />
+                    <col class="board_w100" />
+                    <col class="board_w100 board_pc" />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th class="board_pc">번호</th>
+                      <th>제목</th>
+                      <th class="board_pc">글쓴이</th>
+                      <th>날짜</th>
+                      <th class="board_pc">조회</th>
+                    </tr>
+                  </thead>
+                  <tbody id="noticeListBody">
+                    <!-- API에서 동적으로 로드됨 -->
+                    <tr>
+                      <td colspan="5" style="text-align: center; padding: 50px">
+                        로딩 중...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="board_page_wrap">
+                <div class="board_page">
+                  <ul id="noticePagination">
+                    <!-- 동적으로 로드됨 -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 푸터 -->
     <div class="foot_menu_wrap">
-        <div class="foot_menu">
-            <div class="cont_list">
-                <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
-                </ul>
-            </div>
+      <div class="foot_menu">
+        <div class="cont_list">
+          <ul>
+            <li>
+              <a class="modal_open modal_open_policy1"><b>이용약관</b></a>
+            </li>
+            <li>
+              <a href="/common/policy/privacy_policy.php"
+                ><b>개인정보처리방침</b></a
+              >
+            </li>
+            <li>
+              <a href="/common/policy/service_policy.php"
+                ><b>멤버십 이용약관</b></a
+              >
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
     <div class="foot_wrap">
-        <div class="foot">
-            <div class="cont_list cont_list_content">
-                <ul>
+      <div class="foot">
+        <div class="cont_list cont_list_content">
+          <ul>
+            <li>
+              <div class="cont_text">
+                <div class="cont_list cont_list_m cont_list_m1">
+                  <ul>
                     <li>
-                        <div class="cont_text">
-                            <div class="cont_list cont_list_m cont_list_m1">
-                                <ul>
-                                    <li>
-                                        <div class="foot_logo">
-                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont_text foot_info">
-                            <div class="cont_list cont_list_small cont_list_width_m">
-                                <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
-                                </ul>
-                            </div>
-                        </div>
+                      <div class="foot_logo">
+                        <img
+                          alt="TORI COFFEE 로고"
+                          th:src="@{/logo/logo.png}"
+                        />
+                      </div>
                     </li>
-                </ul>
-            </div>
+                  </ul>
+                </div>
+              </div>
+              <div class="cont_text foot_info">
+                <div class="cont_list cont_list_small cont_list_width_m">
+                  <ul>
+                    <li><b>주식회사 앤하우스</b></li>
+                    <li>대표자 김대영</li>
+                    <li>창업상담 1588-0656</li>
+                    <li>고객센터 1588-8298</li>
+                    <li>FAX 02-325-5199</li>
+                    <li>사업자등록번호 105-87-51367</li>
+                    <li>
+                      서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스
+                    </li>
+                    <li>개인정보보호 책임자 이종원</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
 
     <!-- 상단 이동 버튼 -->
     <a href="javascript:go_top()">
-        <div class="go_top_wrap">
-            <div class="go_top"></div>
-        </div>
+      <div class="go_top_wrap">
+        <div class="go_top"></div>
+      </div>
     </a>
 
     <script>
-        AOS.init({
-            duration: 1200,
-        });
+      AOS.init({
+        duration: 1200,
+      });
 
-        // 현재 검색 상태를 저장할 전역 변수
-        var currentSearchKeyword = '';
-        var currentSearchType = 'title';
+      // 현재 검색 상태를 저장할 전역 변수
+      var currentSearchKeyword = "";
+      var currentSearchType = "title";
 
-        // 공지사항 목록 로드 함수 (전역 스코프)
-        function loadNotices(page, keyword, searchType) {
-            page = page || 1;
 
-            // 검색 상태 유지: keyword와 searchType이 전달되지 않으면 현재 상태 사용
-            if (typeof keyword !== 'undefined' && keyword !== null) {
-                currentSearchKeyword = keyword;
-            }
-            if (typeof searchType !== 'undefined' && searchType !== null) {
-                currentSearchType = searchType;
-            }
 
-            var url = '/api/notices?page=' + page + '&limit=10';
-            if (currentSearchKeyword) {
-                url += '&keyword=' + encodeURIComponent(currentSearchKeyword);
-                url += '&searchType=' + currentSearchType;
-            }
 
-            fetch(url)
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(data) {
-                    // 테이블 tbody 초기화
-                    var tbody = $('#noticeListBody');
-                    tbody.empty();
+      // 공지사항 목록 로드 함수 (전역 스코프)
+      function loadNotices(page, keyword, searchType) {
+        page = page || 1;
 
-                    // 공지사항 목록 렌더링
-                    if (data.notices && data.notices.length > 0) {
-                        data.notices.forEach(function(notice, index) {
-                            var noticeId = notice.id || notice.noticeId;
-                            var displayNum = notice.isPinned ? '공지' : noticeId;
-                            var titleText = notice.isPinned ? '<em>' + escapeHtml(notice.title) + '</em>' : escapeHtml(notice.title);
-
-                            var row = '<tr>' +
-                                '<td class="board_pc">' + displayNum + '</td>' +
-                                '<td>' +
-                                '<div class="text_wrap">' +
-                                '<div class="text">' +
-                                '<a href="notice_detail?id=' + noticeId + '">' +
-                                titleText +
-                                '</a>' +
-                                '</div>' +
-                                '</div>' +
-                                '</td>' +
-                                '<td class="board_pc">' + escapeHtml(notice.author || '관리자') + '</td>' +
-                                '<td>' + formatDate(notice.createdAt) + '</td>' +
-                                '<td class="board_pc">' + (notice.viewCount || 0).toLocaleString() + '</td>' +
-                                '</tr>';
-                            tbody.append(row);
-                        });
-                    } else {
-                        var noResultMsg = '등록된 공지사항이 없습니다.';
-                        if (currentSearchKeyword) {
-                            noResultMsg = '"' + escapeHtml(currentSearchKeyword) + '" 검색 결과가 없습니다. <a href="javascript:void(0)" onclick="resetSearch()" style="color:#D95B3B;text-decoration:underline;">전체 목록 보기</a>';
-                        }
-                        tbody.append('<tr><td colspan="5" style="text-align:center;padding:50px;">' + noResultMsg + '</td></tr>');
-                    }
-
-                    // 검색 상태 표시
-                    updateSearchStatus(data.totalItems || 0);
-
-                    // 페이지네이션 렌더링
-                    renderPagination(data.currentPage, data.totalPages);
-                })
-                .catch(function(error) {
-                    console.error('공지사항 로드 오류:', error);
-                    $('#noticeListBody').html('<tr><td colspan="5" style="text-align:center;padding:50px;color:#dc3545;">공지사항을 불러오는데 실패했습니다.</td></tr>');
-                });
+        // 검색 상태 유지: keyword와 searchType이 전달되지 않으면 현재 상태 사용
+        if (
+          typeof keyword !== "undefined" &&
+          keyword !== null &&
+          keyword !== ""
+        ) {
+          currentSearchKeyword = keyword;
+        } else if (keyword === "") {
+          // 빈 문자열이 명시적으로 전달된 경우 검색 초기화
+          currentSearchKeyword = "";
+        }
+        if (
+          typeof searchType !== "undefined" &&
+          searchType !== null &&
+          searchType !== ""
+        ) {
+          currentSearchType = searchType;
         }
 
-        // 검색 상태 표시 함수
-        function updateSearchStatus(totalItems) {
-            // 검색 상태 표시 영역이 없으면 생성
-            var statusDiv = $('#searchStatus');
-            if (statusDiv.length === 0) {
-                $('.board_search_wrap').after('<div id="searchStatus" style="text-align:center;padding:10px 0;font-size:14px;color:#666;"></div>');
-                statusDiv = $('#searchStatus');
-            }
+        // API Gateway를 통해 board-service 호출
+        var url = "/api/notices?page=" + page + "&limit=10";
+        if (currentSearchKeyword && currentSearchKeyword.trim() !== "") {
+          url += "&keyword=" + encodeURIComponent(currentSearchKeyword.trim());
+          url += "&searchType=" + currentSearchType;
+        }
 
-            if (currentSearchKeyword) {
-                var searchTypeText = {
-                    'title': '제목',
-                    'content': '내용',
-                    'author': '작성자'
-                };
-                var typeText = searchTypeText[currentSearchType] || '제목';
-                statusDiv.html('<span style="color:#333;font-weight:500;">"' + escapeHtml(currentSearchKeyword) + '"</span> (' + typeText + ') 검색 결과: <span style="color:#D95B3B;font-weight:600;">' + totalItems + '건</span> &nbsp; <a href="javascript:void(0)" onclick="resetSearch()" style="color:#666;text-decoration:underline;font-size:12px;">전체 목록 보기</a>');
+        console.log("[Notice] Loading notices from:", url);
+        console.log("[Notice] Search keyword:", currentSearchKeyword);
+        console.log("[Notice] Search type:", currentSearchType);
+
+        fetch(url)
+          .then(function (response) {
+            console.log("[Notice] Response status:", response.status);
+            if (!response.ok) {
+              throw new Error("HTTP error! status: " + response.status);
+            }
+            return response.json();
+          })
+          .then(function (data) {
+            console.log("[Notice] Data received:", data);
+            // 테이블 tbody 초기화
+            var tbody = $("#noticeListBody");
+            tbody.empty();
+
+            // 공지사항 목록 렌더링
+            if (data.notices && data.notices.length > 0) {
+              data.notices.forEach(function (notice, index) {
+                var noticeId = notice.id || notice.noticeId;
+                var displayNum = notice.isPinned ? "공지" : noticeId;
+                var titleText = notice.isPinned
+                  ? "<em>" + escapeHtml(notice.title) + "</em>"
+                  : escapeHtml(notice.title);
+
+                var row =
+                  "<tr>" +
+                  '<td class="board_pc">' +
+                  displayNum +
+                  "</td>" +
+                  "<td>" +
+                  '<div class="text_wrap">' +
+                  '<div class="text">' +
+                  '<a href="notice_detail?id=' +
+                  noticeId +
+                  '">' +
+                  titleText +
+                  "</a>" +
+                  "</div>" +
+                  "</div>" +
+                  "</td>" +
+                  '<td class="board_pc">' +
+                  escapeHtml(notice.author || "관리자") +
+                  "</td>" +
+                  "<td>" +
+                  formatDate(notice.createdAt) +
+                  "</td>" +
+                  '<td class="board_pc">' +
+                  (notice.viewCount || 0).toLocaleString() +
+                  "</td>" +
+                  "</tr>";
+                tbody.append(row);
+              });
             } else {
-                statusDiv.empty();
-            }
-        }
-
-        // 검색 초기화 함수
-        function resetSearch() {
-            currentSearchKeyword = '';
-            currentSearchType = 'title';
-            $('#bbs_search').val('');
-            $('#bbs_search_category').val('bbs_tbl_title');
-            loadNotices(1, '', 'title');
-        }
-
-        // HTML 이스케이프 함수
-        function escapeHtml(text) {
-            if (!text) return '';
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // 날짜 포맷 함수
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            try {
-                var date = new Date(dateStr);
-                return date.getFullYear() + '-' +
-                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(date.getDate()).padStart(2, '0');
-            } catch (e) {
-                return dateStr;
-            }
-        }
-
-        // 페이지네이션 렌더링 함수
-        function renderPagination(currentPage, totalPages) {
-            var paginationUl = $('#noticePagination');
-            paginationUl.empty();
-
-            if (totalPages <= 1) return;
-
-            // 처음 버튼
-            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(1, null, null)"><span>처음</span></a></li>');
-
-            // 페이지 번호
-            for (var i = 1; i <= totalPages; i++) {
-                if (i === currentPage) {
-                    paginationUl.append('<li class="board_page_check"><a><span>' + i + '</span></a></li>');
-                } else {
-                    paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + i + ', null, null)"><span>' + i + '</span></a></li>');
-                }
+              var noResultMsg = "등록된 공지사항이 없습니다.";
+              if (currentSearchKeyword) {
+                noResultMsg =
+                  '"' +
+                  escapeHtml(currentSearchKeyword) +
+                  '" 검색 결과가 없습니다. <a href="javascript:void(0)" onclick="resetSearch()" style="color:#D95B3B;text-decoration:underline;">전체 목록 보기</a>';
+              }
+              tbody.append(
+                '<tr><td colspan="5" style="text-align:center;padding:50px;">' +
+                  noResultMsg +
+                  "</td></tr>"
+              );
             }
 
-            // 마지막 버튼
-            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadNotices(' + totalPages + ', null, null)"><span>마지막</span></a></li>');
+            // 검색 상태 표시
+            updateSearchStatus(data.totalItems || 0);
+
+            // 페이지네이션 렌더링
+            renderPagination(data.currentPage, data.totalPages);
+          })
+          .catch(function (error) {
+            console.error("공지사항 로드 오류:", error);
+            $("#noticeListBody").html(
+              '<tr><td colspan="5" style="text-align:center;padding:50px;color:#dc3545;">공지사항을 불러오는데 실패했습니다.</td></tr>'
+            );
+          });
+      }
+
+      // HTML 이스케이프 함수
+      function escapeHtml(text) {
+        if (!text) return "";
+        var div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // 날짜 포맷 함수
+      function formatDate(dateStr) {
+        if (!dateStr) return "-";
+        try {
+          var date = new Date(dateStr);
+          return (
+            date.getFullYear() +
+            "-" +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(date.getDate()).padStart(2, "0")
+          );
+        } catch (e) {
+          return dateStr;
+        }
+      }
+
+      // 검색 상태 표시 함수
+      function updateSearchStatus(totalItems) {
+        // 검색 상태 표시 영역이 없으면 생성
+        var statusDiv = $("#searchStatus");
+        if (statusDiv.length === 0) {
+          $(".board_search_wrap").after(
+            '<div id="searchStatus" style="text-align:center;padding:10px 0;font-size:14px;color:#666;"></div>'
+          );
+          statusDiv = $("#searchStatus");
         }
 
-        // 헤더 메뉴 호버
-        $(".head_wrap .head .head_menu > ul > li").hover(function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(this).addClass("check");
-                $(".head_menu_down_menu").stop().slideDown("fast");
-            };
-        }, function() {
+        if (currentSearchKeyword) {
+          var searchTypeText = {
+            title: "제목",
+            content: "내용",
+            author: "작성자",
+          };
+          var typeText = searchTypeText[currentSearchType] || "제목";
+          statusDiv.html(
+            '<span style="color:#333;font-weight:500;">"' +
+              escapeHtml(currentSearchKeyword) +
+              '"</span> (' +
+              typeText +
+              ') 검색 결과: <span style="color:#D95B3B;font-weight:600;">' +
+              totalItems +
+              '건</span> &nbsp; <a href="javascript:void(0)" onclick="resetSearch()" style="color:#666;text-decoration:underline;font-size:12px;">전체 목록 보기</a>'
+          );
+        } else {
+          statusDiv.empty();
+        }
+      }
+
+      // 검색 초기화 함수
+      function resetSearch() {
+        currentSearchKeyword = "";
+        currentSearchType = "title";
+        $("#bbs_search").val("");
+        $("#bbs_search_category").val("bbs_tbl_title");
+        loadNotices(1, "", "title");
+      }
+
+      // 페이지네이션 렌더링 함수
+      function renderPagination(currentPage, totalPages) {
+        var paginationUl = $("#noticePagination");
+        paginationUl.empty();
+
+        if (totalPages <= 1) return;
+
+        // 처음 버튼
+        paginationUl.append(
+          '<li><a href="javascript:void(0)" onclick="loadNotices(1, null, null)"><span>처음</span></a></li>'
+        );
+
+        // 페이지 번호
+        for (var i = 1; i <= totalPages; i++) {
+          if (i === currentPage) {
+            paginationUl.append(
+              '<li class="board_page_check"><a><span>' + i + "</span></a></li>"
+            );
+          } else {
+            paginationUl.append(
+              '<li><a href="javascript:void(0)" onclick="loadNotices(' +
+                i +
+                ', null, null)"><span>' +
+                i +
+                "</span></a></li>"
+            );
+          }
+        }
+
+        // 마지막 버튼
+        paginationUl.append(
+          '<li><a href="javascript:void(0)" onclick="loadNotices(' +
+            totalPages +
+            ', null, null)"><span>마지막</span></a></li>'
+        );
+      }
+
+      // 헤더 메뉴 호버
+      $(".head_wrap .head .head_menu > ul > li").hover(
+        function () {
+          if ($(".head_menu_wrap").is(".right0") == false) {
             $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).addClass("check");
+            $(".head_menu_down_menu").stop().slideDown("fast");
+          }
+        },
+        function () {
+          $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        }
+      );
+
+      $(".head_wrap").hover(
+        function () {
+          $(this).addClass("head_over");
+        },
+        function () {
+          if ($(".head_menu_wrap").is(".right0") == false) {
+            $(this).removeClass("head_over");
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(".head_menu_down_menu").stop().slideUp("fast");
+          }
+        }
+      );
+
+      // 모바일 메뉴
+      $(".mobile_menu_icon").click(function () {
+        $(".head_wrap").addClass("head_over");
+        $(this).toggleClass("mobile_menu_icon_open");
+        if ($(this).is(".mobile_menu_icon_open")) {
+          $(".head_menu_wrap").addClass("right0");
+          $(".mobile_menu_overlay").addClass("active");
+          $("body").css("overflow", "hidden");
+        } else {
+          $(".head_menu_wrap").removeClass("right0");
+          $(".mobile_menu_overlay").removeClass("active");
+          $("body").css("overflow", "");
+        }
+      });
+
+      // 로그인 드롭다운 토글
+      $(document).ready(function () {
+        $(".head_login_trigger").click(function (e) {
+          e.preventDefault();
+          $(".head_login_wrap").toggleClass("active");
         });
 
-        $(".head_wrap").hover(function() {
-            $(this).addClass("head_over");
-        }, function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(this).removeClass("head_over");
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(".head_menu_down_menu").stop().slideUp("fast");
-            }
+        // 외부 클릭 시 드롭다운 닫기
+        $(document).click(function (e) {
+          if (!$(e.target).closest(".head_login_wrap").length) {
+            $(".head_login_wrap").removeClass("active");
+          }
         });
 
-        // 모바일 메뉴
-        $(".mobile_menu_icon").click(function(){
-            $(".head_wrap").addClass("head_over");
-            $(this).toggleClass("mobile_menu_icon_open");
-            if ( $(this).is(".mobile_menu_icon_open") ) {
-                $(".head_menu_wrap").addClass("right0");
-                $(".mobile_menu_overlay").addClass("active");
-                $("body").css("overflow", "hidden");
-            } else {
-                $(".head_menu_wrap").removeClass("right0");
-                $(".mobile_menu_overlay").removeClass("active");
-                $("body").css("overflow", "");
-            }
+        // 모바일 메뉴 오버레이 토글
+        $(".mobile_menu_close").click(function () {
+          $(".mobile_menu_overlay").removeClass("active");
+          $("body").css("overflow", "");
+          $(".head_wrap").removeClass("head_over");
+          $(".head_menu_wrap").removeClass("right0");
+          $(".mobile_menu_icon").removeClass("mobile_menu_icon_open");
         });
 
-        // 로그인 드롭다운 토글
-        $(document).ready(function() {
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                $('.head_login_wrap').toggleClass('active');
-            });
-
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 모바일 메뉴 오버레이 토글
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-
-            // 로그인 상태 체크 및 UI 업데이트
-            function checkLoginStatus() {
-                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                const userName = localStorage.getItem('userName') || '사용자명';
-
-                if (isLoggedIn) {
-                    // 로그인 상태일 때
-                    $('.head_login_state_guest').hide();
-                    $('.head_login_state_member').show();
-                    $('.head_user_name').text(userName + '님');
-                } else {
-                    // 비로그인 상태일 때
-                    $('.head_login_state_guest').show();
-                    $('.head_login_state_member').hide();
-                }
-            }
-
-            // 페이지 로드 시 로그인 상태 체크
-            checkLoginStatus();
-
-            // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('userId');
-                localStorage.removeItem('userRole');
-                alert('로그아웃되었습니다');
-                window.location.href = '/';
-            });
-
-            // 검색 폼 제출 처리
-            $('.board_search form').on('submit', function(e) {
-                e.preventDefault();
-                var keyword = $('#bbs_search').val();
-                var searchCategory = $('#bbs_search_category').val();
-
-                // 검색 카테고리 매핑
-                var searchType = 'title';
-                if (searchCategory === 'bbs_tbl_content') {
-                    searchType = 'content';
-                } else if (searchCategory === 'bbs_tbl_name') {
-                    searchType = 'author';
-                }
-
-                loadNotices(1, keyword, searchType);
-            });
-
-            // 페이지 로드 시 공지사항 목록 가져오기
-            loadNotices(1);
+        // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+        $(".mobile_menu_overlay").click(function (e) {
+          if ($(e.target).hasClass("mobile_menu_overlay")) {
+            $(".mobile_menu_overlay").removeClass("active");
+            $("body").css("overflow", "");
+            $(".head_wrap").removeClass("head_over");
+            $(".head_menu_wrap").removeClass("right0");
+            $(".mobile_menu_icon").removeClass("mobile_menu_icon_open");
+          }
         });
+
+        // 화면 회전 시 뷰포트 리셋
+        window.addEventListener("orientationchange", function () {
+          setTimeout(function () {
+            var viewport = document.querySelector('meta[name="viewport"]');
+            viewport.setAttribute(
+              "content",
+              "width=device-width, initial-scale=1.0, maximum-scale=1.0"
+            );
+          }, 100);
+        });
+
+        // 로그인 상태 체크 및 UI 업데이트
+        function checkLoginStatus() {
+          const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+          const userName = localStorage.getItem("userName") || "사용자명";
+
+          if (isLoggedIn) {
+            // 로그인 상태일 때
+            $(".head_login_state_guest").hide();
+            $(".head_login_state_member").show();
+            $(".head_user_name").text(userName + "님");
+          } else {
+            // 비로그인 상태일 때
+            $(".head_login_state_guest").show();
+            $(".head_login_state_member").hide();
+          }
+        }
+
+        // 페이지 로드 시 로그인 상태 체크
+        checkLoginStatus();
+
+        // 로그아웃 버튼 클릭 이벤트
+        $(document).on(
+          "click",
+          '.head_login_dropdown a:contains("로그아웃")',
+          function (e) {
+            e.preventDefault();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("userRole");
+            alert("로그아웃되었습니다");
+            window.location.href = "/";
+          }
+        );
+
+        // 검색 폼 제출 처리
+        $(".board_search form").on("submit", function (e) {
+          e.preventDefault();
+          var keyword = $("#bbs_search").val().trim(); // 앞뒤 공백 제거
+          var searchCategory = $("#bbs_search_category").val();
+
+          console.log(
+            "[Notice] 검색 폼 제출 - keyword:",
+            keyword,
+            "category:",
+            searchCategory
+          );
+
+          // 검색어가 비어있으면 전체 목록 표시
+          if (!keyword || keyword === "") {
+            console.log("[Notice] 검색어가 비어있어 전체 목록 표시");
+            resetSearch();
+            return;
+          }
+
+          // 검색 카테고리 매핑
+          var searchType = "title";
+          if (searchCategory === "bbs_tbl_content") {
+            searchType = "content";
+          } else if (searchCategory === "bbs_tbl_name") {
+            searchType = "author";
+          }
+
+          console.log(
+            "[Notice] 검색 실행 - keyword:",
+            keyword,
+            "searchType:",
+            searchType
+          );
+          loadNotices(1, keyword, searchType);
+        });
+
+        // 페이지 로드 시 URL 파라미터 확인하여 검색 조건 적용
+        var urlParams = new URLSearchParams(window.location.search);
+        var initialKeyword = urlParams.get("bbs_search") || "";
+        var initialCategory = urlParams.get("bbs_search_category") || "bbs_tbl_title";
+        
+        if (initialKeyword) {
+          // URL에 검색어가 있으면 검색 폼에 값 설정
+          $("#bbs_search").val(initialKeyword);
+          $("#bbs_search_category").val(initialCategory);
+          
+          // 검색 카테고리 매핑
+          var initialSearchType = "title";
+          if (initialCategory === "bbs_tbl_content") {
+            initialSearchType = "content";
+          } else if (initialCategory === "bbs_tbl_name") {
+            initialSearchType = "author";
+          }
+          
+          console.log("[Notice] URL에서 검색 파라미터 감지 - keyword:", initialKeyword, "type:", initialSearchType);
+          loadNotices(1, initialKeyword, initialSearchType);
+        } else {
+          // 검색어가 없으면 전체 목록 표시
+          loadNotices(1);
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
-
