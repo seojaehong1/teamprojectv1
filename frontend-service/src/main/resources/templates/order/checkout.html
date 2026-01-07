@@ -625,7 +625,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="cart.html" class="head_user_link">
+                        <a href="/order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -755,21 +755,6 @@
                     <button class="checkout_method_btn" type="button" data-method="takeout">포장주문</button>
                     <button class="checkout_method_btn" type="button" data-method="dinein">매장이용</button>
                 </div>
-                <div class="checkout_method_instruction">포장 옵션을 선택해 주세요!</div>
-                <div class="checkout_option_buttons">
-                    <div class="checkout_option_btn" data-option="straw">
-                        <div class="checkout_option_checkbox">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="checkout_option_text">빨대/스틱</div>
-                    </div>
-                    <div class="checkout_option_btn" data-option="bag">
-                        <div class="checkout_option_checkbox">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="checkout_option_text">캐리어/봉투</div>
-                    </div>
-                </div>
             </div>
 
             <!-- 요청사항 -->
@@ -841,313 +826,165 @@
     </a>
 
     <script>
-        AOS.init({
-            duration: 1200,
-        });
+        // AOS 초기화
+        AOS.init({ duration: 1200 });
 
-        // 헤더 메뉴 호버
-        $(".head_wrap .head .head_menu > ul > li").hover(function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(this).addClass("check");
-                $(".head_menu_down_menu").stop().slideDown("fast");
-            };
-        }, function() {
-            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-        });
-
-        $(".head_wrap").hover(function() {
-            $(this).addClass("head_over");
-        }, function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
-                $(this).removeClass("head_over");
-                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
-                $(".head_menu_down_menu").stop().slideUp("fast");
-            }
-        });
-
-        // 모바일 메뉴
-        $(".mobile_menu_icon").click(function(){
-            $(".head_wrap").addClass("head_over");
-            $(this).toggleClass("mobile_menu_icon_open");
-            if ( $(this).is(".mobile_menu_icon_open") ) {
-                $(".head_menu_wrap").addClass("right0");
-                $(".mobile_menu_overlay").addClass("active");
-                $("body").css("overflow", "hidden");
-            } else {
-                $(".head_menu_wrap").removeClass("right0");
-                $(".mobile_menu_overlay").removeClass("active");
-                $("body").css("overflow", "");
-            }
-        });
-
-        // 로그인 드롭다운 토글
         $(document).ready(function() {
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                $('.head_login_wrap').toggleClass('active');
-            });
-
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 모바일 메뉴 오버레이 닫기
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-        });
-    </script>
-    <script>
-        // 이용방법 버튼 토글 (포장주문/매장이용)
-        $(document).ready(function() {
-            console.log('페이지 로드됨');
-            
-            // 초기화: 모든 active 제거
-            $('.checkout_method_btn').removeClass('active');
-            console.log('active 클래스 전체 제거');
-            
-            // 포장주문만 active 추가
-            var takeoutBtn = $('.checkout_method_btn[data-method="takeout"]');
-            takeoutBtn.addClass('active');
-            console.log('포장주문 active 추가:', takeoutBtn.hasClass('active'));
-            
-            // 클릭 이벤트
-            $('.checkout_method_btn').on('click', function() {
-                console.log('버튼 클릭:', $(this).data('method'));
-                
-                // 모든 버튼 active 제거
-                $('.checkout_method_btn').removeClass('active');
-                
-                // 클릭한 버튼만 active 추가
-                $(this).addClass('active');
-                
-                console.log('포장주문 active:', $('.checkout_method_btn[data-method="takeout"]').hasClass('active'));
-                console.log('매장이용 active:', $('.checkout_method_btn[data-method="dinein"]').hasClass('active'));
-            });
-        });
-
-        // 포장 옵션 버튼 토글
-        $('.checkout_option_btn').click(function() {
-            $(this).toggleClass('active');
-        });
-
-        // 뒤로가기
-        $('.checkout_back').click(function() {
-            history.back();
-        });
-
-        // 페이지 로드 시 장바구니 데이터 불러오기 및 렌더링
-        $(document).ready(function() {
-            // 장바구니 데이터 불러오기
-            const cartData = localStorage.getItem('cart');
-            const cart = cartData ? JSON.parse(cartData) : [];
-            
-            // userName 불러오기
-            const userName = localStorage.getItem('userName') || '고객';
-            
-            // 주문자 이름 표시
-            $('#checkoutCustomerName').text(userName + '님');
-            
-            // 주문 상품 목록 렌더링
-            const itemsContainer = $('#checkoutItemsContainer');
-            itemsContainer.empty();
-            
-            if (cart.length === 0) {
-                // 장바구니가 비어있으면 장바구니 페이지로 이동
-                showCustomAlert('장바구니가 비어있습니다.', function() {
-                    window.location.href = 'cart.html';
-                });
-                return;
-            }
-            
+            // 전역 변수
+            let currentCart = [];
             let totalPrice = 0;
-            
-            // 각 상품 렌더링
-            cart.forEach(function(item) {
-                // 단가 계산 (price는 총가격이므로)
-                const unitPrice = Math.floor(item.price / item.quantity);
-                // 소계는 price (이미 총가격)
-                const subtotal = item.price;
-                totalPrice += subtotal;
-                
-                // 상세설명 표시 (description이 있는 경우)
-                let descriptionHtml = '';
-                if (item.description) {
-                    descriptionHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px; line-height: 1.4;">' + escapeHtml(item.description) + '</div>';
-                }
-                
-                const itemHtml = `
-                    <div class="checkout_item_card">
-                        <div class="checkout_item_image">
-                            <img src="${item.image || '../logo.png'}" alt="${item.name}">
-                        </div>
-                        <div class="checkout_item_info">
-                            <div class="checkout_item_name">${item.name}</div>
-                            <div class="checkout_item_option">${item.size || '기본'}</div>
-                            ${descriptionHtml}
-                            <div class="checkout_item_price">${item.quantity}개 | ${subtotal.toLocaleString()}원</div>
-                        </div>
-                    </div>
-                `;
-                
-                itemsContainer.append(itemHtml);
-            });
-            
-            // 총 결제 금액 표시
-            $('#checkoutTotalPrice').text(totalPrice.toLocaleString() + '원');
-            $('#checkoutPayBtn').text(totalPrice.toLocaleString() + '원 결제하기');
-            
-            // 주문하기 버튼 클릭 이벤트
-            $('#checkoutPayBtn').on('click', function() {
-                // 요청사항 가져오기
-                const request = $('#checkoutRequest').val().trim();
-                
-                // 주문 정보 객체 생성
-                const orderId = 'ORD' + Date.now();
-                const now = new Date();
-                const orderDate = now.getFullYear() + '-' + 
-                                 String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                                 String(now.getDate()).padStart(2, '0') + ' ' + 
-                                 String(now.getHours()).padStart(2, '0') + ':' + 
-                                 String(now.getMinutes()).padStart(2, '0') + ':' + 
-                                 String(now.getSeconds()).padStart(2, '0');
-                
-                const order = {
-                    orderId: orderId,
-                    items: cart,
-                    totalPrice: totalPrice,
-                    customerName: userName,
-                    request: request,
-                    orderDate: orderDate,
-                    status: '주문완료'
-                };
-                
-                // localStorage 'orders' 배열에 추가
-                const ordersData = localStorage.getItem('orders');
-                const orders = ordersData ? JSON.parse(ordersData) : [];
-                orders.push(order);
-                localStorage.setItem('orders', JSON.stringify(orders));
-                
-                // localStorage 'cart' 삭제
-                localStorage.removeItem('cart');
-                
-                // 장바구니 배지 업데이트
-                $('.head_user_badge').text('0');
-                
-                // 주문 완료 알림
-                showCustomAlert('주문이 완료되었습니다!', function() {
-                    window.location.href = 'detail.html?orderId=' + orderId;
-                });
-            });
 
-            // 로그인 상태 체크 및 UI 업데이트
-            function checkLoginStatus() {
-                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                const userName = localStorage.getItem('userName') || '사용자명';
-
-                if (isLoggedIn) {
-                    // 로그인 상태일 때
-                    $('.head_login_state_guest').hide();
-                    $('.head_login_state_member').show();
-                    $('.head_user_name').text(userName + '님');
-                } else {
-                    // 비로그인 상태일 때
-                    $('.head_login_state_guest').show();
-                    $('.head_login_state_member').hide();
-                }
-            }
-
-            // 페이지 로드 시 로그인 상태 체크
+            // 1. 초기 실행 (장바구니 정보 로드 및 로그인 체크)
+            loadOrderSummary();
             checkLoginStatus();
 
-            // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                showCustomAlert('로그아웃되었습니다', function() {
-                    window.location.href = '../login.html';
+            // 2. 서버에서 장바구니 정보 가져오기
+            async function loadOrderSummary() {
+                try {
+                    const response = await fetch('http://localhost:8000/api/order/cart');
+                    if (!response.ok) throw new Error('데이터 로드 실패');
+
+                    currentCart = await response.json();
+
+                    if (!currentCart || currentCart.length === 0) {
+                        showCustomAlert('장바구니가 비어있습니다.', function() {
+                            window.location.href = '/order/cart';
+                        });
+                        return;
+                    }
+                    renderOrderItems(currentCart);
+                } catch (error) {
+                    console.error("데이터 로드 실패:", error);
+                    showCustomAlert('주문 정보를 불러올 수 없습니다.', function() {
+                        window.location.href = '/order/cart';
+                    });
+                }
+            }
+
+            // 3. 장바구니 상품 화면에 그리기
+            function renderOrderItems(cart) {
+                const itemsContainer = $('#checkoutItemsContainer');
+                itemsContainer.empty();
+                totalPrice = 0;
+
+                cart.forEach(item => {
+                    totalPrice += item.totalItemPrice;
+                    const optionsText = (item.cartOptions && item.cartOptions.length > 0)
+                        ? item.cartOptions.map(o => o.optionName).join(', ')
+                        : '기본';
+
+                    // [수정] 지정하신 경로 형식: /src/tem/{menuName}.png
+                    // 만약 파일명에 공백이 있을 경우를 대비해 encodeURIComponent를 사용할 수도 있습니다.
+                    const dynamicImagePath = `/src/tem/${item.menuName}.png`;
+
+                    const itemHtml = `
+                        <div class="checkout_item_card" style="margin-bottom:10px;">
+                            <div class="checkout_item_image">
+                                <img src="${dynamicImagePath}"
+                                     onerror="this.src='/src/tem/logo.png'"
+                                     alt="${item.menuName}"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                            </div>
+                            <div class="checkout_item_info">
+                                <div class="checkout_item_name">${item.menuName}</div>
+                                <div class="checkout_item_option" style="color: #888; font-size: 13px;">옵션: ${optionsText}</div>
+                                <div class="checkout_item_price" style="font-weight: bold; margin-top: 5px;">
+                                    ${item.quantity}개 | ${item.totalItemPrice.toLocaleString()}원
+                                </div>
+                            </div>
+                        </div>`;
+                    itemsContainer.append(itemHtml);
                 });
+
+                $('#checkoutTotalPrice').text(totalPrice.toLocaleString() + '원');
+                $('#checkoutPayBtn').text(totalPrice.toLocaleString() + '원 결제하기');
+            }
+
+            // 4. 결제하기 버튼 클릭 (백엔드 /api/order/place 호출)
+            // 중복 등록 방지를 위해 off()를 먼저 호출합니다.
+            $('#checkoutPayBtn').off('click').on('click', async function(e) {
+                e.preventDefault(); // 기본 동작 방지
+
+                const requestMessage = $('#checkoutRequest').val() ? $('#checkoutRequest').val().trim() : "";
+                const $btn = $(this);
+
+                // 1. 상태 체크
+                if ($btn.hasClass('processing')) return;
+                $btn.addClass('processing').text('결제 중...');
+
+                try {
+                    // 2. 서버에 주문 요청
+                    const response = await fetch('http://localhost:8000/api/order/place', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ "request": requestMessage })
+                    });
+
+                    if (response.ok) {
+                        const resultText = await response.text();
+                        // 숫자만 추출 (주문번호 획득)
+                        const orderId = resultText.replace(/[^0-9]/g, '');
+
+                        console.log("주문 성공, ID:", orderId);
+
+                        // 3. 알림 없이 즉시 이동 테스트 (이동 여부 확인용)
+                        // 만약 알림창(showCustomAlert) 문제라면 이 코드로 바로 넘어갑니다.
+                        window.location.href = '/order/detail?orderId=' + orderId;
+
+                    } else {
+                        const errorMsg = await response.text();
+                        alert('주문 실패: ' + errorMsg);
+                        $btn.removeClass('processing').text('결제하기');
+                    }
+                } catch (error) {
+                    console.error("결제 에러 상세:", error);
+                    alert('네트워크 오류가 발생했습니다.');
+                    $btn.removeClass('processing').text('결제하기');
+                }
+            });
+
+            // 5. 기타 UI 이벤트
+            $('.checkout_method_btn').on('click', function() {
+                $('.checkout_method_btn').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            $('.checkout_back').click(function() { history.back(); });
+
+            function checkLoginStatus() {
+                const userName = localStorage.getItem('userName') || '고객';
+                $('#checkoutCustomerName').text(userName + '님');
+            }
+
+            // [1] 장바구니 카운트 API 호출 함수
+            async function updateCartBadge() {
+                try {
+                    // 컨트롤러의 @RequestMapping("/api/order")와 @GetMapping("/cart/count") 합쳐진 주소
+                    const response = await fetch('http://localhost:8000/api/order/cart/count');
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 헤더의 .head_user_badge 요소에 숫자 넣기
+                        $('.head_user_badge').text(data.count);
+                    }
+                } catch (e) {
+                    console.error("배지 업데이트 실패:", e);
+                }
+            }
+
+            // 페이지 로드 시 실행
+            $(document).ready(function() {
+                updateCartBadge();
             });
         });
-        
-        // HTML 이스케이프 함수
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-    </script>
-    
-    <!-- 커스텀 Alert 모달 -->
-    <div id="customAlertModal" style="display: none;">
-        <div class="modal_overlay"></div>
-        <div class="modal_content">
-            <div class="modal_header">
-                <h3 id="alertTitle">알림</h3>
-            </div>
-            <div class="modal_body">
-                <p id="alertMessage"></p>
-            </div>
-            <div class="modal_footer">
-                <button id="alertConfirmBtn" class="alert_btn">확인</button>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // 커스텀 Alert 함수
-        function showCustomAlert(message, callback, title) {
-            title = title || '알림';
-            $('#alertTitle').text(title);
+
+        // 커스텀 알림 함수
+        function showCustomAlert(message, callback) {
             $('#alertMessage').text(message);
             $('#customAlertModal').fadeIn(200);
-            
-            // 기존 이벤트 제거
-            $('#alertConfirmBtn').off('click');
-            $('.modal_overlay').off('click');
-            
-            // 확인 버튼 클릭 시
-            $('#alertConfirmBtn').on('click', function() {
+            $('#alertConfirmBtn').off('click').on('click', function() {
                 $('#customAlertModal').fadeOut(200, function() {
-                    // 모달 닫힌 후 콜백 실행
-                    if (callback && typeof callback === 'function') {
-                        callback();
-                    }
+                    if (callback) callback();
                 });
-            });
-            
-            // 배경 클릭 시 (콜백 없이 닫기만)
-            $('.modal_overlay').on('click', function() {
-                $('#customAlertModal').fadeOut(200);
             });
         }
     </script>

@@ -38,6 +38,9 @@ public class OptionMaster {
     @Column(name = "quantity", nullable = false)
     private Double quantity;
 
+    @Column(name = "unit", nullable = false)
+    private String unit;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "process_method", nullable = false)
     private ProcessMethod processMethod;

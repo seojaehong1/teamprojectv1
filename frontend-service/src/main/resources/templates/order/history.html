@@ -729,7 +729,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="cart.html" class="head_user_link">
+                        <a href="/order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -857,7 +857,7 @@
                     <div class="order_filter_wrap">
                         <button class="order_filter_btn" data-period="1">1개월</button>
                         <button class="order_filter_btn" data-period="3">3개월</button>
-                        <button class="order_filter_btn" data-period="6">6개월</button>
+                        <button class="order_filter_btn" data-period="6">전체</button>
                         <div class="order_filter_icon">
                             <i class="fas fa-filter"></i>
                         </div>
@@ -917,7 +917,7 @@
                 <div class="order_filter_modal_period_btns">
                     <button class="order_filter_modal_period_btn" data-period="1">1개월</button>
                     <button class="order_filter_modal_period_btn" data-period="3">3개월</button>
-                    <button class="order_filter_modal_period_btn" data-period="6">6개월</button>
+                    <button class="order_filter_modal_period_btn" data-period="6">전체</button>
                 </div>
                 <div class="order_filter_modal_date_wrap">
                     <input type="text" class="order_filter_modal_date_input" value="2025.11.16" readonly>
@@ -999,406 +999,170 @@
     </a>
 
     <script>
-        AOS.init({
-            duration: 1200,
-        });
+        // AOS 초기화
+        AOS.init({ duration: 1200 });
 
-        // 헤더 메뉴 호버
+        // 헤더 및 메뉴 로직 (기존 유지)
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
+            if (!$(".head_menu_wrap").is(".right0")) {
                 $(".head_wrap .head .head_menu > ul > li").removeClass("check");
                 $(this).addClass("check");
                 $(".head_menu_down_menu").stop().slideDown("fast");
-            };
+            }
         }, function() {
             $(".head_wrap .head .head_menu > ul > li").removeClass("check");
         });
 
-        $(".head_wrap").hover(function() {
-            $(this).addClass("head_over");
-        }, function() {
-            if ( $(".head_menu_wrap").is(".right0") == false ) {
+        $(".head_wrap").hover(function() { $(this).addClass("head_over"); }, function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
                 $(this).removeClass("head_over");
                 $(".head_wrap .head .head_menu > ul > li").removeClass("check");
                 $(".head_menu_down_menu").stop().slideUp("fast");
             }
         });
 
-        // 모바일 메뉴
-        $(".mobile_menu_icon").click(function(){
-            $(".head_wrap").addClass("head_over");
-            $(this).toggleClass("mobile_menu_icon_open");
-            if ( $(this).is(".mobile_menu_icon_open") ) {
-                $(".head_menu_wrap").addClass("right0");
-                $(".mobile_menu_overlay").addClass("active");
-                $("body").css("overflow", "hidden");
-            } else {
-                $(".head_menu_wrap").removeClass("right0");
-                $(".mobile_menu_overlay").removeClass("active");
-                $("body").css("overflow", "");
-            }
-        });
-
-        // 로그인 상태 체크 및 UI 업데이트
         $(document).ready(function() {
-            function checkLoginStatus() {
-                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                const userName = localStorage.getItem('userName') || '사용자명';
+            let allOrders = []; // 전체 데이터를 담을 변수
 
-                if (isLoggedIn) {
-                    // 로그인 상태일 때
-                    $('.head_login_state_guest').hide();
-                    $('.head_login_state_member').show();
-                    $('.head_user_name').text(userName + '님');
-                } else {
-                    // 비로그인 상태일 때
-                    $('.head_login_state_guest').show();
-                    $('.head_login_state_member').hide();
+            // [1] 버튼 스타일 초기화 및 '전체' 버튼 활성화
+            function initFilterButtons() {
+                $('.order_filter_btn').each(function() {
+                    const btnText = $(this).text().trim();
+                    if (btnText === '전체') {
+                        // 전체 버튼을 주황색으로
+                        $(this).attr('style', 'background: #D95B3B !important; color: #fff !important; border: 1px solid #D95B3B !important;');
+                    } else {
+                        // 나머지 버튼을 흰색으로
+                        $(this).attr('style', 'background: #fff !important; color: #666 !important; border: 1px solid #d0d0d0 !important;');
+                    }
+                });
+            }
+
+            // [2] 데이터 로드 함수
+            async function loadOrderHistory() {
+                const $container = $('#orderListContainer');
+                const $emptyMessage = $('#orderEmptyMessage');
+
+                try {
+                    const response = await fetch('http://localhost:8000/api/order/history');
+                    if (!response.ok) throw new Error('데이터 로드 실패');
+
+                    allOrders = await response.json();
+                    renderOrderList(allOrders); // 초기화면: 전체 데이터
+
+                } catch (e) {
+                    console.error("데이터가 없거나 오류 발생:", e);
+                    $container.hide();
+                    $emptyMessage.show();
+                } finally {
+                    // 데이터 유무와 상관없이 버튼 스타일은 초기화
+                    initFilterButtons();
                 }
             }
 
-            // 페이지 로드 시 로그인 상태 체크
-            checkLoginStatus();
+            // [3] 리스트 렌더링
+            function renderOrderList(orders) {
+                const $container = $('#orderListContainer');
+                const $emptyMessage = $('#orderEmptyMessage');
+                $container.empty();
 
-            // 로그인 상태일 때 드롭다운 토글 기능
-            $(document).on('click', '.head_login_state_member .head_login_trigger', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const $loginWrap = $(this).closest('.head_login_wrap');
-                $loginWrap.toggleClass('active');
-            });
-
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
-            });
-
-            // 모바일 메뉴 오버레이 닫기
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 탭 전환
-            $('.order_tab li a').click(function(e) {
-                e.preventDefault();
-                $('.order_tab li').removeClass('check');
-                $(this).parent().addClass('check');
-            });
-
-            // 필터 버튼 클릭
-            $(document).on('click', '.order_filter_btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                var $clickedBtn = $(this);
-                
-                // 모든 버튼 초기화
-                $('.order_filter_btn').removeClass('active');
-                $('.order_filter_btn').each(function() {
-                    var btn = this;
-                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
-                    btn.style.setProperty('background', '#fff', 'important');
-                    btn.style.setProperty('color', '#666', 'important');
-                });
-                
-                // 클릭한 버튼만 활성화
-                $clickedBtn.addClass('active');
-                var clickedBtnElement = $clickedBtn[0];
-                clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
-                clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
-                clickedBtnElement.style.setProperty('color', '#fff', 'important');
-                
-                // 강제로 스타일 재적용
-                setTimeout(function() {
-                    clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
-                    clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
-                    clickedBtnElement.style.setProperty('color', '#fff', 'important');
-                }, 10);
-                
-                // 여기에 필터링 로직 추가 가능
-            });
-            
-            // 페이지 로드 시 필터 버튼 초기화
-            $('.order_filter_btn').each(function() {
-                var btn = this;
-                if (!$(btn).hasClass('active')) {
-                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
-                    btn.style.setProperty('background', '#fff', 'important');
-                    btn.style.setProperty('color', '#666', 'important');
-                }
-            });
-
-            // 필터 아이콘 클릭 - 조회조건 오버레이 열기
-            $('.order_filter_icon').click(function() {
-                // 모달 열 때 초기화
-                $('.order_filter_modal_period_btn').removeClass('active');
-                // 스타일 강제 적용 (인라인 스타일로 우선순위 높임)
-                $('.order_filter_modal_period_btn').each(function() {
-                    var btn = this;
-                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
-                    btn.style.setProperty('background', '#fff', 'important');
-                    btn.style.setProperty('color', '#666', 'important');
-                });
-                $('#order_status_select').val('');
-                $('#reservation_only').prop('checked', false).trigger('change');
-                $('.order_filter_overlay').addClass('active');
-                $('body').css('overflow', 'hidden');
-                
-                // 모달이 열린 후 버튼 이벤트 재바인딩
-                setTimeout(function() {
-                    $('.order_filter_modal_period_btn').off('click.periodBtn').on('click.periodBtn', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        var $clickedBtn = $(this);
-                        
-                        // 모든 버튼 초기화
-                        $('.order_filter_modal_period_btn').removeClass('active');
-                        $('.order_filter_modal_period_btn').each(function() {
-                            var btn = this;
-                            btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
-                            btn.style.setProperty('background', '#fff', 'important');
-                            btn.style.setProperty('color', '#666', 'important');
-                        });
-                        
-                        // 클릭한 버튼만 활성화
-                        $clickedBtn.addClass('active');
-                        var clickedBtnElement = $clickedBtn[0];
-                        clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
-                        clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
-                        clickedBtnElement.style.setProperty('color', '#fff', 'important');
-                    });
-                }, 100);
-            });
-
-            // 조회조건 오버레이 닫기
-            $('.order_filter_modal_close, .order_filter_overlay').click(function(e) {
-                if ($(e.target).hasClass('order_filter_overlay') || $(e.target).closest('.order_filter_modal_close').length) {
-                    $('.order_filter_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                }
-            });
-
-            // 모달 내부 클릭 시 닫기 방지
-            $('.order_filter_modal').click(function(e) {
-                e.stopPropagation();
-            });
-
-            // 조회조건 모달 내 기간 버튼 클릭
-            $(document).on('click', '.order_filter_modal_period_btn', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                var $clickedBtn = $(this);
-                
-                // 모든 버튼 초기화
-                $('.order_filter_modal_period_btn').removeClass('active');
-                $('.order_filter_modal_period_btn').each(function() {
-                    var btn = this;
-                    btn.style.setProperty('border', '1px solid #d0d0d0', 'important');
-                    btn.style.setProperty('background', '#fff', 'important');
-                    btn.style.setProperty('color', '#666', 'important');
-                });
-                
-                // 클릭한 버튼만 활성화
-                $clickedBtn.addClass('active');
-                var clickedBtnElement = $clickedBtn[0];
-                clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
-                clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
-                clickedBtnElement.style.setProperty('color', '#fff', 'important');
-                
-                // 강제로 스타일 재적용
-                setTimeout(function() {
-                    clickedBtnElement.style.setProperty('border', '1px solid #D95B3B', 'important');
-                    clickedBtnElement.style.setProperty('background', '#D95B3B', 'important');
-                    clickedBtnElement.style.setProperty('color', '#fff', 'important');
-                }, 10);
-            });
-
-            // 체크박스 클릭 이벤트
-            $('#reservation_only').on('change', function() {
-                const $customCheckbox = $(this).siblings('.order_filter_modal_checkbox_custom');
-                if ($(this).is(':checked')) {
-                    $customCheckbox.addClass('checked');
-                } else {
-                    $customCheckbox.removeClass('checked');
-                }
-            }).trigger('change'); // 초기 상태 반영
-
-            // 조회하기 버튼 클릭
-            $('.order_filter_modal_submit').click(function() {
-                // 기간이 선택되지 않았으면 전체 기간으로 조회
-                // 선택된 기간이 있으면 해당 기간으로 조회
-                $('.order_filter_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                // 여기에 조회 로직 추가 가능
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-
-            // 주문 목록 로드 및 렌더링
-            function loadOrderHistory() {
-                // localStorage에서 주문 목록 가져오기
-                const ordersJson = localStorage.getItem('orders');
-                const orders = ordersJson ? JSON.parse(ordersJson) : [];
-
-                const $orderListContainer = $('#orderListContainer');
-                const $orderEmptyMessage = $('#orderEmptyMessage');
-
-                // 기존 목록 초기화
-                $orderListContainer.empty();
-
-                if (orders.length === 0) {
-                    // 주문이 없을 때
-                    $orderListContainer.hide();
-                    $orderEmptyMessage.show();
+                if (!orders || orders.length === 0) {
+                    $container.hide();
+                    $emptyMessage.show();
                     return;
                 }
 
-                // 주문이 있을 때
-                $orderListContainer.show();
-                $orderEmptyMessage.hide();
-
-                // 주문일시 기준으로 내림차순 정렬 (최신 주문이 위로)
-                orders.sort(function(a, b) {
-                    const dateA = new Date(a.orderDate);
-                    const dateB = new Date(b.orderDate);
-                    return dateB - dateA;
-                });
-
-                // 각 주문을 렌더링
-                orders.forEach(function(order) {
-                    const orderItem = createOrderItem(order);
-                    $orderListContainer.append(orderItem);
+                $container.show();
+                $emptyMessage.hide();
+                orders.forEach(order => {
+                    $container.append(createOrderItem(order));
                 });
             }
 
-            // 주문 아이템 HTML 생성
-            function createOrderItem(order) {
-                // 주문 상태별 색상 클래스
-                let statusClass = '';
-                let statusText = order.status || '주문완료';
-                
-                if (statusText === '주문완료') {
-                    statusClass = 'status_completed';
-                } else if (statusText === '배송중') {
-                    statusClass = 'status_shipping';
-                } else if (statusText === '배송완료') {
-                    statusClass = 'status_delivered';
-                }
+            // [4] 클릭 이벤트 (버튼 색상 변경 및 필터링)
+            $('.order_filter_btn').on('click', function(e) {
+                e.preventDefault();
+                const filterText = $(this).text().trim();
 
-                // 주문일시 포맷팅
-                const orderDate = formatOrderDate(order.orderDate);
-                
-                // 총 금액 포맷팅
-                const totalPrice = formatPrice(order.totalPrice || 0);
-                
-                // 상품 개수
-                const itemCount = order.items ? order.items.length : 0;
-                
-                // 첫 번째 상품명 (여러 개일 경우 "외 N개" 표시)
-                let firstItemName = '';
-                let itemInfo = '';
-                if (order.items && order.items.length > 0) {
-                    const firstItem = order.items[0];
-                    firstItemName = firstItem.name || '상품';
-                    if (order.items.length > 1) {
-                        firstItemName += ' 외 ' + (order.items.length - 1) + '개';
-                    }
-                    // 옵션 정보 추가
-                    if (firstItem.options && firstItem.options.length > 0) {
-                        const optionNames = firstItem.options.map(function(opt) {
-                            return opt.optionName || '옵션';
-                        }).join(', ');
-                        itemInfo = '<div style="font-size: 12px; color: #999; margin-top: 5px;">옵션: ' + optionNames + '</div>';
-                    }
+                // 모든 버튼 초기화 (흰색)
+                $('.order_filter_btn').attr('style', 'background: #fff !important; color: #666 !important; border: 1px solid #d0d0d0 !important;');
+
+                // 클릭한 버튼 주황색으로 변경
+                $(this).attr('style', 'background: #D95B3B !important; color: #fff !important; border: 1px solid #D95B3B !important;');
+
+                // 필터링 처리
+                if (filterText === '전체') {
+                    renderOrderList(allOrders);
                 } else {
-                    firstItemName = '상품';
+                    const months = parseInt(filterText);
+                    const cutoffDate = new Date();
+                    cutoffDate.setMonth(cutoffDate.getMonth() - months);
+
+                    const filtered = allOrders.filter(order => {
+                        const orderDate = new Date(order.orderDate);
+                        return orderDate >= cutoffDate;
+                    });
+                    renderOrderList(filtered);
                 }
+            });
 
+            // [5] 아이템 생성 및 포맷 함수들
+            function createOrderItem(order) {
+                const orderDate = formatOrderDate(order.orderDate);
+                const totalPrice = formatPrice(order.totalAmount || 0);
                 const $item = $('<li>').addClass('order_item').attr('data-order-id', order.orderId);
-                
                 $item.html(`
-                    <div class="order_item_header">
-                        <div>
-                            <div class="order_status_tag ${statusClass}">${statusText}</div>
-                            <div class="order_item_id">주문번호: ${order.orderId}</div>
-                        </div>
-                        <div class="order_item_date">${orderDate}</div>
+                <div class="order_item_header">
+                    <div>
+                        <div class="order_status_tag status_completed">${order.status || '주문완료'}</div>
+                        <div class="order_item_id">주문번호: ${order.orderId}</div>
                     </div>
-                    <div class="order_item_name">${firstItemName}</div>
-                    ${itemInfo}
-                    <div class="order_item_footer">
-                        <div class="order_item_count">총 ${itemCount}개 상품</div>
-                        <div class="order_item_price">${totalPrice}원</div>
-                    </div>
-                `);
-
-                // 주문 클릭 시 상세 페이지로 이동
+                    <div class="order_item_date">${orderDate}</div>
+                </div>
+                <div class="order_item_name">주문 상품 확인</div>
+                <div class="order_item_footer">
+                    <div class="order_item_count">총 ${order.itemCount}개 상품</div>
+                    <div class="order_item_price">${totalPrice}원</div>
+                </div>
+            `);
                 $item.on('click', function() {
-                    window.location.href = 'detail.html?orderId=' + order.orderId;
+                    window.location.href = '/order/detail?orderId=' + order.orderId;
                 });
-
                 return $item;
             }
 
-            // 주문일시 포맷팅 함수
             function formatOrderDate(dateString) {
                 if (!dateString) return '';
-                
-                try {
-                    const date = new Date(dateString);
-                    const year = date.getFullYear();
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const hours = String(date.getHours()).padStart(2, '0');
-                    const minutes = String(date.getMinutes()).padStart(2, '0');
-                    
-                    return `${year}.${month}.${day} ${hours}:${minutes}`;
-                } catch (e) {
-                    return dateString;
-                }
+                const date = new Date(dateString);
+                return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
             }
 
-            // 가격 포맷팅 함수
             function formatPrice(price) {
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
 
-            // 페이지 로드 시 주문 목록 로드
+            // 실행
             loadOrderHistory();
+
+            // [1] 장바구니 카운트 API 호출 함수
+            async function updateCartBadge() {
+                try {
+                    // 컨트롤러의 @RequestMapping("/api/order")와 @GetMapping("/cart/count") 합쳐진 주소
+                    const response = await fetch('http://localhost:8000/api/order/cart/count');
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 헤더의 .head_user_badge 요소에 숫자 넣기
+                        $('.head_user_badge').text(data.count);
+                    }
+                } catch (e) {
+                    console.error("배지 업데이트 실패:", e);
+                }
+            }
+
+            // 페이지 로드 시 실행
+            $(document).ready(function() {
+                updateCartBadge();
+            });
         });
     </script>
 </body>

@@ -28,9 +28,6 @@ public class OptionMaster {
     @Column(name = "default_price", nullable = false)
     private Integer defaultPrice;
 
-//    @Column(name = "changing_material")
-//    private String changingMaterial;
-
     // 변경 전 재료
     @Column(name = "from_material")
     private String fromMaterial;

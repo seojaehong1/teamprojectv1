@@ -20,7 +20,7 @@ public class Recipe {
     private Integer recipeDetailId;
 
     @Column(name = "menu_code", length = 10, nullable = false)
-    private String menuCode; // Menu Entity는 Product Module에 있음
+    private Long menuCode; // Menu Entity는 Product Module에 있음
 
     // 연관 관계: Recipe(N) <-> MaterialMaster(1)
     // 재료명(String)을 FK로 사용하셨기 때문에 @ManyToOne 매핑을 위해 MaterialMaster 엔티티를 참조합니다.

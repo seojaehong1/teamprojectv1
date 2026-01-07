@@ -21,4 +21,15 @@ public class ApiClient {
         String url = GATEWAY_URL + path;
         return restTemplate.postForObject(url, request, responseType);
     }
+
+    public void put(String path, Object request) {
+        String url = GATEWAY_URL + path;
+        restTemplate.put(url, request);
+    }
+
+    // 삭제를 위한 DELETE 메서드 추가
+    public void delete(String path) {
+        String url = GATEWAY_URL + path;
+        restTemplate.delete(url);
+    }
 }

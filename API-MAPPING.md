@@ -450,7 +450,7 @@
 
 ## 3. 주문 관련
 
-### 3.1 order/cart.html (담당: 🟡 박윤호)
+### 3.1 order/cart.html (담당: 🟡 )
 
 **화면 설명**: 장바구니 페이지. 담은 상품 목록 조회, 수량 조절, 삭제, 선택 주문 기능 포함.
 
@@ -484,7 +484,7 @@
   "totalAmount": 10200
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 2. **PUT /api/cart/items/{cartItemId}**
@@ -505,7 +505,7 @@
   "quantity": 3
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 3. **DELETE /api/cart/items/{cartItemId}**
@@ -518,7 +518,7 @@
   "message": "상품이 삭제되었습니다."
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 4. **GET /api/cart/count**
@@ -530,7 +530,7 @@
   "count": 5
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: MEDIUM
 
 **현재 구현 상태**:
@@ -546,7 +546,7 @@
 
 ---
 
-### 3.2 order/checkout.html (담당: 🟡 박윤호)
+### 3.2 order/checkout.html (담당: 🟡 )
 
 **화면 설명**: 주문 결제 페이지. 장바구니 상품 확인, 요청사항 입력, 주문 완료 처리.
 
@@ -556,7 +556,7 @@
    - 용도: 주문 전 장바구니 최종 확인
    - Headers: `Authorization: Bearer {token}`
    - Response: (cart.html과 동일)
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 2. **POST /api/orders**
@@ -585,7 +585,7 @@
   "orderDate": "2024-01-01T10:00:00"
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 **현재 구현 상태**:
@@ -601,7 +601,7 @@
 
 ---
 
-### 3.3 order/history.html (담당: 🟡 박윤호)
+### 3.3 order/history.html (담당: 🟡 )
 
 **화면 설명**: 주문 내역 목록 페이지. 본인의 주문 내역을 날짜순으로 조회, 상태별 필터링.
 
@@ -623,7 +623,7 @@
   }
 ]
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 **현재 구현 상태**:
@@ -637,7 +637,7 @@
 
 ---
 
-### 3.4 order/detail.html (담당: 🟡 박윤호)
+### 3.4 order/detail.html (담당: 🟡 )
 
 **화면 설명**: 주문 상세 페이지. 주문 정보, 주문 상품 목록, 옵션 정보, 주문 상태 표시.
 
@@ -676,7 +676,7 @@
   ]
 }
 ```
-   - 담당자: 🟡 박윤호
+   - 담당자: 🟡 
    - 우선순위: HIGH
 
 2. **PUT /api/orders/{orderId}/cancel**
@@ -1449,7 +1449,7 @@
    - 담당자: 🟡 박윤호
    - 우선순위: HIGH
 
-2. **GET /api/owner/orders/stats**
+2. **GET /api/owner/total**
    - 용도: 주문 통계 조회 (점주 대시보드용)
    - Headers: `Authorization: Bearer {token}` (OWNER 권한)
    - Response:

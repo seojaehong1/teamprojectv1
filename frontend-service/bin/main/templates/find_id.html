@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>아이디 찾기 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 아이디 찾기 페이지 스타일 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+        .find_id_wrap {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+        .find_id_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .find_id_logo {
+            display: flex;
+            align-items: center;
+        }
+        .find_id_logo img {
+            height: 40px;
+            max-width: 100%;
+        }
+        .find_id_content {
+            background: #fff;
+        }
+        .find_id_form {
+            margin-bottom: 20px;
+        }
+        .find_id_form_item {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .find_id_form_label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .find_id_form_label .required {
+            color: #D95B3B;
+            margin-left: 4px;
+        }
+        .find_id_form_input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .find_id_form_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .find_id_form_input::placeholder {
+            color: #999;
+        }
+        .find_id_form_error {
+            font-size: 12px;
+            color: #D95B3B;
+            margin-top: 5px;
+            display: none;
+        }
+        .find_id_form_error.show {
+            display: block;
+        }
+        .find_id_form_success {
+            font-size: 12px;
+            color: #155724;
+            margin-top: 5px;
+            display: none;
+        }
+        .find_id_form_success.show {
+            display: block;
+        }
+        .find_id_email_wrap {
+            display: flex;
+            gap: 10px;
+        }
+        .find_id_email_input {
+            flex: 1;
+        }
+        .find_id_email_btn {
+            padding: 14px 20px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .find_id_email_btn:hover {
+            background: #C74A2A;
+        }
+        .find_id_email_btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        .find_id_submit_btn {
+            width: 100%;
+            padding: 16px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .find_id_submit_btn:hover {
+            background: #C74A2A;
+        }
+        .find_id_result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .find_id_result.show {
+            display: block;
+        }
+        .find_id_result_title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .find_id_result_id {
+            font-size: 18px;
+            font-weight: 700;
+            color: #D95B3B;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+        .find_id_links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .find_id_links a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            position: relative;
+        }
+        .find_id_links a:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -10px;
+            color: #ccc;
+        }
+        .find_id_links a:hover {
+            color: #D95B3B;
+        }
+        /* 커스텀 Alert 모달 스타일 (checkout.html과 동일) */
+        #customAlertModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+        }
+        .modal_overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .modal_content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .modal_header h3 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .modal_body p {
+            margin: 0 0 30px 0;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .modal_footer {
+            text-align: center;
+        }
+        .alert_btn {
+            background: #D95B3B;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .alert_btn:hover {
+            background: #C74A2A;
+        }
+        @media (max-width: 768px) {
+            .find_id_wrap {
+                padding: 20px;
+            }
+            .find_id_header {
+                margin-bottom: 30px;
+            }
+            .find_id_email_wrap {
+                flex-direction: column;
+            }
+            .find_id_email_btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="find_id_wrap">
+        <!-- 헤더 -->
+        <div class="find_id_header">
+            <div class="find_id_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+        </div>
+
+        <!-- 아이디 찾기 콘텐츠 -->
+        <div class="find_id_content">
+            <!-- 아이디 찾기 폼 -->
+            <div class="find_id_form" id="findIdForm">
+                <div class="find_id_form_item">
+                    <label class="find_id_form_label">
+                        이름
+                        <span class="required">*</span>
+                    </label>
+                    <input type="text" class="find_id_form_input" id="findIdName" placeholder="이름을 입력해주세요">
+                    <div class="find_id_form_error" id="nameError">이름을 입력해주세요.</div>
+                </div>
+
+                <div class="find_id_form_item">
+                    <label class="find_id_form_label">
+                        이메일
+                        <span class="required">*</span>
+                    </label>
+                    <div class="find_id_email_wrap">
+                        <div class="find_id_email_input">
+                            <input type="email" class="find_id_form_input" id="findIdEmail" placeholder="이메일을 입력해주세요">
+                        </div>
+                        <button type="button" class="find_id_email_btn" id="emailSendBtn">인증번호 발송</button>
+                    </div>
+                    <div class="find_id_form_error" id="emailError">이메일을 입력해주세요.</div>
+                </div>
+
+                <div class="find_id_form_item">
+                    <label class="find_id_form_label">
+                        인증번호
+                        <span class="required">*</span>
+                    </label>
+                    <div class="find_id_email_wrap">
+                        <div class="find_id_email_input">
+                            <input type="text" class="find_id_form_input" id="findIdEmailCode" placeholder="인증번호를 입력해주세요">
+                        </div>
+                        <button type="button" class="find_id_email_btn" id="emailVerifyBtn">인증번호 확인</button>
+                    </div>
+                    <div class="find_id_form_error" id="emailCodeError">인증번호를 입력해주세요.</div>
+                    <div class="find_id_form_success" id="emailCodeSuccess">이메일 인증이 완료되었습니다.</div>
+                </div>
+
+                <button type="button" class="find_id_submit_btn" id="findIdSubmitBtn">아이디 찾기</button>
+            </div>
+
+            <!-- 아이디 찾기 결과 -->
+            <div class="find_id_result" id="findIdResult">
+                <div class="find_id_result_title">회원님의 아이디는</div>
+                <div class="find_id_result_id" id="foundUserId">user1234</div>
+                <div class="find_id_links">
+                    <a href="login.html">로그인</a>
+                    <a href="signup.html">회원가입</a>
+                </div>
+            </div>
+
+            <!-- 하단 링크 -->
+            <div class="find_id_links">
+                <a href="login.html">로그인</a>
+                <a href="signup.html">회원가입</a>
+                <a href="find_password.html">비밀번호 찾기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 커스텀 Alert 모달 -->
+    <div id="customAlertModal" style="display: none;">
+        <div class="modal_overlay"></div>
+        <div class="modal_content">
+            <div class="modal_header">
+                <h3 id="alertTitle">아이디 찾기</h3>
+            </div>
+            <div class="modal_body">
+                <p id="alertMessage"></p>
+            </div>
+            <div class="modal_footer">
+                <button id="alertConfirmBtn" class="alert_btn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var emailAuthSent = false;
+            var emailAuthVerified = false;
+            var authCode = '123456'; // 임시 인증번호
+            
+            // 커스텀 Alert 함수 (checkout.html과 동일)
+            function showCustomAlert(message, callback, title) {
+                title = title || '알림';
+                $('#alertTitle').text(title);
+                $('#alertMessage').html(message); // HTML 지원
+                $('#customAlertModal').fadeIn(200);
+                
+                // 기존 이벤트 제거
+                $('#alertConfirmBtn').off('click');
+                $('.modal_overlay').off('click');
+                
+                // 확인 버튼 클릭 시
+                $('#alertConfirmBtn').on('click', function() {
+                    $('#customAlertModal').fadeOut(200, function() {
+                        // 모달 닫힌 후 콜백 실행
+                        if (callback && typeof callback === 'function') {
+                            callback();
+                        }
+                    });
+                });
+                
+                // 배경 클릭 시 (콜백 없이 닫기만)
+                $('.modal_overlay').on('click', function() {
+                    $('#customAlertModal').fadeOut(200);
+                });
+            }
+            
+            // 인증번호 발송 버튼 클릭
+            $('#emailSendBtn').on('click', function() {
+                var email = $('#findIdEmail').val().trim();
+                
+                // 이메일 형식 검증
+                if (!email) {
+                    $('#emailError').text('이메일을 입력해주세요.').addClass('show');
+                    $('#findIdEmail').focus();
+                    return;
+                }
+                
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    $('#emailError').text('올바른 이메일 형식을 입력해주세요.').addClass('show');
+                    $('#findIdEmail').focus();
+                    return;
+                }
+                
+                // 인증번호 발송
+                emailAuthSent = true;
+                $('#emailError').removeClass('show');
+                $('#findIdEmailCode').prop('disabled', false);
+                $('#emailVerifyBtn').prop('disabled', false);
+                $('#emailCodeSuccess').removeClass('show');
+                $('#emailCodeError').removeClass('show');
+                
+                // 인증번호 발송 알림 제거 (알럿창 삭제)
+            });
+            
+            // 인증번호 확인 버튼 클릭
+            $('#emailVerifyBtn').on('click', function() {
+                var code = $('#findIdEmailCode').val().trim();
+                
+                if (!code) {
+                    $('#emailCodeError').text('인증번호를 입력해주세요.').addClass('show');
+                    $('#emailCodeSuccess').removeClass('show');
+                    return;
+                }
+                
+                if (code === authCode) {
+                    emailAuthVerified = true;
+                    $('#emailCodeError').removeClass('show');
+                    $('#emailCodeSuccess').addClass('show');
+                    $('#findIdEmailCode').prop('disabled', true);
+                    $('#emailVerifyBtn').prop('disabled', true);
+                    // 커스텀 모달로 인증 완료 표시
+                    showCustomAlert('이메일 인증이 완료되었습니다!', null, '인증 완료');
+                } else {
+                    $('#emailCodeError').text('인증번호가 일치하지 않습니다.').addClass('show');
+                    $('#emailCodeSuccess').removeClass('show');
+                    $('#findIdEmailCode').focus();
+                }
+            });
+            
+            // 아이디 찾기 버튼 클릭
+            $('#findIdSubmitBtn').on('click', function() {
+                var name = $('#findIdName').val().trim();
+                var email = $('#findIdEmail').val().trim();
+                
+                // 이름 검증
+                if (!name) {
+                    $('#nameError').addClass('show');
+                    $('#findIdName').focus();
+                    return;
+                }
+                $('#nameError').removeClass('show');
+                
+                // 이메일 검증
+                if (!email) {
+                    $('#emailError').text('이메일을 입력해주세요.').addClass('show');
+                    $('#findIdEmail').focus();
+                    return;
+                }
+                $('#emailError').removeClass('show');
+                
+                // 이메일 인증 확인
+                if (!emailAuthVerified) {
+                    showCustomAlert('이메일 인증을 완료해주세요.', null, '아이디 찾기');
+                    return;
+                }
+                
+                // localStorage에서 사용자 검색
+                var users = JSON.parse(localStorage.getItem('users') || '[]');
+                var foundUser = users.find(function(user) {
+                    return user.email && user.email.toLowerCase() === email.toLowerCase() &&
+                           user.name && user.name === name;
+                });
+                
+                if (foundUser) {
+                    // 아이디 찾기 성공
+                    var message = '회원님의 아이디는 <strong style="color: #D95B3B;">' + foundUser.username + '</strong>입니다.';
+                    showCustomAlert(message, function() {
+                        window.location.href = 'login.html';
+                    }, '아이디 찾기');
+                } else {
+                    // 아이디 찾기 실패
+                    showCustomAlert('가입된 정보가 없습니다.', null, '아이디 찾기');
+                }
+            });
+            
+            // 초기화: 인증번호 입력란 비활성화
+            $('#findIdEmailCode').prop('disabled', true);
+            $('#emailVerifyBtn').prop('disabled', true);
+        });
+    </script>
+</body>
+</html>
+

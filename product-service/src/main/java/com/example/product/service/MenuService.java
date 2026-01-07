@@ -28,29 +28,36 @@ public class MenuService {
     private final AllergyRepository allergyRepository;
 
     // 1. 메뉴 목록 조회 [GET /api/menu/drinks]
-    public Page<MenuListDto> getMenuList(String category, int page, int limit) {
-
-        int safePage = Math.max(page, 1); // page 음수 처리 방어
-        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
-
-        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
+    public Page<MenuListDto> getMenuList(
+            List<String> categories,
+            String keyword,
+            int page,
+            int limit
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Menu> menus;
 
-        if (category == null || category.isBlank() || category.equalsIgnoreCase("all")) {
-            menus = menuRepository.findAll(pageable);
+        boolean hasCategory = categories != null && !categories.isEmpty();
+        boolean hasKeyword  = keyword != null && !keyword.isBlank();
+
+        if (hasCategory && hasKeyword) {
+            menus = menuRepository.findByCategoryInAndMenuNameContainingIgnoreCase(categories, keyword, pageable);
+        } else if (hasCategory) {
+            menus = menuRepository.findByCategoryIn(categories, pageable);
+        } else if (hasKeyword) {
+            menus = menuRepository.findByMenuNameContainingIgnoreCase(keyword, pageable);
         } else {
-            menus = menuRepository.findByCategory(category, pageable);
+            menus = menuRepository.findAll(pageable);
         }
 
-        return menus.map(menu ->
-                MenuListDto.builder()
-                        .menuCode(menu.getMenuCode())
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
-                        .menuName(menu.getMenuName())
-                        .description(menu.getDescription())
-                        .build()
-        );
+        return menus.map(menu -> MenuListDto.builder()
+                .menuCode(menu.getMenuCode())
+                .menuName(menu.getMenuName())
+                .description(menu.getDescription())
+                .category(menu.getCategory())
+                .build());
     }
+
 
     // 2. 메뉴 검색 [GET /api/menu/drinks/search]
     public Page<MenuListDto> searchMenus(String keyword, int page, int limit) {
@@ -72,6 +79,7 @@ public class MenuService {
                         .imageUrl(buildImageUrl(menu.getMenuCode()))
                         .menuName(menu.getMenuName())
                         .description(menu.getDescription())
+                        .category(menu.getCategory())
                         .build()
         );
     }

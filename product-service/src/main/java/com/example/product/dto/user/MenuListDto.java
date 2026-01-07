@@ -10,4 +10,6 @@ public class MenuListDto {
     private String imageUrl; // /images/menu/{menuCode}.jpg
     private String menuName;
     private String description;
+
+    private String category;
 }
