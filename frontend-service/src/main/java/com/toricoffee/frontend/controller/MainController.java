@@ -100,17 +100,6 @@ public class MainController {
         return "admin/inquiry";
     }
 
-    // Owner 페이지
-    @GetMapping("/owner/inventory")
-    public String ownerInventory() {
-        return "owner/inventory";
-    }
-
-    @GetMapping("/owner/order")
-    public String ownerOrder() {
-        return "owner/order";
-    }
-
     // Policy 페이지
     @GetMapping("/policy/privacy_policy")
     public String privacyPolicy() {
