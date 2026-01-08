@@ -1021,11 +1021,20 @@
                     <div class="product_form_item" style="grid-column: 1 / -1;">
                         <label class="product_form_label">옵션 설정 (등록된 옵션 선택)</label>
                         <div class="product_option_wrap">
+                            <!-- 등록된 옵션 선택 영역 -->
+                            <div id="productOptionGroupWrap" style="margin-bottom: 15px;">
+                                <!-- renderOptionSelector()가 여기에 렌더링 -->
+                            </div>
+                            <!-- 직접 추가한 옵션 리스트 -->
                             <div class="product_option_list" id="productOptionList">
                             </div>
-                            <button type="button" class="product_option_add_btn" onclick="addOptionItem()">
+                            <!-- 기존 버튼 -->
+                            <button type="button"
+                                    class="product_option_add_btn"
+                                    onclick="addOptionItem()">
                                 <i class="fas fa-plus"></i> 옵션 추가
                             </button>
+
                         </div>
                     </div>
                 </div>
@@ -1072,55 +1081,7 @@
                     <label class="product_form_label"><i class="fas fa-exclamation-triangle"></i> 알레르기 유발 요인</label>
                     <div style="font-size: 13px; color: #999; margin-bottom: 15px;">해당되는 성분을 모두 선택해주세요.</div>
 
-                    <div class="allergy_grid">
-                        <label class="allergy_check_item" for="allergy_milk">
-                            <input type="checkbox" name="allergy" value="우유" id="allergy_milk">
-                            <span class="allergy_name">우유</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_soybean">
-                            <input type="checkbox" name="allergy" value="대두" id="allergy_soybean">
-                            <span class="allergy_name">대두</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_wheat">
-                            <input type="checkbox" name="allergy" value="밀" id="allergy_wheat">
-                            <span class="allergy_name">밀</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_egg">
-                            <input type="checkbox" name="allergy" value="계란" id="allergy_egg">
-                            <span class="allergy_name">계란</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_peanut">
-                            <input type="checkbox" name="allergy" value="땅콩" id="allergy_peanut">
-                            <span class="allergy_name">땅콩</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_peach">
-                            <input type="checkbox" name="allergy" value="복숭아" id="allergy_peach">
-                            <span class="allergy_name">복숭아</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_tomato">
-                            <input type="checkbox" name="allergy" value="토마토" id="allergy_tomato">
-                            <span class="allergy_name">토마토</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-
-                        <label class="allergy_check_item" for="allergy_walnut">
-                            <input type="checkbox" name="allergy" value="호두" id="allergy_walnut">
-                            <span class="allergy_name">호두</span>
-                            <div class="allergy_icon"><i class="fas fa-check"></i></div>
-                        </label>
-                    </div>
+                    <div class="allergy_grid" id="allergyCheckWrap"></div>
                 </div>
 
                 <div class="product_form_row">
@@ -1380,6 +1341,75 @@
         duration: 1200,
     });
 
+    const PRODUCT_API  = 'http://localhost:8000/api/admin/products';
+    const OPTION_API   = 'http://localhost:8000/api/admin/options';
+    const MATERIAL_API = 'http://localhost:8000/api/admin/materials';
+    const ALLERGY_API  = 'http://localhost:8000/api/admin/allergies';
+
+    let currentPage = 1;
+    const PAGE_SIZE = 10;
+    let editingMenuCode = null;
+
+    async function loadProductList(page = 1) {
+        const res = await fetch(`${PRODUCT_API}?page=${page}&limit=${PAGE_SIZE}`);
+        const data = await res.json();
+
+        const tbody = document.querySelector('.product_list_table tbody');
+        tbody.innerHTML = '';
+
+        data.content.forEach(p => {
+            tbody.innerHTML += `
+        <tr>
+            <td><img src="${p.imageUrl || 'resources/static/src/no-image.png'}" class="product_image"></td>
+            <td>${p.menuName}</td>
+            <td>${p.category}</td>
+            <td>₩${p.basePrice ? Number(p.basePrice).toLocaleString() : '-'}</td>
+            <td>${p.createdAt ?? '-'}</td>
+            <td>
+                <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
+                <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
+            </td>
+        </tr>`;
+        });
+
+        renderPagination(data.totalPages, page);
+    }
+
+    async function searchProducts(page = 1) {
+        const keyword = document.querySelector('.product_search_input').value.trim();
+
+        if (!keyword) {
+            loadProductList(1);
+            return;
+        }
+
+        const res = await fetch(
+            `${PRODUCT_API}/search?keyword=${encodeURIComponent(keyword)}&page=${page}&limit=${PAGE_SIZE}`
+        );
+        const data = await res.json();
+
+        const tbody = document.querySelector('.product_list_table tbody');
+        tbody.innerHTML = '';
+
+        data.content.forEach(p => {
+            tbody.innerHTML += `
+        <tr>
+            <td><img src="${p.imageUrl ?? 'https://via.placeholder.com/60'}" class="product_image"></td>
+            <td>${p.menuName}</td>
+            <td>${p.category}</td>
+            <td>₩${Number(p.basePrice).toLocaleString()}</td>
+            <td>-</td>
+            <td>
+                <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
+                <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
+            </td>
+        </tr>`;
+        });
+
+        renderPagination(data.totalPages, page);
+    }
+
+
     // 권한 체크
     $(document).ready(function() {
         // var userRole = localStorage.getItem('userRole');
@@ -1432,9 +1462,9 @@
         optionCounter++;
         // DB에서 불러올 옵션 목록 (예시)
         const options = [
-            {id: 1, name: "샷 추가", price: 500},
-            {id: 2, name: "휘핑 추가", price: 600},
-            {id: 3, name: "사이즈 업(L)", price: 1000}
+            {id: 1, name: "샷 추가", basePrice: 500},
+            {id: 2, name: "휘핑 추가", basePrice: 600},
+            {id: 3, name: "사이즈 업(L)", basePrice: 1000}
         ];
 
         let selectHtml = `<div class="product_option_item" id="opt_${optionCounter}" style="display:flex; gap:10px; margin-bottom:10px;">
@@ -1442,7 +1472,7 @@
                     <option value="">적용할 옵션 선택</option>`;
 
         options.forEach(opt => {
-            selectHtml += `<option value="${opt.id}">${opt.name} (+₩${opt.price})</option>`;
+            selectHtml += `<option value="${opt.id}">${opt.name} (+₩${opt.basePrice})</option>`;
         });
 
         selectHtml += `</select>
@@ -1464,8 +1494,6 @@
         ingredientCounter = 0;
         optionCounter = 0;
     }
-
-
 
     // 옵션 항목 추가 (모달)
     let optionCounterModal = 0;
@@ -1545,151 +1573,91 @@
         $('html, body').animate({ scrollTop: $('.product_form_wrap').offset().top - 100 }, 300);
     }
 
-    // 제품 수정 폼 표시
-    function editProduct(id) {
-        // 실제로는 서버에서 제품 정보를 가져와서 폼에 채워야 함
-        // 예시 데이터
-        const productData = {
-            1: {
-                name: '아메리카노',
-                category: '음료',
-                price: 4000,
-                image: 'https://via.placeholder.com/60',
-                description: '깊고 진한 아메리카노',
-                options: [
-                    { groupName: '사이즈', price: 500 }
-                ],
-                ingredients: [
-                    { name: '아메리카노 원두', amount: 20, unit: 'g' }
-                ],
-                allergies: ['우유', '대두']
-            },
-            2: {
-                name: '카페라떼',
-                category: '음료',
-                price: 4500,
-                image: 'https://via.placeholder.com/60',
-                description: '부드러운 우유와 에스프레소의 조화',
-                options: [
-                    { groupName: '사이즈', price: 500 },
-                    { groupName: '토핑', price: 1000 }
-                ],
-                ingredients: [
-                    { name: '라떼 원두', amount: 20, unit: 'g' },
-                    { name: '우유', amount: 200, unit: 'ml' }
-                ],
-                allergies: ['우유', '밀']
-            },
-            3: {
-                name: '바닐라라떼',
-                category: '음료',
-                price: 4500,
-                image: 'https://via.placeholder.com/60',
-                description: '바닐라 시럽이 들어간 달콤한 라떼',
-                options: [
-                    { groupName: '사이즈', price: 500 }
-                ],
-                ingredients: [
-                    { name: '라떼 원두', amount: 20, unit: 'g' },
-                    { name: '우유', amount: 200, unit: 'ml' },
-                    { name: '바닐라 시럽', amount: 15, unit: 'ml' }
-                ],
-                allergies: ['우유']
-            },
-            4: {
-                name: '카푸치노',
-                category: '음료',
-                price: 4500,
-                image: 'https://via.placeholder.com/60',
-                description: '우유 거품이 풍부한 카푸치노',
-                options: [
-                    { groupName: '사이즈', price: 500 }
-                ],
-                ingredients: [
-                    { name: '라떼 원두', amount: 20, unit: 'g' },
-                    { name: '우유', amount: 150, unit: 'ml' }
-                ],
-                allergies: ['우유', '계란']
-            }
-        };
+    function fillNutrition(data) {
+        if (!data) return;
 
-        const product = productData[id] || { name: '', category: '음료', price: '', image: '', description: '', options: [], ingredients: [], allergies: [] };
-        $('#productName').val(product.name);
-        $('#productCategory').val(product.category);
-        $('#productPrice').val(product.price);
-        $('#productDescription').val(product.description || '');
-        if (product.image) {
-            $('#productImagePreview').attr('src', product.image);
-            $('#productImagePreviewRow').show();
-        }
+        $('#nutri_cal').val(data.calories ?? '');
+        $('#nutri_sodium').val(data.sodium ?? '');
+        $('#nutri_carbo').val(data.carbs ?? '');
+        $('#nutri_sugar').val(data.sugars ?? '');
+        $('#nutri_protein').val(data.protein ?? '');
+        $('#nutri_fat').val(data.fat ?? '');
+        $('#nutri_s_fat').val(data.saturatedFat ?? '');
+        $('#nutri_caffeine').val(data.caffeine ?? '');
+    }
 
-        // 옵션 목록 초기화 및 채우기
-        $('#productOptionList').empty();
-        optionCounter = 0;
-        if (product.options && product.options.length > 0) {
-            product.options.forEach(function(option) {
-                optionCounter++;
-                const optionItem = `
-                        <div class="product_option_item" data-option-id="${optionCounter}">
-                            <input type="text" class="product_option_group_name" placeholder="옵션 그룹명 (예: 사이즈, 토핑)" value="${option.groupName || ''}" required>
-                            <input type="number" class="product_option_price" placeholder="추가 금액" value="${option.price || 0}" required min="0" step="100">
-                            <button type="button" class="product_option_remove_btn" onclick="removeOptionItem(${optionCounter})">삭제</button>
-                        </div>
-                    `;
-                $('#productOptionList').append(optionItem);
-            });
-        }
+    function fillAllergies(allergyIds) {
+        if (!Array.isArray(allergyIds)) return;
 
-        // 원재료 목록 초기화 및 채우기
+        $('input[name="allergy"]').each(function () {
+            const id = Number(this.value);
+            const checked = allergyIds.includes(id);
+
+            $(this).prop('checked', checked)
+                .closest('.allergy_check_item')
+                .toggleClass('selected', checked);
+        });
+    }
+
+    function fillOptions(optionIds) {
+        if (!Array.isArray(optionIds)) return;
+
+        $('input[name="option"]').each(function () {
+            const id = Number(this.value);
+            const checked = optionIds.includes(id);
+
+            $(this).prop('checked', checked)
+                .closest('.allergy_check_item')
+                .toggleClass('selected', checked);
+        });
+    }
+
+    function fillIngredients(ingredients) {
+        if (!ingredients) return;
+
         $('#productIngredientList').empty();
         ingredientCounter = 0;
-        if (product.ingredients && product.ingredients.length > 0) {
-            product.ingredients.forEach(function(ingredient) {
-                ingredientCounter++;
-                const ingredientItem = `
-                        <div class="product_ingredient_item" data-ingredient-id="${ingredientCounter}">
-                            <select class="product_ingredient_select" required>
-                                <option value="">원재료 선택</option>
-                                <option value="아메리카노 원두" ${ingredient.name === '아메리카노 원두' ? 'selected' : ''}>아메리카노 원두</option>
-                                <option value="라떼 원두" ${ingredient.name === '라떼 원두' ? 'selected' : ''}>라떼 원두</option>
-                                <option value="우유" ${ingredient.name === '우유' ? 'selected' : ''}>우유</option>
-                                <option value="시럽" ${ingredient.name === '시럽' ? 'selected' : ''}>시럽</option>
-                                <option value="바닐라 시럽" ${ingredient.name === '바닐라 시럽' ? 'selected' : ''}>바닐라 시럽</option>
-                                <option value="카라멜 시럽" ${ingredient.name === '카라멜 시럽' ? 'selected' : ''}>카라멜 시럽</option>
-                                <option value="헤이즐넛 시럽" ${ingredient.name === '헤이즐넛 시럽' ? 'selected' : ''}>헤이즐넛 시럽</option>
-                            </select>
-                            <input type="number" class="product_ingredient_amount" placeholder="수량" value="${ingredient.amount}" required min="0" step="0.1">
-                            <select class="product_ingredient_unit" required>
-                                <option value="kg" ${ingredient.unit === 'kg' ? 'selected' : ''}>kg</option>
-                                <option value="L" ${ingredient.unit === 'L' ? 'selected' : ''}>L</option>
-                                <option value="병" ${ingredient.unit === '병' ? 'selected' : ''}>병</option>
-                                <option value="개" ${ingredient.unit === '개' ? 'selected' : ''}>개</option>
-                                <option value="g" ${ingredient.unit === 'g' ? 'selected' : ''}>g</option>
-                                <option value="ml" ${ingredient.unit === 'ml' ? 'selected' : ''}>ml</option>
-                            </select>
-                            <button type="button" class="product_ingredient_remove_btn" onclick="removeIngredientItem(${ingredientCounter})">삭제</button>
-                        </div>
-                    `;
-                $('#productIngredientList').append(ingredientItem);
-            });
-        }
 
-        // 알레르기 체크박스 초기화 및 설정
-        $('.allergy_check_item').removeClass('selected');
-        $('.allergy_check_item input[type="checkbox"]').prop('checked', false);
-        if (product.allergies && product.allergies.length > 0) {
-            product.allergies.forEach(function(allergy) {
-                var checkbox = $(`.allergy_check_item input[value="${allergy}"]`);
-                checkbox.prop('checked', true).closest('.allergy_check_item').addClass('selected');
-            });
-        }
+        ingredients.forEach(i => {
+            ingredientCounter++;
 
-        $('#productFormTitle').text('제품 수정');
-        $('#productForm').data('productId', id);
-        $('#productFormWrap').slideDown();
-        $('#productListWrap').hide();
-        $('html, body').animate({ scrollTop: $('.product_form_wrap').offset().top - 100 }, 300);
+            $('#productIngredientList').append(`
+            <div class="product_ingredient_item" data-ingredient-id="${ingredientCounter}">
+                <select class="product_ingredient_select">
+                    <option value="${i.name}" selected>${i.name}</option>
+                </select>
+                <input type="number" class="product_ingredient_amount" value="${i.amount}">
+                <select class="product_ingredient_unit">
+                    <option value="${i.unit}" selected>${i.unit}</option>
+                </select>
+            </div>
+        `);
+        });
     }
+
+
+
+    // 제품 수정 폼 표시
+    async function openEditProduct(menuCode) {
+        const res = await fetch(`${PRODUCT_API}/${menuCode}`);
+        const data = await res.json();
+
+        editingMenuCode = menuCode;
+
+        showAddForm();
+        await loadSelectors();
+
+        $('#productName').val(data.menuName);
+        $('#productCategory').val(data.category);
+        $('#productPrice').val(data.basePrice);
+        $('#productDescription').val(data.description);
+
+        fillNutrition(data);
+        fillOptions(data.optionIds);
+        fillIngredients(data.ingredients);
+        fillAllergies(data.allergyIds);
+    }
+
 
     // 제품 폼 숨기기
     function hideProductForm() {
@@ -1726,12 +1694,15 @@
     }
 
     // 삭제 확인
-    function confirmDelete() {
-        if (deleteProductId) {
-            // 제품 삭제 로직
-            $('#deleteModal').removeClass('show');
-            $('#deleteSuccessModal').addClass('show');
-        }
+    async function confirmDelete() {
+        if (!deleteProductId) return;
+
+        await fetch(`${PRODUCT_API}/${deleteProductId}`, {
+            method: 'DELETE'
+        });
+
+        closeDeleteModal();
+        loadProductList(currentPage);
     }
 
 
@@ -1775,36 +1746,41 @@
 
     // 제품 폼 제출
     $(document).ready(function() {
-        $('#productForm').submit(function(e) {
+        document.getElementById('productForm').addEventListener('submit', async e => {
             e.preventDefault();
-            const productId = $(this).data('productId');
-            // 제품 저장 로직
+
+            const payload = {
+                menuName: $('#productName').val(),
+                category: $('#productCategory').val(),
+                basePrice: Number($('#productPrice').val()),
+                description: $('#productDescription').val(),
+
+                optionIds: collectSelectedOptionIds(),   // ✅ 등록 옵션
+                customOptions: collectCustomOptions(),   // ✅ 직접 옵션
+
+                ingredients: collectIngredients(),
+                allergyIds: collectAllergies(),
+                nutrition: collectNutrition()
+
+            };
+
+            const url = editingMenuCode
+                ? `${PRODUCT_API}/${editingMenuCode}`
+                : PRODUCT_API;
+
+            const method = editingMenuCode ? 'PUT' : 'POST';
+
+            await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            editingMenuCode = null;
             hideProductForm();
-            if (productId) {
-                // 제품 수정 완료 모달 표시
-                const scrollbarWidth = getScrollbarWidth();
-                document.body.style.overflow = 'hidden';
-                document.body.style.paddingRight = scrollbarWidth + 'px';
-                $('#editSuccessModal').addClass('show');
-            } else {
-                // 제품 추가 완료 모달 표시
-                const scrollbarWidth = getScrollbarWidth();
-                document.body.style.overflow = 'hidden';
-                document.body.style.paddingRight = scrollbarWidth + 'px';
-                $('#addSuccessModal').addClass('show');
-                // 노란색 강제 제거
-                setTimeout(function() {
-                    $('#addSuccessModalBtn').css({
-                        'background': '#D95B3B',
-                        'background-color': '#D95B3B',
-                        'background-image': 'none',
-                        'color': '#fff',
-                        'border': 'none',
-                        'border-color': '#D95B3B'
-                    });
-                }, 10);
-            }
+            loadProductList(currentPage);
         });
+
 
         // 모달 외부 클릭 시 닫기
         $(document).on('click', '.delete_modal', function(e) {
@@ -1856,6 +1832,45 @@
                     $('#optionToMaterial').html(optionsHtml);
                 }
             });
+        }
+
+        function collectNutrition() {
+            return {
+                calories: Number($('#nutri_cal').val()) || 0,
+                sodium: Number($('#nutri_sodium').val()) || 0,
+                carbs: Number($('#nutri_carbo').val()) || 0,
+                sugars: Number($('#nutri_sugar').val()) || 0,
+                protein: Number($('#nutri_protein').val()) || 0,
+                fat: Number($('#nutri_fat').val()) || 0,
+                saturatedFat: Number($('#nutri_s_fat').val()) || 0,
+                caffeine: Number($('#nutri_caffeine').val()) || 0
+            };
+        }
+
+        function collectSelectedOptionIds() {
+            return [...document.querySelectorAll('input[name="option"]:checked')]
+                .map(el => Number(el.value));
+        }
+
+        function collectCustomOptions() {
+            return [...document.querySelectorAll('#productOptionList .product_option_item')]
+                .map(el => ({
+                    optionId: el.querySelector('select')?.value || null
+                }))
+                .filter(o => o.optionId);
+        }
+
+        function collectIngredients() {
+            return [...document.querySelectorAll('.product_ingredient_item')].map(el => ({
+                name: el.querySelector('.product_ingredient_select').value,
+                amount: Number(el.querySelector('.product_ingredient_amount').value),
+                unit: el.querySelector('.product_ingredient_unit').value
+            }));
+        }
+
+        function collectAllergies() {
+            return [...document.querySelectorAll('input[name="allergy"]:checked')]
+                .map(el => el.value);
         }
 
         // 옵션 등록 폼 제출
@@ -1922,6 +1937,129 @@
             }
         });
     });
+
+    function renderAllergySelector(allergies) {
+        const $wrap = $('#allergyCheckWrap'); // ⭐ HTML에 있는 컨테이너 ID
+        $wrap.empty();
+
+        allergies.forEach(a => {
+            $wrap.append(`
+            <label class="allergy_check_item">
+                <input type="checkbox" name="allergy" value="${a.allergyId}">
+                <span>${a.allergyName}</span>
+            </label>
+        `);
+        });
+    }
+
+    function renderMaterialSelector(materials) {
+        const $from = $('#optionFromMaterial');
+        const $to   = $('#optionToMaterial');
+
+        $from.empty().append('<option value="">선택하세요</option>');
+        $to.empty().append('<option value="">선택하세요</option>');
+
+        materials.forEach(m => {
+            const opt = `<option value="${m.materialId}">${m.materialName}</option>`;
+            $from.append(opt);
+            $to.append(opt);
+        });
+    }
+
+    function renderOptionSelector(optionGroups) {
+        const $wrap = $('#productOptionGroupWrap');
+        $wrap.empty();
+
+        optionGroups.forEach(group => {
+            const groupHtml = `
+        <div class="option_group">
+            <div class="option_group_title">${group.optionGroupName}</div>
+            <div class="option_items">
+                ${group.options.map(opt => `
+                    <label class="allergy_check_item">
+                        <input type="checkbox"
+                               name="option"
+                               value="${opt.optionId}">
+                        <span class="allergy_name">
+                            ${opt.optionName} (+₩${opt.defaultPrice})
+                        </span>
+                        <div class="allergy_icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </label>
+                `).join('')}
+            </div>
+        </div>
+        `;
+            $wrap.append(groupHtml);
+        });
+    }
+
+
+    async function loadSelectors() {
+        const [opts, mats, alls] = await Promise.all([
+            fetch(OPTION_API).then(r => r.json()),
+            fetch(MATERIAL_API).then(r => r.json()),
+            fetch(ALLERGY_API).then(r => r.json())
+        ]);
+
+        renderOptionSelector(opts);
+        renderMaterialSelector(mats);
+        renderAllergySelector(alls);
+    }
+
+    $(document).ready(function () {
+        loadSelectors();
+        loadProductList(1);
+    });
+
+    $(document).ready(function () {
+        $('.product_search_btn').on('click', () => searchProducts(1));
+
+        $('.product_search_input').on('keyup', function (e) {
+            if (e.key === 'Enter') {
+                searchProducts(1);
+            }
+        });
+    });
+
+
+    function renderPagination(totalPages, currentPage) {
+        const $wrap = $('.board_page ul');
+        $wrap.empty();
+
+        if (totalPages <= 1) return;
+
+        // 처음
+        $wrap.append(`
+        <li>
+            <a href="javascript:void(0)" onclick="loadProductList(1)">
+                <span>처음</span>
+            </a>
+        </li>
+    `);
+
+        // 페이지 번호
+        for (let i = 1; i <= totalPages; i++) {
+            $wrap.append(`
+            <li class="${i === currentPage ? 'board_page_check' : ''}">
+                <a href="javascript:void(0)" onclick="loadProductList(${i})">
+                    <span>${i}</span>
+                </a>
+            </li>
+        `);
+        }
+
+        // 마지막
+        $wrap.append(`
+        <li>
+            <a href="javascript:void(0)" onclick="loadProductList(${totalPages})">
+                <span>마지막</span>
+            </a>
+        </li>
+    `);
+    }
+
 </script>
 </body>
 </html>

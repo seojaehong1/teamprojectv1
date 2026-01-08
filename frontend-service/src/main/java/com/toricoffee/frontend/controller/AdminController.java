@@ -11,77 +11,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/products")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
     private ApiClient apiClient;
 
-
-    // 관리자 상품 관리 페이지
-    // 실제 주소 GET /admin/products
-    // 템플릿 templates/admin/product.html
-    @GetMapping
-    public String productPage(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int limit,
-            Model model
-    ) {
-        try {
-            Object productPageData;
-
-            // 🔹 검색 여부에 따라 API 분기
-            if (keyword == null || keyword.isBlank()) {
-                productPageData = apiClient.get(
-                        "/api/admin/products?page=" + page + "&limit=" + limit,
-                        Object.class
-                );
-            } else {
-                productPageData = apiClient.get(
-                        "/api/admin/products/search"
-                                + "?keyword=" + keyword
-                                + "&page=" + page
-                                + "&limit=" + limit,
-                        Object.class
-                );
-            }
-
-            model.addAttribute("products", productPageData);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("currentPage", page);
-
-            log.info("관리자 상품 목록 로드 성공");
-
-        } catch (Exception e) {
-            log.error("관리자 상품 목록 로드 실패", e);
-
-            model.addAttribute("products", null);
-            model.addAttribute("errorMessage", "상품 목록을 불러오지 못했습니다.");
-        }
-
-        return "admin/product";
+    @GetMapping("/products")
+    public String productManagePage() {
+        log.info("관리자 상품 관리 페이지 진입");
+        return "admin/product"; // templates/admin/product.html
     }
 
-    @GetMapping("/form-data")
-    public String productFormData(Model model) {
-
-        try {
-            Object allergies = apiClient.get("/api/admin/allergies", Object.class);
-            Object materials = apiClient.get("/api/admin/materials", Object.class);
-            Object options   = apiClient.get("/api/admin/options", Object.class);
-
-            model.addAttribute("allergies", allergies);
-            model.addAttribute("materials", materials);
-            model.addAttribute("options", options);
-
-            log.info("상품 등록/수정 selector 데이터 로드 성공");
-
-        } catch (Exception e) {
-            log.error("상품 등록 selector 데이터 로드 실패", e);
-        }
-
-        return "admin/product :: formData";
-        // thymeleaf fragment 사용하지 않으면 "" 리턴
+    @GetMapping("/users")
+    public String userManagePage() {
+        log.info("관리자 회원 관리 페이지 진입");
+        return "admin/user";
     }
+
+    @GetMapping("/notices")
+    public String noticeManagePage() {
+        log.info("관리자 공지사항 관리 페이지 진입");
+        return "admin/notice";
+    }
+
+    @GetMapping("/inquiries")
+    public String inquiryManagePage() {
+        log.info("관리자 문의 관리 페이지 진입");
+        return "admin/inquiry";
+    }
+
 }

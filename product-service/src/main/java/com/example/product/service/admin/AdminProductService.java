@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ public class AdminProductService {
 
         return menuRepository.findAll(pageable)
                 .map(menu -> AdminProductListDto.builder()
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
+                        .imageUrl(buildImageUrl(menu.getMenuName()))
                         .menuCode(menu.getMenuCode())
                         .menuName(menu.getMenuName())
                         .category(menu.getCategory())
@@ -59,7 +61,7 @@ public class AdminProductService {
 
         return menuRepository.findByMenuNameContaining(keyword, pageable)
                 .map(menu -> AdminProductListDto.builder()
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
+                        .imageUrl(buildImageUrl(menu.getMenuName()))
                         .menuCode(menu.getMenuCode())
                         .menuName(menu.getMenuName())
                         .category(menu.getCategory())
@@ -303,7 +305,7 @@ public class AdminProductService {
     }
 
     // 이미지 경로 생성
-    private String buildImageUrl(Long menuCode) {
-        return "/images/menu/" + menuCode + ".jpg";
+    private String buildImageUrl(String menuName) {
+        return "/src/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
     }
 }
