@@ -540,7 +540,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="inventory.html">
+                <a href="javascript:void(0)" style="cursor: default;">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -629,21 +629,6 @@
                         <th>관리</th>
                     </tr>
                     </thead>
-                    <tbody>  </tbody>
-                </table>
-
-                <table class="order_list_table">
-                    <thead>
-                    <tr>
-                        <th>주문번호</th>
-                        <th>주문시간</th>
-                        <th>메뉴</th>
-                        <th>수량</th>
-                        <th>금액</th>
-                        <th>상태</th>
-                        <th>관리</th>
-                    </tr>
-                    </thead>
                     <tbody id="orderTableBody"> </tbody>
                 </table>
             </div>
@@ -668,9 +653,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -783,7 +768,7 @@
                 e.preventDefault();
                 if (confirm('로그아웃하시겠습니까?')) {
                     localStorage.clear();
-                    window.location.href = '../login.html';
+                    window.location.href = '/login';
                 }
             });
 
