@@ -1359,26 +1359,18 @@
         tbody.innerHTML = '';
 
         data.content.forEach(p => {
-            const imagePath = `/src/tem/${p.menuName}.png`;
-            const defaultImage = '/src/tem/no-image.png'; // 또는 '/src/tem/default.png'
-
             tbody.innerHTML += `
-            <tr>
-                <td>
-                    <img src="${imagePath}"
-                         class="product_image"
-                         alt="${p.menuName}"
-                         onerror="this.onerror=null; this.src='${defaultImage}';">
-                </td>
-                <td>${p.menuName}</td>
-                <td>${p.category}</td>
-                <td>₩${p.basePrice ? Number(p.basePrice).toLocaleString() : '-'}</td>
-                <td>${p.createdAt ?? '-'}</td>
-                <td>
-                    <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
-                    <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
-                </td>
-            </tr>`;
+        <tr>
+            <td><img src="${p.imageUrl || 'resources/static/src/no-image.png'}" class="product_image"></td>
+            <td>${p.menuName}</td>
+            <td>${p.category}</td>
+            <td>₩${p.basePrice ? Number(p.basePrice).toLocaleString() : '-'}</td>
+            <td>${p.createdAt ?? '-'}</td>
+            <td>
+                <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
+                <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
+            </td>
+        </tr>`;
         });
 
         renderPagination(data.totalPages, page);

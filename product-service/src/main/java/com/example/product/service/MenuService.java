@@ -78,7 +78,7 @@ public class MenuService {
         return menus.map(menu ->
                 MenuListDto.builder()
                         .menuCode(menu.getMenuCode())
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
+                        .imageUrl(buildImageUrl(menu.getMenuName()))
                         .menuName(menu.getMenuName())
                         .description(menu.getDescription())
                         .category(menu.getCategory())
@@ -116,7 +116,7 @@ public class MenuService {
 
         return MenuDetailDto.builder()
                 .menuCode(menu.getMenuCode())
-                .imageUrl(buildImageUrl(menu.getMenuCode()))
+                .imageUrl(buildImageUrl(menu.getMenuName()))
                 .menuName(menu.getMenuName())
                 .description(menu.getDescription())
                 .category(menu.getCategory())
@@ -146,8 +146,9 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    private String buildImageUrl(Long menuCode) {
-        return "/images/menu/" + menuCode + ".jpg";
+    // 이미지 경로 생성
+    private String buildImageUrl(String menuName) {
+        return "/src/tem/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
     }
 
 }
