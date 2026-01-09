@@ -89,17 +89,19 @@ public class AdminProductService {
         );
 
         // 2. nutrition 저장
+        NutritionDto n = dto.getNutrition();
+
         nutritionRepository.save(
                 Nutrition.builder()
-                        .menu(menu)   // @MapsId
-                        .calories(dto.getCalories())
-                        .sodium(dto.getSodium())
-                        .carbs(dto.getCarbs())
-                        .sugars(dto.getSugars())
-                        .protein(dto.getProtein())
-                        .fat(dto.getFat())
-                        .saturatedFat(dto.getSaturatedFat())
-                        .caffeine(dto.getCaffeine())
+                        .menu(menu)
+                        .calories(n.getCalories())
+                        .sodium(n.getSodium())
+                        .carbs(n.getCarbs())
+                        .sugars(n.getSugars())
+                        .protein(n.getProtein())
+                        .fat(n.getFat())
+                        .saturatedFat(n.getSaturatedFat())
+                        .caffeine(n.getCaffeine())
                         .build()
         );
 
@@ -129,7 +131,12 @@ public class AdminProductService {
                 .orElse(null);
 
         // 4. options Ids 조회
-        List<Integer> optionIds = List.of();
+        List<Integer> optionIds = menuOptionRepository.findByMenu_MenuCode(menuCode)
+                .stream()
+                .flatMap(mo -> optionMasterRepository.findByOptionGroupName(mo.getOptionGroupName()).stream())
+                .map(OptionMaster::getOptionId)
+                .distinct()
+                .collect(Collectors.toList());
 
         // 5. recipe 조회
         List<RecipeUpdateViewDto> recipes = recipeRepository
@@ -198,16 +205,16 @@ public class AdminProductService {
                                 .build()
                 );
 
-        nutrition.setCalories(dto.getCalories());
-        nutrition.setSodium(dto.getSodium());
-        nutrition.setCarbs(dto.getCarbs());
-        nutrition.setSugars(dto.getSugars());
-        nutrition.setProtein(dto.getProtein());
-        nutrition.setFat(dto.getFat());
-        nutrition.setSaturatedFat(dto.getSaturatedFat());
-        nutrition.setCaffeine(dto.getCaffeine());
+        NutritionDto n = dto.getNutrition();
 
-        nutritionRepository.save(nutrition);
+        nutrition.setCalories(n.getCalories());
+        nutrition.setSodium(n.getSodium());
+        nutrition.setCarbs(n.getCarbs());
+        nutrition.setSugars(n.getSugars());
+        nutrition.setProtein(n.getProtein());
+        nutrition.setFat(n.getFat());
+        nutrition.setSaturatedFat(n.getSaturatedFat());
+        nutrition.setCaffeine(n.getCaffeine());
 
         // 3. 기존 옵션 매핑 제거 후 재설정
         menuOptionRepository.deleteByMenu_MenuCode(menuCode);
@@ -306,6 +313,6 @@ public class AdminProductService {
 
     // 이미지 경로 생성
     private String buildImageUrl(String menuName) {
-        return "/src/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
+        return "/src/tem/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
     }
 }

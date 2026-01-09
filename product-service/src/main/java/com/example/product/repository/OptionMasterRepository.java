@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OptionMasterRepository extends JpaRepository<OptionMaster, Integer> {
     List<OptionMaster> findByOptionGroupNameIn(List<String> optionGroupNames);
+    List<OptionMaster> findByOptionGroupName(String groupName);
 }

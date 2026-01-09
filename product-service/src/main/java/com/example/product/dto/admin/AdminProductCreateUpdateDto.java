@@ -20,14 +20,7 @@ public class AdminProductCreateUpdateDto {
     private List<Integer> allergyIds;
 
     // 3. nutrition
-    private BigDecimal calories;
-    private BigDecimal sodium;
-    private BigDecimal carbs;
-    private BigDecimal sugars;
-    private BigDecimal protein;
-    private BigDecimal fat;
-    private BigDecimal saturatedFat;
-    private BigDecimal caffeine;
+    private NutritionDto nutrition;
 
     // 4. option
     private List<Integer> optionIds; // option_master PK 목록

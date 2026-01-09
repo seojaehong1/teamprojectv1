@@ -1345,6 +1345,7 @@
     const OPTION_API   = 'http://localhost:8000/api/admin/options';
     const MATERIAL_API = 'http://localhost:8000/api/admin/materials';
     const ALLERGY_API  = 'http://localhost:8000/api/admin/allergies';
+    const CATEGORY_API = 'http://localhost:8000/api/admin/categori';
 
     let currentPage = 1;
     const PAGE_SIZE = 10;
@@ -1358,18 +1359,26 @@
         tbody.innerHTML = '';
 
         data.content.forEach(p => {
+            const imagePath = `/src/tem/${p.menuName}.png`;
+            const defaultImage = '/src/tem/no-image.png'; // 또는 '/src/tem/default.png'
+
             tbody.innerHTML += `
-        <tr>
-            <td><img src="${p.imageUrl || 'resources/static/src/no-image.png'}" class="product_image"></td>
-            <td>${p.menuName}</td>
-            <td>${p.category}</td>
-            <td>₩${p.basePrice ? Number(p.basePrice).toLocaleString() : '-'}</td>
-            <td>${p.createdAt ?? '-'}</td>
-            <td>
-                <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
-                <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
-            </td>
-        </tr>`;
+            <tr>
+                <td>
+                    <img src="${imagePath}"
+                         class="product_image"
+                         alt="${p.menuName}"
+                         onerror="this.onerror=null; this.src='${defaultImage}';">
+                </td>
+                <td>${p.menuName}</td>
+                <td>${p.category}</td>
+                <td>₩${p.basePrice ? Number(p.basePrice).toLocaleString() : '-'}</td>
+                <td>${p.createdAt ?? '-'}</td>
+                <td>
+                    <button class="product_action_btn edit" onclick="openEditProduct(${p.menuCode})">수정</button>
+                    <button class="product_action_btn delete" onclick="deleteProduct(${p.menuCode})">삭제</button>
+                </td>
+            </tr>`;
         });
 
         renderPagination(data.totalPages, page);
@@ -1645,16 +1654,22 @@
         editingMenuCode = menuCode;
 
         showAddForm();
+
+        // 중요: 셀렉터 목록(카테고리 포함)이 먼저 로드되어 있어야 값을 채울 수 있습니다.
         await loadSelectors();
 
         $('#productName').val(data.menuName);
-        $('#productCategory').val(data.category);
+
+        if (data.category) {
+            $('#productCategory').val(data.category).prop('selected', true);
+        }
+
         $('#productPrice').val(data.basePrice);
         $('#productDescription').val(data.description);
 
         fillNutrition(data);
         fillOptions(data.optionIds);
-        fillIngredients(data.ingredients);
+        fillIngredients(data.recipes); // DTO에서 recipes로 오므로 명칭 확인
         fillAllergies(data.allergyIds);
     }
 
@@ -1870,7 +1885,7 @@
 
         function collectAllergies() {
             return [...document.querySelectorAll('input[name="allergy"]:checked')]
-                .map(el => el.value);
+                .map(el => Number(el.value));
         }
 
         // 옵션 등록 폼 제출
@@ -1939,16 +1954,18 @@
     });
 
     function renderAllergySelector(allergies) {
-        const $wrap = $('#allergyCheckWrap'); // ⭐ HTML에 있는 컨테이너 ID
+        const $wrap = $('#allergyCheckWrap');
         $wrap.empty();
 
         allergies.forEach(a => {
+            // ⭐ a.allergyId(숫자)가 value에 들어가야 합니다.
+            // 만약 a.allergyId가 없다면 서버에서 내려주는 데이터의 ID 필드명을 확인하세요.
             $wrap.append(`
             <label class="allergy_check_item">
                 <input type="checkbox" name="allergy" value="${a.allergyId}">
                 <span>${a.allergyName}</span>
             </label>
-        `);
+             `);
         });
     }
 
@@ -1995,17 +2012,30 @@
         });
     }
 
+    // 카테고리 셀렉터 렌더링 함수
+    function renderCategorySelector(categories) {
+        const $select = $('#productCategory');
+        $select.empty();
+        $select.append('<option value="">선택하세요</option>');
+
+        categories.forEach(c => {
+            // DTO의 필드명이 categoryName인지 확인하세요.
+            $select.append(`<option value="${c.categoryName}">${c.categoryName}</option>`);
+        });
+    }
 
     async function loadSelectors() {
-        const [opts, mats, alls] = await Promise.all([
+        const [opts, mats, alls, cats] = await Promise.all([
             fetch(OPTION_API).then(r => r.json()),
             fetch(MATERIAL_API).then(r => r.json()),
-            fetch(ALLERGY_API).then(r => r.json())
+            fetch(ALLERGY_API).then(r => r.json()),
+            fetch(CATEGORY_API).then(r => r.json()) // 카테고리 추가
         ]);
 
         renderOptionSelector(opts);
         renderMaterialSelector(mats);
         renderAllergySelector(alls);
+        renderCategorySelector(cats); // 카테고리 렌더링 실행
     }
 
     $(document).ready(function () {
