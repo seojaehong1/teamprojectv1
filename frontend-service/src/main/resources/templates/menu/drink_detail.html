@@ -1166,6 +1166,11 @@
             showToppingSelectModal();
         });
 
+        // 주문 선택 버튼
+        $('.drink_detail_order_btn').on('click', function() {
+            placeOrderDirectly();
+        });
+
         // 영양 정보 버튼 클릭
         $('.drink_detail_info_link').click(function() {
             showProductDetailModal();
@@ -1304,17 +1309,20 @@
     function renderToppingList(groups) {
         let html = '';
         groups.forEach(group => {
-            html += `<div style="font-weight:700; margin: 15px 0 10px; color:#333;">${group.optionGroupName}</div>`;
+            // 그룹 이름을 변수에 저장
+            const groupName = group.optionGroupName;
+            html += `<div style="font-weight:700; margin: 15px 0 10px; color:#333;">${groupName}</div>`;
 
             group.options.forEach(opt => {
+                // data-group 속성에 그룹 이름을 넣어줍니다.
                 html += `
-            <li class="topping_item" data-id="${opt.optionId}" data-price="${opt.price}" data-name="${opt.optionName}">
+            <li class="topping_item"
+                data-id="${opt.optionId}"
+                data-price="${opt.price}"
+                data-name="${opt.optionName}"
+                data-group="${groupName}">
                 <div class="topping_item_name">${opt.optionName}</div>
-                <div style="display:flex; align-items:center;">
-                    <span class="topping_item_price">+${opt.price.toLocaleString()}원</span>
-                    <div class="topping_item_check"><i class="fas fa-check"></i></div>
-                </div>
-            </li>`;
+                </li>`;
             });
         });
         $('#toppingList').html(html);
@@ -1328,10 +1336,12 @@
     }
 
     /**
-     * 3. 토핑 선택 완료 버튼
+     * 3. 옵션 선택 완료 버튼
      */
     function confirmToppingSelection() {
+        // [수정] const 또는 let으로 변수를 선언해야 에러가 나지 않습니다.
         const selectedToppings = [];
+
         $('.topping_item.selected').each(function() {
             selectedToppings.push({
                 id: $(this).data('id'),
@@ -1340,10 +1350,10 @@
             });
         });
 
-        // 로컬스토리지나 전역 변수에 저장
+        // 전역 변수나 로컬스토리지에 저장 (나중에 데이터 전송 시 활용)
         window.selectedToppings = selectedToppings;
 
-        // 버튼 텍스트 변경 (예: 토핑 선택 -> 휘핑 추가 외 1건)
+        // 버튼 텍스트 변경 로직
         if(selectedToppings.length > 0) {
             const text = selectedToppings.length > 1
                 ? `${selectedToppings[0].name} 외 ${selectedToppings.length - 1}건`
@@ -1376,6 +1386,38 @@
         // 최종 가격 계산
         const totalPrice = (basePrice + toppingTotal) * quantity;
         $('.drink_detail_price').text(totalPrice.toLocaleString() + '원');
+    }
+
+    /**
+     * 5. 서버 전송용 데이터(ProductItemDto) 수집
+     */
+    function getProductInfo() {
+        const quantity = parseInt($('.drink_detail_quantity_num').text());
+        const unitPrice = window.currentBasePrice || 0;
+
+        // 선택된 옵션들의 가격 총합 계산
+        let toppingTotal = 0;
+        const selectedOptions = [];
+        $('.topping_item.selected').each(function() {
+            const p = parseInt($(this).data('price')) || 0;
+            toppingTotal += p;
+            selectedOptions.push({
+                optionId: $(this).data('id'),
+                optionName: $(this).data('name'),
+                optionPrice: p,
+                optionGroupName: $(this).data('group')
+            });
+        });
+
+        return {
+            customerId: "1", // 현재 컨트롤러에서 1로 고정해서 테스트 중이므로 맞춰줍니다.
+            menuCode: parseInt(menuCode),
+            menuName: $('.drink_detail_name').text(),
+            quantity: quantity,
+            unitPrice: unitPrice,
+            totalAmount: (unitPrice + toppingTotal) * quantity, // 총액 계산
+            options: selectedOptions
+        };
     }
 
     function showToppingSelectModal() {
@@ -1422,6 +1464,73 @@
         $('#productDetailModal').fadeOut(200);
         $('body').css('overflow', '');
     }
+
+    async function addToCart() {
+        // 1. DTO 수집 (위에서 만든 getProductInfo 호출)
+        const productData = getProductInfo();
+
+        // 2. 컨트롤러가 List<ProductItemDto>를 받으므로 배열로 감싸서 전송
+        const payload = [productData];
+
+        try {
+            const response = await fetch('http://localhost:8000/api/order/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload) // [ { ... } ] 형태로 전송
+            });
+
+            if (response.ok) {
+                const message = await response.text();
+                if(confirm(`${message}\n장바구니로 이동하시겠습니까?`)) {
+                    location.href = '/order/cart';
+                }
+            } else {
+                const errorMsg = await response.text();
+                alert("담기 실패: " + errorMsg);
+            }
+        } catch (error) {
+            console.error("전송 에러:", error);
+            alert("서버 통신 오류가 발생했습니다.");
+        }
+    }
+
+    async function placeOrderDirectly() {
+        // 1. DTO 데이터 수집 (장바구니와 동일한 구조)
+        const productData = getProductInfo();
+
+        // 2. 컨트롤러 전송을 위해 배열로 감싸기
+        const payload = [productData];
+
+        try {
+            // 장바구니 API를 그대로 사용하여 서버 세션/DB에 먼저 저장
+            const response = await fetch('http://localhost:8000/api/order/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                // 성공 시 바로 결제/주문 페이지로 이동
+                // 요청하신 대로 주소를 /order/checkout으로 설정합니다.
+                location.href = '/order/checkout';
+            } else {
+                const errorMsg = await response.text();
+                alert("주문 처리 중 오류가 발생했습니다: " + errorMsg);
+            }
+        } catch (error) {
+            console.error("전송 에러:", error);
+            alert("서버 통신 오류가 발생했습니다.");
+        }
+    }
+
+    // HTML의 장바구니 담기 버튼에 바인딩 (클래스명 확인 필요)
+    $('.drink_detail_cart_btn').on('click', function() {
+        addToCart();
+    });
 </script>
 </body>
 </html>
