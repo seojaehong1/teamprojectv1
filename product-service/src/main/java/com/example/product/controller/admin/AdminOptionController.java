@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/options")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminOptionController {
 
     private final AdminOptionService adminOptionService;
 
     // 1. create 단계 option selector
-    @GetMapping
+    @GetMapping("/options")
     public List<OptionGroupDto> getAllOptions() {
         return adminOptionService.getAllOptionsGrouped();
     }

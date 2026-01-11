@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,29 +30,36 @@ public class MenuService {
     private final AllergyRepository allergyRepository;
 
     // 1. 메뉴 목록 조회 [GET /api/menu/drinks]
-    public Page<MenuListDto> getMenuList(String category, int page, int limit) {
-
-        int safePage = Math.max(page, 1); // page 음수 처리 방어
-        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
-
-        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
+    public Page<MenuListDto> getMenuList(
+            List<String> categories,
+            String keyword,
+            int page,
+            int limit
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
         Page<Menu> menus;
 
-        if (category == null || category.isBlank() || category.equalsIgnoreCase("all")) {
-            menus = menuRepository.findAll(pageable);
+        boolean hasCategory = categories != null && !categories.isEmpty();
+        boolean hasKeyword  = keyword != null && !keyword.isBlank();
+
+        if (hasCategory && hasKeyword) {
+            menus = menuRepository.findByCategoryInAndMenuNameContainingIgnoreCase(categories, keyword, pageable);
+        } else if (hasCategory) {
+            menus = menuRepository.findByCategoryIn(categories, pageable);
+        } else if (hasKeyword) {
+            menus = menuRepository.findByMenuNameContainingIgnoreCase(keyword, pageable);
         } else {
-            menus = menuRepository.findByCategory(category, pageable);
+            menus = menuRepository.findAll(pageable);
         }
 
-        return menus.map(menu ->
-                MenuListDto.builder()
-                        .menuCode(menu.getMenuCode())
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
-                        .menuName(menu.getMenuName())
-                        .description(menu.getDescription())
-                        .build()
-        );
+        return menus.map(menu -> MenuListDto.builder()
+                .menuCode(menu.getMenuCode())
+                .menuName(menu.getMenuName())
+                .description(menu.getDescription())
+                .category(menu.getCategory())
+                .build());
     }
+
 
     // 2. 메뉴 검색 [GET /api/menu/drinks/search]
     public Page<MenuListDto> searchMenus(String keyword, int page, int limit) {
@@ -69,9 +78,10 @@ public class MenuService {
         return menus.map(menu ->
                 MenuListDto.builder()
                         .menuCode(menu.getMenuCode())
-                        .imageUrl(buildImageUrl(menu.getMenuCode()))
+                        .imageUrl(buildImageUrl(menu.getMenuName()))
                         .menuName(menu.getMenuName())
                         .description(menu.getDescription())
+                        .category(menu.getCategory())
                         .build()
         );
     }
@@ -106,7 +116,7 @@ public class MenuService {
 
         return MenuDetailDto.builder()
                 .menuCode(menu.getMenuCode())
-                .imageUrl(buildImageUrl(menu.getMenuCode()))
+                .imageUrl(buildImageUrl(menu.getMenuName()))
                 .menuName(menu.getMenuName())
                 .description(menu.getDescription())
                 .category(menu.getCategory())
@@ -136,8 +146,9 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    private String buildImageUrl(Long menuCode) {
-        return "/images/menu/" + menuCode + ".jpg";
+    // 이미지 경로 생성
+    private String buildImageUrl(String menuName) {
+        return "/src/tem/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
     }
 
 }

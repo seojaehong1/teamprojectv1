@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/materials")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminMaterialController {
 
     private final AdminMaterialService adminMaterialService;
 
     // 1. create 단계 material_master selector
-    @GetMapping
+    @GetMapping("/materials")
     public List<MaterialSelectDto> getMaterials() {
         return adminMaterialService.getAllMaterials();
     }

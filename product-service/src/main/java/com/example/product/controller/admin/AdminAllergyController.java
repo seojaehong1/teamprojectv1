@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/allergies")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminAllergyController {
 
     private final AdminAllergyService adminAllergyService;
 
     // 1. create 단계 allergy selector
-    @GetMapping
+    @GetMapping("/allergies")
     public List<AllergySelectDto> getAllergies() {
         return adminAllergyService.getAllAllergies();
     }
