@@ -129,43 +129,43 @@ INSERT INTO menu_option (menu_code, option_group_name) VALUES
 (25, '텀블러'), (25, '샷선택'), (25, '당도선택'), (25, '토핑선택');
 
 
--- 1. 옵션 마스터 입력
-INSERT INTO option_master
-(option_group_name, option_name, default_price, from_material_id, to_material_id, quantity, unit, process_method)
-VALUES
--- 1. 텀블러
-('텀블러', '텀블러 이용', 0,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '24oz 아이스컵'), NULL, 0.00, 'ea', '제거'),
-
--- 2. 샷 선택
-('샷선택', '샷추가(+600)', 600, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '에스프레소 원두'), 9.00, 'g', '추가'),
-('샷선택', '2샷추가(+1200)', 1200, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '에스프레소 원두'), 18.00, 'g', '추가'),
-('샷선택', '디카페인 샷 추가(+1000)', 1000, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '디카페인 원두'), 9.00, 'g', '추가'),
-('샷선택', '디카페인 2샷 추가(+2000)', 2000, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '디카페인 원두'), 18.00, 'g', '추가'),
-
--- 3. 당도 선택
-('당도선택', '바닐라시럽추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '바닐라 시럽'), 20.00, 'g', '추가'),
-('당도선택', '카라멜시럽추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '카라멜 시럽'), 20.00, 'g', '추가'),
-('당도선택', '헤이즐넛시럽추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '헤이즐넛 시럽'), 20.00, 'g', '추가'),
-('당도선택', '연유 추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '연유'), 20.00, 'g', '추가'),
-('당도선택', '초코소스 추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '초코소스'), 20.00, 'g', '추가'),
-
--- 4. 토핑 선택
-('토핑선택', '휘핑추가(+500)', 500, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '휘핑크림'), 40.00, 'g', '추가'),
-('토핑선택', '타피오카 펄 추가(+700)', 700, NULL,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '타피오카펄'), 50.00, 'g', '추가'),
-
--- 5. 음료 변경
-('제로사이다변경', '제로사이다변경', 0,
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '사이다'),
- (SELECT ingredient_id FROM material_master WHERE ingredient_name = '제로사이다'), 200.00, 'ml', '변경');
+-- 1. 옵션 마스터 입력 (임시 주석처리 - material_master 데이터 필요)
+-- INSERT INTO option_master
+-- (option_group_name, option_name, default_price, from_material_id, to_material_id, quantity, unit, process_method)
+-- VALUES
+-- -- 1. 텀블러
+-- ('텀블러', '텀블러 이용', 0,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '24oz 아이스컵'), NULL, 0.00, 'ea', '제거'),
+--
+-- -- 2. 샷 선택
+-- ('샷선택', '샷추가(+600)', 600, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '에스프레소 원두'), 9.00, 'g', '추가'),
+-- ('샷선택', '2샷추가(+1200)', 1200, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '에스프레소 원두'), 18.00, 'g', '추가'),
+-- ('샷선택', '디카페인 샷 추가(+1000)', 1000, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '디카페인 원두'), 9.00, 'g', '추가'),
+-- ('샷선택', '디카페인 2샷 추가(+2000)', 2000, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '디카페인 원두'), 18.00, 'g', '추가'),
+--
+-- -- 3. 당도 선택
+-- ('당도선택', '바닐라시럽추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '바닐라 시럽'), 20.00, 'g', '추가'),
+-- ('당도선택', '카라멜시럽추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '카라멜 시럽'), 20.00, 'g', '추가'),
+-- ('당도선택', '헤이즐넛시럽추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '헤이즐넛 시럽'), 20.00, 'g', '추가'),
+-- ('당도선택', '연유 추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '연유'), 20.00, 'g', '추가'),
+-- ('당도선택', '초코소스 추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '초코소스'), 20.00, 'g', '추가'),
+--
+-- -- 4. 토핑 선택
+-- ('토핑선택', '휘핑추가(+500)', 500, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '휘핑크림'), 40.00, 'g', '추가'),
+-- ('토핑선택', '타피오카 펄 추가(+700)', 700, NULL,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '타피오카펄'), 50.00, 'g', '추가'),
+--
+-- -- 5. 음료 변경
+-- ('제로사이다변경', '제로사이다변경', 0,
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '사이다'),
+--  (SELECT ingredient_id FROM material_master WHERE ingredient_name = '제로사이다'), 200.00, 'ml', '변경');
