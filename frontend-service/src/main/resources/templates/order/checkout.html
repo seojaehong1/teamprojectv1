@@ -951,6 +951,15 @@
 
                 const $btn = $(this);
 
+                // 로그인 체크
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                if (!isLoggedIn) {
+                    showCustomAlert('로그인이 필요한 서비스입니다.', function() {
+                        window.location.href = '/login';
+                    });
+                    return;
+                }
+
                 // 이용방법 선택 확인
                 const selectedMethod = $('.checkout_method_btn.active').data('method');
                 if (!selectedMethod) {

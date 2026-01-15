@@ -1272,11 +1272,11 @@
             }
 
             var actions = '<div class="inquiry_actions">';
+            actions += '<button class="inquiry_action_btn view" onclick="viewInquiry(' + inquiry.id + ')">보기</button>';
+            actions += '<button class="inquiry_action_btn delete" onclick="deleteInquiry(' + inquiry.id + ')">삭제</button>';
             if (inquiry.status !== 'ANSWERED') {
                 actions += '<button class="inquiry_action_btn answer" onclick="showAnswerForm(' + inquiry.id + ')">답변</button>';
             }
-            actions += '<button class="inquiry_action_btn view" onclick="viewInquiry(' + inquiry.id + ')">보기</button>';
-            actions += '<button class="inquiry_action_btn delete" onclick="deleteInquiry(' + inquiry.id + ')">삭제</button>';
             actions += '</div>';
 
             var row = '<tr>' +

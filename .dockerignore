@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Build outputs
+**/build/
+**/bin/
+**/out/
+**/*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Gradle
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# Temp files
+*.tmp
+*.temp
+tmpclaude-*
+nul
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Data
+data/
+
+# OS
+.DS_Store
+Thumbs.db

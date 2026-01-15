@@ -1142,6 +1142,17 @@
             // 주문하기 버튼 클릭 (이동 경로 수정)
             $('.cart_order_btn').on('click', function() {
                 const btn = $(this);
+
+                // 로그인 체크
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                if (!isLoggedIn) {
+                    showToast('로그인 필요', '로그인이 필요한 서비스입니다', 'warning');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1000);
+                    return;
+                }
+
                 if (!btn.hasClass('disabled')) {
                     // pulse 애니메이션 추가
                     btn.addClass('btn-pulse');

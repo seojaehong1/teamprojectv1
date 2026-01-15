@@ -533,6 +533,64 @@
         }
     </style>
     
+    <!-- 커스텀 모달 스타일 -->
+    <style>
+        .modal_wrap {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+        }
+        .modal_wrap.show {
+            display: block;
+        }
+        .modal_content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .modal_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .modal_text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .modal_btn {
+            padding: 12px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #D95B3B;
+            color: #fff;
+        }
+        .modal_btn:hover {
+            background: #c44d2f;
+        }
+    </style>
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
@@ -629,7 +687,7 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="/">마이페이지</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
                                     <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
@@ -791,7 +849,35 @@
         </div>
     </a>
 
+    <!-- 커스텀 모달 -->
+    <div class="modal_wrap" id="customModal">
+        <div class="modal_content">
+            <div class="modal_title" id="modalTitle">알림</div>
+            <div class="modal_text" id="modalText"></div>
+            <button class="modal_btn" id="modalBtn" type="button">확인</button>
+        </div>
+    </div>
+
     <script>
+        // 커스텀 모달 함수
+        function showCustomModal(title, message, callback) {
+            var modal = document.getElementById('customModal');
+            var modalTitle = document.getElementById('modalTitle');
+            var modalText = document.getElementById('modalText');
+            var modalBtn = document.getElementById('modalBtn');
+
+            modalTitle.textContent = title || '알림';
+            modalText.textContent = message;
+            modal.classList.add('show');
+
+            modalBtn.onclick = function() {
+                modal.classList.remove('show');
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            };
+        }
+
         AOS.init({
             duration: 1200,
         });
@@ -873,8 +959,9 @@
                 e.preventDefault();
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '/';
+                showCustomModal('알림', '로그아웃되었습니다', function() {
+                    window.location.href = '/';
+                });
             });
 
             // 모바일 메뉴 오버레이 닫기
@@ -917,8 +1004,9 @@
 
             var token = localStorage.getItem('accessToken');
             if (!token) {
-                alert('로그인이 필요합니다.');
-                window.location.href = '/login';
+                showCustomModal('알림', '로그인이 필요합니다.', function() {
+                    window.location.href = '/login';
+                });
                 return;
             }
 
@@ -926,11 +1014,11 @@
             var content = $('#inquiryContent').val().trim();
 
             if (!title) {
-                alert('제목을 입력해주세요.');
+                showCustomModal('알림', '제목을 입력해주세요.');
                 return;
             }
             if (!content) {
-                alert('내용을 입력해주세요.');
+                showCustomModal('알림', '내용을 입력해주세요.');
                 return;
             }
 
@@ -947,13 +1035,14 @@
                 return response.json();
             })
             .then(function(data) {
-                alert('문의가 등록되었습니다.');
-                $('#inquiryForm')[0].reset();
-                // 문의 목록 페이지로 이동
-                window.location.href = '/mypage/inquiry_list';
+                showCustomModal('알림', '문의가 등록되었습니다.', function() {
+                    $('#inquiryForm')[0].reset();
+                    // 문의 목록 페이지로 이동
+                    window.location.href = '/mypage/inquiry_list';
+                });
             })
             .catch(function(error) {
-                alert('문의 등록에 실패했습니다.');
+                showCustomModal('알림', '문의 등록에 실패했습니다.');
                 console.error(error);
             });
         });
@@ -962,8 +1051,9 @@
         $(document).ready(function() {
             var isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (!isLoggedIn) {
-                alert('로그인이 필요합니다.');
-                window.location.href = '/login';
+                showCustomModal('알림', '로그인이 필요합니다.', function() {
+                    window.location.href = '/login';
+                });
                 return;
             }
         });
