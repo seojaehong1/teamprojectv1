@@ -417,7 +417,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="../mypage/index">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -523,13 +523,13 @@
                     </div>
                     <div class="cont_tab">
                         <ul>
-                            <li class="check"><a href="?bbs_category=4">전체</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=5">가맹문의</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=6">매장정보</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=7">스탬프</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=8">메가쿠폰</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=9">모바일상품권</a></li>
-                            <li><a href="?bbs_category=4&bbs_detail_category=10">고객센터</a></li>
+                            <li class="check" data-category="전체"><a href="javascript:void(0)" onclick="filterFaq('전체')">전체</a></li>
+                            <li data-category="주문"><a href="javascript:void(0)" onclick="filterFaq('주문')">주문</a></li>
+                            <li data-category="메뉴"><a href="javascript:void(0)" onclick="filterFaq('메뉴')">메뉴</a></li>
+                            <li data-category="매장이용"><a href="javascript:void(0)" onclick="filterFaq('매장이용')">매장이용</a></li>
+                            <li data-category="멤버십"><a href="javascript:void(0)" onclick="filterFaq('멤버십')">멤버십</a></li>
+                            <li data-category="결제"><a href="javascript:void(0)" onclick="filterFaq('결제')">결제</a></li>
+                            <li data-category="기타"><a href="javascript:void(0)" onclick="filterFaq('기타')">기타</a></li>
                         </ul>
                     </div>
                     <div class="cont_list cont_list_content cont_list_content_search">
@@ -537,23 +537,19 @@
                             <li>
                                 <div class="board_search_wrap">
                                     <div class="board_search">
-                                        <form method="GET">
-                                            <input type="hidden" name="bbs_category" id="bbs_category" value="4">
-                                            <input type="hidden" name="bbs_detail_category" id="bbs_detail_category" value="">
+                                        <form onsubmit="searchFaq(); return false;">
                                             <ul>
                                                 <li class="board_search_select">
                                                     <div class="input_select_wrap input_wrap2">
-                                                        <select name="bbs_search_category" id="bbs_search_category">
-                                                            <option value="bbs_tbl_title">제목</option>
-                                                            <option value="bbs_tbl_content">내용</option>
-                                                            <option value="bbs_tbl_name">작성자</option>
+                                                        <select id="faq_search_category">
+                                                            <option value="title">제목</option>
                                                         </select>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="input_text_wrap input_wrap2">
                                                         <label>
-                                                            <input type="text" name="bbs_search" id="bbs_search" placeholder="검색어를 입력하세요" required>
+                                                            <input type="text" id="faq_search_input" placeholder="검색어를 입력하세요">
                                                         </label>
                                                     </div>
                                                 </li>
@@ -590,169 +586,154 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="board_pc">공지</td>
+                                        <td class="board_pc">10</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD0xODEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        <em>[고객센터] 9월 1일부터 인상되는 디저트 가격이 어떻게 되나요?</em>
+                                                    <a href="faq_detail?id=1">
+                                                        <em>[주문] 온라인으로 주문하면 매장에서 바로 받을 수 있나요?</em>
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2022-08-30</td>
-                                        <td class="board_pc">2246</td>
+                                        <td>2025-12-01</td>
+                                        <td class="board_pc">1523</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">31</td>
+                                        <td class="board_pc">9</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MjMmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [모바일상품권] 매장에서 모바일상품권 사용을 거부당했습니다. 사용 가능한가요?
+                                                    <a href="faq_detail?id=2">
+                                                        [주문] 주문 후 메뉴 변경이나 취소가 가능한가요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">287</td>
+                                        <td>2025-12-01</td>
+                                        <td class="board_pc">987</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">30</td>
+                                        <td class="board_pc">8</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MjImYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [모바일상품권] 모바일 상품권의 유효기간을 연장하고 싶은데 가능한가요?
+                                                    <a href="faq_detail?id=3">
+                                                        [메뉴] 음료의 당도나 얼음 양 조절이 가능한가요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">171</td>
+                                        <td>2025-11-28</td>
+                                        <td class="board_pc">1245</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">29</td>
+                                        <td class="board_pc">7</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MjEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [모바일상품권] 모바일 상품권 중 금액권 내 잔액 확인을 원하는데 확인 가능 한가요?
+                                                    <a href="faq_detail?id=4">
+                                                        [메뉴] 알레르기 정보는 어디서 확인할 수 있나요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">511</td>
+                                        <td>2025-11-28</td>
+                                        <td class="board_pc">756</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">28</td>
+                                        <td class="board_pc">6</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MjAmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [모바일상품권] 음료 모바일 교환권 선물을 받았는데 메뉴 변경이 가능한가요?
+                                                    <a href="faq_detail?id=5">
+                                                        [매장이용] 매장 운영시간은 어떻게 되나요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">213</td>
+                                        <td>2025-11-25</td>
+                                        <td class="board_pc">2103</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">27</td>
+                                        <td class="board_pc">5</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTkmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [모바일상품권] 모바일 상품권 이용 시 현금 영수증 발급 가능한가요?
+                                                    <a href="faq_detail?id=6">
+                                                        [매장이용] 개인컵 사용 시 할인 혜택이 있나요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">151</td>
+                                        <td>2025-11-25</td>
+                                        <td class="board_pc">1876</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">26</td>
+                                        <td class="board_pc">4</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTgmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [메가쿠폰] 메가쿠폰 사용 시 현금 영수증 적립 가능한가요?
+                                                    <a href="faq_detail?id=7">
+                                                        [멤버십] 회원가입 혜택은 무엇인가요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">248</td>
+                                        <td>2025-11-20</td>
+                                        <td class="board_pc">1432</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">25</td>
+                                        <td class="board_pc">3</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTcmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [메가쿠폰] 메가쿠폰 유효기간이 만료 되었는데 연장 가능한가요?
+                                                    <a href="faq_detail?id=8">
+                                                        [멤버십] 적립 포인트 사용 방법을 알려주세요.
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">273</td>
+                                        <td>2025-11-20</td>
+                                        <td class="board_pc">1156</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">24</td>
+                                        <td class="board_pc">2</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTYmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [메가쿠폰] 스탬프 리워드 쿠폰 사용 시 아메리카노 이외에 다른 메뉴로 변경 가능한가요?
+                                                    <a href="faq_detail?id=9">
+                                                        [결제] 어떤 결제 수단을 사용할 수 있나요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">486</td>
+                                        <td>2025-11-15</td>
+                                        <td class="board_pc">892</td>
                                     </tr>
                                     <tr>
-                                        <td class="board_pc">23</td>
+                                        <td class="board_pc">1</td>
                                         <td>
                                             <div class="text_wrap">
                                                 <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTUmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [메가쿠폰] 스탬프 리워드 쿠폰으로 (HOT)아메리카노 1잔을 구매하면 차액 반환 가능한가요?
+                                                    <a href="faq_detail?id=10">
+                                                        [기타] 고객 의견이나 불편사항은 어디로 문의하나요?
                                                     </a>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">280</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">22</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="detail/?YmJzX2lkeD01MTQmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==">
-                                                        [메가쿠폰] 스탬프 리워드 쿠폰으로 디저트 또는 MD 구매도 가능한가요?
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">TORI COFFEE</td>
-                                        <td>2025-11-18</td>
-                                        <td class="board_pc">147</td>
+                                        <td>2025-11-15</td>
+                                        <td class="board_pc">654</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -781,9 +762,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -807,14 +788,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -835,6 +814,94 @@
         AOS.init({
             duration: 1200,
         });
+
+        // FAQ 카테고리 필터 함수
+        function filterFaq(category) {
+            // 탭 활성화 상태 변경
+            $('.cont_tab li').removeClass('check');
+            $('.cont_tab li[data-category="' + category + '"]').addClass('check');
+
+            // FAQ 목록 필터링
+            const $rows = $('.board_list tbody tr');
+
+            if (category === '전체') {
+                // 전체 선택 시 모든 행 표시
+                $rows.show();
+            } else {
+                // 카테고리별 필터링
+                $rows.each(function() {
+                    const $row = $(this);
+                    const titleText = $row.find('.text a').text() || $row.find('.text em').text() || '';
+
+                    // 제목에서 카테고리 추출 (예: [주문], [메뉴] 등)
+                    if (titleText.includes('[' + category + ']')) {
+                        $row.show();
+                    } else {
+                        $row.hide();
+                    }
+                });
+            }
+
+            // 필터 후 보이는 항목이 없으면 메시지 표시
+            const visibleRows = $rows.filter(':visible').length;
+            if (visibleRows === 0) {
+                // 결과 없음 메시지가 없으면 추가
+                if ($('.no_result_msg').length === 0) {
+                    $('.board_list tbody').append('<tr class="no_result_msg"><td colspan="5" style="text-align:center; padding:40px; color:#999;">해당 카테고리의 FAQ가 없습니다.</td></tr>');
+                }
+            } else {
+                // 결과가 있으면 메시지 제거
+                $('.no_result_msg').remove();
+            }
+
+            // 번호 재정렬
+            let num = visibleRows;
+            $rows.filter(':visible').not('.no_result_msg').each(function() {
+                $(this).find('td:first').text(num--);
+            });
+        }
+
+        // FAQ 검색 함수
+        function searchFaq() {
+            const searchText = $('#faq_search_input').val().trim().toLowerCase();
+
+            // 검색어가 비어있으면 전체 표시
+            if (!searchText) {
+                filterFaq('전체');
+                return;
+            }
+
+            // 카테고리 탭 초기화
+            $('.cont_tab li').removeClass('check');
+            $('.cont_tab li[data-category="전체"]').addClass('check');
+
+            // FAQ 목록 검색
+            const $rows = $('.board_list tbody tr').not('.no_result_msg');
+            $('.no_result_msg').remove();
+
+            $rows.each(function() {
+                const $row = $(this);
+                const titleText = ($row.find('.text a').text() || $row.find('.text em').text() || '').toLowerCase();
+
+                if (titleText.includes(searchText)) {
+                    $row.show();
+                } else {
+                    $row.hide();
+                }
+            });
+
+            // 검색 결과가 없으면 메시지 표시
+            const visibleRows = $rows.filter(':visible').length;
+            if (visibleRows === 0) {
+                $('.board_list tbody').append('<tr class="no_result_msg"><td colspan="5" style="text-align:center; padding:40px; color:#999;">"' + $('#faq_search_input').val() + '" 검색 결과가 없습니다.</td></tr>');
+            }
+
+            // 번호 재정렬
+            let num = visibleRows;
+            $rows.filter(':visible').each(function() {
+                $(this).find('td:first').text(num--);
+            });
+        }
 
         // 헤더 메뉴 호버
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
@@ -914,69 +981,7 @@
                 }, 100);
             });
 
-            // FAQ 아코디언 기능
-            // FAQ 답변 데이터 (실제로는 서버에서 가져와야 함)
-            const faqAnswers = {
-                'detail/?YmJzX2lkeD0xODEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '9월 1일부터 디저트 가격이 인상됩니다. 자세한 가격표는 매장에서 확인하실 수 있습니다.',
-                'detail/?YmJzX2lkeD01MjMmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일상품권은 모든 매장에서 사용 가능합니다. 매장에서 사용을 거부당한 경우 고객센터(1588-8298)로 문의해주세요.',
-                'detail/?YmJzX2lkeD01MjImYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권의 유효기간 연장은 불가능합니다. 유효기간 내에 사용해주시기 바랍니다.',
-                'detail/?YmJzX2lkeD01MjEmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권 중 금액권의 잔액은 매장에서 확인 가능합니다. 매장 직원에게 문의해주세요.',
-                'detail/?YmJzX2lkeD01MjAmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '음료 모바일 교환권은 메뉴 변경이 불가능합니다. 지정된 메뉴로만 교환 가능합니다.',
-                'detail/?YmJzX2lkeD01MTkmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '모바일 상품권 이용 시 현금 영수증 발급이 가능합니다. 매장에서 요청해주세요.',
-                'detail/?YmJzX2lkeD01MTgmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '메가쿠폰 사용 시 현금 영수증 적립이 가능합니다. 매장에서 현금 영수증을 발급받으시면 적립됩니다.',
-                'detail/?YmJzX2lkeD01MTcmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '메가쿠폰 유효기간 연장은 불가능합니다. 유효기간 내에 사용해주시기 바랍니다.',
-                'detail/?YmJzX2lkeD01MTYmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰은 아메리카노로만 교환 가능하며, 다른 메뉴로 변경은 불가능합니다.',
-                'detail/?YmJzX2lkeD01MTUmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰으로 (HOT)아메리카노 1잔을 구매하시면 차액 반환이 불가능합니다.',
-                'detail/?YmJzX2lkeD01MTQmYmJzX2NhdGVnb3J5PTQmYmJzX2RldGFpbF9jYXRlZ29yeT0mYmJzX3BhZ2U9MQ==': '스탬프 리워드 쿠폰은 음료 교환 전용이며, 디저트 또는 MD 구매에는 사용할 수 없습니다.'
-            };
-
-            // FAQ 테이블 행에 아코디언 기능 추가
-            $('.board_list tbody tr').each(function() {
-                const $row = $(this);
-                const $link = $row.find('a');
-                const href = $link.attr('href');
-                const answer = faqAnswers[href] || '답변 내용이 준비 중입니다.';
-                
-                // 질문 셀에 클래스 추가 및 아이콘 추가
-                const $questionCell = $row.find('td').eq(1);
-                $questionCell.addClass('faq_question');
-                
-                // 아이콘 추가
-                if ($questionCell.find('.faq_icon').length === 0) {
-                    $questionCell.append('<span class="faq_icon">▼</span>');
-                }
-                
-                // 링크 클릭 이벤트 변경
-                $link.on('click', function(e) {
-                    e.preventDefault();
-                    
-                    // 현재 행의 답변 영역 찾기 또는 생성
-                    let $answerRow = $row.next('.faq_answer_row');
-                    
-                    if ($answerRow.length === 0) {
-                        // 답변 행이 없으면 생성
-                        $answerRow = $('<tr class="faq_answer_row"><td colspan="5" class="faq_answer"><div class="faq_answer_content">' + answer + '</div></td></tr>');
-                        $row.after($answerRow);
-                    }
-                    
-                    // 현재 행이 활성화되어 있는지 확인
-                    const isActive = $row.hasClass('faq_active');
-                    
-                    // 모든 FAQ 닫기
-                    $('.board_list tbody tr').removeClass('faq_active');
-                    $('.faq_answer_row').removeClass('active').slideUp(300);
-                    $('.faq_question').removeClass('active');
-                    $('.faq_icon').text('▼');
-                    
-                    // 현재 행이 활성화되어 있지 않으면 열기
-                    if (!isActive) {
-                        $row.addClass('faq_active');
-                        $questionCell.addClass('active');
-                        $questionCell.find('.faq_icon').text('▲');
-                        $answerRow.addClass('active').slideDown(300);
-                    }
-                });
-            });
+            // FAQ 링크는 상세 페이지로 이동하도록 기본 동작 유지
 
             // 로그인 상태 체크 및 UI 업데이트
             function checkLoginStatus() {
@@ -1006,6 +1011,88 @@
                 alert('로그아웃되었습니다');
                 window.location.href = '/';
             });
+
+            // FAQ 페이지네이션
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            const $faqRows = $('.board_list tbody tr').not('.faq_answer_row');
+            const totalItems = $faqRows.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            function showPage(page) {
+                currentPage = page;
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                $faqRows.each(function(index) {
+                    const $row = $(this);
+                    const $answerRow = $row.next('.faq_answer_row');
+
+                    if (index >= start && index < end) {
+                        $row.show();
+                    } else {
+                        $row.hide();
+                        $answerRow.hide().removeClass('active');
+                        $row.removeClass('faq_active');
+                        $row.find('.faq_icon').text('▼');
+                    }
+                });
+
+                renderPagination();
+            }
+
+            function renderPagination() {
+                const $pagination = $('.board_page ul');
+                $pagination.empty();
+
+                // 처음 버튼
+                if (currentPage > 1) {
+                    $pagination.append(`<li><a href="#" data-page="1"><span>처음</span></a></li>`);
+                } else {
+                    $pagination.append(`<li><a><span>처음</span></a></li>`);
+                }
+
+                // 페이지 번호
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    if (i === currentPage) {
+                        $pagination.append(`<li class="board_page_check"><a><span>${i}</span></a></li>`);
+                    } else {
+                        $pagination.append(`<li><a href="#" data-page="${i}"><span>${i}</span></a></li>`);
+                    }
+                }
+
+                // 다음 버튼
+                if (currentPage < totalPages) {
+                    $pagination.append(`<li><a href="#" data-page="${currentPage + 1}"><span>다음</span></a></li>`);
+                } else {
+                    $pagination.append(`<li><a><span>다음</span></a></li>`);
+                }
+
+                // 마지막 버튼
+                if (currentPage < totalPages) {
+                    $pagination.append(`<li><a href="#" data-page="${totalPages}"><span>마지막</span></a></li>`);
+                } else {
+                    $pagination.append(`<li><a><span>마지막</span></a></li>`);
+                }
+
+                // 페이지 링크 클릭 이벤트
+                $('.board_page a[data-page]').on('click', function(e) {
+                    e.preventDefault();
+                    const page = parseInt($(this).data('page'));
+                    showPage(page);
+                    $('html, body').animate({ scrollTop: $('.board_list').offset().top - 100 }, 300);
+                });
+            }
+
+            // 초기 페이지 표시
+            if (totalItems > itemsPerPage) {
+                showPage(1);
+            } else {
+                $('.board_page_wrap').hide();
+            }
         });
     </script>
 </body>

@@ -43,9 +43,19 @@ public class MainController {
         return "bbs/faq";
     }
 
+    @GetMapping("/bbs/faq_detail")
+    public String faqDetail() {
+        return "bbs/faq_detail";
+    }
+
     @GetMapping("/bbs/event")
     public String event() {
         return "bbs/event";
+    }
+
+    @GetMapping("/bbs/event_detail")
+    public String eventDetail() {
+        return "bbs/event_detail";
     }
 
     // Mypage 페이지
@@ -75,11 +85,6 @@ public class MainController {
     }
 
     // Admin 페이지
-    @GetMapping("/admin/login")
-    public String adminLogin() {
-        return "admin/login";
-    }
-
     @GetMapping("/admin/user")
     public String adminUser() {
         return "admin/user";

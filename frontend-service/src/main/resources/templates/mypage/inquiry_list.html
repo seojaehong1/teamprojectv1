@@ -504,7 +504,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="/">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -589,7 +589,7 @@
                             <li>
                                 <div class="board_search_wrap">
                                     <div class="board_search">
-                                        <form method="GET">
+                                        <form onsubmit="searchInquiry(); return false;">
                                             <ul>
                                                 <li class="board_search_select">
                                                     <div class="input_select_wrap input_wrap2">
@@ -602,7 +602,7 @@
                                                 <li>
                                                     <div class="input_text_wrap input_wrap2">
                                                         <label>
-                                                            <input type="text" name="inquiry_search" id="inquiry_search" placeholder="검색어를 입력하세요" required>
+                                                            <input type="text" name="inquiry_search" id="inquiry_search" placeholder="검색어를 입력하세요">
                                                         </label>
                                                     </div>
                                                 </li>
@@ -666,9 +666,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -692,14 +692,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -853,6 +851,14 @@
             } catch (e) {
                 return dateStr;
             }
+        }
+
+        // 검색 함수
+        function searchInquiry() {
+            var keyword = $('#inquiry_search').val().trim();
+            var searchCategory = $('#inquiry_search_category').val();
+            // 빈 검색어는 전체 목록 표시
+            loadInquiries(0, keyword, searchCategory);
         }
 
         // 페이지네이션 렌더링 함수

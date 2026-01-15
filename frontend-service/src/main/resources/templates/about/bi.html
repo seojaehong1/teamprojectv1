@@ -281,60 +281,170 @@
         }
         
         /* BI 페이지 비주얼 스타일 */
-        .bi_visual_img_top {
-            max-width: 400px;
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            margin-bottom: 30px;
-            display: block;
+        .bi01 .cont_list_content_align > ul {
+            display: flex;
+            align-items: flex-start;
+            gap: 60px;
         }
+        .bi01 .cont_list_content_align > ul > li:first-child {
+            flex: 1;
+        }
+        .bi01 .cont_list_content_align > ul > li:last-child {
+            flex: 0 0 520px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .bi_visual_img_top,
         .bi_visual_img_bottom {
-            max-width: 400px;
-            width: 100%;
+            max-width: 100%;
+            width: 520px;
             height: auto;
             object-fit: contain;
             display: block;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+        .bi_visual_img_top:hover,
+        .bi_visual_img_bottom:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(207, 74, 35, 0.2);
         }
         .bi_text_content {
-            font-size: 14px;
-            line-height: 1.8;
-            color: #1f1f1f;
+            font-size: 15px;
+            line-height: 1.9;
+            color: #333;
         }
         .bi_text_content strong,
         .bi_text_content span.highlight {
-            color: #cf4a23;
+            color: #D95B3B;
             font-weight: 600;
         }
+
+        /* 로고 그리드 스타일 개선 */
+        .cont_list4.cont_list_m2 > ul {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .cont_list4.cont_list_m2 > ul > li {
+            width: 100% !important;
+        }
+        .cont_list4.cont_list_m2 .cont_gallery_list_box {
+            border: 1px solid rgba(207, 74, 35, 0.15) !important;
+            border-radius: 16px;
+            background: #fff;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .cont_list4.cont_list_m2 .cont_gallery_list_box:hover {
+            border-color: #D95B3B !important;
+            box-shadow: 0 8px 24px rgba(207, 74, 35, 0.15) !important;
+            transform: translateY(-4px);
+        }
         .bi_logo_grid_box {
-            min-height: 180px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 30px 20px;
         }
         .bi01_img {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 100%;
+            height: 140px;
         }
         .bi01_img img {
-            max-width: 80%;
-            max-height: 120px;
+            max-width: 90%;
+            max-height: 130px;
             width: auto;
             height: auto;
             object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .cont_list4.cont_list_m2 .cont_gallery_list_box:hover .bi01_img img {
+            transform: scale(1.05);
         }
         .bi_logo_caption {
-            margin-top: 15px;
-            font-size: 13px;
+            margin-top: 20px;
+            font-size: 14px;
             color: #666;
             text-align: center;
             line-height: 1.5;
+            font-weight: 500;
         }
+
+        /* BI 다운로드 버튼 스타일 */
+        .bi01 .input_btn_wrap .btn1 {
+            background: linear-gradient(135deg, #D95B3B 0%, #cf4a23 100%) !important;
+            border: none !important;
+            color: #fff !important;
+            border-radius: 8px;
+            padding: 14px 32px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .bi01 .input_btn_wrap .btn1:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(207, 74, 35, 0.35);
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .bi01 .cont_list_content_align > ul {
+                flex-direction: column;
+            }
+            .bi01 .cont_list_content_align > ul > li:last-child {
+                flex: none;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .bi_visual_img_top,
+            .bi_visual_img_bottom {
+                width: 300px;
+            }
+            .cont_list4.cont_list_m2 > ul {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .bi01 .cont_list_content_align > ul > li:last-child {
+                flex-direction: column;
+                align-items: center;
+            }
+            .bi_visual_img_top,
+            .bi_visual_img_bottom {
+                width: 100%;
+                max-width: 350px;
+            }
+            .cont_list4.cont_list_m2 > ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 이용약관 모달 스타일 */
+        .terms_modal_overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center; }
+        .terms_modal_overlay.show { display: flex; }
+        .terms_modal { background: #fff; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .terms_modal_header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; }
+        .terms_modal_title { font-size: 18px; font-weight: 700; color: #333; }
+        .terms_modal_close { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
+        .terms_modal_close:hover { color: #333; }
+        .terms_modal_body { padding: 20px; overflow-y: auto; max-height: calc(80vh - 140px); }
+        .terms_section { margin-bottom: 20px; }
+        .terms_section_title { font-size: 14px; font-weight: 600; color: #D95B3B; margin-bottom: 8px; }
+        .terms_section_content { font-size: 14px; color: #555; line-height: 1.6; }
+        .terms_note { font-size: 13px; color: #888; margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; line-height: 1.6; }
+        .terms_modal_footer { padding: 15px 20px; border-top: 1px solid #eee; text-align: center; }
+        .terms_modal_btn { padding: 12px 40px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .terms_modal_btn:hover { background: #c04a2f; }
     </style>
     
     <!-- JavaScript -->
@@ -434,7 +544,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="../mypage/index">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -555,7 +665,7 @@
                                             국문 지정 서체는 로고 타입을 보조하는 서체로, 인쇄물, 사인물, 디자인물 등에서 문구를 강조할 경우 가독성을 고려하여 세련되고 선명한 이미지를 가진 윤고딕을 사용합니다. 전용매체의 성격이나 내용에 따라 굵기를 선택적으로 사용할 수 있습니다.
                                         </div>
                                         <div class="cont_text" style="margin-top: 30px;">
-                                            <a href="/common/file/logo.eps" target="_blank" download="TORI COFFEE_로고.eps">
+                                            <a th:href="@{/logo/logo.png}" download="TORI_COFFEE_로고.png">
                                                 <div class="input_btn_wrap input_wrap3 input_width">
                                                     <input type="button" value="BI Download" class="btn btn1 btn_ani" id="">
                                                 </div>
@@ -564,8 +674,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <img alt="TORI COFFEE 브랜드 가이드" class="bi_visual_img_top">
-                                    <img alt="TORI COFFEE 로고 및 컬러" class="bi_visual_img_bottom" th:src="@{/logo/logo.png}">
+                                    <img alt="TORI COFFEE 브랜드 가이드" class="bi_visual_img_top" th:src="@{/src/bi04.png}">
                                 </li>
                             </ul>
                         </div>
@@ -577,7 +686,7 @@
                                     <div class="cont_gallery_list_box">
                                         <div class="cont_text_box bi_logo_grid_box">
                                             <div class="cont_text cont_text_title bi01_img bi01_img1 robo color">
-                                                <img alt="TORI COFFEE 가로형 로고" th:src="@{/logo/logo.png}">
+                                                <img alt="TORI COFFEE Signature 로고" th:src="@{/src/bi01.png}">
                                             </div>
                                             <div class="bi_logo_caption">Signature 로고</div>
                                         </div>
@@ -587,7 +696,7 @@
                                     <div class="cont_gallery_list_box">
                                         <div class="cont_text_box bi_logo_grid_box">
                                             <div class="cont_text cont_text_title bi01_img bi01_img2 robo color">
-                                                <img alt="TORI COFFEE 블랙 배경용 로고" th:src="@{/logo/logo.png}">
+                                                <img alt="TORI COFFEE 블랙 배경용 로고" th:src="@{/src/bi02.png}">
                                             </div>
                                             <div class="bi_logo_caption">Black 배경형</div>
                                         </div>
@@ -597,7 +706,7 @@
                                     <div class="cont_gallery_list_box">
                                         <div class="cont_text_box bi_logo_grid_box">
                                             <div class="cont_text cont_text_title bi01_img bi01_img3 robo color">
-                                                <img alt="TORI COFFEE 오렌지 배경용 로고" th:src="@{/logo/logo.png}">
+                                                <img alt="TORI COFFEE 오렌지 배경용 로고" th:src="@{/src/bi03.png}">
                                             </div>
                                             <div class="bi_logo_caption">Orange 배경형</div>
                                         </div>
@@ -607,7 +716,7 @@
                                     <div class="cont_gallery_list_box">
                                         <div class="cont_text_box bi_logo_grid_box">
                                             <div class="cont_text cont_text_title bi01_img bi01_img4 robo color">
-                                                <img alt="TORI COFFEE 심볼 로고" th:src="@{/logo/logo.png}">
+                                                <img alt="TORI COFFEE 심볼 로고" th:src="@{/src/bi06.png}">
                                             </div>
                                             <div class="bi_logo_caption">Symbol 마크</div>
                                         </div>
@@ -626,9 +735,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -652,14 +761,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 토리커피</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -778,7 +885,47 @@
                 window.location.href = '/';
             });
         });
+
+        // 이용약관 모달
+        function showTermsModal() {
+            document.getElementById('termsModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeTermsModal() {
+            document.getElementById('termsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
     </script>
+
+    <!-- 이용약관 모달 -->
+    <div id="termsModal" class="terms_modal_overlay" onclick="if(event.target===this) closeTermsModal()">
+        <div class="terms_modal">
+            <div class="terms_modal_header">
+                <div class="terms_modal_title">이용안내</div>
+                <button class="terms_modal_close" onclick="closeTermsModal()">&times;</button>
+            </div>
+            <div class="terms_modal_body">
+                <div class="terms_section">
+                    <div class="terms_section_title">개인정보수집 범위</div>
+                    <div class="terms_section_content">이름, 연락처</div>
+                </div>
+                <div class="terms_section">
+                    <div class="terms_section_title">개인정보수집 및 이용목적</div>
+                    <div class="terms_section_content">온라인 문의 및 상담 자료와 결과 회신</div>
+                </div>
+                <div class="terms_section">
+                    <div class="terms_section_title">개인정보수집 및 보유기간</div>
+                    <div class="terms_section_content">개인정보 수집 및 이용에 대한 목적이 달성되면 지체없이 파기하며 최대 보유기간은 1년을 넘기지 아니한다.</div>
+                </div>
+                <div class="terms_note">
+                    * 매장과 관련된 CS의 경우, 해결 과정 안내 혹은 결과 회신을 위해 매장 관리자(슈퍼바이저, 매장점주), 본사 유관부서가 연락을 드릴 수 있습니다.
+                </div>
+            </div>
+            <div class="terms_modal_footer">
+                <button class="terms_modal_btn" onclick="closeTermsModal()">확인</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

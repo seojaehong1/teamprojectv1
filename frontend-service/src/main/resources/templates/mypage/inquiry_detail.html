@@ -259,171 +259,69 @@
             }
         }
         
-        /* 문의 상세 스타일 */
-        .inquiry_detail_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-        }
-        .inquiry_detail_content_wrap {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px 40px;
-        }
-        .inquiry_detail_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 30px;
-        }
-        .inquiry_detail_back {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
-        .inquiry_detail_back:hover {
-            color: #D95B3B;
-        }
-        .inquiry_detail_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .inquiry_detail_content {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        .inquiry_detail_content_header {
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .inquiry_detail_content_title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .inquiry_detail_content_meta {
-            display: flex;
-            gap: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-        .inquiry_detail_content_meta_item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .inquiry_detail_status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .inquiry_detail_status.pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .inquiry_detail_status.answered {
-            background: #d4edda;
-            color: #155724;
-        }
-        .inquiry_detail_status.completed {
-            background: #e2e3e5;
-            color: #383d41;
-        }
-        .inquiry_detail_content_body {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            margin-bottom: 30px;
-        }
-        .inquiry_detail_answer_section {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
-        .inquiry_detail_answer_title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .inquiry_detail_answer_content {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        .inquiry_detail_answer_empty {
-            font-size: 14px;
-            color: #999;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        .inquiry_detail_actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        .inquiry_detail_btn {
-            padding: 12px 30px;
-            background: #D95B3B;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .inquiry_detail_btn:hover {
-            background: #c04a2f;
-        }
-        .inquiry_detail_btn.secondary {
-            background: #666;
-        }
-        .inquiry_detail_btn.secondary:hover {
-            background: #555;
-        }
+        /* 문의 상세 스타일 - FAQ 스타일과 통일 */
+        .inquiry_detail_wrap { max-width: 100%; margin: 0 auto; padding: 0; background: #fff; min-height: calc(100vh - 200px); }
+        .inquiry_detail_content_wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px 40px; }
+        .inquiry_detail_header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e0e0e0; margin-bottom: 30px; }
+        .inquiry_detail_back { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #333; }
+        .inquiry_detail_back:hover { color: #D95B3B; }
+        .inquiry_detail_title { font-size: 20px; font-weight: 700; color: #333; }
+        .inquiry_detail_content { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 30px; margin-bottom: 30px; }
+        .inquiry_detail_content_header { border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px; }
+        .inquiry_detail_tag { display: inline-block; padding: 4px 12px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+        .inquiry_detail_content_title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .inquiry_detail_content_meta { display: flex; gap: 20px; font-size: 14px; color: #666; flex-wrap: wrap; }
+        .inquiry_detail_content_meta_item { display: flex; align-items: center; gap: 5px; }
+
+        /* 문의 내용 섹션 */
+        .inquiry_detail_question { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #D95B3B; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .inquiry_detail_question_label { font-size: 14px; font-weight: 600; color: #D95B3B; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .inquiry_detail_question_label i { font-size: 18px; }
+        .inquiry_detail_question_text { font-size: 16px; line-height: 1.9; color: #444; white-space: pre-wrap; word-wrap: break-word; }
+
+        /* 답변 섹션 */
+        .inquiry_detail_answer { padding: 25px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+        .inquiry_detail_answer_label { font-size: 14px; font-weight: 600; color: #666; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .inquiry_detail_answer_label i { font-size: 18px; color: #4CAF50; }
+        .inquiry_detail_answer_text { font-size: 16px; line-height: 1.9; color: #444; white-space: pre-wrap; word-wrap: break-word; }
+        .inquiry_detail_answer_empty { text-align: center; padding: 40px 20px; color: #999; font-size: 15px; }
+        .inquiry_detail_answer_empty i { display: block; font-size: 40px; color: #ddd; margin-bottom: 15px; }
+
+        .inquiry_detail_actions { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+        .inquiry_detail_btn { padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .inquiry_detail_btn:hover { background: #c04a2f; }
+
+        /* 섹션 공통 스타일 */
+        .inquiry_section { margin-top: 30px; padding: 25px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+        .section_title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section_title i { color: #D95B3B; }
+
+        /* 피드백 섹션 */
+        .inquiry_feedback_section { text-align: center; padding: 30px; background: linear-gradient(135deg, #fff5f3 0%, #fff 100%); border: 1px solid #ffe0db; }
+        .feedback_title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px; }
+        .feedback_buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .feedback_btn { display: flex; align-items: center; gap: 8px; padding: 12px 25px; border: 2px solid #e0e0e0; background: #fff; border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .feedback_btn:hover { border-color: #D95B3B; color: #D95B3B; }
+        .feedback_btn.active { background: #D95B3B; border-color: #D95B3B; color: #fff; }
+        .feedback_btn i { font-size: 18px; }
+        .feedback_result { display: none; padding: 15px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; }
+        .feedback_result.show { display: block; }
+
+        /* 추가 문의 안내 */
+        .inquiry_more_section { background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%); text-align: center; }
+        .more_icon { font-size: 40px; color: #D95B3B; margin-bottom: 15px; }
+        .more_text { font-size: 15px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+        .more_btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; background: #333; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .more_btn:hover { background: #D95B3B; color: #fff; }
+
         @media (max-width: 768px) {
-            .inquiry_detail_content_wrap {
-                padding: 20px 15px;
-            }
-            .inquiry_detail_content {
-                padding: 20px;
-            }
-            .inquiry_detail_content_title {
-                font-size: 20px;
-            }
-            .inquiry_detail_content_meta {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .inquiry_detail_content_wrap { padding: 20px 15px; }
+            .inquiry_detail_content { padding: 20px; }
+            .inquiry_detail_content_title { font-size: 18px; }
+            .inquiry_detail_content_meta { flex-direction: column; gap: 10px; }
+            .inquiry_section { padding: 20px; margin-top: 20px; }
+            .feedback_buttons { flex-direction: column; }
+            .feedback_btn { justify-content: center; }
         }
     </style>
     
@@ -524,7 +422,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="/">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -634,9 +532,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -660,14 +558,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -872,59 +768,94 @@
                 var createdAt = inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString('ko-KR') : '';
                 var status = inquiry.status || 'PENDING';
                 var statusText = '';
-                var statusClass = '';
 
                 if (status === 'ANSWERED' || status === 'answered') {
                     statusText = '답변 완료';
-                    statusClass = 'answered';
                 } else if (status === 'COMPLETED' || status === 'completed') {
                     statusText = '처리 완료';
-                    statusClass = 'completed';
                 } else {
                     statusText = '답변 대기';
-                    statusClass = 'pending';
                 }
 
                 var html = `
                     <div class="inquiry_detail_content_header">
+                        <span class="inquiry_detail_tag">${statusText}</span>
                         <div class="inquiry_detail_content_title">${escapeHtml(inquiry.title) || ''}</div>
                         <div class="inquiry_detail_content_meta">
+                            <div class="inquiry_detail_content_meta_item">
+                                <i class="fas fa-user"></i>
+                                <span>${inquiry.userName || '회원'}</span>
+                            </div>
                             <div class="inquiry_detail_content_meta_item">
                                 <i class="fas fa-calendar"></i>
                                 <span>${createdAt}</span>
                             </div>
                             <div class="inquiry_detail_content_meta_item">
-                                <span class="inquiry_detail_status ${statusClass}">${statusText}</span>
+                                <i class="fas fa-hashtag"></i>
+                                <span>문의번호 #${inquiry.inquiryId || inquiry.id || '-'}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="inquiry_detail_content_body">
-                        ${escapeHtml(inquiry.content) || ''}
+                    <div class="inquiry_detail_question">
+                        <div class="inquiry_detail_question_label"><i class="fas fa-question-circle"></i> 문의 내용</div>
+                        <div class="inquiry_detail_question_text">${escapeHtml(inquiry.content) || ''}</div>
                     </div>
                 `;
-                
+
                 // 답변이 있는 경우 답변 섹션 추가
                 if (inquiry.answer) {
                     html += `
-                        <div class="inquiry_detail_answer_section">
-                            <div class="inquiry_detail_answer_title">관리자 답변</div>
-                            <div class="inquiry_detail_answer_content">
-                                ${escapeHtml(inquiry.answer)}
+                        <div class="inquiry_detail_answer">
+                            <div class="inquiry_detail_answer_label"><i class="fas fa-check-circle"></i> 관리자 답변</div>
+                            <div class="inquiry_detail_answer_text">${escapeHtml(inquiry.answer)}</div>
+                        </div>
+
+                        <div class="inquiry_section inquiry_feedback_section">
+                            <div class="feedback_title"><i class="fas fa-smile"></i> 이 답변이 도움이 되었나요?</div>
+                            <div class="feedback_buttons">
+                                <button class="feedback_btn" onclick="submitFeedback('yes', this)">
+                                    <i class="far fa-thumbs-up"></i> 네, 도움이 됐어요
+                                </button>
+                                <button class="feedback_btn" onclick="submitFeedback('no', this)">
+                                    <i class="far fa-thumbs-down"></i> 아니요
+                                </button>
+                            </div>
+                            <div class="feedback_result" id="feedbackResult">
+                                <i class="fas fa-heart"></i> 소중한 피드백 감사합니다!
                             </div>
                         </div>
                     `;
                 } else {
                     html += `
-                        <div class="inquiry_detail_answer_section">
+                        <div class="inquiry_detail_answer">
                             <div class="inquiry_detail_answer_empty">
-                                아직 답변이 등록되지 않았습니다.
+                                <i class="far fa-hourglass"></i>
+                                아직 답변이 등록되지 않았습니다.<br>
+                                <small>빠른 시일 내에 답변드리겠습니다.</small>
                             </div>
                         </div>
                     `;
                 }
-                
+
+                html += `
+                    <div class="inquiry_section inquiry_more_section">
+                        <div class="more_icon"><i class="fas fa-headset"></i></div>
+                        <div class="more_text">추가 문의사항이 있으신가요?<br>새로운 1:1 문의를 등록해보세요.</div>
+                        <a href="/mypage/inquiry" class="more_btn">
+                            <i class="fas fa-pen"></i> 새 문의하기
+                        </a>
+                    </div>
+                `;
+
                 $('#inquiryDetailContent').html(html);
             }
+
+            // 피드백 제출 함수
+            window.submitFeedback = function(type, btn) {
+                $('.feedback_btn').removeClass('active');
+                $(btn).addClass('active');
+                $('#feedbackResult').addClass('show');
+            };
 
             // HTML 이스케이프 함수
             function escapeHtml(text) {

@@ -16,7 +16,13 @@
     <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
+    <!-- Global UI Kit -->
+    <link rel="stylesheet" th:href="@{/css/global-ui-kit.css}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
         .head_wrap .head {
@@ -259,13 +265,17 @@
             }
         }
         /* 주문 상세 스타일 */
+        .cont_wrap.bbs_wrap {
+            background: #F8FAFC;
+            min-height: 100vh;
+        }
         .order_detail_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 30px;
+            background: #fff;
+            margin-bottom: 20px;
         }
         .order_detail_back {
             background: none;
@@ -301,20 +311,23 @@
             color: #333;
         }
         .order_store_info {
-            color: #0066cc;
-            font-size: 14px;
-            margin-bottom: 20px;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 8px;
         }
         .order_status_message {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 30px;
+            color: #1e293b;
+            margin-bottom: 24px;
         }
-        .order_status_message emoji {
-            font-size: 28px;
-            margin-left: 10px;
+        .order_status_message span {
+            font-size: 24px;
+            margin-left: 8px;
         }
+
+        /* 주문 진행바 스타일 */
         .order_progress_wrap {
             margin-bottom: 40px;
             background: transparent !important;
@@ -324,8 +337,30 @@
             justify-content: space-between;
             position: relative;
             margin-bottom: 0;
-            border-bottom: 2px solid #e0e0e0;
+            padding-top: 40px;
             background: transparent !important;
+        }
+        /* 진행 바 배경 */
+        .order_progress_steps::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+        /* 진행 바 (동적으로 너비 변경) */
+        .order_progress_bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #D95B3B;
+            transition: width 0.5s ease;
+            z-index: 2;
+            border-radius: 0 10px 10px 0;
         }
         .order_progress_step {
             flex: 1;
@@ -334,24 +369,15 @@
             color: #999;
             font-weight: 400;
             padding-bottom: 12px;
-            cursor: pointer;
+            cursor: default;
             transition: all 0.2s ease;
             position: relative;
             background: transparent !important;
+            z-index: 3;
         }
         .order_progress_step.active {
             color: #333;
             font-weight: 700;
-        }
-        .order_progress_step.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: #D95B3B;
-            border-radius: 10px;
         }
         .order_progress_time {
             font-size: 11px;
@@ -359,49 +385,102 @@
             margin-top: 5px;
             background: transparent !important;
         }
-        .order_progress_bar {
-            display: none;
+        .order_progress_step.active::before {
+            content: '';
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
         }
-        .order_progress_fill {
-            display: none;
+        /* 진행 바가 첫 번째 자식이므로 nth-child(2, 3, 4) 사용 */
+        .order_progress_step:nth-child(2).active::before {
+            content: '✅';
         }
+        .order_progress_step:nth-child(3).active::before {
+            content: '⏳';
+        }
+        .order_progress_step:nth-child(4).active::before {
+            content: '🎉';
+        }
+        .order_status_update_notice {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10000;
+            font-weight: 500;
+        }
+        .order_status_update_notice.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 섹션 카드 스타일 (배민 스타일) */
         .order_detail_section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f8f9fa;
         }
         .order_detail_section_title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f8f9fa;
         }
         .order_detail_section_title h3 {
             font-size: 18px;
             font-weight: 700;
-            color: #333;
+            color: #2c2c2c;
             margin: 0;
         }
         .order_detail_section_title a {
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #94a3b8;
             text-decoration: none;
+            font-weight: 500;
         }
         .order_detail_section_title a:hover {
-            color: #333;
+            color: #D95B3B;
         }
+
+        /* 상품 아이템 - 배민 스타일 */
         .order_item_detail {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 2px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+        .order_item_detail:hover {
+            border-color: #ffd6cc;
+            background: #fffbfa;
+        }
+        .order_item_detail:last-child {
+            margin-bottom: 0;
         }
         .order_item_image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
             overflow: hidden;
             flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
         .order_item_image img {
             width: 100%;
@@ -410,51 +489,66 @@
         }
         .order_item_content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .order_item_name_wrap {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .order_item_name {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
-            color: #333;
+            color: #2c2c2c;
+            line-height: 1.4;
         }
-        .order_item_favorite {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #999;
-            cursor: pointer;
-            padding: 0;
+        .order_item_quantity {
+            font-size: 13px;
+            color: #495057;
+            font-weight: 500;
+            margin-bottom: 8px;
         }
-        .order_item_favorite:hover {
-            color: #d32f2f;
+        /* 옵션 배지 스타일 */
+        .order_item_options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
         }
-        .order_item_temp {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
+        .order_item_option_badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: #fff3e0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #e65100;
+            font-weight: 600;
+            border: 1px solid #ffcc80;
         }
         .order_item_price {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
+            font-size: 18px;
+            color: #D95B3B;
+            font-weight: 700;
         }
+
+        /* 결제 정보 섹션 - 배민 스타일 */
         .order_payment_section {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #fffbfa 0%, #fff 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px dashed #ffd6cc;
         }
         .order_payment_item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             font-size: 14px;
-            color: #666;
+            color: #495057;
+            font-weight: 500;
         }
         .order_payment_item:last-child {
             margin-bottom: 0;
@@ -462,45 +556,146 @@
         .order_payment_total {
             display: flex;
             justify-content: space-between;
-            padding-top: 15px;
-            margin-top: 15px;
-            border-top: 1px solid #e0e0e0;
+            align-items: center;
+            padding: 20px;
+            margin-top: 16px;
+            background: #fff3e0;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #D95B3B;
+        }
+
+        /* 주문 정보 섹션 - 배민 스타일 */
+        .order_info_box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px solid #e9ecef;
+        }
+        .order_info_item {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+        .order_info_item:last-child {
+            margin-bottom: 0;
+        }
+        .order_info_label {
+            font-size: 12px;
+            color: #868e96;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .order_info_value {
             font-size: 16px;
             font-weight: 700;
-            color: #333;
+            color: #2c2c2c;
         }
-        .order_stamp_section {
-            background: #fff9e6;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 30px;
+        .order_info_value.highlight {
+            color: #D95B3B;
+            font-weight: 800;
         }
-        .order_stamp_message {
+
+        /* 하단 버튼 - 배민 스타일 */
+        .order_detail_buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 28px;
+        }
+        .btn_home, .btn_history {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 36px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
             font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
-        .order_stamp_info {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
+        .btn_home {
+            background: #f8f9fa;
+            color: #495057;
+            border: 2px solid #e9ecef;
         }
-        .order_stamp_badge {
-            width: 80px;
-            height: 80px;
+        .btn_home:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        .btn_history {
             background: #D95B3B;
+            color: #fff;
+            border: 2px solid #D95B3B;
+        }
+        .btn_history:hover {
+            background: #C74A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(217, 91, 59, 0.4);
+        }
+
+        /* Empty State 디자인 개선 */
+        .order_not_found {
+            text-align: center;
+            padding: 80px 40px;
+            color: #64748b;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+        .order_not_found_icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
-            border: 3px solid #333;
         }
-        .order_stamp_badge img {
-            width: 50px;
-            height: 50px;
+        .order_not_found_icon i {
+            font-size: 56px;
+            color: #D95B3B;
+        }
+        .order_not_found_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .order_not_found_text {
+            font-size: 15px;
+            font-weight: 400;
+            color: #64748b;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .order_not_found_button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: #D95B3B;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(217, 91, 59, 0.3);
+        }
+        .order_not_found_button:hover {
+            background: #C74A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 91, 59, 0.4);
+            color: #fff;
         }
     </style>
     <!-- 푸터 노란색 제거 (TORI COFFEE 색상 적용) -->
@@ -531,6 +726,9 @@
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
     
@@ -538,7 +736,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -546,49 +744,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
-                            <a class="m head_menu_down">메가 스토리</a>
+                            <a href="/about/brand" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="/about/brand">브랜드</a></li>
+                                    <li><a href="/about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
-                            <a class="m head_menu_down">메뉴소개</a>
+                            <a href="/menu/drink" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="/menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="/about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="/about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="/bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="/bbs/notice">공지사항</a></li>
+                                    <li><a href="/bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="/bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="/bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -609,7 +807,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="/login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -622,8 +820,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -712,9 +910,16 @@
                     </div>
 
                     <!-- 주문을 찾을 수 없음 메시지 -->
-                    <div id="orderNotFoundMessage" style="display: none; padding: 60px 20px; text-align: center;">
-                        <div style="font-size: 16px; color: #999; margin-bottom: 20px;">주문을 찾을 수 없습니다</div>
-                        <a href="../index.html" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">홈으로 가기</a>
+                    <div id="orderNotFoundMessage" class="order_not_found" style="display: none;">
+                        <div class="order_not_found_icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="order_not_found_title">주문을 찾을 수 없습니다</div>
+                        <div class="order_not_found_text">입력하신 주문번호를 다시 확인해주세요.<br>주문 내역에서 확인하실 수 있습니다.</div>
+                        <a href="/order/history" class="order_not_found_button">
+                            <i class="fas fa-list"></i>
+                            주문내역 보기
+                        </a>
                     </div>
 
                         </div>
@@ -727,9 +932,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -753,14 +958,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -778,6 +981,28 @@
     </a>
 
     <script>
+        // 네비바 드롭다운 hover 이벤트
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+            }
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
         $(document).ready(function() {
             // 1. URL에서 주문번호 가져오기
             const urlParams = new URLSearchParams(window.location.search);
@@ -789,9 +1014,16 @@
                 return;
             }
 
+            // 실시간 주문 상태 업데이트를 위한 변수 (전역 스코프)
+            let previousStatus = null;
+            let pollingInterval = null;
+
             // 2. 초기 로드
             loadOrderDetailFromServer(orderId);
             checkLoginStatus();
+
+            // 페이지 로드 시 장바구니 카운트 업데이트
+            updateCartBadge();
 
             // 3. 서버 API로부터 데이터 가져오기
             async function loadOrderDetailFromServer(id) {
@@ -810,11 +1042,34 @@
                     $('#orderNotFoundMessage').hide();
                     $('#orderInfoContainer').show();
                     renderOrderDetail(order);
+
+                    // 초기 상태 저장 (polling 비교용)
+                    if (!previousStatus) {
+                        previousStatus = order.status;
+                    }
                 } catch (error) {
                     console.error("데이터 로드 에러:", error);
+                    showToast('오류 발생', '주문 정보를 불러올 수 없습니다', 'error');
                     $('#orderInfoContainer').hide();
                     $('#orderNotFoundMessage').show();
                 }
+            }
+
+            // 주문 상태 정보 매핑 함수
+            function getStatusInfo(status) {
+                const statusMap = {
+                    // Enum 이름
+                    'PENDING': { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' },
+                    'PREPARING': { step: 2, progress: 66, displayText: '준비중', emoji: '⏳' },
+                    'COMPLETED': { step: 3, progress: 100, displayText: '준비완료', emoji: '🎉' },
+                    'CANCELED': { step: 1, progress: 33, displayText: '주문취소', emoji: '❌' },
+                    // Enum description (API가 반환하는 값)
+                    '결제 완료': { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' },
+                    '주문 접수': { step: 2, progress: 66, displayText: '준비중', emoji: '⏳' },
+                    '주문 완료': { step: 3, progress: 100, displayText: '준비완료', emoji: '🎉' },
+                    '주문 취소': { step: 1, progress: 33, displayText: '주문취소', emoji: '❌' }
+                };
+                return statusMap[status] || { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' };
             }
 
             // 4. 화면 렌더링 함수 (서버 DTO 구조에 최적화)
@@ -823,41 +1078,45 @@
                 container.empty();
 
                 // 상태 메시지 설정
-                let statusEmoji = order.status === '주문완료' || order.status === 'PENDING' ? '✅' : '⏳';
-                let displayStatus = order.status === 'PENDING' ? '주문완료' : order.status;
+                let statusInfo = getStatusInfo(order.status);
 
                 let orderInfoHtml = `
                 <div class="order_store_info">주문번호 ${order.orderId}</div>
                 <div class="order_status_message">
-                    ${displayStatus} <span style="font-size: 28px;">${statusEmoji}</span>
+                    ${statusInfo.displayText} <span style="font-size: 28px;">${statusInfo.emoji}</span>
                 </div>
 
                 <div class="order_progress_wrap">
-                    <div class="order_progress_bar">
-                        <div class="order_progress_fill" style="width: ${order.status === 'PENDING' || order.status === '주문완료' ? '33%' : '66%'}"></div>
-                    </div>
                     <div class="order_progress_steps">
-                        <div class="order_progress_step active">주문완료<div class="order_progress_time">${formatOrderDate(order.orderDate)}</div></div>
-                        <div class="order_progress_step ${order.status === 'PREPARING' ? 'active' : ''}">준비중</div>
-                        <div class="order_progress_step ${order.status === 'COMPLETED' ? 'active' : ''}">준비완료</div>
+                        <div class="order_progress_bar" style="width: ${(statusInfo.step / 3) * 100}%;"></div>
+                        <div class="order_progress_step ${statusInfo.step >= 1 ? 'active' : ''}" data-step="1">
+                            주문완료
+                            <div class="order_progress_time">${formatOrderDate(order.orderDate)}</div>
+                        </div>
+                        <div class="order_progress_step ${statusInfo.step >= 2 ? 'active' : ''}" data-step="2">
+                            준비중
+                        </div>
+                        <div class="order_progress_step ${statusInfo.step >= 3 ? 'active' : ''}" data-step="3">
+                            준비완료
+                        </div>
                     </div>
                 </div>
 
                 <div class="order_detail_section">
                     <div class="order_detail_section_title">
-                        <h3>주문내역 ${order.items ? order.items.length : 0}개</h3>
+                        <h3>주문 상품</h3>
                     </div>
             `;
 
                 // 상품 목록 반복문
                 if (order.items) {
                     order.items.forEach(function(item) {
-                        // 1. 옵션 정보 처리 (서버 필드명: optionName, optionPriceAtOrder)
+                        // 1. 옵션 정보 처리 (배지 스타일로 변경)
                         let optionsHtml = '';
                         if (item.options && item.options.length > 0) {
-                            optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px;">';
+                            optionsHtml = '<div class="order_item_options">';
                             item.options.forEach(function(option) {
-                                optionsHtml += `<div>+ ${option.optionName} (+${option.optionPriceAtOrder.toLocaleString()}원)</div>`;
+                                optionsHtml += `<span class="order_item_option_badge">+ ${option.optionName} +${option.optionPriceAtOrder.toLocaleString()}원</span>`;
                             });
                             optionsHtml += '</div>';
                         }
@@ -869,16 +1128,15 @@
                                 <div class="order_item_image">
                                     <img src="${dynamicImagePath}"
                                          onerror="this.src='/src/tem/logo.png'"
-                                         alt="${item.menuName}"
-                                         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                                         alt="${item.menuName}">
                                 </div>
                                 <div class="order_item_content">
                                     <div class="order_item_name_wrap">
                                         <div class="order_item_name">${item.menuName}</div>
                                     </div>
-                                    <div class="order_item_temp">수량: ${item.quantity}개</div>
+                                    <div class="order_item_quantity">수량 ${item.quantity}개</div>
                                     ${optionsHtml}
-                                    <div class="order_item_price">결제금액: ${item.totalItemPrice.toLocaleString()}원</div>
+                                    <div class="order_item_price">${item.totalItemPrice.toLocaleString()}원</div>
                                 </div>
                             </div>
                         `;
@@ -886,11 +1144,11 @@
                     });
                 }
 
-                // 결제 정보 및 요청사항
+                // 결제 정보 섹션
                 orderInfoHtml += `
                 </div>
                 <div class="order_detail_section">
-                    <div class="order_detail_section_title"><h3>결제금액</h3></div>
+                    <div class="order_detail_section_title"><h3>결제 정보</h3></div>
                     <div class="order_payment_section">
                         <div class="order_payment_total">
                             <span>총 결제금액</span>
@@ -900,31 +1158,145 @@
                 </div>
 
                 <div class="order_detail_section">
-                    <div class="order_detail_section_title"><h3>주문 정보</h3></div>
-                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-size: 14px; color: #666;">주문자</div>
-                            <div style="font-size: 16px; font-weight: 600;">${order.customerId}님</div>
+                    <div class="order_detail_section_title"><h3>수령인 정보</h3></div>
+                    <div class="order_info_box">
+                        <div class="order_info_item">
+                            <div class="order_info_label">주문자</div>
+                            <div class="order_info_value">${order.customerName}님</div>
                         </div>
-                        <div style="margin-bottom: 10px;">
-                            <div style="font-size: 14px; color: #666;">주문일시</div>
-                            <div style="font-size: 16px;">${formatOrderDate(order.orderDate)}</div>
+                        <div class="order_info_item">
+                            <div class="order_info_label">주문일시</div>
+                            <div class="order_info_value">${formatOrderDate(order.orderDate)}</div>
                         </div>
-                        <div>
-                            <div style="font-size: 14px; color: #666;">요청사항</div>
-                            <div style="font-size: 16px; color: #D95B3B; font-weight: 600;">${order.request || '없음'}</div>
+                        <div class="order_info_item">
+                            <div class="order_info_label">요청사항</div>
+                            <div class="order_info_value highlight">${order.request || '없음'}</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="order_detail_section" style="display: flex; gap: 10px; justify-content: center;">
-                    <a href="/index.html" class="btn_home" style="padding: 12px 25px; background: #eee; border-radius: 8px; text-decoration: none; color: #333;">홈으로</a>
-                    <a href="/order/history" class="btn_history" style="padding: 12px 25px; background: #D95B3B; border-radius: 8px; text-decoration: none; color: #fff;">주문내역보기</a>
+                <div class="order_detail_buttons">
+                    <a href="/index.html" class="btn_home">홈으로</a>
+                    <a href="/order/history" class="btn_history">주문내역보기</a>
                 </div>
             `;
 
                 container.html(orderInfoHtml);
             }
+
+            // 실시간 주문 상태 업데이트 함수
+            function startStatusPolling() {
+                console.log('[Polling] 실시간 상태 업데이트 시작');
+                // 기존 polling이 있으면 중지
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                }
+
+                // 3초마다 상태 체크
+                pollingInterval = setInterval(async () => {
+                    try {
+                        console.log('[Polling] 상태 확인 중...');
+                        const response = await fetch(`http://localhost:8000/api/order/detail/${orderId}`);
+                        console.log('[Polling] API 응답:', response.status);
+                        if (response.ok) {
+                            const order = await response.json();
+                            const currentStatus = order.status;
+                            console.log('[Polling] 현재 상태:', currentStatus, '/ 이전 상태:', previousStatus);
+
+                            // 상태가 변경되었을 때만 업데이트
+                            if (previousStatus && previousStatus !== currentStatus) {
+                                console.log('[Polling] 상태 변경 감지! 알림 표시');
+                                showStatusUpdateNotice(currentStatus);
+                                updateProgressBar(currentStatus);
+                            }
+
+                            previousStatus = currentStatus;
+                        } else {
+                            console.error('[Polling] API 응답 실패:', response.status);
+                        }
+                    } catch (error) {
+                        console.error('[Polling] 에러:', error);
+                    }
+                }, 3000); // 3초마다
+            }
+
+            // 진행 바 선택적 업데이트 (애니메이션 적용)
+            function updateProgressBar(newStatus) {
+                console.log('[ProgressBar] 진행 바 업데이트 시작, 상태:', newStatus);
+                const statusInfo = getStatusInfo(newStatus);
+                console.log('[ProgressBar] 상태 정보:', statusInfo);
+
+                const progressBarElement = $('.order_progress_bar');
+                console.log('[ProgressBar] 진행 바 요소 개수:', progressBarElement.length);
+
+                if (progressBarElement.length === 0) {
+                    console.error('[ProgressBar] 진행 바 요소를 찾을 수 없습니다!');
+                    return;
+                }
+
+                // 현재 너비 확인
+                const currentWidth = progressBarElement.css('width');
+                console.log('[ProgressBar] 현재 너비:', currentWidth);
+
+                // 새로운 너비 계산
+                const newWidth = `${(statusInfo.step / 3) * 100}%`;
+                console.log('[ProgressBar] 새로운 너비:', newWidth);
+
+                // 강제로 reflow를 트리거하여 transition이 작동하도록 함
+                progressBarElement[0].offsetHeight; // 강제 reflow
+
+                // 너비 업데이트
+                progressBarElement.attr('style', 'width: ' + newWidth + ' !important;');
+
+                // 업데이트 후 너비 확인
+                setTimeout(() => {
+                    const updatedWidth = progressBarElement.css('width');
+                    console.log('[ProgressBar] 업데이트 후 너비:', updatedWidth);
+                }, 100);
+
+                // 스텝 active 클래스 업데이트
+                $('.order_progress_step').removeClass('active');
+                for (let i = 1; i <= statusInfo.step; i++) {
+                    $(`.order_progress_step[data-step="${i}"]`).addClass('active');
+                    console.log('[ProgressBar] 스텝', i, 'active 추가');
+                }
+
+                // 상태 메시지 업데이트
+                $('.order_status_message').html(`${statusInfo.displayText} <span style="font-size: 28px;">${statusInfo.emoji}</span>`);
+                console.log('[ProgressBar] 진행 바 업데이트 완료');
+            }
+
+            // 상태 변경 알림 표시
+            function showStatusUpdateNotice(newStatus) {
+                const statusInfo = getStatusInfo(newStatus);
+                const notice = $('<div class="order_status_update_notice">')
+                    .html(`주문 상태가 <b>${statusInfo.displayText}</b>(으)로 변경되었습니다 ${statusInfo.emoji}`)
+                    .appendTo('body');
+
+                setTimeout(() => notice.addClass('show'), 100);
+                setTimeout(() => {
+                    notice.removeClass('show');
+                    setTimeout(() => notice.remove(), 300);
+                }, 3000);
+            }
+
+            // 페이지가 보일 때 polling 시작, 숨겨질 때 중지
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    if (pollingInterval) {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                    }
+                } else {
+                    loadOrderDetailFromServer(orderId);
+                    startStatusPolling();
+                }
+            });
+
+            // 초기 polling 시작
+            setTimeout(() => {
+                startStatusPolling();
+            }, 3000);
 
             // 날짜 포맷팅 (ISO 타임스탬프 대응)
             function formatOrderDate(dateString) {
@@ -943,32 +1315,99 @@
                     $('.head_login_state_guest').hide();
                     $('.head_login_state_member').show();
                     $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
                 }
             }
+
+            // 로그인 드롭다운 토글
+            $('.head_login_trigger').on('click', function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 드롭다운 외부 클릭 시 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 처리
+            $('.head_login_dropdown a:contains("로그아웃")').on('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userId');
+                showToast('로그아웃 완료', '안전하게 로그아웃되었습니다', 'success');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            });
 
             $('.order_detail_back').on('click', function() { history.back(); });
             $('.order_detail_refresh').on('click', function() { location.reload(); });
 
-            // [1] 장바구니 카운트 API 호출 함수
+            // 장바구니 카운트 API 호출 함수
             async function updateCartBadge() {
                 try {
-                    // 컨트롤러의 @RequestMapping("/api/order")와 @GetMapping("/cart/count") 합쳐진 주소
                     const response = await fetch('http://localhost:8000/api/order/cart/count');
                     if (response.ok) {
                         const data = await response.json();
-                        // 헤더의 .head_user_badge 요소에 숫자 넣기
                         $('.head_user_badge').text(data.count);
                     }
                 } catch (e) {
                     console.error("배지 업데이트 실패:", e);
                 }
             }
-
-            // 페이지 로드 시 실행
-            $(document).ready(function() {
-                updateCartBadge();
-            });
         });
+    </script>
+
+    <!-- Toast UI Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Toast UI JavaScript -->
+    <script>
+        // Toast UI 헬퍼 함수
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const iconMap = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconMap[type] || '✓'}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                <button class="toast-close" aria-label="닫기">×</button>
+            `;
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            // 닫기 버튼 이벤트
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
+        }
     </script>
 </body>
 </html>

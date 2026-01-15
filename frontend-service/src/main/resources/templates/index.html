@@ -559,6 +559,89 @@
         .section_story .cell50:last-child {
             padding-top: 60px;
         }
+
+        /* 확인 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        .logout_modal_wrap.show {
+            display: flex !important;
+        }
+        .logout_modal_content {
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: logoutModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 16px !important;
+        }
+        .logout_modal_title {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+        .logout_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.6 !important;
+        }
+        .logout_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
+        }
+        .logout_modal_btn {
+            flex: 1 !important;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+        .logout_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
+        }
+        .logout_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
+        }
+        .logout_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
+        }
+        .logout_modal_btn.danger:hover {
+            background: #DC2626 !important;
+        }
     </style>
     
     <!-- JavaScript -->
@@ -744,14 +827,8 @@
                             <div class="swiper-container section_main_swiper section_main_swiper1">
                                 <ul class="swiper-wrapper">
                                     <li class="swiper-slide swiper-slide-active">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" 
-                                            style="background:url('src/main1.png'); width:100%; height:100vh; background-size:cover; background-position:center center;">
-                                        </div>
-                                        
-                                        <div class="swiper-slide_img swiper-slide_img_m" 
-                                            style="background:url('src/main1.png'); width:100%; height:100vh; background-size:cover; background-position:center center;">
-                                        </div>
-
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event01_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event01_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -764,8 +841,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251203192750_1764757670996_LrPhMy03_8.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251203192750_1764757670996_LrPhMy03_8.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event02_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event02_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -778,8 +855,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251105224149_1762350109012_hXPC0XaBXG.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251105224149_1762350109012_hXPC0XaBXG.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event03_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event03_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -792,8 +869,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251023110728_1761185248895_41p1zdqV0x.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251023110728_1761185248895_41p1zdqV0x.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event04_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event04_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -806,8 +883,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250516164107_1747381267051_ImhzD_CLQI.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250516164107_1747381267051_ImhzD_CLQI.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event05_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event05_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -820,8 +897,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250424000230_1745420550423_8nOaXZV6Ww.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250424000230_1745420550423_8nOaXZV6Ww.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event06_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event06_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -834,8 +911,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250319235554_1742396154719_ZFON8RAMW6.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250319235554_1742396154719_ZFON8RAMW6.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event07_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event07_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -848,8 +925,8 @@
                                         </div>
                                     </li>
                                     <li class="swiper-slide">
-                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20240926210426_1727352266910_QC_A3rqBQj.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
-                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20240926210426_1727352266910_QC_A3rqBQj.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background: #D95B3B url('src/event08_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 50%;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background: #D95B3B url('src/event08_1.png') no-repeat center center; width:100%; height:100vh; background-size:auto 60%;"></div>
                                         <div class="section_middle">
                                             <div class="cont_boxs">
                                                 <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
@@ -889,7 +966,7 @@
                     <div class="table0">
                         <div class="cell50"></div>
                         <div class="cell50">
-                            <img alt="TORI COFFEE 브랜드 소개">
+                            <img alt="TORI COFFEE 브랜드 소개" th:src="@{/src/tori.png}">
                         </div>
                     </div>
                     <div class="section_middle">
@@ -979,175 +1056,8 @@
                                             <div class="swiper" style="height:100%; width:100%; max-width:420px;">
                                                 <div class="swiper_overflow_container" style="overflow:visible; position:relative;">
                                                     <div class="swiper-container section_menu_swiper cont_gallery_list" style="width:100%; height:100%; overflow:visible !important;">
-                                                        <ul class="swiper-wrapper">
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img">
-                                                                        <img alt="골드망고 스무디" th:src="@{/src/골드망고 스무디.png}">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b>골드망고 스무디</b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1">French Fries Milkshake</div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2">부드럽고 달콤한 밀크쉐이크에 바삭한 감자튀김스틱을 더해 짭짤함과 달콤함이 어우러지는 단짠 매력의 겨울시즌 한정 밀크쉐이크</div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img">
-                                                                        <img alt="메뉴">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img">
-                                                                        <img alt="메뉴">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img">
-                                                                        <img alt="메뉴">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
-                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
-                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
-                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
-                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
-                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
-                                                                    </div>
-                                                                    <div class="cont_text_box">
-                                                                        <div class="cont_text">
-                                                                            <div class="cont_text_inner text_wrap cont_text_title">
-                                                                                <div class="text text1">
-                                                                                    <b></b>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="cont_text_inner text_wrap cont_text_info">
-                                                                                <div class="text text1"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="cont_text cont_text_info">
-                                                                            <div class="text_wrap">
-                                                                                <div class="text text2"></div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
+                                                        <ul class="swiper-wrapper" id="menuSwiperWrapper">
+                                                            <!-- 메뉴 슬라이드가 JavaScript로 동적 생성됩니다 -->
                                                         </ul>
                                                         <div class="swiper-button-next"></div>
                                                         <div class="swiper-button-prev"></div>
@@ -1163,7 +1073,7 @@
                 </div>
             </div>
 
-            <!-- Section 04 - 매장 -->
+            <!-- Section 04 - 매장 (주석 처리됨)
             <div id="section04" class="cont_box section section_store" data-anchor="store">
                 <div class="section_inner">
                     <div class="section_middle">
@@ -1179,12 +1089,12 @@
                                         </div>
                                         <div class="cont_text_box">
                                             <div class="cont_text cont_text_title section_main_fade animation_fade_up animation04">
-                                                <b>TORI COFFEE 본사 오시는 길</b>
+                                                <b>TORI COFFEE 오시는 길</b>
                                             </div>
                                             <div class="cont_text section_main_fade animation_fade_up animation05">
-                                                서울특별시 강남구 강남대로 518 11층, 13층, (주)앤하우스<br>
-                                                지번: 서울특별시 강남구 논현동 164-1<br>
-                                                Tel. 1588-0656 | Fax. 02-325-5199
+                                                경기도 성남시 수정구 복정로 76<br>
+                                                동서울대학교<br>
+                                                Tel. 010-3030-7038
                                             </div>
                                             <div class="cont_text section_main_fade animation_fade_up animation06">
                                                 <a href="/about/map">
@@ -1197,8 +1107,9 @@
                                     </li>
                                     <li style="display:inline-block; vertical-align:middle; margin-right:0; margin-top:0; width:calc(50% - 25px);">
                                         <div class="map_wrap">
-                                            <!-- 지도 영역 -->
-                                            <img alt="TORI COFFEE 오시는 길 지도" th:src="@{/src/map.png}" style="width:100%;height:auto;display:block;">
+                                            <a href="https://map.kakao.com/?urlX=528469.999999999&urlY=1100228.0000000005&urlLevel=3&itemId=10294769&q=%EB%8F%99%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&srcid=10294769&map_type=TYPE_MAP" target="_blank" style="display:block; cursor:pointer;">
+                                                <img alt="동서울대학교 오시는 길 지도" th:src="@{/src/map.png}" style="width:400px;height:300px;object-fit:cover;display:block;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+                                            </a>
                                         </div>
                                     </li>
                                 </ul>
@@ -1207,6 +1118,7 @@
                     </div>
                 </div>
             </div>
+            -->
 
             <!-- Section 05 - 소식 -->
             <div id="section05" class="cont_box section section_news" data-anchor="news">
@@ -1443,7 +1355,7 @@
                         <div class="foot_menu">
                             <div class="cont_list">
                                 <ul>
-                                    <li><a href="javascript:void(0);" onclick="showTermsModal(); return false;"><b>이용약관</b></a></li>
+                                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
                                     <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
                                     <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                                 </ul>
@@ -1469,14 +1381,12 @@
                                         <div class="cont_text foot_info">
                                             <div class="cont_list cont_list_small cont_list_width_m">
                                                 <ul>
-                                                    <li><b>주식회사 토리커피</b></li>
-                                                    <li>대표자 김대영</li>
-                                                    <li>창업상담 1588-0656</li>
-                                                    <li>고객센터 1588-8298</li>
-                                                    <li>FAX 02-325-5199</li>
-                                                    <li>사업자등록번호 105-87-51367</li>
-                                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                                    <li>개인정보보호 책임자 이종원</li>
+                                                    <li><b>팀 부리또</b></li>
+                                                    <li>대표 서재홍</li>
+                                                    <li>연락처 010-3030-7038</li>
+                                                    <li>이메일 wtme3@naver.com</li>
+                                                    <li>주소 동서울대학교</li>
+                                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -1564,10 +1474,12 @@
                 <span></span>
                 <div class="chap_list_wrap_title">메뉴소개</div>
             </li>
+            <!-- 매장 주석 처리
             <li class="chap_list">
                 <span></span>
                 <div class="chap_list_wrap_title">매장</div>
             </li>
+            -->
             <li class="chap_list">
                 <span></span>
                 <div class="chap_list_wrap_title">소식</div>
@@ -1597,7 +1509,7 @@
     <script>
         $(document).ready(function(){
             $("body").addClass("main_body");
-            
+
             // 뷰포트 강제 리셋 (모바일 뷰포트 인식 문제 해결)
             if (window.innerWidth <= 768) {
                 var viewport = document.querySelector('meta[name="viewport"]');
@@ -1605,14 +1517,90 @@
                     viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
                 }
             }
-            
+
+            // 메뉴 섹션 데이터 로드
+            loadMenuSlides();
+
             fullpage();
         });
+
+        // 메뉴 슬라이드 로드 함수 - 지정된 6개 상품 표시
+        function loadMenuSlides() {
+            // 표시할 메뉴 목록
+            const featuredMenus = [
+                { menuName: '말차라떼', menuEngName: 'Matcha Latte', description: '진한 말차와 부드러운 우유의 조화' },
+                { menuName: '블루베리 요거트 스무디', menuEngName: 'Blueberry Yogurt Smoothie', description: '상큼한 블루베리와 요거트의 건강한 조합' },
+                { menuName: '골드망고 스무디', menuEngName: 'Gold Mango Smoothie', description: '달콤하고 진한 망고의 풍미가 가득한 트로피컬 스무디' },
+                { menuName: '코코넛커피 스무디', menuEngName: 'Coconut Coffee Smoothie', description: '코코넛과 커피가 어우러진 이국적인 풍미' },
+                { menuName: '체리콕', menuEngName: 'Cherry Coke', description: '달콤한 체리와 콜라의 상쾌한 조합' },
+                { menuName: '유자차(hot)', menuEngName: 'Citron Tea', description: '향긋한 유자의 달콤하고 상큼한 전통차' }
+            ];
+
+            renderMenuSlides(featuredMenus);
+            initMenuSwiper();
+        }
+
+        // 메뉴 슬라이드 렌더링
+        function renderMenuSlides(menuList) {
+            const wrapper = document.getElementById('menuSwiperWrapper');
+            if (!wrapper) return;
+
+            wrapper.innerHTML = '';
+
+            menuList.forEach(menu => {
+                const slide = document.createElement('li');
+                slide.className = 'swiper-slide';
+                slide.style.cssText = 'opacity:1; overflow:visible; width:100% !important;';
+
+                // 이미지 경로 생성
+                const imagePath = `/src/tem/${menu.menuName}.png`;
+
+                slide.innerHTML = `
+                    <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                        <div class="cont_gallery_list_img">
+                            <img alt="${menu.menuName}" src="${imagePath}" onerror="this.src='/src/tem/no-image.png'">
+                        </div>
+                        <div class="cont_text_box">
+                            <div class="cont_text">
+                                <div class="cont_text_inner text_wrap cont_text_title">
+                                    <div class="text text1">
+                                        <b>${menu.menuName}</b>
+                                    </div>
+                                </div>
+                                <div class="cont_text_inner text_wrap cont_text_info">
+                                    <div class="text text1">${menu.menuEngName || ''}</div>
+                                </div>
+                            </div>
+                            <div class="cont_text cont_text_info">
+                                <div class="text_wrap">
+                                    <div class="text text2">${menu.description || ''}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                wrapper.appendChild(slide);
+            });
+        }
+
+        // 메뉴 Swiper 초기화
+        function initMenuSwiper() {
+            new Swiper('.section_menu_swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                navigation: {
+                    nextEl: '.section_menu_swiper .swiper-button-next',
+                    prevEl: '.section_menu_swiper .swiper-button-prev',
+                },
+            });
+        }
 
         function fullpage() {
             var ChapList = $(".chap_list_wrap ul li");
             $(".main").fullpage({
-                anchors: ["main", "story", "menu", "store", "news", "event", "foot"],
+                anchors: ["main", "story", "menu", "news", "event", "foot"],
                 onLeave: function(index, nextIndex, direction){
                     ChapList.removeClass("on");
                     ChapList.eq(nextIndex-1).addClass("on");
@@ -1800,25 +1788,41 @@
             // 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                if (typeof showCustomModal === 'function') {
-                    showCustomModal(
-                        '로그아웃',
-                        '로그아웃 하시겠습니까?',
-                        function() {
-                            localStorage.removeItem('isLoggedIn');
-                            localStorage.removeItem('userName');
-                            localStorage.removeItem('userRole');
-                            window.location.href = '/';
-                        },
-                        true
-                    );
-                } else {
-                    if (confirm('로그아웃 하시겠습니까?')) {
-                        localStorage.removeItem('isLoggedIn');
-                        localStorage.removeItem('userName');
-                        localStorage.removeItem('userRole');
-                        window.location.href = '/';
-                    }
+                showConfirm('로그아웃하시겠습니까?', function() {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    window.location.href = '/';
+                }, '로그아웃');
+            });
+        });
+
+        // 확인 모달 함수 (Admin 스타일)
+        var confirmCallback = null;
+
+        function showConfirm(message, callback, title) {
+            $('#confirmTitle').text(title || '확인');
+            $('#confirmText').text(message);
+            confirmCallback = callback;
+            $('#confirmModal').addClass('show');
+        }
+
+        function closeConfirmModal() {
+            $('#confirmModal').removeClass('show');
+            confirmCallback = null;
+        }
+
+        $(document).ready(function() {
+            $('#confirmOkBtn').click(function() {
+                $('#confirmModal').removeClass('show');
+                if (confirmCallback) confirmCallback();
+                confirmCallback = null;
+            });
+
+            // 모달 외부 클릭 시 닫기
+            $('.logout_modal_wrap').click(function(e) {
+                if ($(e.target).hasClass('logout_modal_wrap')) {
+                    closeConfirmModal();
                 }
             });
         });
@@ -1918,6 +1922,20 @@
     </script>
     
     <!-- 커스텀 모달 -->
+    <!-- 확인 모달 (Admin 스타일) -->
+    <div class="logout_modal_wrap" id="confirmModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title" id="confirmTitle">확인</div>
+            </div>
+            <div class="logout_modal_text" id="confirmText">진행하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+                <button class="logout_modal_btn danger" id="confirmOkBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
     <div id="customModal" class="custom_modal">
         <div class="custom_modal_content">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">

@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>이벤트 상세 - TORI COFFEE</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown li {
+            margin: 0;
+        }
+        .head_login_dropdown li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .head_login_dropdown li a:hover {
+            background-color: #f5f5f5;
+            color: #D95B3B;
+        }
+        .head_login_dropdown li:first-child a,
+        .head_login_dropdown li:nth-child(2) a {
+            color: #D95B3B;
+        }
+        .head_user_name {
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2a2a2a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay_inner {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            padding: 60px 20px 40px;
+            box-sizing: border-box;
+        }
+        .mobile_menu_overlay_inner::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: #D95B3B;
+            z-index: 10000;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+        .mobile_menu_logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .mobile_menu_logo_icon {
+            color: #D95B3B;
+            font-size: 28px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+
+        /* 이벤트 상세 스타일 */
+        .event_detail_wrap {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            background: #fff;
+            min-height: calc(100vh - 200px);
+        }
+        .event_detail_content_wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px 40px;
+        }
+        .event_detail_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .event_detail_back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        .event_detail_back:hover {
+            color: #D95B3B;
+        }
+        .event_detail_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        .event_detail_content {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .event_detail_content_header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .event_detail_content_title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .event_detail_content_meta {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .event_detail_content_meta_item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .event_detail_content_body {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+        }
+        .event_detail_content_body img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .event_detail_tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #D95B3B;
+            color: #fff;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .event_detail_actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .event_detail_btn {
+            padding: 12px 30px;
+            background: #D95B3B;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .event_detail_btn:hover {
+            background: #c04a2f;
+        }
+        .event_detail_btn.secondary {
+            background: #666;
+        }
+        .event_detail_btn.secondary:hover {
+            background: #555;
+        }
+        @media (max-width: 768px) {
+            .event_detail_content_wrap {
+                padding: 20px 15px;
+            }
+            .event_detail_content {
+                padding: 20px;
+            }
+            .event_detail_content_title {
+                font-size: 20px;
+            }
+            .event_detail_content_meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* 이벤트 기간 강조 */
+        .event_period {
+            background: #fff3cd;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: 600;
+        }
+
+        /* 섹션 공통 스타일 */
+        .event_description_section,
+        .event_benefits_section,
+        .event_howto_section,
+        .event_notice_section,
+        .event_share_section,
+        .event_related_section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        .section_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section_title i {
+            color: #D95B3B;
+        }
+
+        .section_content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* 혜택 안내 */
+        .benefits_list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .benefits_list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #333;
+            border-left: 4px solid #D95B3B;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .benefits_list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefits_list li i {
+            color: #D95B3B;
+            font-size: 18px;
+        }
+
+        /* 참여 방법 */
+        .howto_list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            counter-reset: none;
+        }
+
+        .howto_list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .howto_list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .step_num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: #D95B3B;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* 유의사항 */
+        .notice_list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notice_list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: #666;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .notice_list li:last-child {
+            border-bottom: none;
+        }
+
+        .notice_list li i {
+            color: #f0ad4e;
+            margin-top: 2px;
+        }
+
+        /* 공유하기 */
+        .share_buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .share_btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share_btn.kakao {
+            background: #FEE500;
+            color: #3C1E1E;
+        }
+
+        .share_btn.kakao:hover {
+            background: #E6CF00;
+        }
+
+        .share_btn.facebook {
+            background: #1877F2;
+            color: #fff;
+        }
+
+        .share_btn.facebook:hover {
+            background: #166FE5;
+        }
+
+        .share_btn.twitter {
+            background: #1DA1F2;
+            color: #fff;
+        }
+
+        .share_btn.twitter:hover {
+            background: #1A91DA;
+        }
+
+        .share_btn.copy {
+            background: #666;
+            color: #fff;
+        }
+
+        .share_btn.copy:hover {
+            background: #555;
+        }
+
+        /* 관련 이벤트 */
+        .related_list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .related_item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .related_item:hover {
+            background: #f5f5f5;
+            transform: translateX(5px);
+        }
+
+        .related_tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #D95B3B;
+            color: #fff;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .related_title {
+            font-size: 14px;
+            color: #333;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .share_buttons {
+                flex-direction: column;
+            }
+            .share_btn {
+                justify-content: center;
+            }
+            .event_description_section,
+            .event_benefits_section,
+            .event_howto_section,
+            .event_notice_section,
+            .event_share_section,
+            .event_related_section {
+                padding: 20px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="/">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
+                            <a class="m head_menu_down">메가 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
+                            <a class="m head_menu_down">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="notice" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="notice">공지사항</a></li>
+                                    <li><a href="faq">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="event" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="event">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="../order/cart" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_overlay_inner">
+            <div class="mobile_menu_header">
+                <div class="mobile_menu_logo">
+                    <span class="mobile_menu_logo_text">TORI</span>
+                    <span class="mobile_menu_logo_icon">☕</span>
+                    <span class="mobile_menu_logo_text">COFFEE</span>
+                </div>
+                <button class="mobile_menu_close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile_menu_content">
+                <div class="mobile_menu_left">
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메가 스토리</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메뉴소개</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">매장</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">소식</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">이벤트</div>
+                    </div>
+                </div>
+                <div class="mobile_menu_right">
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/drink">음료</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/notice">공지사항</a>
+                        <a href="/bbs/faq">FAQ</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/event">이벤트</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <div class="cont_box cont_head">
+                <div class="cont_boxs">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title_info">TORI NEWS</div>
+                        <div class="cont_title robo color">
+                            <h2>TORI EVENT</h2>
+                        </div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text cont_list_map">
+                            <ul>
+                                <li>홈</li>
+                                <li>TORI 소식</li>
+                                <li>이벤트</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event_detail_wrap">
+                <div class="event_detail_content_wrap">
+                    <div class="event_detail_header">
+                        <button class="event_detail_back" type="button" onclick="history.back()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="event_detail_title">이벤트</div>
+                        <div style="width: 40px;"></div>
+                    </div>
+
+                    <div class="event_detail_content" id="eventDetailContent">
+                        <!-- 이벤트 내용이 여기에 동적으로 표시됩니다 -->
+                    </div>
+
+                    <div class="event_detail_actions">
+                        <button class="event_detail_btn" onclick="location.href='event'">목록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        // 로그인 드롭다운 토글
+        $(document).ready(function() {
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 모바일 메뉴 오버레이 토글
+            $('.mobile_menu_close').click(function() {
+                $('.mobile_menu_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                $('.head_wrap').removeClass('head_over');
+                $('.head_menu_wrap').removeClass('right0');
+                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+            });
+
+            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+            $('.mobile_menu_overlay').click(function(e) {
+                if ($(e.target).hasClass('mobile_menu_overlay')) {
+                    $('.mobile_menu_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    $('.head_wrap').removeClass('head_over');
+                    $('.head_menu_wrap').removeClass('right0');
+                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+                }
+            });
+
+            // 로그인 상태 체크 및 UI 업데이트
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            checkLoginStatus();
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                alert('로그아웃되었습니다');
+                window.location.href = '/';
+            });
+
+            // 이벤트 데이터
+            const eventData = {
+                '1': {
+                    title: '[이벤트] 겨울 미니 시즌 신메뉴 출시',
+                    tag: '이벤트',
+                    date: '2024.12.01',
+                    endDate: '2025.02.28',
+                    image: '/src/event01_1.png',
+                    description: '추운 겨울, 따뜻한 음료와 함께하세요! TORI COFFEE에서 겨울 시즌을 맞아 특별한 신메뉴를 출시했습니다.',
+                    benefits: ['겨울 한정 신메뉴 3종 출시', '신메뉴 주문 시 사이즈업 무료', '2잔 이상 주문 시 10% 할인'],
+                    howTo: ['TORI COFFEE 매장 방문 또는 온라인 주문', '겨울 시즌 메뉴 선택', '결제 시 자동 혜택 적용'],
+                    notice: ['본 이벤트는 일부 매장에서 진행되지 않을 수 있습니다.', '재고 소진 시 조기 종료될 수 있습니다.', '다른 할인/쿠폰과 중복 적용 불가합니다.']
+                },
+                '2': {
+                    title: '[제휴] 토리TRC커피 X 미래카드',
+                    tag: '제휴',
+                    date: '2024.12.01',
+                    endDate: '2025.03.31',
+                    image: '/src/event02_1.png',
+                    description: '미래카드와 함께하는 특별한 제휴 혜택! 미래카드로 결제하시면 다양한 혜택을 누리실 수 있습니다.',
+                    benefits: ['미래카드 결제 시 15% 즉시 할인', '월 3회까지 할인 적용 가능', '포인트 2배 적립'],
+                    howTo: ['미래카드로 결제', '할인 자동 적용', '영수증에서 할인 내역 확인'],
+                    notice: ['미래카드 본인 명의 카드만 적용됩니다.', '일부 제외 메뉴가 있을 수 있습니다.', '타 할인과 중복 적용 불가합니다.']
+                },
+                '3': {
+                    title: '[이벤트] 크리스마스 시즌 한정 음료',
+                    tag: '이벤트',
+                    date: '2024.11.25',
+                    endDate: '2024.12.25',
+                    image: '/src/event03_1.png',
+                    description: '크리스마스를 맞아 특별히 준비한 시즌 한정 음료! 달콤하고 따뜻한 크리스마스를 TORI와 함께하세요.',
+                    benefits: ['크리스마스 한정 음료 4종 출시', '한정판 크리스마스 컵 증정', '2잔 구매 시 포토카드 증정'],
+                    howTo: ['크리스마스 시즌 음료 주문', '한정 굿즈 선착순 증정', '인스타그램 인증 시 추가 쿠폰 지급'],
+                    notice: ['한정 수량 소진 시 조기 종료됩니다.', '굿즈는 1인 1개까지 증정됩니다.', '일부 매장 제외될 수 있습니다.']
+                },
+                '4': {
+                    title: '[이벤트] 12월 토리TRC 별빛 결제 이벤트',
+                    tag: '이벤트',
+                    date: '2024.11.20',
+                    endDate: '2024.12.31',
+                    image: '/src/event04_1.png',
+                    description: '12월 한 달간 별빛처럼 빛나는 혜택을 드립니다! 매일 다른 혜택으로 더욱 특별한 12월을 만나보세요.',
+                    benefits: ['매주 월요일 아메리카노 50% 할인', '주말 음료 사이즈업 무료', '생일 고객 음료 1잔 무료'],
+                    howTo: ['TORI 앱 회원 로그인', '이벤트 쿠폰 다운로드', '결제 시 쿠폰 적용'],
+                    notice: ['앱 회원 전용 이벤트입니다.', '1일 1회 사용 가능합니다.', '타 쿠폰과 중복 사용 불가합니다.']
+                },
+                '5': {
+                    title: '[제휴] 토리 TORI커피 X KT구독팩 출시',
+                    tag: '제휴',
+                    date: '2024.11.15',
+                    endDate: '2025.02.28',
+                    image: '/src/event05_1.png',
+                    description: 'KT 구독팩과 TORI COFFEE의 만남! 매달 커피 혜택을 정기적으로 받아보세요.',
+                    benefits: ['월 아메리카노 5잔 무료 제공', 'KT 멤버십 추가 할인 10%', '신규 가입 시 웰컴 드링크 증정'],
+                    howTo: ['KT 구독팩 가입', 'TORI 앱 연동', '매월 쿠폰 자동 지급'],
+                    notice: ['KT 이용 고객만 참여 가능합니다.', '구독 해지 시 혜택이 종료됩니다.', '월 5잔 초과 시 정상가 결제됩니다.']
+                },
+                '6': {
+                    title: '[제휴] 이제 TORI에서도 페이코 식권 사용 가능!',
+                    tag: '제휴',
+                    date: '2024.11.10',
+                    endDate: '상시',
+                    image: '/src/event06_1.png',
+                    description: '페이코 식권으로 간편하게 TORI COFFEE를 즐기세요! 직장인 여러분을 위한 새로운 결제 수단이 추가되었습니다.',
+                    benefits: ['페이코 식권 결제 가능', '식권 결제 시에도 포인트 적립', '간편한 QR 결제'],
+                    howTo: ['페이코 앱 실행', '식권 QR코드 제시', '결제 완료'],
+                    notice: ['페이코 식권 가맹점에서만 사용 가능합니다.', '일부 메뉴 제외될 수 있습니다.', '식권 잔액 내에서 결제 가능합니다.']
+                },
+                '7': {
+                    title: '[이벤트] STORI : 우리의 목소리를 따라와',
+                    tag: '이벤트',
+                    date: '2024.11.05',
+                    endDate: '2024.12.31',
+                    image: '/src/event07_1.png',
+                    description: 'TORI의 새로운 브랜드 캠페인 STORI! 여러분의 이야기를 들려주세요. 선정된 사연에는 특별한 선물을 드립니다.',
+                    benefits: ['사연 채택 시 1만원 상품권 증정', '베스트 사연 선정 시 한 달 무료 음료', '참여자 전원 할인 쿠폰 지급'],
+                    howTo: ['TORI 공식 인스타그램 팔로우', '#STORI_토리커피 해시태그와 함께 사연 게시', '매주 월요일 당첨자 발표'],
+                    notice: ['비공개 계정은 참여가 제한됩니다.', '부적절한 내용은 심사에서 제외됩니다.', '중복 당첨은 불가합니다.']
+                },
+                '8': {
+                    title: '[이벤트] 12월 토리 TORI커피 X 하나페이 할인 EVENT',
+                    tag: '이벤트',
+                    date: '2024.11.01',
+                    endDate: '2024.12.31',
+                    image: '/src/event08_1.png',
+                    description: '하나페이로 결제하고 더 큰 혜택을 받으세요! 12월 한 달간 하나페이 고객만을 위한 특별 할인 이벤트를 진행합니다.',
+                    benefits: ['하나페이 결제 시 20% 할인', '최대 5,000원까지 할인', '하나머니 추가 적립'],
+                    howTo: ['하나페이 앱에서 결제', '자동 할인 적용', '하나머니 추가 적립 확인'],
+                    notice: ['하나페이 결제 시에만 적용됩니다.', '월 3회까지 할인 가능합니다.', '일부 메뉴 제외될 수 있습니다.']
+                }
+            };
+
+            // 이벤트 상세 정보 로드
+            function loadEventDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const eventId = urlParams.get('id');
+
+                if (!eventId || !eventData[eventId]) {
+                    $('#eventDetailContent').html(`
+                        <div style="text-align: center; padding: 60px 20px;">
+                            <div style="font-size: 16px; color: #999; margin-bottom: 20px;">이벤트를 찾을 수 없습니다</div>
+                            <a href="event" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">목록으로 가기</a>
+                        </div>
+                    `);
+                    return;
+                }
+
+                const event = eventData[eventId];
+                renderEventDetail(event, eventId);
+            }
+
+            // 이벤트 상세 정보 렌더링 함수
+            function renderEventDetail(event, eventId) {
+                let benefitsHtml = event.benefits.map(b => `<li><i class="fas fa-gift"></i> ${b}</li>`).join('');
+                let howToHtml = event.howTo.map((h, i) => `<li><span class="step_num">${i+1}</span> ${h}</li>`).join('');
+                let noticeHtml = event.notice.map(n => `<li><i class="fas fa-exclamation-circle"></i> ${n}</li>`).join('');
+
+                // 다른 이벤트 추천
+                let otherEvents = Object.keys(eventData).filter(id => id !== eventId).slice(0, 3);
+                let relatedHtml = otherEvents.map(id => {
+                    let e = eventData[id];
+                    return `<a href="event_detail?id=${id}" class="related_item">
+                        <span class="related_tag">${e.tag}</span>
+                        <span class="related_title">${e.title}</span>
+                    </a>`;
+                }).join('');
+
+                let html = `
+                    <div class="event_detail_content_header">
+                        <span class="event_detail_tag">${event.tag}</span>
+                        <div class="event_detail_content_title">${event.title}</div>
+                        <div class="event_detail_content_meta">
+                            <div class="event_detail_content_meta_item">
+                                <i class="fas fa-user"></i>
+                                <span>TORI COFFEE</span>
+                            </div>
+                            <div class="event_detail_content_meta_item">
+                                <i class="fas fa-calendar"></i>
+                                <span>${event.date}</span>
+                            </div>
+                            <div class="event_detail_content_meta_item event_period">
+                                <i class="fas fa-clock"></i>
+                                <span>~${event.endDate}까지</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event_detail_content_body">
+                        <img src="${event.image}" alt="${event.title}">
+                    </div>
+
+                    <div class="event_description_section">
+                        <div class="section_title"><i class="fas fa-info-circle"></i> 이벤트 소개</div>
+                        <p class="section_content">${event.description}</p>
+                    </div>
+
+                    <div class="event_benefits_section">
+                        <div class="section_title"><i class="fas fa-star"></i> 혜택 안내</div>
+                        <ul class="benefits_list">${benefitsHtml}</ul>
+                    </div>
+
+                    <div class="event_howto_section">
+                        <div class="section_title"><i class="fas fa-hand-point-right"></i> 참여 방법</div>
+                        <ol class="howto_list">${howToHtml}</ol>
+                    </div>
+
+                    <div class="event_notice_section">
+                        <div class="section_title"><i class="fas fa-exclamation-triangle"></i> 유의사항</div>
+                        <ul class="notice_list">${noticeHtml}</ul>
+                    </div>
+
+                    <div class="event_related_section">
+                        <div class="section_title"><i class="fas fa-th-list"></i> 다른 이벤트</div>
+                        <div class="related_list">${relatedHtml}</div>
+                    </div>
+                `;
+
+                $('#eventDetailContent').html(html);
+            }
+
+            // URL 복사 함수
+            window.copyUrl = function() {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('URL이 복사되었습니다!');
+                });
+            };
+
+            // 페이지 로드 시 이벤트 상세 정보 로드
+            loadEventDetail();
+        });
+    </script>
+</body>
+</html>

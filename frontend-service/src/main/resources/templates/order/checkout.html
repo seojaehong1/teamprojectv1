@@ -16,7 +16,13 @@
     <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
+    <!-- Global UI Kit -->
+    <link rel="stylesheet" th:href="@{/css/global-ui-kit.css}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
         .head_wrap .head {
@@ -481,6 +487,20 @@
         .checkout_pay_btn:active {
             background: #C74A2A;
         }
+        .checkout_pay_btn.disabled {
+            background: #ccc !important;
+            color: #666 !important;
+            cursor: not-allowed !important;
+        }
+        .checkout_method_warning {
+            color: #D95B3B;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+        .checkout_method_warning.show {
+            display: block;
+        }
         @media (min-width: 769px) {
             .checkout_content_wrap {
                 max-width: 600px;
@@ -556,6 +576,9 @@
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     
@@ -563,7 +586,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -571,49 +594,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
-                            <a class="m head_menu_down">메가 스토리</a>
+                            <a href="/about/brand" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="/about/brand">브랜드</a></li>
+                                    <li><a href="/about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
-                            <a class="m head_menu_down">메뉴소개</a>
+                            <a href="/menu/drink" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="/menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="/about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="/about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="/bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="/bbs/notice">공지사항</a></li>
+                                    <li><a href="/bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="/bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="/bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -634,7 +657,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="/login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -647,8 +670,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -755,6 +778,7 @@
                     <button class="checkout_method_btn" type="button" data-method="takeout">포장주문</button>
                     <button class="checkout_method_btn" type="button" data-method="dinein">매장이용</button>
                 </div>
+                <div class="checkout_method_warning" id="methodWarning">이용방법을 선택해주세요.</div>
             </div>
 
             <!-- 요청사항 -->
@@ -775,9 +799,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -801,14 +825,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -828,6 +850,28 @@
     <script>
         // AOS 초기화
         AOS.init({ duration: 1200 });
+
+        // 네비바 드롭다운 hover 이벤트
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+            }
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
 
         $(document).ready(function() {
             // 전역 변수
@@ -905,19 +949,42 @@
             $('#checkoutPayBtn').off('click').on('click', async function(e) {
                 e.preventDefault(); // 기본 동작 방지
 
-                const requestMessage = $('#checkoutRequest').val() ? $('#checkoutRequest').val().trim() : "";
                 const $btn = $(this);
+
+                // 이용방법 선택 확인
+                const selectedMethod = $('.checkout_method_btn.active').data('method');
+                if (!selectedMethod) {
+                    $('#methodWarning').addClass('show');
+                    // 이용방법 섹션으로 스크롤
+                    $('html, body').animate({
+                        scrollTop: $('.checkout_method_buttons').offset().top - 100
+                    }, 300);
+                    return;
+                }
+
+                const requestMessage = $('#checkoutRequest').val() ? $('#checkoutRequest').val().trim() : "";
 
                 // 1. 상태 체크
                 if ($btn.hasClass('processing')) return;
                 $btn.addClass('processing').text('결제 중...');
 
                 try {
-                    // 2. 서버에 주문 요청
+                    // 고객 이름 가져오기
+                    const customerName = localStorage.getItem('userName') || '고객';
+                    console.log('[주문] localStorage.userName:', localStorage.getItem('userName'));
+                    console.log('[주문] customerName:', customerName);
+
+                    // 2. 서버에 주문 요청 (customerName 포함)
+                    const requestData = {
+                        "request": requestMessage,
+                        "customerName": customerName
+                    };
+                    console.log('[주문] 전송할 데이터:', requestData);
+
                     const response = await fetch('http://localhost:8000/api/order/place', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ "request": requestMessage })
+                        body: JSON.stringify(requestData)
                     });
 
                     if (response.ok) {
@@ -933,28 +1000,72 @@
 
                     } else {
                         const errorMsg = await response.text();
-                        alert('주문 실패: ' + errorMsg);
+                        showToast('주문 실패', errorMsg, 'error');
                         $btn.removeClass('processing').text('결제하기');
                     }
                 } catch (error) {
                     console.error("결제 에러 상세:", error);
-                    alert('네트워크 오류가 발생했습니다.');
+                    showToast('네트워크 오류', '네트워크 오류가 발생했습니다', 'error');
                     $btn.removeClass('processing').text('결제하기');
                 }
             });
 
-            // 5. 기타 UI 이벤트
+            // 5. 이용방법 버튼 클릭 이벤트
             $('.checkout_method_btn').on('click', function() {
                 $('.checkout_method_btn').removeClass('active');
                 $(this).addClass('active');
+                // 선택 시 경고 메시지 숨기고 버튼 활성화
+                $('#methodWarning').removeClass('show');
+                $('#checkoutPayBtn').removeClass('disabled');
             });
+
+            // 초기 상태: 결제 버튼 비활성화
+            $('#checkoutPayBtn').addClass('disabled');
 
             $('.checkout_back').click(function() { history.back(); });
 
             function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
                 const userName = localStorage.getItem('userName') || '고객';
+
+                // 주문자 이름 표시
                 $('#checkoutCustomerName').text(userName + '님');
+
+                // 헤더 로그인 상태 업데이트
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
             }
+
+            // 로그인 드롭다운 토글
+            $('.head_login_trigger').on('click', function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 드롭다운 외부 클릭 시 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 처리
+            $('.head_login_dropdown a:contains("로그아웃")').on('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userId');
+                showToast('로그아웃 완료', '안전하게 로그아웃되었습니다', 'success');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            });
 
             // [1] 장바구니 카운트 API 호출 함수
             async function updateCartBadge() {
@@ -986,6 +1097,52 @@
                     if (callback) callback();
                 });
             });
+        }
+    </script>
+
+    <!-- Toast UI Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Toast UI JavaScript -->
+    <script>
+        // Toast UI 헬퍼 함수
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const iconMap = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconMap[type] || '✓'}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                <button class="toast-close" aria-label="닫기">×</button>
+            `;
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            // 닫기 버튼 이벤트
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
         }
     </script>
 </body>

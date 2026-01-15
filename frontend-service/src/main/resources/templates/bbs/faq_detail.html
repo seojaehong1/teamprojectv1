@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>FAQ 상세 - TORI COFFEE</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+
+    <style>
+        .head_wrap .head { position: relative; }
+        .head_logo { display: block !important; visibility: visible !important; }
+        .head_logo img { display: block !important; visibility: visible !important; max-height: 60px; height: auto; }
+        .head_user_wrap { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 1000; }
+        .head_user_menu { display: flex; align-items: center; gap: 20px; }
+        .head_user_item { position: relative; }
+        .head_user_link { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: #333; cursor: pointer; position: relative; padding: 5px 10px; }
+        .head_user_link:hover { color: #000; }
+        .head_user_link i { font-size: 20px; margin-bottom: 5px; }
+        .head_user_text { font-size: 12px; font-weight: 400; }
+        .head_user_badge { position: absolute; top: 0; right: 5px; background: #333; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .head_login_wrap { position: relative; }
+        .head_login_dropdown { position: absolute; top: 100%; right: 0; margin-top: 10px; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-width: 150px; display: none; z-index: 1001; }
+        .head_login_wrap.active .head_login_dropdown { display: block; }
+        .head_login_dropdown::before { content: ''; position: absolute; top: -8px; right: 20px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid #fff; }
+        .head_login_dropdown ul { list-style: none; margin: 0; padding: 8px 0; }
+        .head_login_dropdown li { margin: 0; }
+        .head_login_dropdown li a { display: block; padding: 10px 20px; color: #333; text-decoration: none; font-size: 14px; transition: background-color 0.2s; }
+        .head_login_dropdown li a:hover { background-color: #f5f5f5; color: #D95B3B; }
+        @media (max-width: 768px) { .head_user_wrap { display: none; } }
+        .head_menu > ul > li > a.pc:hover, .head_menu > ul > li.check > a.pc, .head_menu > ul > li > a.pc.active { background: #D95B3B !important; color: #ffffff !important; }
+        .head_menu_down_menu a:hover, .head_menu_down_menu li:hover > a { background: #D95B3B !important; color: #ffffff !important; }
+
+        /* FAQ 상세 스타일 */
+        .faq_detail_wrap { max-width: 100%; margin: 0 auto; padding: 0; background: #fff; min-height: calc(100vh - 200px); }
+        .faq_detail_content_wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px 40px; }
+        .faq_detail_header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e0e0e0; margin-bottom: 30px; }
+        .faq_detail_back { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #333; }
+        .faq_detail_back:hover { color: #D95B3B; }
+        .faq_detail_title { font-size: 20px; font-weight: 700; color: #333; }
+        .faq_detail_content { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 30px; margin-bottom: 30px; }
+        .faq_detail_content_header { border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px; }
+        .faq_detail_content_title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .faq_detail_content_meta { display: flex; gap: 20px; font-size: 14px; color: #666; flex-wrap: wrap; }
+        .faq_detail_content_meta_item { display: flex; align-items: center; gap: 5px; }
+        .faq_detail_tag { display: inline-block; padding: 4px 12px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+        .faq_detail_question { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #D95B3B; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .faq_detail_question_label { font-size: 14px; font-weight: 600; color: #D95B3B; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .faq_detail_question_label i { font-size: 18px; }
+        .faq_detail_question_text { font-size: 18px; font-weight: 600; color: #333; line-height: 1.6; }
+        .faq_detail_answer { padding: 25px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+        .faq_detail_answer_label { font-size: 14px; font-weight: 600; color: #666; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .faq_detail_answer_label i { font-size: 18px; color: #4CAF50; }
+        .faq_detail_answer_text { font-size: 16px; line-height: 1.9; color: #444; }
+        .faq_detail_actions { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+        .faq_detail_btn { padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .faq_detail_btn:hover { background: #c04a2f; }
+
+        /* 섹션 공통 스타일 */
+        .faq_section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fafafa;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .section_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section_title i { color: #D95B3B; }
+
+        /* 키워드 태그 */
+        .faq_keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #e0e0e0;
+        }
+        .keyword_tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #f0f0f0;
+            color: #555;
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .keyword_tag:hover {
+            background: #D95B3B;
+            color: #fff;
+        }
+
+        /* 피드백 섹션 */
+        .faq_feedback_section {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #fff5f3 0%, #fff 100%);
+            border: 1px solid #ffe0db;
+        }
+        .feedback_title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .feedback_buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .feedback_btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border: 2px solid #e0e0e0;
+            background: #fff;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .feedback_btn:hover {
+            border-color: #D95B3B;
+            color: #D95B3B;
+        }
+        .feedback_btn.active {
+            background: #D95B3B;
+            border-color: #D95B3B;
+            color: #fff;
+        }
+        .feedback_btn i { font-size: 18px; }
+        .feedback_result {
+            display: none;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            color: #2e7d32;
+            font-size: 14px;
+        }
+        .feedback_result.show { display: block; }
+
+        /* 1:1 문의 안내 */
+        .faq_inquiry_section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%);
+            text-align: center;
+        }
+        .inquiry_icon {
+            font-size: 40px;
+            color: #D95B3B;
+            margin-bottom: 15px;
+        }
+        .inquiry_text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .inquiry_btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .inquiry_btn:hover {
+            background: #D95B3B;
+            color: #fff;
+        }
+
+        /* 관련 FAQ */
+        .related_faq_list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .related_faq_item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .related_faq_item:hover {
+            background: #f5f5f5;
+            transform: translateX(5px);
+        }
+        .related_faq_tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #D95B3B;
+            color: #fff;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .related_faq_question {
+            font-size: 14px;
+            color: #333;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .related_faq_arrow {
+            color: #999;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .faq_detail_content_wrap { padding: 20px 15px; }
+            .faq_detail_content { padding: 20px; }
+            .faq_detail_content_title { font-size: 18px; }
+            .faq_detail_content_meta { flex-direction: column; gap: 10px; }
+            .faq_section { padding: 20px; margin-top: 20px; }
+            .feedback_buttons { flex-direction: column; }
+            .feedback_btn { justify-content: center; }
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="/"><img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}"></a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul><li><a href="../about/brand">브랜드</a></li><li><a href="../about/bi">BI</a></li></ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul><li><a href="../menu/drink">음료</a></li></ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map" class="pc">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul><li><a href="../about/map">오시는 길</a></li></ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="notice" class="pc">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul><li><a href="notice">공지사항</a></li><li><a href="faq">FAQ</a></li></ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="event" class="pc">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul><li><a href="event">이벤트</a></li></ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <div class="head_user_item head_cart">
+                        <a href="../order/cart" class="head_user_link"><i class="fas fa-shopping-cart"></i><span class="head_user_badge">0</span></a>
+                    </div>
+                    <div class="head_user_item head_login_wrap">
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login" class="head_user_link"><i class="far fa-user"></i><span class="head_user_text">로그인</span></a>
+                        </div>
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger"><i class="far fa-user"></i><span class="head_user_text head_user_name">사용자명님</span></a>
+                            <div class="head_login_dropdown">
+                                <ul><li><a href="../mypage/index">마이페이지</a></li><li><a href="../order/history">주문조회</a></li><li><a href="#">로그아웃</a></li></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <div class="cont_box cont_head">
+                <div class="cont_boxs">
+                    <div class="cont_title_wrap">
+                        <div class="cont_title_info">TORI NEWS</div>
+                        <div class="cont_title robo color"><h2>FAQ</h2></div>
+                    </div>
+                    <div class="cont_text_wrap">
+                        <div class="cont_text cont_list_map">
+                            <ul><li>홈</li><li>TORI 소식</li><li>FAQ</li></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq_detail_wrap">
+                <div class="faq_detail_content_wrap">
+                    <div class="faq_detail_header">
+                        <button class="faq_detail_back" type="button" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+                        <div class="faq_detail_title">FAQ</div>
+                        <div style="width: 40px;"></div>
+                    </div>
+
+                    <div class="faq_detail_content" id="faqDetailContent">
+                        <!-- FAQ 내용이 여기에 동적으로 표시됩니다 -->
+                    </div>
+
+                    <div class="faq_detail_actions">
+                        <button class="faq_detail_btn" onclick="location.href='faq'">목록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul><li><div class="foot_logo"><img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}"></div></li></ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 1200 });
+
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            }
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        $(document).ready(function() {
+            // FAQ 데이터
+            const faqData = {
+                '1': { category: '주문', question: '온라인으로 주문하면 매장에서 바로 받을 수 있나요?', answer: '네, 가능합니다! TORI COFFEE 온라인 주문 시스템을 통해 주문하시면, 주문 완료 후 약 10~15분 내에 매장에서 음료를 수령하실 수 있습니다. 주문 시 선택하신 매장에서 주문번호를 말씀해주시면 됩니다.', date: '2025-12-01', views: 1523, keywords: ['온라인주문', '매장수령', '픽업', '주문번호'] },
+                '2': { category: '주문', question: '주문 후 메뉴 변경이나 취소가 가능한가요?', answer: '음료 제조가 시작되기 전이라면 주문 변경 및 취소가 가능합니다. 마이페이지 > 주문내역에서 해당 주문을 선택하여 변경/취소하시거나, 매장으로 직접 연락 주시기 바랍니다.', date: '2025-12-01', views: 987, keywords: ['주문변경', '주문취소', '환불', '마이페이지'] },
+                '3': { category: '메뉴', question: '음료의 당도나 얼음 양 조절이 가능한가요?', answer: '네, 물론입니다! 주문 시 옵션에서 당도(일반/덜달게), 얼음 양(보통/적게/많이)을 선택하실 수 있습니다. 특별한 요청사항이 있으시면 요청사항란에 적어주시면 최대한 반영해드립니다.', date: '2025-11-28', views: 1245, keywords: ['당도조절', '얼음양', '커스텀', '옵션'] },
+                '4': { category: '메뉴', question: '알레르기 정보는 어디서 확인할 수 있나요?', answer: '각 메뉴의 상세 페이지에서 알레르기 유발 성분 정보를 확인하실 수 있습니다. 또한 매장 직원에게 문의하시면 더 자세한 정보를 안내받으실 수 있습니다. 알레르기가 있으신 분은 주문 전 꼭 확인해주세요.', date: '2025-11-28', views: 756, keywords: ['알레르기', '성분정보', '원재료', '유발성분'] },
+                '5': { category: '매장이용', question: '매장 운영시간은 어떻게 되나요?', answer: 'TORI COFFEE 동서울대학교점은 평일 오전 9시부터 오후 6시까지 운영됩니다. 주말 및 공휴일은 휴무입니다. 학교 행사나 방학 기간에는 운영시간이 변경될 수 있으니 공지사항을 참고해주세요.', date: '2025-11-25', views: 2103, keywords: ['운영시간', '영업시간', '휴무일', '방학'] },
+                '6': { category: '매장이용', question: '개인컵 사용 시 할인 혜택이 있나요?', answer: '네! 환경 보호를 위해 개인 텀블러를 가져오시면 음료 가격에서 300원 할인을 받으실 수 있습니다. 깨끗한 개인컵을 준비해주시고, 주문 시 직원에게 말씀해주세요.', date: '2025-11-25', views: 1876, keywords: ['개인컵', '텀블러', '할인', '에코'] },
+                '7': { category: '멤버십', question: '회원가입 혜택은 무엇인가요?', answer: 'TORI COFFEE 회원가입 시 다양한 혜택을 받으실 수 있습니다! 가입 즉시 웰컴 쿠폰(아메리카노 무료)이 지급되며, 구매 금액의 5%가 포인트로 적립됩니다. 또한 생일 달에는 특별 쿠폰도 드립니다.', date: '2025-11-20', views: 1432, keywords: ['회원가입', '웰컴쿠폰', '포인트', '생일쿠폰'] },
+                '8': { category: '멤버십', question: '적립 포인트 사용 방법을 알려주세요.', answer: '적립된 포인트는 1포인트 = 1원으로 현금처럼 사용 가능합니다. 주문 결제 시 포인트 사용 옵션을 선택하시면 자동으로 차감됩니다. 최소 사용 금액은 1,000포인트부터이며, 유효기간은 적립일로부터 1년입니다.', date: '2025-11-20', views: 1156, keywords: ['포인트', '적립', '사용', '유효기간'] },
+                '9': { category: '결제', question: '어떤 결제 수단을 사용할 수 있나요?', answer: 'TORI COFFEE에서는 다양한 결제 수단을 지원합니다. 신용카드, 체크카드, 카카오페이, 네이버페이, 토스 등 간편결제와 현금 결제가 모두 가능합니다. 온라인 주문 시에도 동일한 결제 수단을 이용하실 수 있습니다.', date: '2025-11-15', views: 892, keywords: ['결제수단', '카드', '간편결제', '현금'] },
+                '10': { category: '기타', question: '고객 의견이나 불편사항은 어디로 문의하나요?', answer: '고객님의 소중한 의견은 언제든지 환영합니다! 이메일(wtme3@naver.com) 또는 전화(010-3030-7038)로 문의해주시면 빠르게 답변드리겠습니다. 또한 마이페이지 > 1:1 문의를 통해서도 문의하실 수 있습니다.', date: '2025-11-15', views: 654, keywords: ['고객문의', '불편사항', '1:1문의', '이메일'] }
+            };
+
+            function loadFaqDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const faqId = urlParams.get('id');
+
+                if (!faqId || !faqData[faqId]) {
+                    $('#faqDetailContent').html('<div style="text-align: center; padding: 60px 20px;"><div style="font-size: 16px; color: #999; margin-bottom: 20px;">FAQ를 찾을 수 없습니다</div><a href="faq" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">목록으로 가기</a></div>');
+                    return;
+                }
+
+                const faq = faqData[faqId];
+
+                // 키워드 태그 생성
+                let keywordsHtml = faq.keywords.map(k => `<span class="keyword_tag">#${k}</span>`).join('');
+
+                // 같은 카테고리의 관련 FAQ 찾기
+                let relatedFaqs = Object.keys(faqData)
+                    .filter(id => id !== faqId && faqData[id].category === faq.category)
+                    .slice(0, 3);
+
+                // 관련 FAQ가 부족하면 다른 카테고리에서 추가
+                if (relatedFaqs.length < 3) {
+                    let otherFaqs = Object.keys(faqData)
+                        .filter(id => id !== faqId && !relatedFaqs.includes(id))
+                        .slice(0, 3 - relatedFaqs.length);
+                    relatedFaqs = [...relatedFaqs, ...otherFaqs];
+                }
+
+                let relatedHtml = relatedFaqs.map(id => {
+                    let f = faqData[id];
+                    return `<a href="faq_detail?id=${id}" class="related_faq_item">
+                        <span class="related_faq_tag">${f.category}</span>
+                        <span class="related_faq_question">${f.question}</span>
+                        <i class="fas fa-chevron-right related_faq_arrow"></i>
+                    </a>`;
+                }).join('');
+
+                let html = `
+                    <div class="faq_detail_content_header">
+                        <span class="faq_detail_tag">${faq.category}</span>
+                        <div class="faq_detail_content_meta">
+                            <div class="faq_detail_content_meta_item"><i class="fas fa-user"></i><span>TORI COFFEE</span></div>
+                            <div class="faq_detail_content_meta_item"><i class="fas fa-calendar"></i><span>${faq.date}</span></div>
+                            <div class="faq_detail_content_meta_item"><i class="fas fa-eye"></i><span>조회 ${faq.views.toLocaleString()}</span></div>
+                        </div>
+                    </div>
+                    <div class="faq_detail_question">
+                        <div class="faq_detail_question_label"><i class="fas fa-question-circle"></i> 질문</div>
+                        <div class="faq_detail_question_text">${faq.question}</div>
+                    </div>
+                    <div class="faq_detail_answer">
+                        <div class="faq_detail_answer_label"><i class="fas fa-check-circle"></i> 답변</div>
+                        <div class="faq_detail_answer_text">${faq.answer}</div>
+                        <div class="faq_keywords">${keywordsHtml}</div>
+                    </div>
+
+                    <div class="faq_section faq_feedback_section">
+                        <div class="feedback_title"><i class="fas fa-smile"></i> 이 답변이 도움이 되었나요?</div>
+                        <div class="feedback_buttons">
+                            <button class="feedback_btn" onclick="submitFeedback('yes', this)">
+                                <i class="far fa-thumbs-up"></i> 네, 도움이 됐어요
+                            </button>
+                            <button class="feedback_btn" onclick="submitFeedback('no', this)">
+                                <i class="far fa-thumbs-down"></i> 아니요
+                            </button>
+                        </div>
+                        <div class="feedback_result" id="feedbackResult">
+                            <i class="fas fa-heart"></i> 소중한 피드백 감사합니다!
+                        </div>
+                    </div>
+
+                    <div class="faq_section faq_inquiry_section">
+                        <div class="inquiry_icon"><i class="fas fa-headset"></i></div>
+                        <div class="inquiry_text">원하시는 답변을 찾지 못하셨나요?<br>1:1 문의를 통해 더 자세한 안내를 받아보세요.</div>
+                        <a href="../mypage/inquiry" class="inquiry_btn">
+                            <i class="fas fa-pen"></i> 1:1 문의하기
+                        </a>
+                    </div>
+
+                    <div class="faq_section">
+                        <div class="section_title"><i class="fas fa-th-list"></i> 관련 FAQ</div>
+                        <div class="related_faq_list">${relatedHtml}</div>
+                    </div>
+                `;
+                $('#faqDetailContent').html(html);
+            }
+
+            // 피드백 제출 함수
+            window.submitFeedback = function(type, btn) {
+                $('.feedback_btn').removeClass('active');
+                $(btn).addClass('active');
+                $('#feedbackResult').addClass('show');
+            };
+
+            loadFaqDetail();
+
+            // 로그인 상태 체크
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

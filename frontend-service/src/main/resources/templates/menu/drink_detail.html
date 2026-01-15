@@ -17,6 +17,12 @@
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
 
+    <!-- Global UI Kit -->
+    <link rel="stylesheet" th:href="@{/css/global-ui-kit.css}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
         .head_wrap .head {
@@ -474,6 +480,10 @@
             font-size: 16px;
             color: #333;
         }
+        .drink_detail_option_btn_text.selected {
+            color: #D95B3B;
+            font-weight: 700;
+        }
         .drink_detail_option_btn i {
             font-size: 16px;
             color: #999;
@@ -810,6 +820,9 @@
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -817,7 +830,7 @@
 <div class="head_wrap">
     <div class="head">
         <div class="head_logo">
-            <a href="../index.html">
+            <a href="/">
                 <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
             </a>
         </div>
@@ -825,49 +838,49 @@
             <div class="head_menu">
                 <ul>
                     <li>
-                        <a href="../about/brand.html" class="pc">메가 스토리</a>
-                        <a class="m head_menu_down">메가 스토리</a>
+                        <a href="/about/brand" class="pc">토리 스토리</a>
+                        <a class="m head_menu_down">토리 스토리</a>
                         <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                             <ul>
-                                <li><a href="../about/brand.html">브랜드</a></li>
-                                <li><a href="../about/bi.html">BI</a></li>
+                                <li><a href="/about/brand">브랜드</a></li>
+                                <li><a href="/about/bi">BI</a></li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a href="drink.html" class="pc">메뉴소개</a>
-                        <a class="m head_menu_down">메뉴소개</a>
+                        <a href="/menu/drink" class="pc">메뉴</a>
+                        <a class="m head_menu_down">메뉴</a>
                         <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                             <ul>
-                                <li><a href="drink.html">음료</a></li>
+                                <li><a href="/menu/drink">음료</a></li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a href="../about/map.html" class="pc">매장</a>
+                        <a href="/about/map" class="pc">매장</a>
                         <a class="m head_menu_down">매장</a>
                         <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                             <ul>
-                                <li><a href="../about/map.html">오시는 길</a></li>
+                                <li><a href="/about/map">오시는 길</a></li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a href="../bbs/notice.html" class="pc">소식</a>
+                        <a href="/bbs/notice" class="pc">소식</a>
                         <a class="m head_menu_down">소식</a>
                         <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                             <ul>
-                                <li><a href="../bbs/notice.html">공지사항</a></li>
-                                <li><a href="../bbs/faq.html">FAQ</a></li>
+                                <li><a href="/bbs/notice">공지사항</a></li>
+                                <li><a href="/bbs/faq">FAQ</a></li>
                             </ul>
                         </div>
                     </li>
                     <li>
-                        <a href="../bbs/event.html" class="pc">이벤트</a>
+                        <a href="/bbs/event" class="pc">이벤트</a>
                         <a class="m head_menu_down">이벤트</a>
                         <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                             <ul>
-                                <li><a href="../bbs/event.html">이벤트</a></li>
+                                <li><a href="/bbs/event">이벤트</a></li>
                             </ul>
                         </div>
                     </li>
@@ -879,7 +892,7 @@
             <div class="head_user_menu">
                 <!-- 장바구니 아이콘 -->
                 <div class="head_user_item head_cart">
-                    <a href="../order/cart.html" class="head_user_link">
+                    <a href="/order/cart" class="head_user_link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="head_user_badge">0</span>
                     </a>
@@ -888,7 +901,7 @@
                 <div class="head_user_item head_login_wrap">
                     <!-- 비로그인 상태 -->
                     <div class="head_login_state head_login_state_guest">
-                        <a href="../login.html" class="head_user_link">
+                        <a href="/login" class="head_user_link">
                             <i class="far fa-user"></i>
                             <span class="head_user_text">로그인</span>
                         </a>
@@ -901,8 +914,8 @@
                         </a>
                         <div class="head_login_dropdown">
                             <ul>
-                                <li><a href="../mypage/index.html">마이페이지</a></li>
-                                <li><a href="../order/history.html">주문/배송조회</a></li>
+                                <li><a href="/mypage/index">마이페이지</a></li>
+                                <li><a href="/order/history">주문조회</a></li>
                                 <li><a href="#">로그아웃</a></li>
                             </ul>
                         </div>
@@ -1017,12 +1030,14 @@
         <!-- 옵션 선택 -->
         <div class="drink_detail_options">
 
-            <!-- 퍼스널 옵션 -->
+            <!-- 옵션 그룹별 버튼들 (동적으로 생성됨) -->
             <div class="drink_detail_personal_options">
-                <div class="drink_detail_personal_options_title">퍼스널 옵션</div>
-                <div class="drink_detail_option_btn">
-                    <span class="drink_detail_option_btn_text">토핑 선택</span>
-                    <i class="fas fa-chevron-right"></i>
+                <div class="drink_detail_personal_options_title">옵션</div>
+                <div id="optionGroupButtons">
+                    <!-- 로딩 중 표시 -->
+                    <div class="option_loading" style="text-align: center; padding: 15px; color: #999; font-size: 14px;">
+                        옵션을 불러오는 중...
+                    </div>
                 </div>
             </div>
         </div>
@@ -1050,9 +1065,9 @@
     <div class="foot_menu">
         <div class="cont_list">
             <ul>
-                <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
             </ul>
         </div>
     </div>
@@ -1076,14 +1091,12 @@
                     <div class="cont_text foot_info">
                         <div class="cont_list cont_list_small cont_list_width_m">
                             <ul>
-                                <li><b>주식회사 앤하우스</b></li>
-                                <li>대표자 김대영</li>
-                                <li>창업상담 1588-0656</li>
-                                <li>고객센터 1588-8298</li>
-                                <li>FAX 02-325-5199</li>
-                                <li>사업자등록번호 105-87-51367</li>
-                                <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                <li>개인정보보호 책임자 이종원</li>
+                                <li><b>팀 부리또</b></li>
+                                <li>대표 서재홍</li>
+                                <li>연락처 010-3030-7038</li>
+                                <li>이메일 wtme3@naver.com</li>
+                                <li>주소 동서울대학교</li>
+                                <li>팀원 이주희, 박윤호, 하성호</li>
                             </ul>
                         </div>
                     </div>
@@ -1129,7 +1142,7 @@
     <div class="modal_overlay"></div>
     <div class="modal_content">
         <div class="modal_header">
-            <h3>토핑 선택</h3>
+            <h3>옵션 선택</h3>
         </div>
         <div class="modal_body">
             <ul class="topping_list" id="toppingList">
@@ -1146,6 +1159,28 @@
     // 1. 초기화 및 기본 UI 로직
     AOS.init({ duration: 1200 });
 
+    // 네비바 드롭다운 hover 이벤트
+    $(".head_wrap .head .head_menu > ul > li").hover(function() {
+        if (!$(".head_menu_wrap").is(".right0")) {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).addClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+        }
+    }, function() {
+        $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+    });
+
+    $(".head_wrap").hover(function() {
+        $(this).addClass("head_over");
+    }, function() {
+        if (!$(".head_menu_wrap").is(".right0")) {
+            $(this).removeClass("head_over");
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(".head_menu_down_menu").stop().slideUp("fast");
+        }
+    });
+
     const API_BASE_URL = 'http://localhost:8000/api/menu/drinks';
     const OPTION_API_URL = 'http://localhost:8000/api/menu/options'; // 옵션 API 주소 추가
 
@@ -1153,18 +1188,18 @@
     const menuCode = urlParams.get('menuCode');
 
     $(document).ready(function() {
+        // 로그인 상태 체크
+        checkLoginStatus();
+
         if (menuCode) {
             fetchMenuDetail(menuCode);
             fetchMenuOptions(menuCode);
         } else {
-            alert("잘못된 접근입니다.");
-            history.back();
+            showToast('잘못된 접근입니다', '메뉴를 선택해주세요', 'error');
+            setTimeout(() => {
+                history.back();
+            }, 1500);
         }
-
-        // 토핑 선택 버튼 클릭 시 모달 열기
-        $('.drink_detail_option_btn').click(function() {
-            showToppingSelectModal();
-        });
 
         // 주문 선택 버튼
         $('.drink_detail_order_btn').on('click', function() {
@@ -1236,7 +1271,7 @@
      */
     function showProductDetailModal() {
         if (!window.nutritionData) {
-            alert("영양 정보가 없는 상품입니다.");
+            showToast('영양 정보 없음', '영양 정보가 없는 상품입니다', 'info');
             return;
         }
 
@@ -1298,124 +1333,172 @@
             .then(res => res.json())
             .then(data => {
                 window.menuOptionsData = data; // 전역 변수에 옵션 그룹 데이터 저장
-                renderToppingList(data);
+                renderOptionGroupButtons(data); // 옵션 그룹별 버튼 생성
             })
-            .catch(err => console.error("옵션 로드 실패:", err));
+            .catch(err => {
+                console.error("옵션 로드 실패:", err);
+                $('#optionGroupButtons').html('<div style="text-align: center; padding: 15px; color: #999;">옵션이 없습니다.</div>');
+            });
+    }
+
+    // 선택된 옵션을 그룹별로 저장하는 전역 변수
+    window.selectedOptionsByGroup = {};
+
+    /**
+     * 2. 옵션 그룹별 버튼 생성
+     */
+    function renderOptionGroupButtons(groups) {
+        if (!groups || groups.length === 0) {
+            $('#optionGroupButtons').html('<div style="text-align: center; padding: 15px; color: #999;">선택 가능한 옵션이 없습니다.</div>');
+            return;
+        }
+
+        let html = '';
+        groups.forEach((group, index) => {
+            const groupName = group.optionGroupName;
+            html += `
+                <div class="drink_detail_option_btn" data-group-index="${index}" data-group-name="${groupName}">
+                    <span class="drink_detail_option_btn_text">${groupName}</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>`;
+        });
+        $('#optionGroupButtons').html(html);
+
+        // 각 옵션 그룹 버튼 클릭 이벤트
+        $('#optionGroupButtons').on('click', '.drink_detail_option_btn', function() {
+            const groupIndex = $(this).data('group-index');
+            const groupName = $(this).data('group-name');
+            window.currentGroupName = groupName; // 현재 선택 중인 그룹 저장
+            showOptionModal(groupIndex, groupName);
+        });
     }
 
     /**
-     * 2. 토핑 목록 모달에 렌더링
+     * 3. 특정 옵션 그룹 모달 표시
      */
-    function renderToppingList(groups) {
-        let html = '';
-        groups.forEach(group => {
-            // 그룹 이름을 변수에 저장
-            const groupName = group.optionGroupName;
-            html += `<div style="font-weight:700; margin: 15px 0 10px; color:#333;">${groupName}</div>`;
+    function showOptionModal(groupIndex, groupName) {
+        const group = window.menuOptionsData[groupIndex];
+        if (!group) return;
 
-            group.options.forEach(opt => {
-                // data-group 속성에 그룹 이름을 넣어줍니다.
-                html += `
-            <li class="topping_item"
-                data-id="${opt.optionId}"
-                data-price="${opt.price}"
-                data-name="${opt.optionName}"
-                data-group="${groupName}">
-                <div class="topping_item_name">${opt.optionName}</div>
+        // 모달 제목 변경
+        $('#toppingSelectModal .modal_header h3').text(groupName + ' 선택');
+
+        // 해당 그룹에서 이미 선택된 옵션들
+        const selectedInGroup = window.selectedOptionsByGroup[groupName] || [];
+        const selectedIds = selectedInGroup.map(opt => opt.id);
+
+        // 해당 그룹의 옵션만 렌더링
+        let html = '';
+        group.options.forEach(opt => {
+            const isSelected = selectedIds.includes(opt.optionId);
+            const selectedClass = isSelected ? 'selected' : '';
+
+            html += `
+                <li class="topping_item ${selectedClass}"
+                    data-id="${opt.optionId}"
+                    data-price="${opt.price}"
+                    data-name="${opt.optionName}"
+                    data-group="${groupName}">
+                    <div class="topping_item_name">${opt.optionName}</div>
+                    <div class="topping_item_check"><i class="fas fa-check"></i></div>
                 </li>`;
-            });
         });
         $('#toppingList').html(html);
 
-        // [수정] 토핑 클릭 이벤트
+        // 토핑 클릭 이벤트
         $('.topping_item').click(function() {
             $(this).toggleClass('selected');
-            // 기존의 calculateTotalPrice() 대신 정의된 updatePrice()를 호출합니다.
-            updatePrice();
         });
+
+        // 모달 표시
+        $('#toppingSelectModal').fadeIn(200);
+        $('body').css('overflow', 'hidden');
     }
 
     /**
-     * 3. 옵션 선택 완료 버튼
+     * 4. 옵션 선택 완료 버튼
      */
     function confirmToppingSelection() {
-        // [수정] const 또는 let으로 변수를 선언해야 에러가 나지 않습니다.
-        const selectedToppings = [];
+        const groupName = window.currentGroupName;
+        const selectedInCurrentGroup = [];
 
+        // 현재 모달에서 선택된 옵션들 수집
         $('.topping_item.selected').each(function() {
-            selectedToppings.push({
+            selectedInCurrentGroup.push({
                 id: $(this).data('id'),
                 name: $(this).data('name'),
-                price: parseInt($(this).data('price'))
+                price: parseInt($(this).data('price')),
+                group: $(this).data('group')
             });
         });
 
-        // 전역 변수나 로컬스토리지에 저장 (나중에 데이터 전송 시 활용)
-        window.selectedToppings = selectedToppings;
+        // 해당 그룹의 선택 상태 저장
+        window.selectedOptionsByGroup[groupName] = selectedInCurrentGroup;
 
-        // 버튼 텍스트 변경 로직
-        if(selectedToppings.length > 0) {
-            const text = selectedToppings.length > 1
-                ? `${selectedToppings[0].name} 외 ${selectedToppings.length - 1}건`
-                : selectedToppings[0].name;
-            $('.drink_detail_option_btn_text').text(text).css('color', '#D95B3B');
+        // 해당 그룹 버튼 텍스트 업데이트
+        const $btn = $(`.drink_detail_option_btn[data-group-name="${groupName}"]`);
+        if (selectedInCurrentGroup.length > 0) {
+            const text = selectedInCurrentGroup.length > 1
+                ? `${selectedInCurrentGroup[0].name} 외 ${selectedInCurrentGroup.length - 1}건`
+                : selectedInCurrentGroup[0].name;
+            $btn.find('.drink_detail_option_btn_text').text(text).addClass('selected');
         } else {
-            $('.drink_detail_option_btn_text').text('토핑 선택').css('color', '#333');
+            $btn.find('.drink_detail_option_btn_text').text(groupName).removeClass('selected');
         }
 
-        updatePrice(); // 최종 가격 업데이트
+        updatePrice();
         $('#toppingSelectModal').fadeOut(200);
         $('body').css('overflow', '');
     }
 
     /**
-     * 4. 가격 계산 로직 (기본가 + 실시간 선택된 토핑가)
+     * 5. 가격 계산 로직 (기본가 + 선택된 옵션가)
      */
     function updatePrice() {
-        // 수량 가져오기
         const quantity = parseInt($('.drink_detail_quantity_num').text()) || 1;
-        // 기본 단가
         const basePrice = window.currentBasePrice || 0;
 
-        // 현재 모달에서 'selected' 클래스가 붙은 모든 토핑의 가격 합산
-        let toppingTotal = 0;
-        $('.topping_item.selected').each(function() {
-            toppingTotal += parseInt($(this).data('price')) || 0;
+        // 모든 그룹에서 선택된 옵션의 가격 합산
+        let optionTotal = 0;
+        Object.values(window.selectedOptionsByGroup || {}).forEach(options => {
+            options.forEach(opt => {
+                optionTotal += opt.price || 0;
+            });
         });
 
-        // 최종 가격 계산
-        const totalPrice = (basePrice + toppingTotal) * quantity;
+        const totalPrice = (basePrice + optionTotal) * quantity;
         $('.drink_detail_price').text(totalPrice.toLocaleString() + '원');
     }
 
     /**
-     * 5. 서버 전송용 데이터(ProductItemDto) 수집
+     * 6. 서버 전송용 데이터(ProductItemDto) 수집
      */
     function getProductInfo() {
         const quantity = parseInt($('.drink_detail_quantity_num').text());
         const unitPrice = window.currentBasePrice || 0;
 
-        // 선택된 옵션들의 가격 총합 계산
-        let toppingTotal = 0;
+        // 모든 그룹에서 선택된 옵션 수집
+        let optionTotal = 0;
         const selectedOptions = [];
-        $('.topping_item.selected').each(function() {
-            const p = parseInt($(this).data('price')) || 0;
-            toppingTotal += p;
-            selectedOptions.push({
-                optionId: $(this).data('id'),
-                optionName: $(this).data('name'),
-                optionPrice: p,
-                optionGroupName: $(this).data('group')
+        Object.entries(window.selectedOptionsByGroup || {}).forEach(([groupName, options]) => {
+            options.forEach(opt => {
+                optionTotal += opt.price || 0;
+                selectedOptions.push({
+                    optionId: opt.id,
+                    optionName: opt.name,
+                    optionPrice: opt.price,
+                    optionGroupName: groupName
+                });
             });
         });
 
         return {
-            customerId: "1", // 현재 컨트롤러에서 1로 고정해서 테스트 중이므로 맞춰줍니다.
+            customerId: "1",
             menuCode: parseInt(menuCode),
             menuName: $('.drink_detail_name').text(),
             quantity: quantity,
             unitPrice: unitPrice,
-            totalAmount: (unitPrice + toppingTotal) * quantity, // 총액 계산
+            totalAmount: (unitPrice + optionTotal) * quantity,
             options: selectedOptions
         };
     }
@@ -1483,16 +1566,28 @@
 
             if (response.ok) {
                 const message = await response.text();
-                if(confirm(`${message}\n장바구니로 이동하시겠습니까?`)) {
+                const result = await Swal.fire({
+                    title: '장바구니에 담았습니다',
+                    text: '장바구니로 이동하시겠습니까?',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D95B3B',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: '장바구니로 이동',
+                    cancelButtonText: '계속 쇼핑하기',
+                    reverseButtons: true
+                });
+
+                if (result.isConfirmed) {
                     location.href = '/order/cart';
                 }
             } else {
                 const errorMsg = await response.text();
-                alert("담기 실패: " + errorMsg);
+                showToast('담기 실패', errorMsg, 'error');
             }
         } catch (error) {
             console.error("전송 에러:", error);
-            alert("서버 통신 오류가 발생했습니다.");
+            showToast('서버 오류', '서버 통신 오류가 발생했습니다', 'error');
         }
     }
 
@@ -1519,11 +1614,11 @@
                 location.href = '/order/checkout';
             } else {
                 const errorMsg = await response.text();
-                alert("주문 처리 중 오류가 발생했습니다: " + errorMsg);
+                showToast('주문 처리 실패', '주문 처리 중 오류가 발생했습니다: ' + errorMsg, 'error');
             }
         } catch (error) {
             console.error("전송 에러:", error);
-            alert("서버 통신 오류가 발생했습니다.");
+            showToast('서버 오류', '서버 통신 오류가 발생했습니다', 'error');
         }
     }
 
@@ -1531,6 +1626,94 @@
     $('.drink_detail_cart_btn').on('click', function() {
         addToCart();
     });
+
+    // 로그인 상태 체크 함수
+    function checkLoginStatus() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const userName = localStorage.getItem('userName') || '사용자명';
+
+        if (isLoggedIn) {
+            // 로그인 상태일 때
+            $('.head_login_state_guest').hide();
+            $('.head_login_state_member').show();
+            $('.head_user_name').text(userName + '님');
+        } else {
+            // 비로그인 상태일 때
+            $('.head_login_state_guest').show();
+            $('.head_login_state_member').hide();
+        }
+    }
+
+    // 로그인 드롭다운 메뉴 토글
+    $('.head_login_trigger').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('.head_login_wrap').toggleClass('active');
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.head_login_wrap').length) {
+            $('.head_login_wrap').removeClass('active');
+        }
+    });
+
+    // 로그아웃 버튼 클릭 이벤트
+    $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        showToast('로그아웃 완료', '안전하게 로그아웃되었습니다', 'success');
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    });
+</script>
+
+<!-- Toast UI Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Toast UI JavaScript -->
+<script>
+    // Toast UI 헬퍼 함수
+    function showToast(title, message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        const iconMap = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+
+        toast.innerHTML = `
+            <div class="toast-icon">${iconMap[type] || '✓'}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                ${message ? `<div class="toast-message">${message}</div>` : ''}
+            </div>
+            <button class="toast-close" aria-label="닫기">×</button>
+        `;
+
+        const container = document.getElementById('toastContainer');
+        container.appendChild(toast);
+
+        // 닫기 버튼 이벤트
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => {
+            toast.classList.add('toast-exit');
+            setTimeout(() => toast.remove(), 300);
+        });
+
+        // 3초 후 자동 제거
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 3000);
+    }
 </script>
 </body>
 </html>

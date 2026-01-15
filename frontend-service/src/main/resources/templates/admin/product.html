@@ -9,740 +9,735 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
-    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
 
     <style>
-        /* 헤더 고정 해제 - 스크롤 시 사라지도록 */
+        /* ========================================
+           Design System - CSS Custom Properties
+           ======================================== */
+        :root {
+            /* Primary Colors */
+            --primary: #D95B3B;
+            --primary-hover: #C74A2A;
+            --primary-light: #FFF5F2;
+            --primary-gradient: linear-gradient(135deg, #D95B3B, #E8734F);
+
+            /* Grayscale */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+
+            /* Status Colors */
+            --success: #10B981;
+            --success-light: #D1FAE5;
+            --warning: #F59E0B;
+            --warning-light: #FEF3C7;
+            --danger: #EF4444;
+            --danger-light: #FEE2E2;
+            --info: #3B82F6;
+            --info-light: #DBEAFE;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========================================
+           Reset & Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           Fixed Header
+           ======================================== */
         .head_wrap {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap.head_fixed {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap .head {
-            position: relative !important;
-        }
-        /* 로고 중복 방지 - 모든 가상 요소 및 배경 이미지 제거 */
-        .head_wrap .head_logo,
-        .head_wrap .head .head_logo {
-            display: block !important;
-            visibility: visible !important;
-            position: relative !important;
-            z-index: 1 !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo::before,
-        .head_wrap .head_logo::after,
-        .head_wrap .head .head_logo::before,
-        .head_wrap .head .head_logo::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a,
-        .head_wrap .head .head_logo a {
-            display: block !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a::before,
-        .head_wrap .head_logo a::after,
-        .head_wrap .head .head_logo a::before,
-        .head_wrap .head .head_logo a::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo img,
-        .head_wrap .head .head_logo img {
-            display: block !important;
-            visibility: visible !important;
-            max-height: 60px !important;
-            height: auto !important;
-            width: auto !important;
-            position: relative !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo .head_logo_img,
-        .head_wrap .head .head_logo .head_logo_img {
-            display: block !important;
-            visibility: visible !important;
-        }
-        /* 중복 로고 요소 숨기기 */
-        .head_wrap .head_logo + .head_logo,
-        .head_wrap .head .head_logo + .head_logo {
-            display: none !important;
-        }
-        .head_user_wrap {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            height: 70px;
+            background: #fff;
+            box-shadow: var(--shadow-md);
             z-index: 1000;
         }
+
+        .head {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .head_logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .head_logo_img {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Center Navigation */
+        .head_menu_wrap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .head_menu ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .head_menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .head_menu ul li a:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .head_menu ul li a.active,
+        .head_menu ul li.active a {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* User Menu */
+        .head_user_wrap {
+            display: flex;
+            align-items: center;
+        }
+
         .head_user_menu {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-        .head_user_item {
+
+        .head_login_wrap {
             position: relative;
         }
+
         .head_user_link {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 4px;
             text-decoration: none;
-            color: #333;
+            color: var(--gray-600);
             cursor: pointer;
-            position: relative;
-            padding: 5px 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            transition: var(--transition);
         }
+
         .head_user_link:hover {
-            color: #000;
+            background: var(--gray-100);
+            color: var(--gray-900);
         }
+
         .head_user_link i {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 18px;
         }
+
         .head_user_text {
             font-size: 12px;
-            font-weight: 400;
+            font-weight: 500;
         }
-        .head_login_wrap {
-            position: relative;
-        }
+
         .head_login_dropdown {
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 10px;
+            margin-top: 8px;
             background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
             min-width: 150px;
             display: none;
             z-index: 1001;
+            overflow: hidden;
         }
+
         .head_login_wrap.active .head_login_dropdown {
             display: block;
         }
-        .head_login_dropdown::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #fff;
-        }
+
         .head_login_dropdown ul {
             list-style: none;
-            margin: 0;
-            padding: 8px 0;
-        }
-        .head_login_dropdown ul li {
-            margin: 0;
-        }
-        .head_login_dropdown ul li a {
-            display: block;
-            padding: 10px 20px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.2s;
-        }
-        .head_login_dropdown ul li a:hover {
-            background: #f5f5f5;
         }
 
-        /* 제품 관리 스타일 */
-        .admin_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-            padding-top: 100px; /* 헤더 높이만큼 여백 추가 */
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
         }
+
+        .head_login_dropdown ul li a:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        /* ========================================
+           Main Content Area
+           ======================================== */
+        .admin_wrap {
+            padding-top: 70px;
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
         .admin_content_wrap {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 32px 24px;
         }
+
         .admin_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 24px;
         }
+
         .admin_title {
             font-size: 28px;
             font-weight: 700;
-            color: #333;
+            color: var(--gray-900);
         }
+
+        /* Navigation Pills */
         .admin_nav {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
         }
+
         .admin_nav_item {
             padding: 10px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: none;
+            border-radius: var(--radius-full);
             background: #fff;
-            color: #666;
+            color: var(--gray-600);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s;
-        }
-        .admin_nav_item:hover {
-            border-color: #333;
-            color: #333;
-        }
-        .admin_nav_item.active {
-            background: #333;
-            color: #fff;
-            border-color: #333;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* 제품 관리 툴바 */
+        .admin_nav_item:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .admin_nav_item.active {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
+        }
+
+        /* ========================================
+           Toolbar
+           ======================================== */
         .product_toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 16px;
         }
+
         .product_search {
             display: flex;
             gap: 10px;
             flex: 1;
-            min-width: 300px;
+            max-width: 400px;
         }
+
         .product_search_input {
             flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
             font-size: 14px;
+            background: #fff;
+            transition: var(--transition);
         }
+
+        .product_search_input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+        }
+
         .product_search_btn {
-            padding: 10px 20px;
-            background: #333;
+            padding: 12px 20px;
+            background: var(--gray-800);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            transition: var(--transition);
         }
+
+        .product_search_btn:hover {
+            background: var(--gray-900);
+        }
+
         .product_add_btn {
-            padding: 10px 20px;
-            background: #D95B3B;
+            padding: 12px 24px;
+            background: var(--primary-gradient);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-        }
-        .product_add_btn:hover {
-            background: #C74A2A;
-        }
-        .product_filter {
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
             display: flex;
-            gap: 10px;
-        }
-        .product_filter_select {
-            padding: 10px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            background: #fff;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* 제품 목록 */
-        .product_list_table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .product_list_table thead {
-            background: #f9f9f9;
-        }
-        .product_list_table th {
-            padding: 15px;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 700;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        .product_list_table td {
-            padding: 15px;
-            font-size: 14px;
-            color: #666;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .product_list_table tbody tr:hover {
-            background: #f9f9f9;
-        }
-        .product_image {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .product_action_btn {
-            padding: 6px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            background: #fff;
-            color: #333;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 5px;
-        }
-        .product_action_btn:hover {
-            background: #333;
-            color: #fff;
-            border-color: #333;
-        }
-        .product_action_btn.edit {
-            background: #D95B3B;
-            border-color: #D95B3B;
-            color: #fff;
-        }
-        .product_action_btn.edit:hover {
-            background: #C74A2A;
-        }
-        .product_action_btn.delete {
-            background: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
-        }
-        .product_action_btn.delete:hover {
-            background: #c82333;
+        .product_add_btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(217, 91, 59, 0.4);
         }
 
-        /* 제품 추가/수정 폼 */
+        /* ========================================
+           Product Form
+           ======================================== */
         .product_form_wrap {
             background: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
         }
+
         .product_form_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 1px solid var(--gray-200);
         }
+
         .product_form_title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: #333;
+            color: var(--gray-900);
         }
+
         .product_form_close {
-            background: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
             border: none;
-            font-size: 24px;
+            border-radius: var(--radius);
+            font-size: 18px;
             cursor: pointer;
-            color: #666;
-            padding: 5px;
+            color: var(--gray-600);
+            transition: var(--transition);
         }
+
         .product_form_close:hover {
-            color: #333;
+            background: var(--gray-200);
+            color: var(--gray-900);
         }
+
         .product_form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
         }
+
         .product_form_row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+
         .product_form_item {
             display: flex;
             flex-direction: column;
         }
+
         .product_form_label {
             font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: var(--gray-700);
             margin-bottom: 8px;
         }
+
         .product_form_input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
             font-size: 14px;
-            box-sizing: border-box;
+            transition: var(--transition);
+            background: #fff;
         }
+
         .product_form_input:focus {
             outline: none;
-            border-color: #333;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
         }
+
+        textarea.product_form_input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .product_form_image_preview {
             width: 200px;
             height: 200px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
         }
+
+        /* Ingredient Section */
         .product_ingredient_wrap {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
+
         .product_ingredient_list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+
         .product_ingredient_item {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
+            padding: 14px 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
         }
+
         .product_ingredient_item select,
         .product_ingredient_item input {
             flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
             font-size: 14px;
+            background: #fff;
+            transition: var(--transition);
         }
-        .product_ingredient_item select {
-            min-width: 150px;
+
+        .product_ingredient_item select:focus,
+        .product_ingredient_item input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
-        .product_ingredient_item input {
-            min-width: 100px;
-        }
+
         .product_ingredient_remove_btn {
-            padding: 8px 15px;
-            background: #dc3545;
+            padding: 10px 16px;
+            background: var(--danger);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            font-size: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
+
         .product_ingredient_remove_btn:hover {
-            background: #c82333;
+            background: #DC2626;
         }
+
         .product_ingredient_add_btn {
-            padding: 10px 15px;
-            background: #333;
+            padding: 12px 18px;
+            background: var(--gray-800);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
             align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         .product_ingredient_add_btn:hover {
-            background: #555;
+            background: var(--gray-900);
         }
-        /* 옵션 설정 스타일 */
+
+        /* Option Section */
         .product_option_wrap {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
+
         .product_option_list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+
         .product_option_item {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
+            padding: 14px 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
         }
+
         .product_option_item input {
             flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
             font-size: 14px;
+            background: #fff;
         }
-        .product_option_item input[type="text"] {
-            min-width: 150px;
-        }
-        .product_option_item input[type="number"] {
-            min-width: 100px;
-        }
+
         .product_option_remove_btn {
-            padding: 8px 15px;
-            background: #dc3545;
+            padding: 10px 16px;
+            background: var(--danger);
             color: #fff;
             border: none;
-            border-radius: 6px;
-            font-size: 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
+
         .product_option_remove_btn:hover {
-            background: #c82333;
+            background: #DC2626;
         }
+
         .product_option_add_btn {
-            padding: 10px 15px;
-            background: #D95B3B;
+            padding: 12px 18px;
+            background: var(--primary-gradient);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: var(--transition);
             align-self: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         .product_option_add_btn:hover {
-            background: #C74A2A;
+            transform: translateY(-1px);
         }
+
+        /* Form Actions */
         .product_form_actions {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
             justify-content: flex-end;
         }
+
         .product_form_btn {
-            padding: 12px 30px;
+            padding: 14px 32px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: var(--radius);
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-        .product_form_btn.cancel {
-            background: #fff !important;
-            background-color: #fff !important;
-            color: #666 !important;
-            border: 2px solid #ddd !important;
-        }
-        .product_form_btn.cancel:hover {
-            background: #f5f5f5 !important;
-            background-color: #f5f5f5 !important;
-        }
-        .product_form_btn.save {
-            background: #D95B3B;
-            color: #fff;
-        }
-        .product_form_btn.save:hover {
-            background: #C74A2A;
+            transition: var(--transition);
         }
 
-        /* 제품 추가/수정 모달 */
-        .product_modal_overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .product_modal_overlay.active {
-            display: flex;
-        }
-        .product_modal {
+        .product_form_btn.cancel {
             background: #fff;
-            width: 100%;
-            max-width: 600px;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            max-height: 90vh;
-            overflow-y: auto;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-300);
         }
-        .product_modal_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
+
+        .product_form_btn.cancel:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
         }
-        .product_modal_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .product_modal_close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-        .product_modal_form_item {
-            margin-bottom: 20px;
-        }
-        .product_modal_label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .product_modal_input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        .product_modal_input:focus {
-            outline: none;
-            border-color: #333;
-        }
-        .product_modal_image_preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 10px;
-            border: 1px solid #e0e0e0;
-        }
-        .product_modal_actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        .product_modal_btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .product_modal_btn.cancel {
-            background: #f5f5f5;
-            color: #666;
-        }
-        .product_modal_btn.cancel:hover {
-            background: #e0e0e0;
-        }
-        .product_modal_btn.save {
-            background: #D95B3B;
+
+        .product_form_btn.save {
+            background: var(--primary-gradient);
             color: #fff;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
         }
-        .product_modal_btn.save:hover {
-            background: #C74A2A;
+
+        .product_form_btn.save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(217, 91, 59, 0.4);
         }
-        /* 영양정보 및 알레르기 스타일 */
+
+        /* ========================================
+           Info Sections (Nutrition & Allergy)
+           ======================================== */
         .product_info_section {
             margin-top: 20px;
-            padding: 20px;
-            background: #f9f9f9;
-            border-radius: 8px;
-        }
-        .nutrition_grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            padding: 24px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
         }
 
-        /* 알레르기 유발 성분 커스텀 체크박스 스타일 */
+        .product_info_section .product_form_label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .product_info_section .product_form_label i {
+            color: var(--primary);
+        }
+
+        .nutrition_grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .nutrition_grid .product_form_item label {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .nutrition_grid .product_form_input {
+            padding: 10px 14px;
+        }
+
+        /* Allergy Grid */
         .allergy_grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2열로 배치 */
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
         .allergy_check_item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition);
             background: #fff;
         }
 
         .allergy_check_item:hover {
-            border-color: #D95B3B;
-            background: #fff9f7;
+            border-color: var(--primary);
+            background: var(--primary-light);
         }
 
         .allergy_check_item.selected {
-            border-color: #D95B3B;
-            background: #fff9f7;
+            border-color: var(--primary);
+            background: var(--primary-light);
         }
 
-        .allergy_name {
-            font-size: 15px;
-            color: #333;
+        .allergy_check_item span {
+            font-size: 14px;
+            color: var(--gray-700);
             font-weight: 500;
         }
 
         .allergy_icon {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #D95B3B;
-            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: var(--transition);
         }
 
         .allergy_check_item.selected .allergy_icon {
-            background: #D95B3B;
+            background: var(--primary);
         }
 
         .allergy_check_item.selected .allergy_icon i {
             color: #fff;
-            font-size: 11px;
+            font-size: 12px;
             display: block;
         }
 
@@ -750,152 +745,695 @@
             display: none;
         }
 
-        /* 실제 체크박스는 숨김 처리 */
         .allergy_check_item input[type="checkbox"] {
             display: none;
         }
 
-        /* 삭제 확인 모달 */
-        .delete_modal {
+        /* Option Group Buttons */
+        .option_group_btn_wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option_group_btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 18px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option_group_btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .option_group_btn_text {
+            font-size: 15px;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .option_group_btn_text.selected {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .option_group_btn i {
+            font-size: 14px;
+            color: var(--gray-400);
+        }
+
+        /* ========================================
+           Product Table
+           ======================================== */
+        .cont_text_wrap {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .product_list_table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product_list_table thead {
+            background: var(--gray-50);
+        }
+
+        .product_list_table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .product_list_table td {
+            padding: 18px 20px;
+            font-size: 14px;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .product_list_table tbody tr {
+            transition: var(--transition);
+        }
+
+        .product_list_table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .product_list_table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .product_image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Action Buttons */
+        .product_action_btn {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            background: #fff;
+            color: var(--gray-600);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-right: 6px;
+        }
+
+        .product_action_btn:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .product_action_btn.edit {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .product_action_btn.edit:hover {
+            background: var(--primary-hover);
+        }
+
+        .product_action_btn.delete {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: #fff;
+        }
+
+        .product_action_btn.delete:hover {
+            background: #DC2626;
+        }
+
+        /* ========================================
+           Pagination
+           ======================================== */
+        .board_page_wrap {
+            display: flex;
+            justify-content: center;
+            padding: 32px 0;
+        }
+
+        .board_page ul {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .board_page li {
+            background: none !important;
+        }
+
+        .board_page li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: #fff !important;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .board_page li a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light) !important;
+        }
+
+        .board_page li.board_page_check a {
+            background: var(--primary-gradient) !important;
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(217, 91, 59, 0.3);
+        }
+
+        .board_page li a span {
+            background: none !important;
+        }
+
+        /* ========================================
+           Modals
+           ======================================== */
+        .product_modal_overlay,
+        .delete_modal,
+        .option_select_modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
             display: none;
-            z-index: 10001;
-            overflow: auto;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        .delete_modal.show {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        .delete_modal_content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px 25px 20px;
-            max-width: 360px;
-            width: calc(100% - 40px);
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            position: relative;
-            margin: auto;
-            transform: translateY(-60px);
-        }
-        .delete_modal_title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: #333;
-        }
-        .delete_modal_text {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-        .delete_modal_buttons {
+
+        .product_modal_overlay.active,
+        .delete_modal.show,
+        .option_select_modal.active {
             display: flex;
-            gap: 10px;
         }
-        .delete_modal_btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-size: 15px;
+
+        /* Product Modal */
+        .product_modal {
+            background: #fff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product_modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .product_modal_title {
+            font-size: 20px;
             font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .product_modal_close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
             cursor: pointer;
-            transition: background 0.2s;
+            color: var(--gray-600);
+            transition: var(--transition);
         }
-        .delete_modal_btn.cancel {
-            background: #fff !important;
-            background-color: #fff !important;
-            color: #666 !important;
-            border: 2px solid #ddd !important;
+
+        .product_modal_close:hover {
+            background: var(--gray-200);
         }
-        .delete_modal_btn.cancel:hover {
-            background: #f5f5f5 !important;
-            background-color: #f5f5f5 !important;
+
+        .product_modal_form_item {
+            margin-bottom: 20px;
         }
-        .delete_modal_btn.confirm {
-            background: #D95B3B;
+
+        .product_modal_label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .product_modal_input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .product_modal_input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+        }
+
+        .product_modal_image_preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-top: 12px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .product_modal_actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .product_modal_btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .product_modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .product_modal_btn.cancel:hover {
+            background: var(--gray-200);
+        }
+
+        .product_modal_btn.save {
+            background: var(--primary-gradient);
             color: #fff;
         }
-        .delete_modal_btn.confirm:hover {
-            background: #C74A2A;
+
+        .product_modal_btn.save:hover {
+            opacity: 0.9;
         }
+
+        /* Delete Modal */
+        .delete_modal_content {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .delete_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--gray-900);
+        }
+
+        .delete_modal_text {
+            font-size: 15px;
+            color: var(--gray-600);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .delete_modal_buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .delete_modal_btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .delete_modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .delete_modal_btn.cancel:hover {
+            background: var(--gray-200);
+        }
+
+        .delete_modal_btn.confirm {
+            background: var(--primary-gradient);
+            color: #fff;
+        }
+
+        .delete_modal_btn.confirm:hover {
+            opacity: 0.9;
+        }
+
         .delete_modal_btn.close {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: var(--radius);
             border: none;
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            background-image: none !important;
-            color: #fff !important;
+            background: var(--primary-gradient);
+            color: #fff;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            opacity: 1 !important;
         }
+
         .delete_modal_btn.close:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-            opacity: 1 !important;
+            opacity: 0.9;
         }
-        #editSuccessModal .delete_modal_btn.close,
-        #deleteSuccessModal .delete_modal_btn.close,
-        #addSuccessModal .delete_modal_btn.close {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            background-image: none !important;
-            color: #fff !important;
-            opacity: 1 !important;
+
+        /* Option Select Modal */
+        .option_select_modal_content {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
         }
-        #editSuccessModal .delete_modal_btn.close:hover,
-        #deleteSuccessModal .delete_modal_btn.close:hover,
-        #addSuccessModal .delete_modal_btn.close:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-            opacity: 1 !important;
+
+        .option_select_modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .option_select_modal_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .option_select_modal_close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+
+        .option_select_list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .option_select_item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option_select_item:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .option_select_item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .option_select_item_name {
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .option_select_item_check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--primary);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option_select_item.selected .option_select_item_check {
+            background: var(--primary);
+        }
+
+        .option_select_item.selected .option_select_item_check i {
+            color: #fff;
+            font-size: 12px;
+            display: block;
+        }
+
+        .option_select_item_check i {
+            display: none;
+        }
+
+        .option_select_confirm_btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option_select_confirm_btn:hover {
+            opacity: 0.9;
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
+        .foot_menu_wrap {
+            background: var(--gray-100);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .foot_menu {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        .foot_menu .cont_list ul {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+            justify-content: center;
+        }
+
+        .foot_menu .cont_list ul li a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .foot_menu .cont_list ul li a:hover {
+            color: var(--primary);
+        }
+
+        .foot_wrap {
+            background: var(--gray-800);
+            padding: 40px 24px;
+        }
+
+        .foot {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .foot_logo img {
+            height: 40px;
+            filter: brightness(0) invert(1);
+            margin-bottom: 20px;
+        }
+
+        .foot_info ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            list-style: none;
+        }
+
+        .foot_info ul li {
+            color: var(--gray-400);
+            font-size: 13px;
+        }
+
+        .foot_info ul li b {
+            color: var(--gray-300);
+        }
+
+        /* Go Top Button */
+        .go_top_wrap {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .go_top_wrap:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(217, 91, 59, 0.4);
+        }
+
+        .go_top_wrap::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-left: 2px solid #fff;
+            border-top: 2px solid #fff;
+            transform: rotate(45deg);
+            margin-top: 4px;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 1024px) {
+            .head_menu_wrap {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
             .admin_header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
+                gap: 16px;
             }
+
             .product_toolbar {
                 flex-direction: column;
             }
+
             .product_search {
                 width: 100%;
+                max-width: none;
             }
+
             .product_form_row {
                 grid-template-columns: 1fr;
             }
-            .product_list_table {
-                font-size: 12px;
+
+            .nutrition_grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+
+            .allergy_grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product_list_table {
+                font-size: 13px;
+            }
+
             .product_list_table th,
             .product_list_table td {
-                padding: 10px 8px;
+                padding: 12px 10px;
             }
-            .allergy_grid {
-                grid-template-columns: 1fr; /* 모바일에서는 1열 */
+
+            .product_action_btn {
+                padding: 6px 10px;
+                font-size: 12px;
             }
         }
     </style>
 
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
 </head>
 <body>
 
@@ -903,25 +1441,17 @@
 <div class="head_wrap">
     <div class="head">
         <div class="head_logo">
-            <a href="user.html">
+            <a href="/admin/user">
                 <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
             </a>
         </div>
         <div class="head_menu_wrap">
             <div class="head_menu">
                 <ul>
-                    <li>
-                        <a href="user.html" class="pc">회원 관리</a>
-                    </li>
-                    <li>
-                        <a href="product.html" class="pc">상품 관리</a>
-                    </li>
-                    <li>
-                        <a href="notice.html" class="pc">공지사항 관리</a>
-                    </li>
-                    <li>
-                        <a href="inquiry.html" class="pc">문의 관리</a>
-                    </li>
+                    <li><a href="/admin/user">회원 관리</a></li>
+                    <li class="active"><a href="/admin/product">상품 관리</a></li>
+                    <li><a href="/admin/notice">공지사항 관리</a></li>
+                    <li><a href="/admin/inquiry">문의 관리</a></li>
                 </ul>
             </div>
         </div>
@@ -954,10 +1484,10 @@
 
         <!-- 네비게이션 -->
         <div class="admin_nav">
-            <a href="user.html" class="admin_nav_item">회원 관리</a>
-            <a href="product.html" class="admin_nav_item active">상품 관리</a>
-            <a href="notice.html" class="admin_nav_item">공지사항 관리</a>
-            <a href="inquiry.html" class="admin_nav_item">문의 관리</a>
+            <a href="/admin/user" class="admin_nav_item">회원 관리</a>
+            <a href="/admin/product" class="admin_nav_item active">상품 관리</a>
+            <a href="/admin/notice" class="admin_nav_item">공지사항 관리</a>
+            <a href="/admin/inquiry" class="admin_nav_item">문의 관리</a>
         </div>
 
         <!-- 검색 및 필터 -->
@@ -966,11 +1496,9 @@
                 <input type="text" class="product_search_input" placeholder="제품명으로 검색...">
                 <button class="product_search_btn">검색</button>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="product_add_btn" onclick="showAddForm()">
-                    <i class="fas fa-plus"></i> 제품 추가
-                </button>
-            </div>
+            <button class="product_add_btn" onclick="showAddForm()">
+                <i class="fas fa-plus"></i> 제품 추가
+            </button>
         </div>
 
         <!-- 제품 추가/수정 폼 -->
@@ -1021,57 +1549,50 @@
                     <div class="product_form_item" style="grid-column: 1 / -1;">
                         <label class="product_form_label">옵션 설정 (등록된 옵션 선택)</label>
                         <div class="product_option_wrap">
-                            <!-- 등록된 옵션 선택 영역 -->
                             <div id="productOptionGroupWrap" style="margin-bottom: 15px;">
-                                <!-- renderOptionSelector()가 여기에 렌더링 -->
                             </div>
-                            <!-- 직접 추가한 옵션 리스트 -->
                             <div class="product_option_list" id="productOptionList">
                             </div>
-                            <!-- 기존 버튼 -->
-                            <button type="button"
-                                    class="product_option_add_btn"
-                                    onclick="addOptionItem()">
+                            <button type="button" class="product_option_add_btn" onclick="addOptionItem()">
                                 <i class="fas fa-plus"></i> 옵션 추가
                             </button>
-
                         </div>
                     </div>
                 </div>
 
-                <div class="product_info_section" style="margin-top:20px; padding:20px; background:#f9f9f9; border-radius:8px;">
+                <div class="product_info_section">
                     <label class="product_form_label"><i class="fas fa-info-circle"></i> 영양 상세정보 (1회 제공량 기준)</label>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top:10px;">
+                    <div class="nutrition_grid">
                         <div class="product_form_item">
-                            <label style="font-size:12px;">칼로리 (kcal)</label>
+                            <label>칼로리 (kcal)</label>
                             <input type="number" class="product_form_input" id="nutri_cal">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">나트륨 (mg)</label>
+                            <label>나트륨 (mg)</label>
                             <input type="number" class="product_form_input" id="nutri_sodium">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">탄수화물 (g)</label>
+                            <label>탄수화물 (g)</label>
                             <input type="number" class="product_form_input" id="nutri_carbo">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">당류 (g)</label>
+                            <label>당류 (g)</label>
                             <input type="number" class="product_form_input" id="nutri_sugar">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">단백질 (g)</label>
+                            <label>단백질 (g)</label>
                             <input type="number" class="product_form_input" id="nutri_protein">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">지방 (g)</label>
+                            <label>지방 (g)</label>
                             <input type="number" class="product_form_input" id="nutri_fat">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">포화지방 (g)</label>
+                            <label>포화지방 (g)</label>
                             <input type="number" class="product_form_input" id="nutri_s_fat">
                         </div>
                         <div class="product_form_item">
-                            <label style="font-size:12px;">카페인 (mg)</label>
+                            <label>카페인 (mg)</label>
                             <input type="number" class="product_form_input" id="nutri_caffeine">
                         </div>
                     </div>
@@ -1079,8 +1600,7 @@
 
                 <div class="product_info_section">
                     <label class="product_form_label"><i class="fas fa-exclamation-triangle"></i> 알레르기 유발 요인</label>
-                    <div style="font-size: 13px; color: #999; margin-bottom: 15px;">해당되는 성분을 모두 선택해주세요.</div>
-
+                    <div style="font-size: 13px; color: var(--gray-500); margin-bottom: 16px;">해당되는 성분을 모두 선택해주세요.</div>
                     <div class="allergy_grid" id="allergyCheckWrap"></div>
                 </div>
 
@@ -1089,7 +1609,6 @@
                         <label class="product_form_label">원재료</label>
                         <div class="product_ingredient_wrap">
                             <div class="product_ingredient_list" id="productIngredientList">
-                                <!-- 원재료 항목들이 여기에 동적으로 추가됩니다 -->
                             </div>
                             <button type="button" class="product_ingredient_add_btn" onclick="addIngredientItem()">
                                 <i class="fas fa-plus"></i> 원재료 추가
@@ -1129,39 +1648,6 @@
                         <button class="product_action_btn delete" onclick="deleteProduct(1)">삭제</button>
                     </td>
                 </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/60" alt="제품" class="product_image"></td>
-                    <td>카페라떼</td>
-                    <td>음료</td>
-                    <td>₩4,500</td>
-                    <td>2024-01-01</td>
-                    <td>
-                        <button class="product_action_btn edit" onclick="editProduct(2)">수정</button>
-                        <button class="product_action_btn delete" onclick="deleteProduct(2)">삭제</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/60" alt="제품" class="product_image"></td>
-                    <td>바닐라라떼</td>
-                    <td>음료</td>
-                    <td>₩4,500</td>
-                    <td>2024-01-05</td>
-                    <td>
-                        <button class="product_action_btn edit" onclick="editProduct(3)">수정</button>
-                        <button class="product_action_btn delete" onclick="deleteProduct(3)">삭제</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><img src="https://via.placeholder.com/60" alt="제품" class="product_image"></td>
-                    <td>카푸치노</td>
-                    <td>음료</td>
-                    <td>₩4,500</td>
-                    <td>2024-01-10</td>
-                    <td>
-                        <button class="product_action_btn edit" onclick="editProduct(4)">수정</button>
-                        <button class="product_action_btn delete" onclick="deleteProduct(4)">삭제</button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -1186,44 +1672,25 @@
     <div class="foot_menu">
         <div class="cont_list">
             <ul>
-                <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                <li><a href="/policy/service_policy"><b>이용약관</b></a></li>
+                <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
             </ul>
         </div>
     </div>
 </div>
 <div class="foot_wrap">
     <div class="foot">
-        <div class="cont_list cont_list_content">
+        <div class="foot_logo">
+            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+        </div>
+        <div class="foot_info">
             <ul>
-                <li>
-                    <div class="cont_text">
-                        <div class="cont_list cont_list_m cont_list_m1">
-                            <ul>
-                                <li>
-                                    <div class="foot_logo">
-                                        <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="cont_text foot_info">
-                        <div class="cont_list cont_list_small cont_list_width_m">
-                            <ul>
-                                <li><b>주식회사 앤하우스</b></li>
-                                <li>대표자 김대영</li>
-                                <li>창업상담 1588-0656</li>
-                                <li>고객센터 1588-8298</li>
-                                <li>FAX 02-325-5199</li>
-                                <li>사업자등록번호 105-87-51367</li>
-                                <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                <li>개인정보보호 책임자 이종원</li>
-                            </ul>
-                        </div>
-                    </div>
-                </li>
+                <li><b>팀 부리또</b></li>
+                <li>대표 서재홍</li>
+                <li>연락처 010-3030-7038</li>
+                <li>이메일 wtme3@naver.com</li>
+                <li>주소 동서울대학교</li>
+                <li>팀원 이주희, 박윤호, 하성호</li>
             </ul>
         </div>
     </div>
@@ -1231,9 +1698,7 @@
 
 <!-- 상단 이동 버튼 -->
 <a href="javascript:go_top()">
-    <div class="go_top_wrap">
-        <div class="go_top"></div>
-    </div>
+    <div class="go_top_wrap"></div>
 </a>
 
 <!-- 제품 추가/수정 모달 -->
@@ -1245,31 +1710,30 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <form id="productForm">
+        <form id="productFormModal">
             <div class="product_modal_form_item">
                 <label class="product_modal_label">제품명</label>
-                <input type="text" class="product_modal_input" id="productName" required>
+                <input type="text" class="product_modal_input" id="productNameModal" required>
             </div>
             <div class="product_modal_form_item">
                 <label class="product_modal_label">카테고리</label>
-                <select class="product_modal_input" id="productCategory" required>
+                <select class="product_modal_input" id="productCategoryModal" required>
                     <option value="">선택하세요</option>
                     <option value="음료" selected>음료</option>
                 </select>
             </div>
             <div class="product_modal_form_item">
                 <label class="product_modal_label">가격</label>
-                <input type="number" class="product_modal_input" id="productPrice" required min="0" placeholder="가격을 입력하세요">
+                <input type="number" class="product_modal_input" id="productPriceModal" required min="0" placeholder="가격을 입력하세요">
             </div>
             <div class="product_modal_form_item">
                 <label class="product_modal_label">상세설명</label>
-                <textarea class="product_modal_input" id="productDescription" rows="4" placeholder="상품 상세설명을 입력하세요"></textarea>
+                <textarea class="product_modal_input" id="productDescriptionModal" rows="4" placeholder="상품 상세설명을 입력하세요"></textarea>
             </div>
             <div class="product_modal_form_item">
                 <label class="product_modal_label">옵션 설정</label>
                 <div class="product_option_wrap">
                     <div class="product_option_list" id="productOptionListModal">
-                        <!-- 옵션 항목들이 여기에 동적으로 추가됩니다 -->
                     </div>
                     <button type="button" class="product_option_add_btn" onclick="addOptionItemModal()">
                         <i class="fas fa-plus"></i> 옵션 그룹 추가
@@ -1278,8 +1742,8 @@
             </div>
             <div class="product_modal_form_item">
                 <label class="product_modal_label">이미지</label>
-                <input type="file" class="product_modal_input" id="productImage" accept="image/*" onchange="previewImage(this)">
-                <img id="productImagePreview" class="product_modal_image_preview" style="display: none;" alt="미리보기">
+                <input type="file" class="product_modal_input" id="productImageModal" accept="image/*" onchange="previewImageModal(this)">
+                <img id="productImagePreviewModal" class="product_modal_image_preview" style="display: none;" alt="미리보기">
             </div>
             <div class="product_modal_actions">
                 <button type="button" class="product_modal_btn cancel" onclick="closeProductModal()">취소</button>
@@ -1310,7 +1774,7 @@
         <div class="delete_modal_text">
             제품이 삭제되었습니다.
         </div>
-        <button type="button" class="delete_modal_btn close" onclick="closeDeleteSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
+        <button type="button" class="delete_modal_btn close" onclick="closeDeleteSuccessModal()">확인</button>
     </div>
 </div>
 
@@ -1321,7 +1785,7 @@
         <div class="delete_modal_text">
             제품 정보가 수정되었습니다.
         </div>
-        <button type="button" class="delete_modal_btn close" onclick="closeEditSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
+        <button type="button" class="delete_modal_btn close" onclick="closeEditSuccessModal()">확인</button>
     </div>
 </div>
 
@@ -1332,14 +1796,30 @@
         <div class="delete_modal_text">
             제품이 추가되었습니다.
         </div>
-        <button type="button" class="delete_modal_btn close" id="addSuccessModalBtn" onclick="closeAddSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important; border-color: #D95B3B !important;">확인</button>
+        <button type="button" class="delete_modal_btn close" id="addSuccessModalBtn" onclick="closeAddSuccessModal()">확인</button>
+    </div>
+</div>
+
+<!-- 옵션 선택 모달 -->
+<div class="option_select_modal" id="optionSelectModal">
+    <div class="option_select_modal_content">
+        <div class="option_select_modal_header">
+            <div class="option_select_modal_title" id="optionSelectModalTitle">옵션 선택</div>
+            <button class="option_select_modal_close" onclick="closeOptionSelectModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="option_select_list" id="optionSelectList">
+        </ul>
+        <button class="option_select_confirm_btn" onclick="confirmOptionSelection()">선택 완료</button>
     </div>
 </div>
 
 <script>
-    AOS.init({
-        duration: 1200,
-    });
+    // Go to top function
+    function go_top() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     const PRODUCT_API  = 'http://localhost:8000/api/admin/products';
     const OPTION_API   = 'http://localhost:8000/api/admin/options';
@@ -1360,7 +1840,7 @@
 
         data.content.forEach(p => {
             const imagePath = `/src/tem/${p.menuName}.png`;
-            const defaultImage = '/src/tem/no-image.png'; // 또는 '/src/tem/default.png'
+            const defaultImage = '/logo/logo.png';
 
             tbody.innerHTML += `
             <tr>
@@ -1401,9 +1881,17 @@
         tbody.innerHTML = '';
 
         data.content.forEach(p => {
+            const imagePath = `/src/tem/${p.menuName}.png`;
+            const defaultImage = '/logo/logo.png';
+
             tbody.innerHTML += `
         <tr>
-            <td><img src="${p.imageUrl ?? 'https://via.placeholder.com/60'}" class="product_image"></td>
+            <td>
+                <img src="${imagePath}"
+                     class="product_image"
+                     alt="${p.menuName}"
+                     onerror="this.onerror=null; this.src='${defaultImage}';">
+            </td>
             <td>${p.menuName}</td>
             <td>${p.category}</td>
             <td>₩${Number(p.basePrice).toLocaleString()}</td>
@@ -1418,17 +1906,8 @@
         renderPagination(data.totalPages, page);
     }
 
-
     // 권한 체크
     $(document).ready(function() {
-        // var userRole = localStorage.getItem('userRole');
-        // if (userRole !== 'admin') {
-        //     alert('관리자 권한이 필요합니다.');
-        //     window.location.href = 'login.html';
-        //     return;
-        // }
-
-        // 사용자명 표시
         var userName = localStorage.getItem('userName') || 'Admin';
         $('.head_user_name').text(userName);
 
@@ -1450,7 +1929,7 @@
             e.preventDefault();
             if (confirm('로그아웃하시겠습니까?')) {
                 localStorage.clear();
-                window.location.href = 'login.html';
+                window.location.href = '/';
             }
         });
 
@@ -1469,14 +1948,13 @@
 
     function addOptionItem() {
         optionCounter++;
-        // DB에서 불러올 옵션 목록 (예시)
         const options = [
             {id: 1, name: "샷 추가", basePrice: 500},
             {id: 2, name: "휘핑 추가", basePrice: 600},
             {id: 3, name: "사이즈 업(L)", basePrice: 1000}
         ];
 
-        let selectHtml = `<div class="product_option_item" id="opt_${optionCounter}" style="display:flex; gap:10px; margin-bottom:10px;">
+        let selectHtml = `<div class="product_option_item" id="opt_${optionCounter}">
                 <select class="product_form_input" style="flex:1;">
                     <option value="">적용할 옵션 선택</option>`;
 
@@ -1489,19 +1967,6 @@
             </div>`;
 
         $('#productOptionList').append(selectHtml);
-    }
-    function hideProductForm() {
-        $('#productFormWrap').slideUp();
-        $('#productListWrap').show();
-        $('#productForm')[0].reset(); // input, checkbox 모두 초기화
-        $('#productImagePreviewRow').hide();
-        $('#productIngredientList').empty();
-        $('#productOptionList').empty();
-        // 알레르기 체크박스 초기화
-        $('.allergy_check_item').removeClass('selected');
-        $('.allergy_check_item input[type="checkbox"]').prop('checked', false);
-        ingredientCounter = 0;
-        optionCounter = 0;
     }
 
     // 옵션 항목 추가 (모달)
@@ -1571,7 +2036,6 @@
         $('#productImagePreviewRow').hide();
         $('#productIngredientList').empty();
         $('#productOptionList').empty();
-        // 알레르기 체크박스 초기화
         $('.allergy_check_item').removeClass('selected');
         $('.allergy_check_item input[type="checkbox"]').prop('checked', false);
         ingredientCounter = 0;
@@ -1609,15 +2073,33 @@
     }
 
     function fillOptions(optionIds) {
-        if (!Array.isArray(optionIds)) return;
+        if (!Array.isArray(optionIds) || optionIds.length === 0) return;
 
-        $('input[name="option"]').each(function () {
-            const id = Number(this.value);
-            const checked = optionIds.includes(id);
+        window.selectedOptionsByGroup = {};
 
-            $(this).prop('checked', checked)
-                .closest('.allergy_check_item')
-                .toggleClass('selected', checked);
+        window.optionGroupsData.forEach((group, groupIndex) => {
+            const groupName = group.optionGroupName;
+            const selectedInGroup = [];
+
+            group.options.forEach(opt => {
+                if (optionIds.includes(opt.optionId)) {
+                    selectedInGroup.push({
+                        id: opt.optionId,
+                        name: opt.optionName,
+                        price: opt.defaultPrice
+                    });
+                }
+            });
+
+            if (selectedInGroup.length > 0) {
+                window.selectedOptionsByGroup[groupName] = selectedInGroup;
+
+                const $btn = $(`.option_group_btn[data-group-name="${groupName}"]`);
+                const text = selectedInGroup.length > 1
+                    ? `${selectedInGroup[0].name} 외 ${selectedInGroup.length - 1}건`
+                    : selectedInGroup[0].name;
+                $btn.find('.option_group_btn_text').text(text).addClass('selected');
+            }
         });
     }
 
@@ -1644,8 +2126,6 @@
         });
     }
 
-
-
     // 제품 수정 폼 표시
     async function openEditProduct(menuCode) {
         const res = await fetch(`${PRODUCT_API}/${menuCode}`);
@@ -1655,7 +2135,6 @@
 
         showAddForm();
 
-        // 중요: 셀렉터 목록(카테고리 포함)이 먼저 로드되어 있어야 값을 채울 수 있습니다.
         await loadSelectors();
 
         $('#productName').val(data.menuName);
@@ -1669,10 +2148,9 @@
 
         fillNutrition(data);
         fillOptions(data.optionIds);
-        fillIngredients(data.recipes); // DTO에서 recipes로 오므로 명칭 확인
+        fillIngredients(data.recipes);
         fillAllergies(data.allergyIds);
     }
-
 
     // 제품 폼 숨기기
     function hideProductForm() {
@@ -1682,9 +2160,13 @@
         $('#productImagePreviewRow').hide();
         $('#productIngredientList').empty();
         $('#productOptionList').empty();
-        // 알레르기 체크박스 초기화
         $('.allergy_check_item').removeClass('selected');
         $('.allergy_check_item input[type="checkbox"]').prop('checked', false);
+        window.selectedOptionsByGroup = {};
+        $('.option_group_btn_text').each(function() {
+            const groupName = $(this).closest('.option_group_btn').data('group-name');
+            $(this).text(groupName).removeClass('selected');
+        });
         ingredientCounter = 0;
         optionCounter = 0;
     }
@@ -1696,6 +2178,16 @@
             reader.onload = function(e) {
                 $('#productImagePreview').attr('src', e.target.result);
                 $('#productImagePreviewRow').show();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewImageModal(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#productImagePreviewModal').attr('src', e.target.result).show();
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -1720,7 +2212,6 @@
         loadProductList(currentPage);
     }
 
-
     function closeDeleteModal() {
         $('#deleteModal').removeClass('show');
         deleteProductId = null;
@@ -1728,35 +2219,23 @@
 
     function closeDeleteSuccessModal() {
         $('#deleteSuccessModal').removeClass('show');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
         location.reload();
     }
 
     function closeEditSuccessModal() {
         $('#editSuccessModal').removeClass('show');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
         location.reload();
     }
 
     function closeAddSuccessModal() {
         $('#addSuccessModal').removeClass('show');
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
         location.reload();
     }
 
-    // 스크롤바 너비 계산
-    function getScrollbarWidth() {
-        const outer = document.createElement('div');
-        outer.style.visibility = 'hidden';
-        outer.style.overflow = 'scroll';
-        outer.style.msOverflowStyle = 'scrollbar';
-        document.body.appendChild(outer);
-        const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-        outer.parentNode.removeChild(outer);
-        return scrollbarWidth;
+    function closeProductModal() {
+        $('#productModal').removeClass('active');
+        $('#productOptionListModal').empty();
+        optionCounterModal = 0;
     }
 
     // 제품 폼 제출
@@ -1769,14 +2248,11 @@
                 category: $('#productCategory').val(),
                 basePrice: Number($('#productPrice').val()),
                 description: $('#productDescription').val(),
-
-                optionIds: collectSelectedOptionIds(),   // ✅ 등록 옵션
-                customOptions: collectCustomOptions(),   // ✅ 직접 옵션
-
+                optionIds: collectSelectedOptionIds(),
+                customOptions: collectCustomOptions(),
                 ingredients: collectIngredients(),
                 allergyIds: collectAllergies(),
                 nutrition: collectNutrition()
-
             };
 
             const url = editingMenuCode
@@ -1796,7 +2272,6 @@
             loadProductList(currentPage);
         });
 
-
         // 모달 외부 클릭 시 닫기
         $(document).on('click', '.delete_modal', function(e) {
             if ($(e.target).hasClass('delete_modal')) {
@@ -1806,164 +2281,52 @@
                 closeAddSuccessModal();
             }
         });
-
-        // 제품 모달 닫기
-        function closeProductModal() {
-            $('#productModal').removeClass('active');
-            $('#productOptionListModal').empty();
-            optionCounterModal = 0;
-        }
-
-        // 재료 목록 로드
-        function loadMaterialList() {
-            // API 호출 (실제로는 서버에서 가져와야 함)
-            // GET /api/admin/inventory 또는 GET /api/owner/inventory
-            $.ajax({
-                url: '/api/admin/inventory',
-                method: 'GET',
-                success: function(response) {
-                    if (response.success && response.data) {
-                        let optionsHtml = '<option value="">선택하세요</option>';
-                        response.data.forEach(function(material) {
-                            optionsHtml += '<option value="' + material.ingredient_id + '">' + material.ingredient_name + '</option>';
-                        });
-                        $('#optionFromMaterial').html(optionsHtml);
-                        $('#optionToMaterial').html(optionsHtml);
-                    }
-                },
-                error: function() {
-                    // 에러 시 예시 데이터
-                    const exampleMaterials = [
-                        { ingredient_id: 1, ingredient_name: '아메리카노 원두' },
-                        { ingredient_id: 2, ingredient_name: '라떼 원두' },
-                        { ingredient_id: 3, ingredient_name: '우유' },
-                        { ingredient_id: 4, ingredient_name: '시럽' }
-                    ];
-                    let optionsHtml = '<option value="">선택하세요</option>';
-                    exampleMaterials.forEach(function(material) {
-                        optionsHtml += '<option value="' + material.ingredient_id + '">' + material.ingredient_name + '</option>';
-                    });
-                    $('#optionFromMaterial').html(optionsHtml);
-                    $('#optionToMaterial').html(optionsHtml);
-                }
-            });
-        }
-
-        function collectNutrition() {
-            return {
-                calories: Number($('#nutri_cal').val()) || 0,
-                sodium: Number($('#nutri_sodium').val()) || 0,
-                carbs: Number($('#nutri_carbo').val()) || 0,
-                sugars: Number($('#nutri_sugar').val()) || 0,
-                protein: Number($('#nutri_protein').val()) || 0,
-                fat: Number($('#nutri_fat').val()) || 0,
-                saturatedFat: Number($('#nutri_s_fat').val()) || 0,
-                caffeine: Number($('#nutri_caffeine').val()) || 0
-            };
-        }
-
-        function collectSelectedOptionIds() {
-            return [...document.querySelectorAll('input[name="option"]:checked')]
-                .map(el => Number(el.value));
-        }
-
-        function collectCustomOptions() {
-            return [...document.querySelectorAll('#productOptionList .product_option_item')]
-                .map(el => ({
-                    optionId: el.querySelector('select')?.value || null
-                }))
-                .filter(o => o.optionId);
-        }
-
-        function collectIngredients() {
-            return [...document.querySelectorAll('.product_ingredient_item')].map(el => ({
-                name: el.querySelector('.product_ingredient_select').value,
-                amount: Number(el.querySelector('.product_ingredient_amount').value),
-                unit: el.querySelector('.product_ingredient_unit').value
-            }));
-        }
-
-        function collectAllergies() {
-            return [...document.querySelectorAll('input[name="allergy"]:checked')]
-                .map(el => Number(el.value));
-        }
-
-        // 옵션 등록 폼 제출
-        $('#optionRegisterForm').on('submit', function(e) {
-            e.preventDefault();
-
-            const optionGroupName = $('#optionGroupName').val();
-            const optionName = $('#optionName').val();
-            const defaultPrice = $('#optionDefaultPrice').val();
-            const processMethod = $('#optionProcessMethod').val();
-            const quantity = $('#optionQuantity').val();
-            const fromMaterialId = $('#optionFromMaterial').val() || null;
-            const toMaterialId = $('#optionToMaterial').val() || null;
-
-            if (!optionGroupName || !optionName || !defaultPrice || !processMethod || !quantity) {
-                alert('필수 항목을 모두 입력해주세요.');
-                return false;
-            }
-
-            if (processMethod === '변경' && !fromMaterialId) {
-                alert('변경 전 재료를 선택해주세요.');
-                return false;
-            }
-
-            if ((processMethod === '추가' || processMethod === '변경') && !toMaterialId) {
-                alert('변경 후 재료를 선택해주세요.');
-                return false;
-            }
-
-            // API 호출 (실제로는 서버에 요청)
-            // POST /api/admin/options
-            $.ajax({
-                url: '/api/admin/options',
-                method: 'POST',
-                data: JSON.stringify({
-                    option_group_name: optionGroupName,
-                    option_name: optionName,
-                    default_price: defaultPrice,
-                    process_method: processMethod,
-                    quantity: quantity,
-                    from_material_id: fromMaterialId,
-                    to_material_id: toMaterialId
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    closeOptionRegisterModal();
-                    alert('옵션이 등록되었습니다.');
-                    // 페이지 새로고침 또는 옵션 목록 업데이트
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.error('옵션 등록 실패:', error);
-                    alert('옵션 등록에 실패했습니다.');
-                }
-            });
-
-            return false;
-        });
-
-        // 옵션 등록 모달 외부 클릭 시 닫기
-        $(document).on('click', '#optionRegisterModal', function(e) {
-            if ($(e.target).hasClass('product_modal_overlay')) {
-                closeOptionRegisterModal();
-            }
-        });
     });
+
+    function collectNutrition() {
+        return {
+            calories: Number($('#nutri_cal').val()) || 0,
+            sodium: Number($('#nutri_sodium').val()) || 0,
+            carbs: Number($('#nutri_carbo').val()) || 0,
+            sugars: Number($('#nutri_sugar').val()) || 0,
+            protein: Number($('#nutri_protein').val()) || 0,
+            fat: Number($('#nutri_fat').val()) || 0,
+            saturatedFat: Number($('#nutri_s_fat').val()) || 0,
+            caffeine: Number($('#nutri_caffeine').val()) || 0
+        };
+    }
+
+    function collectCustomOptions() {
+        return [...document.querySelectorAll('#productOptionList .product_option_item')]
+            .map(el => ({
+                optionId: el.querySelector('select')?.value || null
+            }))
+            .filter(o => o.optionId);
+    }
+
+    function collectIngredients() {
+        return [...document.querySelectorAll('.product_ingredient_item')].map(el => ({
+            name: el.querySelector('.product_ingredient_select').value,
+            amount: Number(el.querySelector('.product_ingredient_amount').value),
+            unit: el.querySelector('.product_ingredient_unit').value
+        }));
+    }
+
+    function collectAllergies() {
+        return [...document.querySelectorAll('input[name="allergy"]:checked')]
+            .map(el => Number(el.value));
+    }
 
     function renderAllergySelector(allergies) {
         const $wrap = $('#allergyCheckWrap');
         $wrap.empty();
 
         allergies.forEach(a => {
-            // ⭐ a.allergyId(숫자)가 value에 들어가야 합니다.
-            // 만약 a.allergyId가 없다면 서버에서 내려주는 데이터의 ID 필드명을 확인하세요.
             $wrap.append(`
             <label class="allergy_check_item">
                 <input type="checkbox" name="allergy" value="${a.allergyId}">
                 <span>${a.allergyName}</span>
+                <div class="allergy_icon"><i class="fas fa-check"></i></div>
             </label>
              `);
         });
@@ -1983,43 +2346,118 @@
         });
     }
 
+    // 전역 변수: 옵션 그룹 데이터 및 선택된 옵션
+    window.optionGroupsData = [];
+    window.selectedOptionsByGroup = {};
+    window.currentOptionGroupIndex = null;
+
     function renderOptionSelector(optionGroups) {
+        window.optionGroupsData = optionGroups;
         const $wrap = $('#productOptionGroupWrap');
         $wrap.empty();
 
-        optionGroups.forEach(group => {
-            const groupHtml = `
-        <div class="option_group">
-            <div class="option_group_title">${group.optionGroupName}</div>
-            <div class="option_items">
-                ${group.options.map(opt => `
-                    <label class="allergy_check_item">
-                        <input type="checkbox"
-                               name="option"
-                               value="${opt.optionId}">
-                        <span class="allergy_name">
-                            ${opt.optionName} (+₩${opt.defaultPrice})
-                        </span>
-                        <div class="allergy_icon">
-                            <i class="fas fa-check"></i>
-                        </div>
-                    </label>
-                `).join('')}
-            </div>
-        </div>
-        `;
-            $wrap.append(groupHtml);
+        if (!optionGroups || optionGroups.length === 0) {
+            $wrap.html('<div style="color: var(--gray-500); padding: 12px;">등록된 옵션이 없습니다.</div>');
+            return;
+        }
+
+        let html = '<div class="option_group_btn_wrap">';
+        optionGroups.forEach((group, index) => {
+            html += `
+                <div class="option_group_btn" data-group-index="${index}" data-group-name="${group.optionGroupName}">
+                    <span class="option_group_btn_text">${group.optionGroupName}</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>`;
+        });
+        html += '</div>';
+        $wrap.html(html);
+
+        $('.option_group_btn').on('click', function() {
+            const groupIndex = $(this).data('group-index');
+            const groupName = $(this).data('group-name');
+            openOptionSelectModal(groupIndex, groupName);
         });
     }
 
-    // 카테고리 셀렉터 렌더링 함수
+    function openOptionSelectModal(groupIndex, groupName) {
+        window.currentOptionGroupIndex = groupIndex;
+        const group = window.optionGroupsData[groupIndex];
+        if (!group) return;
+
+        $('#optionSelectModalTitle').text(groupName + ' 선택');
+
+        const selectedIds = (window.selectedOptionsByGroup[groupName] || []).map(o => o.id);
+
+        let html = '';
+        group.options.forEach(opt => {
+            const isSelected = selectedIds.includes(opt.optionId);
+            const selectedClass = isSelected ? 'selected' : '';
+            html += `
+                <li class="option_select_item ${selectedClass}"
+                    data-id="${opt.optionId}"
+                    data-name="${opt.optionName}"
+                    data-price="${opt.defaultPrice}"
+                    data-group="${groupName}">
+                    <span class="option_select_item_name">${opt.optionName} (+₩${Number(opt.defaultPrice).toLocaleString()})</span>
+                    <div class="option_select_item_check"><i class="fas fa-check"></i></div>
+                </li>`;
+        });
+        $('#optionSelectList').html(html);
+
+        $('.option_select_item').on('click', function() {
+            $(this).toggleClass('selected');
+        });
+
+        $('#optionSelectModal').addClass('active');
+    }
+
+    function closeOptionSelectModal() {
+        $('#optionSelectModal').removeClass('active');
+    }
+
+    function confirmOptionSelection() {
+        const groupIndex = window.currentOptionGroupIndex;
+        const group = window.optionGroupsData[groupIndex];
+        const groupName = group.optionGroupName;
+
+        const selectedInGroup = [];
+        $('#optionSelectList .option_select_item.selected').each(function() {
+            selectedInGroup.push({
+                id: $(this).data('id'),
+                name: $(this).data('name'),
+                price: $(this).data('price')
+            });
+        });
+
+        window.selectedOptionsByGroup[groupName] = selectedInGroup;
+
+        const $btn = $(`.option_group_btn[data-group-name="${groupName}"]`);
+        if (selectedInGroup.length > 0) {
+            const text = selectedInGroup.length > 1
+                ? `${selectedInGroup[0].name} 외 ${selectedInGroup.length - 1}건`
+                : selectedInGroup[0].name;
+            $btn.find('.option_group_btn_text').text(text).addClass('selected');
+        } else {
+            $btn.find('.option_group_btn_text').text(groupName).removeClass('selected');
+        }
+
+        closeOptionSelectModal();
+    }
+
+    function collectSelectedOptionIds() {
+        const ids = [];
+        Object.values(window.selectedOptionsByGroup || {}).forEach(options => {
+            options.forEach(opt => ids.push(opt.id));
+        });
+        return ids;
+    }
+
     function renderCategorySelector(categories) {
         const $select = $('#productCategory');
         $select.empty();
         $select.append('<option value="">선택하세요</option>');
 
         categories.forEach(c => {
-            // DTO의 필드명이 categoryName인지 확인하세요.
             $select.append(`<option value="${c.categoryName}">${c.categoryName}</option>`);
         });
     }
@@ -2029,13 +2467,13 @@
             fetch(OPTION_API).then(r => r.json()),
             fetch(MATERIAL_API).then(r => r.json()),
             fetch(ALLERGY_API).then(r => r.json()),
-            fetch(CATEGORY_API).then(r => r.json()) // 카테고리 추가
+            fetch(CATEGORY_API).then(r => r.json())
         ]);
 
         renderOptionSelector(opts);
         renderMaterialSelector(mats);
         renderAllergySelector(alls);
-        renderCategorySelector(cats); // 카테고리 렌더링 실행
+        renderCategorySelector(cats);
     }
 
     $(document).ready(function () {
@@ -2053,14 +2491,12 @@
         });
     });
 
-
     function renderPagination(totalPages, currentPage) {
         const $wrap = $('.board_page ul');
         $wrap.empty();
 
         if (totalPages <= 1) return;
 
-        // 처음
         $wrap.append(`
         <li>
             <a href="javascript:void(0)" onclick="loadProductList(1)">
@@ -2069,7 +2505,6 @@
         </li>
     `);
 
-        // 페이지 번호
         for (let i = 1; i <= totalPages; i++) {
             $wrap.append(`
             <li class="${i === currentPage ? 'board_page_check' : ''}">
@@ -2080,7 +2515,6 @@
         `);
         }
 
-        // 마지막
         $wrap.append(`
         <li>
             <a href="javascript:void(0)" onclick="loadProductList(${totalPages})">
@@ -2089,7 +2523,6 @@
         </li>
     `);
     }
-
 </script>
 </body>
 </html>

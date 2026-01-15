@@ -16,7 +16,13 @@
     <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
     <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
+    <!-- Global UI Kit -->
+    <link rel="stylesheet" th:href="@{/css/global-ui-kit.css}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
     <!-- 로그인/장바구니 영역 스타일 -->
     <style>
         .head_wrap .head {
@@ -259,12 +265,22 @@
             }
         }
         /* 주문내역 스타일 */
+        .cont_wrap.bbs_wrap {
+            background: #F8FAFC;
+            min-height: 100vh;
+        }
+        .cont_box {
+            background: transparent;
+        }
         .order_tab_wrap {
-            border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 30px;
+            background: #fff;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f8f9fa;
         }
         .order_tab {
-            display: flex;
+            display: flex !important;
             gap: 0;
         }
         .order_tab li {
@@ -272,51 +288,67 @@
             text-align: center;
         }
         .order_tab li a {
-            display: block;
-            padding: 15px 20px;
-            color: #666;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
+            display: block !important;
+            padding: 20px !important;
+            color: #868e96 !important;
+            text-decoration: none !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            border-bottom: 4px solid transparent !important;
             transition: all 0.3s;
+            position: relative;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        .order_tab li a:hover {
+            color: #D95B3B !important;
+            background: #fffbfa !important;
         }
         .order_tab li.check a {
-            color: #333;
-            font-weight: 700;
-            border-bottom-color: #333;
+            color: #D95B3B !important;
+            font-weight: 700 !important;
+            border-bottom-color: #D95B3B !important;
+            background: linear-gradient(180deg, #fffbfa 0%, #fff 100%) !important;
         }
         .order_filter_wrap {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 30px;
-            padding: 0 0 20px;
+            margin-bottom: 20px;
+            padding: 20px 24px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f8f9fa;
         }
         .order_filter_btn {
-            padding: 8px 20px !important;
-            border: 1px solid #d0d0d0 !important;
-            border-radius: 20px !important;
+            padding: 12px 24px !important;
+            border: 2px solid #e9ecef !important;
+            border-radius: 24px !important;
             background: #fff !important;
-            color: #666 !important;
+            color: #868e96 !important;
             font-size: 14px !important;
+            font-weight: 600 !important;
             cursor: pointer !important;
-            transition: all 0.3s !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
         .order_filter_btn:hover {
-            border-color: #D95B3B !important;
+            border-color: #ffd6cc !important;
             color: #D95B3B !important;
+            background: #fffbfa !important;
+            transform: translateY(-1px) !important;
         }
         .order_filter_btn.active {
             background: #D95B3B !important;
             color: #fff !important;
             border-color: #D95B3B !important;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3) !important;
+            transform: translateY(-2px) !important;
         }
         .order_filter_icon {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #e0e0e0;
+            width: 44px;
+            height: 44px;
+            border: 1px solid #e2e8f0;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -325,105 +357,189 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-left: auto;
+            color: #64748b;
         }
         .order_filter_icon:hover {
-            border-color: #333;
-            color: #333;
+            border-color: #D95B3B;
+            color: #D95B3B;
         }
         .order_list {
             list-style: none;
             margin: 0;
             padding: 0;
         }
+
+        /* 카드 레이아웃 - 배민 스타일 (밝고 친근하게) */
         .order_item {
             background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 2px solid #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+        .order_item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #D95B3B 0%, #ff7a59 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .order_item:hover::before {
+            opacity: 1;
         }
         .order_item:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(217, 91, 59, 0.15);
+            transform: translateY(-4px);
+            border-color: #ffd6cc;
         }
         .order_status_tag {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #f5f5f5;
-            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background: #fff3e0;
+            border-radius: 20px;
             font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
+            font-weight: 700;
+            color: #e65100;
+            margin-bottom: 12px;
+            border: 1px solid #ffcc80;
         }
         .order_status_tag.status_completed {
-            background: #4caf50;
-            color: #fff;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #a5d6a7;
         }
         .order_status_tag.status_shipping {
-            background: #2196f3;
-            color: #fff;
+            background: #e3f2fd;
+            color: #1565c0;
+            border-color: #90caf9;
         }
         .order_status_tag.status_delivered {
-            background: #9e9e9e;
-            color: #fff;
+            background: #f3e5f5;
+            color: #6a1b9a;
+            border-color: #ce93d8;
         }
-        .order_item {
-            cursor: pointer;
-        }
-        .order_item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
+
+        /* Flexbox를 사용하여 헤더 레이아웃 개선 - 간격 20% 증가 */
         .order_item_header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
+            gap: 20px;
+        }
+        .order_item_header_left {
+            flex: 1;
+            min-width: 0; /* flex item truncation을 위해 필요 */
         }
         .order_item_id {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 5px;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .order_item_date {
             font-size: 12px;
-            color: #999;
+            color: #cbd5e1;
+            font-weight: 400;
+            white-space: nowrap;
         }
+        .order_item_name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c2c2c;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        /* Footer 레이아웃 개선 - 배민 스타일 */
         .order_item_footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px dashed #f1f5f9;
+            gap: 12px;
         }
         .order_item_count {
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #495057;
+            font-weight: 600;
         }
         .order_item_price {
-            font-size: 16px;
-            font-weight: 700;
-            color: #333;
+            font-size: 19px;
+            font-weight: 800;
+            color: #D95B3B;
+            white-space: nowrap;
         }
-        .order_item_name {
-            font-size: 16px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .order_item_info {
-            font-size: 14px;
-            color: #999;
-        }
+        /* Empty State 디자인 개선 */
         .order_empty {
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            padding: 80px 40px;
+            color: #64748b;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
         }
-        .order_empty i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: #e0e0e0;
+        .order_empty_icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .order_empty_icon i {
+            font-size: 56px;
+            color: #D95B3B;
+        }
+        .order_empty_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .order_empty_text {
+            font-size: 15px;
+            font-weight: 400;
+            color: #64748b;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .order_empty_button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: #D95B3B;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(217, 91, 59, 0.3);
+        }
+        .order_empty_button:hover {
+            background: #C74A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 91, 59, 0.4);
+            color: #fff;
         }
         /* 조회조건 선택 오버레이 */
         .order_filter_overlay {
@@ -660,6 +776,9 @@
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
     
@@ -667,7 +786,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -675,49 +794,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">토리 스토리</a>
+                            <a href="/about/brand" class="pc">토리 스토리</a>
                             <a class="m head_menu_down">토리 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="/about/brand">브랜드</a></li>
+                                    <li><a href="/about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="/menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="/menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="/about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="/about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="/bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="/bbs/notice">공지사항</a></li>
+                                    <li><a href="/bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="/bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="/bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -738,7 +857,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="/login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -751,9 +870,9 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="history.html">주문/배송조회</a></li>
-                                    <li><a href="#">로그아웃</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
+                                    <li><a href="#" class="logout_link">로그아웃</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -783,33 +902,33 @@
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">토리 스토리</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/brand.html">브랜드</a>
-                        <a href="../about/bi.html">BI</a>
+                        <a href="/about/brand">브랜드</a>
+                        <a href="/about/bi">BI</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">메뉴소개</div>
                     <div class="mobile_menu_sub">
-                        <a href="../menu/drink.html">음료</a>
+                        <a href="/menu/drink">음료</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">매장</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/map.html">오시는 길</a>
+                        <a href="/about/map">오시는 길</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">소식</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/notice.html">공지사항</a>
-                        <a href="../bbs/faq.html">FAQ</a>
+                        <a href="/bbs/notice">공지사항</a>
+                        <a href="/bbs/faq">FAQ</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">이벤트</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/event.html">이벤트</a>
+                        <a href="/bbs/event">이벤트</a>
                     </div>
                 </div>
             </div>
@@ -872,8 +991,15 @@
 
                     <!-- 주문이 없을 때 -->
                     <div class="order_empty" id="orderEmptyMessage" style="display: none;">
-                        <i class="far fa-inbox"></i>
-                        <div class="cont_text">주문 내역이 없습니다.</div>
+                        <div class="order_empty_icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="order_empty_title">주문 내역이 없습니다</div>
+                        <div class="order_empty_text">첫 주문을 하러 가볼까요?<br>맛있는 커피가 기다리고 있어요!</div>
+                        <a href="/menu/drink" class="order_empty_button">
+                            <i class="fas fa-coffee"></i>
+                            메뉴 보러가기
+                        </a>
                     </div>
 
                     <!-- 페이지네이션 -->
@@ -948,9 +1074,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -974,14 +1100,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -1022,45 +1146,110 @@
         });
 
         $(document).ready(function() {
+            // 로그인 필수 체크 - 비로그인 시 로그인 페이지로 이동
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                alert('로그인이 필요한 서비스입니다.');
+                window.location.href = '/login?redirect=/order/history';
+                return;
+            }
+
+            // 로그인 상태 체크 함수
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 확인
+            checkLoginStatus();
+
+            // 로그인 드롭다운 토글
+            $('.head_login_trigger').on('click', function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 드롭다운 외부 클릭 시 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 처리
+            $('.logout_link').on('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userId');
+                showToast('로그아웃 완료', '안전하게 로그아웃되었습니다', 'success');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            });
+
             let allOrders = []; // 전체 데이터를 담을 변수
+            let currentPage = 1;
+            let currentPeriod = null; // 현재 선택된 기간 (null = 전체)
+            const itemsPerPage = 5; // 페이지당 5개씩
 
             // [1] 버튼 스타일 초기화 및 '전체' 버튼 활성화
-            function initFilterButtons() {
+            function initFilterButtons(activePeriod) {
                 $('.order_filter_btn').each(function() {
-                    const btnText = $(this).text().trim();
-                    if (btnText === '전체') {
-                        // 전체 버튼을 주황색으로
+                    const btnPeriod = $(this).data('period');
+                    const isActive = (activePeriod === null && btnPeriod === 6) ||
+                                     (activePeriod === btnPeriod);
+
+                    if (isActive) {
                         $(this).attr('style', 'background: #D95B3B !important; color: #fff !important; border: 1px solid #D95B3B !important;');
                     } else {
-                        // 나머지 버튼을 흰색으로
                         $(this).attr('style', 'background: #fff !important; color: #666 !important; border: 1px solid #d0d0d0 !important;');
                     }
                 });
             }
 
-            // [2] 데이터 로드 함수
-            async function loadOrderHistory() {
+            // [2] 데이터 로드 함수 (기간 파라미터 지원)
+            async function loadOrderHistory(period) {
                 const $container = $('#orderListContainer');
                 const $emptyMessage = $('#orderEmptyMessage');
 
+                // period: 1, 3 = 해당 개월, 6 또는 null = 전체
+                let url = 'http://localhost:8000/api/order/history';
+                if (period && period !== 6) {
+                    url += '?period=' + period;
+                }
+
+                console.log('[주문내역] API 호출:', url);
+
                 try {
-                    const response = await fetch('http://localhost:8000/api/order/history');
+                    const response = await fetch(url);
                     if (!response.ok) throw new Error('데이터 로드 실패');
 
                     allOrders = await response.json();
-                    renderOrderList(allOrders); // 초기화면: 전체 데이터
+                    currentPage = 1;
+                    currentPeriod = period;
+                    renderOrderList(allOrders);
 
                 } catch (e) {
                     console.error("데이터가 없거나 오류 발생:", e);
+                    showToast('오류 발생', '주문 내역을 불러올 수 없습니다', 'error');
                     $container.hide();
                     $emptyMessage.show();
                 } finally {
-                    // 데이터 유무와 상관없이 버튼 스타일은 초기화
-                    initFilterButtons();
+                    initFilterButtons(period);
                 }
             }
 
-            // [3] 리스트 렌더링
+            // [3] 리스트 렌더링 (페이지네이션 추가)
             function renderOrderList(orders) {
                 const $container = $('#orderListContainer');
                 const $emptyMessage = $('#orderEmptyMessage');
@@ -1069,41 +1258,78 @@
                 if (!orders || orders.length === 0) {
                     $container.hide();
                     $emptyMessage.show();
+                    $('.board_page_wrap').hide();
                     return;
                 }
 
                 $container.show();
                 $emptyMessage.hide();
-                orders.forEach(order => {
+
+                // 페이지네이션 계산
+                const totalPages = Math.ceil(orders.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const pageOrders = orders.slice(startIndex, endIndex);
+
+                // 현재 페이지 항목 렌더링
+                pageOrders.forEach(order => {
                     $container.append(createOrderItem(order));
+                });
+
+                // 페이지네이션 렌더링
+                renderPagination(totalPages);
+            }
+
+            // 페이지네이션 렌더링
+            function renderPagination(totalPages) {
+                const $pagination = $('.board_page');
+                $pagination.empty();
+
+                if (totalPages <= 1) {
+                    $('.board_page_wrap').hide();
+                    return;
+                }
+
+                $('.board_page_wrap').show();
+
+                // 이전 버튼
+                if (currentPage > 1) {
+                    $pagination.append(`<a href="#" class="page_prev" data-page="${currentPage - 1}">‹</a>`);
+                }
+
+                // 페이지 번호
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'check' : '';
+                    $pagination.append(`<a href="#" class="${activeClass}" data-page="${i}">${i}</a>`);
+                }
+
+                // 다음 버튼
+                if (currentPage < totalPages) {
+                    $pagination.append(`<a href="#" class="page_next" data-page="${currentPage + 1}">›</a>`);
+                }
+
+                // 페이지 클릭 이벤트
+                $pagination.find('a').on('click', function(e) {
+                    e.preventDefault();
+                    const page = parseInt($(this).data('page'));
+                    if (page && page !== currentPage) {
+                        currentPage = page;
+                        renderOrderList(allOrders);
+                        // 페이지 상단으로 스크롤
+                        $('html, body').animate({ scrollTop: $('.order_tab_wrap').offset().top - 100 }, 300);
+                    }
                 });
             }
 
-            // [4] 클릭 이벤트 (버튼 색상 변경 및 필터링)
+            // [4] 클릭 이벤트 (API 호출로 기간별 필터링)
             $('.order_filter_btn').on('click', function(e) {
                 e.preventDefault();
-                const filterText = $(this).text().trim();
+                const period = $(this).data('period'); // 1, 3, 6(전체)
 
-                // 모든 버튼 초기화 (흰색)
-                $('.order_filter_btn').attr('style', 'background: #fff !important; color: #666 !important; border: 1px solid #d0d0d0 !important;');
+                console.log('[주문내역] 기간 필터 클릭:', period + '개월');
 
-                // 클릭한 버튼 주황색으로 변경
-                $(this).attr('style', 'background: #D95B3B !important; color: #fff !important; border: 1px solid #D95B3B !important;');
-
-                // 필터링 처리
-                if (filterText === '전체') {
-                    renderOrderList(allOrders);
-                } else {
-                    const months = parseInt(filterText);
-                    const cutoffDate = new Date();
-                    cutoffDate.setMonth(cutoffDate.getMonth() - months);
-
-                    const filtered = allOrders.filter(order => {
-                        const orderDate = new Date(order.orderDate);
-                        return orderDate >= cutoffDate;
-                    });
-                    renderOrderList(filtered);
-                }
+                // API 호출하여 기간별 데이터 로드
+                loadOrderHistory(period);
             });
 
             // [5] 아이템 생성 및 포맷 함수들
@@ -1113,15 +1339,15 @@
                 const $item = $('<li>').addClass('order_item').attr('data-order-id', order.orderId);
                 $item.html(`
                 <div class="order_item_header">
-                    <div>
+                    <div class="order_item_header_left">
                         <div class="order_status_tag status_completed">${order.status || '주문완료'}</div>
-                        <div class="order_item_id">주문번호: ${order.orderId}</div>
+                        <div class="order_item_id">주문번호 ${order.orderId}</div>
                     </div>
                     <div class="order_item_date">${orderDate}</div>
                 </div>
-                <div class="order_item_name">주문 상품 확인</div>
+                <div class="order_item_name">${order.itemCount}개 상품</div>
                 <div class="order_item_footer">
-                    <div class="order_item_count">총 ${order.itemCount}개 상품</div>
+                    <div class="order_item_count">${order.itemCount}개</div>
                     <div class="order_item_price">${totalPrice}원</div>
                 </div>
             `);
@@ -1141,8 +1367,8 @@
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
 
-            // 실행
-            loadOrderHistory();
+            // 실행 (초기: 전체 조회, period=6)
+            loadOrderHistory(6);
 
             // [1] 장바구니 카운트 API 호출 함수
             async function updateCartBadge() {
@@ -1164,6 +1390,52 @@
                 updateCartBadge();
             });
         });
+    </script>
+
+    <!-- Toast UI Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Toast UI JavaScript -->
+    <script>
+        // Toast UI 헬퍼 함수
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const iconMap = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconMap[type] || '✓'}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                <button class="toast-close" aria-label="닫기">×</button>
+            `;
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            // 닫기 버튼 이벤트
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
+        }
     </script>
 </body>
 </html>

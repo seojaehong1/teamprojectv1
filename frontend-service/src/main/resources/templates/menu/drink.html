@@ -167,7 +167,21 @@
             background: #D95B3B !important;
             color: #ffffff !important;
         }
-        
+
+        /* 체크박스 색상 변경 */
+        .checkbox input[type="checkbox"]:checked + .check_mark,
+        .checkbox input[type="checkbox"]:checked ~ .check_mark {
+            background-color: #D95B3B !important;
+            border-color: #D95B3B !important;
+        }
+        .checkbox input[type="checkbox"]:checked + .check_mark::after,
+        .checkbox input[type="checkbox"]:checked ~ .check_mark::after {
+            border-color: #fff !important;
+        }
+        .checkbox:hover .check_mark {
+            border-color: #D95B3B !important;
+        }
+
         /* 모바일 메뉴 오버레이 */
         .mobile_menu_overlay {
             position: fixed;
@@ -383,7 +397,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="/mypage/index">마이페이지</a></li>
-                                    <li><a href="/order/history">주문/배송조회</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -558,28 +572,19 @@
                         </div>
                         <div class="checkbox_wrap list_checkbox">
                             <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="커피">
+                                <input type="checkbox" id="" name="list_checkbox" value="커피/라떼">
                                 <span class="check_mark"></span>
                                 <div class="checkbox_text">
-                                    커피
+                                    커피/라떼
                                 </div>
                             </label>
                         </div>
                         <div class="checkbox_wrap list_checkbox">
                             <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="라떼">
+                                <input type="checkbox" id="" name="list_checkbox" value="스무디">
                                 <span class="check_mark"></span>
                                 <div class="checkbox_text">
-                                    라떼
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="스무디/프라페">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    스무디&프라페
+                                    스무디
                                 </div>
                             </label>
                         </div>
@@ -682,9 +687,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -708,14 +713,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -819,6 +822,26 @@
         let selectedCategories = []; // 배열로 변경
 
         $(document).ready(function () {
+            // 로그인 상태 체크 함수
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 로그인 상태 체크
+            checkLoginStatus();
+
             // 최초 로딩: 전체 메뉴 1페이지
             fetchMenuList(1);
 
@@ -848,20 +871,19 @@
             });
 
             /* ===============================
-               카테고리 선택
+               카테고리 선택 (하나만 선택 가능)
             =============================== */
             $('input[name="list_checkbox"]').on('change', function () {
-                selectedCategories = [];
-
-                $('input[name="list_checkbox"]:checked').each(function () {
-                    selectedCategories.push($(this).val());
-                });
-
-                // 아무것도 선택 안 했으면 전체
-                if (selectedCategories.length === 0) {
-                    $('input[name="list_checkbox_all"]').prop('checked', true);
-                } else {
+                if ($(this).prop('checked')) {
+                    // 다른 모든 체크박스 해제
+                    $('input[name="list_checkbox"]').not(this).prop('checked', false);
                     $('input[name="list_checkbox_all"]').prop('checked', false);
+
+                    selectedCategories = [$(this).val()];
+                } else {
+                    selectedCategories = [];
+                    // 아무것도 선택 안 했으면 전체 선택
+                    $('input[name="list_checkbox_all"]').prop('checked', true);
                 }
 
                 currentPage = 1;
@@ -1068,7 +1090,30 @@
 
             $('#menuCount').text(visibleCount);
             visibleCount === 0 ? $('#menuNoResult').show() : $('#menuNoResult').hide();
+        }
+
+        // 로그인 드롭다운 메뉴 토글
+        $(document).on('click', '.head_login_trigger', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('.head_login_wrap').toggleClass('active');
+        });
+
+        // 외부 클릭 시 드롭다운 닫기
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.head_login_wrap').length) {
+                $('.head_login_wrap').removeClass('active');
             }
+        });
+
+        // 로그아웃 버튼 클릭 이벤트
+        $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            alert('로그아웃되었습니다');
+            window.location.href = '/';
+        });
     </script>
 
 </body>

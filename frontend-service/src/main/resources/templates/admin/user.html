@@ -4,1668 +4,1342 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>사용자 관리 - TORI COFFEE</title>
-    
-    <!-- CSS -->
+
+    <!-- Fonts & Icons Only -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
-    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
     <style>
-        /* 헤더 고정 해제 - 스크롤 시 사라지도록 */
+        /* ========================================
+           Design System - CSS Custom Properties
+           ======================================== */
+        :root {
+            /* Primary Colors */
+            --primary: #D95B3B;
+            --primary-hover: #C74A2A;
+            --primary-light: #FFF5F2;
+            --primary-gradient: linear-gradient(135deg, #D95B3B, #E8734F);
+
+            /* Grayscale */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+
+            /* Status Colors */
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========================================
+           Reset & Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           Fixed Header
+           ======================================== */
         .head_wrap {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap.head_fixed {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap .head {
-            position: relative !important;
-        }
-        /* 로고 중복 방지 - 모든 가상 요소 및 배경 이미지 제거 */
-        .head_wrap .head_logo,
-        .head_wrap .head .head_logo {
-            display: block !important;
-            visibility: visible !important;
-            position: relative !important;
-            z-index: 1 !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo::before,
-        .head_wrap .head_logo::after,
-        .head_wrap .head .head_logo::before,
-        .head_wrap .head .head_logo::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a,
-        .head_wrap .head .head_logo a {
-            display: block !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a::before,
-        .head_wrap .head_logo a::after,
-        .head_wrap .head .head_logo a::before,
-        .head_wrap .head .head_logo a::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo img,
-        .head_wrap .head .head_logo img {
-            display: block !important;
-            visibility: visible !important;
-            max-height: 60px !important;
-            height: auto !important;
-            width: auto !important;
-            position: relative !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo .head_logo_img,
-        .head_wrap .head .head_logo .head_logo_img {
-            display: block !important;
-            visibility: visible !important;
-        }
-        /* 중복 로고 요소 숨기기 */
-        .head_wrap .head_logo + .head_logo,
-        .head_wrap .head .head_logo + .head_logo {
-            display: none !important;
-        }
-        .head_user_wrap {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            height: 70px;
+            background: #fff;
+            box-shadow: var(--shadow-md);
             z-index: 1000;
         }
+
+        .head {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .head_logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .head_logo_img {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Center Navigation */
+        .head_menu_wrap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .head_menu ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .head_menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .head_menu ul li a:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .head_menu ul li.active a {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* User Menu */
+        .head_user_wrap {
+            display: flex;
+            align-items: center;
+        }
+
         .head_user_menu {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-        .head_user_item {
+
+        .head_login_wrap {
             position: relative;
         }
+
         .head_user_link {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 4px;
             text-decoration: none;
-            color: #333;
+            color: var(--gray-600);
             cursor: pointer;
-            position: relative;
-            padding: 5px 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            transition: var(--transition);
         }
+
         .head_user_link:hover {
-            color: #000;
+            background: var(--gray-100);
+            color: var(--gray-900);
         }
+
         .head_user_link i {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 18px;
         }
+
         .head_user_text {
             font-size: 12px;
-            font-weight: 400;
+            font-weight: 500;
         }
-        .head_login_wrap {
-            position: relative;
-        }
+
         .head_login_dropdown {
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 10px;
+            margin-top: 8px;
             background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
             min-width: 150px;
             display: none;
             z-index: 1001;
+            overflow: hidden;
         }
+
         .head_login_wrap.active .head_login_dropdown {
             display: block;
         }
-        .head_login_dropdown::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #fff;
-        }
+
         .head_login_dropdown ul {
             list-style: none;
-            margin: 0;
-            padding: 8px 0;
         }
-        .head_login_dropdown ul li {
-            margin: 0;
-        }
+
         .head_login_dropdown ul li a {
             display: block;
-            padding: 10px 20px;
-            color: #333;
+            padding: 12px 16px;
+            color: var(--gray-700);
             text-decoration: none;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
+
         .head_login_dropdown ul li a:hover {
-            background: #f5f5f5;
+            background: var(--gray-50);
+            color: var(--primary);
         }
-        
-        /* 관리자 스타일 */
+
+        /* ========================================
+           Main Content Area
+           ======================================== */
         .admin_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-            padding-top: 100px; /* 헤더 높이만큼 여백 추가 */
+            padding-top: 70px;
+            min-height: 100vh;
+            background: var(--gray-50);
         }
+
         .admin_content_wrap {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 32px 24px;
         }
+
         .admin_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 24px;
         }
+
         .admin_title {
             font-size: 28px;
             font-weight: 700;
-            color: #333;
+            color: var(--gray-900);
         }
+
+        /* Navigation Pills */
         .admin_nav {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
         }
+
         .admin_nav_item {
             padding: 10px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: none;
+            border-radius: var(--radius-full);
             background: #fff;
-            color: #666;
+            color: var(--gray-600);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
         }
+
         .admin_nav_item:hover {
-            border-color: #333;
-            color: #333;
+            background: var(--gray-100);
+            color: var(--gray-900);
         }
+
         .admin_nav_item.active {
-            background: #333;
+            background: var(--primary-gradient);
             color: #fff;
-            border-color: #333;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
         }
-        
-        /* 사용자 관리 툴바 */
+
+        /* ========================================
+           Toolbar
+           ======================================== */
         .user_toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 16px;
         }
+
         .user_search {
             display: flex;
             gap: 10px;
             flex: 1;
-            min-width: 300px;
+            max-width: 400px;
         }
+
         .user_search_input {
             flex: 1;
-            padding: 10px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        .user_search_btn {
-            padding: 10px 20px;
-            background: #333;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .user_filter {
-            display: flex;
-            gap: 10px;
-        }
-        .user_filter_select {
-            padding: 10px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
             font-size: 14px;
             background: #fff;
+            transition: var(--transition);
         }
-        
-        /* 사용자 목록 */
+
+        .user_search_input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+        }
+
+        .user_search_btn {
+            padding: 12px 20px;
+            background: var(--gray-800);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user_search_btn:hover {
+            background: var(--gray-900);
+        }
+
+        .user_filter_select {
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+        }
+
+        .user_filter_select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* ========================================
+           User Table
+           ======================================== */
+        .cont_text_wrap {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
         .user_list_table {
             width: 100%;
             border-collapse: collapse;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
+
         .user_list_table thead {
-            background: #f9f9f9;
+            background: var(--gray-50);
         }
+
         .user_list_table th {
-            padding: 15px;
+            padding: 16px 20px;
             text-align: left;
-            font-size: 14px;
-            font-weight: 700;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
         }
+
         .user_list_table td {
-            padding: 15px;
+            padding: 18px 20px;
             font-size: 14px;
-            color: #666;
-            border-bottom: 1px solid #f0f0f0;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
         }
+
+        .user_list_table tbody tr {
+            transition: var(--transition);
+        }
+
         .user_list_table tbody tr:hover {
-            background: #f9f9f9;
+            background: var(--gray-50);
         }
-        .user_role {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
+
+        .user_list_table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .user_badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
             font-size: 12px;
             font-weight: 600;
         }
-        .user_role.admin {
-            background: #dc3545;
+
+        .user_badge.admin {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
             color: #fff;
         }
-        .user_role.owner {
-            background: #ffc107;
-            color: #333;
+
+        .user_badge.owner {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #fff;
         }
-        .user_role.user {
-            background: #e2e3e5;
-            color: #383d41;
+
+        .user_badge.member {
+            background: var(--gray-100);
+            color: var(--gray-600);
         }
+
+        /* Action Buttons */
+        .user_actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
         .user_action_btn {
-            padding: 6px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
             background: #fff;
-            color: #333;
-            font-size: 12px;
+            color: var(--gray-600);
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 5px;
+            transition: var(--transition);
         }
+
         .user_action_btn:hover {
-            background: #333;
-            color: #fff;
-            border-color: #333;
+            background: var(--gray-100);
+            border-color: var(--gray-300);
         }
+
         .user_action_btn.edit {
-            background: #D95B3B;
-            border-color: #D95B3B;
+            background: var(--primary);
+            border-color: var(--primary);
             color: #fff;
         }
+
         .user_action_btn.edit:hover {
-            background: #C74A2A;
+            background: var(--primary-hover);
         }
+
         .user_action_btn.delete {
-            background: #dc3545;
-            border-color: #dc3545;
+            background: var(--danger);
+            border-color: var(--danger);
             color: #fff;
         }
+
         .user_action_btn.delete:hover {
-            background: #c82333;
+            background: #DC2626;
         }
+
         .user_action_btn.promote {
-            background: #ffc107;
-            border-color: #ffc107;
-            color: #333;
+            background: var(--warning);
+            border-color: var(--warning);
+            color: #fff;
         }
+
         .user_action_btn.promote:hover {
-            background: #e0a800;
-            border-color: #e0a800;
+            background: #D97706;
         }
-        
-        /* 사용자 수정 모달 */
-        .user_modal_overlay {
+
+        /* Empty State */
+        .user_empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 15px;
+        }
+
+        /* ========================================
+           Pagination
+           ======================================== */
+        .board_page_wrap {
+            display: flex;
+            justify-content: center;
+            padding: 32px 0;
+        }
+
+        .board_page ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .board_page li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .board_page li a:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .board_page li.active a {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .board_page li.disabled a {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ========================================
+           Modal
+           ======================================== */
+        .modal_wrap {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
             z-index: 10000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        .user_modal_overlay.active {
+
+        .modal_wrap.show {
             display: flex;
         }
-        .user_modal {
+
+        .modal_content {
             background: #fff;
             width: 100%;
             max-width: 500px;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
         }
-        .user_modal_header {
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
         }
-        .user_modal_title {
+
+        .modal_title {
             font-size: 20px;
             font-weight: 700;
-            color: #333;
+            color: var(--gray-900);
         }
-        .user_modal_close {
-            background: none;
+
+        .modal_close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
             border: none;
-            font-size: 24px;
+            border-radius: var(--radius);
             cursor: pointer;
-            color: #666;
+            color: var(--gray-500);
+            transition: var(--transition);
         }
-        .user_modal_form_item {
+
+        .modal_close:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .modal_form_item {
             margin-bottom: 20px;
         }
-        .user_modal_label {
+
+        .modal_form_label {
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: var(--gray-700);
             margin-bottom: 8px;
         }
-        .user_modal_input {
+
+        .modal_form_input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
             font-size: 14px;
-            box-sizing: border-box;
+            transition: var(--transition);
         }
-        .user_modal_input:focus {
+
+        .modal_form_input:focus {
             outline: none;
-            border-color: #333;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
         }
-        .user_modal_actions {
+
+        .modal_form_hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 6px;
+        }
+
+        .modal_actions {
             display: flex;
-            gap: 10px;
-            margin-top: 30px;
+            gap: 12px;
+            margin-top: 28px;
         }
-        .user_modal_btn {
+
+        .modal_btn {
             flex: 1;
-            padding: 12px 30px !important;
+            padding: 14px;
             border: none;
-            border-radius: 8px !important;
-            font-size: 16px !important;
-            font-weight: 600;
-            min-width: 100px !important;
-            cursor: pointer !important;
-            transition: all 0.3s;
-        }
-        .user_modal_btn.cancel,
-        button.user_modal_btn.cancel,
-        .user_modal_btn.cancel:not(:hover) {
-            background: #fff !important;
-            background-color: #fff !important;
-            color: #666 !important;
-            border: 2px solid #ddd !important;
-        }
-        .user_modal_btn.cancel:hover {
-            background: #f5f5f5 !important;
-            background-color: #f5f5f5 !important;
-        }
-        .user_modal_btn.save {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            color: #fff !important;
-            border: none !important;
-        }
-        .user_modal_btn.save:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-        }
-        
-        /* 삭제 확인 모달 */
-        .delete_modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            display: none;
-            z-index: 10001;
-            overflow: auto;
-        }
-        .delete_modal.show {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        .delete_modal_content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px 25px 20px;
-            max-width: 360px;
-            width: calc(100% - 40px);
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            position: relative;
-            margin: auto;
-            transform: translateY(-60px);
-        }
-        .delete_modal_title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: #333;
-        }
-        .delete_modal_text {
+            border-radius: var(--radius);
             font-size: 14px;
-            color: #555;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .modal_btn.cancel:hover {
+            background: var(--gray-200);
+        }
+
+        .modal_btn.primary {
+            background: var(--primary-gradient);
+            color: #fff;
+        }
+
+        .modal_btn.primary:hover {
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
+        }
+
+        .modal_btn.danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .modal_btn.danger:hover {
+            background: #DC2626;
+        }
+
+        /* Confirm Modal */
+        .modal_content.confirm {
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .modal_content.confirm .modal_header {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal_text {
+            font-size: 15px;
+            color: var(--gray-600);
             margin-bottom: 24px;
             line-height: 1.6;
         }
-        .delete_modal_buttons {
+
+        /* ========================================
+           Footer
+           ======================================== */
+        .foot_wrap {
+            background: var(--gray-800);
+            color: var(--gray-400);
+            padding: 40px 24px;
+            margin-top: 60px;
+        }
+
+        .foot_content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 40px;
         }
-        .delete_modal_btn {
-            flex: 1;
-            padding: 12px 30px !important;
-            border-radius: 8px !important;
-            border: none;
-            font-size: 16px !important;
-            font-weight: 700;
-            min-width: 100px !important;
-            cursor: pointer !important;
-            transition: background 0.2s;
+
+        .foot_logo img {
+            height: 40px;
+            opacity: 0.8;
         }
-        .delete_modal_btn.cancel {
-            background: #fff !important;
-            background-color: #fff !important;
-            color: #666 !important;
-            border: 2px solid #ddd !important;
+
+        .foot_info {
+            font-size: 13px;
+            line-height: 1.8;
         }
-        .delete_modal_btn.cancel:hover {
-            background: #f5f5f5 !important;
-            background-color: #f5f5f5 !important;
+
+        .foot_links {
+            display: flex;
+            gap: 24px;
         }
-        .delete_modal_btn.confirm {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            color: #fff !important;
-            border: none !important;
+
+        .foot_links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
         }
-        .delete_modal_btn.confirm:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
+
+        .foot_links a:hover {
+            color: #fff;
         }
-        .delete_modal_btn.close {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            background-image: none !important;
-            color: #fff !important;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            opacity: 1 !important;
-        }
-        .delete_modal_btn.close:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-            opacity: 1 !important;
-        }
-        #editSuccessModal .delete_modal_btn.close,
-        #deleteSuccessModal .delete_modal_btn.close {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            background-image: none !important;
-            color: #fff !important;
-            opacity: 1 !important;
-        }
-        #editSuccessModal .delete_modal_btn.close:hover,
-        #deleteSuccessModal .delete_modal_btn.close:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-            opacity: 1 !important;
-        }
-        
-        @media (max-width: 768px) {
-            .admin_header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 1024px) {
+            .head_menu_wrap {
+                position: static;
+                transform: none;
             }
+
+            .head {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 16px 24px;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin_content_wrap {
+                padding: 24px 16px;
+            }
+
             .user_toolbar {
                 flex-direction: column;
             }
+
             .user_search {
                 width: 100%;
+                max-width: none;
             }
-            .user_list_table {
-                font-size: 12px;
+
+            .user_filter_select {
+                width: 100%;
             }
+
+            .head_menu ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .admin_nav {
+                justify-content: center;
+            }
+
             .user_list_table th,
             .user_list_table td {
-                padding: 10px 8px;
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            .user_action_btn {
+                padding: 6px 10px;
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .foot_content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .foot_links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
-        
-        /* 커스텀 모달 스타일 */
-        #customConfirmModal,
-        #customAlertModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10000;
-        }
-        .modal_overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
-        .modal_content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            min-width: 350px;
-            max-width: 450px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-        .modal_header h3 {
-            margin: 0 0 20px 0;
-            font-size: 20px;
-            color: #333;
-        }
-        .modal_body p {
-            margin: 0 0 30px 0;
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-        }
-        .modal_footer {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .modal_cancel_btn {
-            background: #fff !important;
-            color: #666 !important;
-            border: 2px solid #ddd !important;
-            padding: 12px 30px !important;
-            border-radius: 8px !important;
-            font-size: 16px !important;
-            min-width: 100px !important;
-            cursor: pointer !important;
-            transition: all 0.2s;
-        }
-        .modal_cancel_btn:hover {
-            background: #f5f5f5 !important;
-        }
-        .modal_confirm_btn {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            color: white !important;
-            border: none !important;
-            padding: 12px 30px !important;
-            border-radius: 8px !important;
-            font-size: 16px !important;
-            min-width: 100px !important;
-            cursor: pointer !important;
-            transition: all 0.2s;
-        }
-        .modal_confirm_btn:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-        }
     </style>
-    
-    <!-- JavaScript -->
+
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
 </head>
 <body>
-    
-    <!-- 헤더 -->
-    <div class="head_wrap">
-        <div class="head">
-            <div class="head_logo">
-                <a href="/admin/user">
-                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
-                </a>
+
+<!-- 헤더 -->
+<div class="head_wrap">
+    <div class="head">
+        <div class="head_logo">
+            <a href="/admin/user">
+                <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+            </a>
+        </div>
+        <div class="head_menu_wrap">
+            <div class="head_menu">
+                <ul>
+                    <li class="active"><a href="/admin/user">회원 관리</a></li>
+                    <li><a href="/admin/product">상품 관리</a></li>
+                    <li><a href="/admin/notice">공지사항 관리</a></li>
+                    <li><a href="/admin/inquiry">문의 관리</a></li>
+                </ul>
             </div>
-            <div class="head_menu_wrap">
-                <div class="head_menu">
-                    <ul>
-                        <li>
-                            <a href="user" class="pc">회원 관리</a>
-                        </li>
-                        <li>
-                            <a href="product" class="pc">상품 관리</a>
-                        </li>
-                        <li>
-                            <a href="notice" class="pc">공지사항 관리</a>
-                        </li>
-                        <li>
-                            <a href="inquiry" class="pc">문의 관리</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="head_user_wrap">
-                <div class="head_user_menu">
-                    <div class="head_user_item head_login_wrap">
-                        <div class="head_login_state head_login_state_member">
-                            <a href="#" class="head_user_link head_login_trigger">
-                                <i class="far fa-user"></i>
-                                <span class="head_user_text head_user_name">Admin</span>
-                            </a>
-                            <div class="head_login_dropdown">
-                                <ul>
-                                    <li><a href="#" id="adminLogoutBtn">로그아웃</a></li>
-                                </ul>
-                            </div>
+        </div>
+        <div class="head_user_wrap">
+            <div class="head_user_menu">
+                <div class="head_user_item head_login_wrap">
+                    <div class="head_login_state head_login_state_member">
+                        <a href="#" class="head_user_link head_login_trigger">
+                            <i class="far fa-user"></i>
+                            <span class="head_user_text head_user_name">Admin</span>
+                        </a>
+                        <div class="head_login_dropdown">
+                            <ul>
+                                <li><a href="#" id="adminLogoutBtn">로그아웃</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 메인 콘텐츠 -->
-    <div class="admin_wrap">
-        <div class="admin_content_wrap">
-            <div class="admin_header">
-                <div class="admin_title">사용자 관리</div>
+<!-- 메인 콘텐츠 -->
+<div class="admin_wrap">
+    <div class="admin_content_wrap">
+        <div class="admin_header">
+            <div class="admin_title">회원 관리</div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <div class="admin_nav">
+            <a href="/admin/user" class="admin_nav_item active">회원 관리</a>
+            <a href="/admin/product" class="admin_nav_item">상품 관리</a>
+            <a href="/admin/notice" class="admin_nav_item">공지사항 관리</a>
+            <a href="/admin/inquiry" class="admin_nav_item">문의 관리</a>
+        </div>
+
+        <!-- 검색 및 필터 -->
+        <div class="user_toolbar">
+            <div class="user_search">
+                <input type="text" class="user_search_input" id="searchInput" placeholder="이름, 이메일로 검색...">
+                <button class="user_search_btn" id="searchBtn">검색</button>
             </div>
-            
-            <!-- 네비게이션 -->
-            <div class="admin_nav">
-                <a href="user" class="admin_nav_item active">회원 관리</a>
-                <a href="product" class="admin_nav_item">상품 관리</a>
-                <a href="notice" class="admin_nav_item">공지사항 관리</a>
-                <a href="inquiry" class="admin_nav_item">문의 관리</a>
-            </div>
-            
-            <!-- 검색 및 필터 -->
-            <div class="user_toolbar">
-                <div class="user_search">
-                    <input type="text" class="user_search_input" placeholder="이름, 이메일로 검색...">
-                    <button class="user_search_btn">검색</button>
-                </div>
-                <div class="user_filter">
-                    <select class="user_filter_select" id="roleFilter">
-                        <option value="">전체 권한</option>
-                        <option value="admin">관리자</option>
-                        <option value="store_owner">점주</option>
-                        <option value="member">일반 사용자</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- 사용자 목록 -->
-            <div class="cont_text_wrap">
-                <table class="user_list_table">
-                    <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>이름</th>
-                            <th>이메일</th>
-                            <th>권한</th>
-                            <th>가입일</th>
-                            <th>관리</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userListBody">
-                        <!-- 동적으로 생성됩니다 -->
-                    </tbody>
-                </table>
-                <div id="userListEmpty" style="display: none; text-align: center; padding: 40px; color: #999;">
-                    등록된 회원이 없습니다.
-                </div>
-            </div>
-            
-            <!-- 페이지네이션 -->
-            <div class="board_page_wrap">
-                <div class="board_page">
-                    <ul>
-                        <li><a><span>처음</span></a></li>
-                        <li class="board_page_check"><a><span>1</span></a></li>
-                        <li><a><span>2</span></a></li>
-                        <li><a><span>다음</span></a></li>
-                        <li><a><span>마지막</span></a></li>
-                    </ul>
-                </div>
+            <select class="user_filter_select" id="roleFilter">
+                <option value="">전체 권한</option>
+                <option value="admin">관리자</option>
+                <option value="store_owner">점주</option>
+                <option value="member">일반 사용자</option>
+            </select>
+        </div>
+
+        <!-- 회원 목록 -->
+        <div class="cont_text_wrap">
+            <table class="user_list_table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>가입일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                </tbody>
+            </table>
+            <div class="user_empty" id="userEmpty" style="display: none;">
+                등록된 회원이 없습니다.
             </div>
         </div>
-    </div>
 
-    <!-- 푸터 -->
-    <div class="foot_menu_wrap">
-        <div class="foot_menu">
-            <div class="cont_list">
-                <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+        <!-- 페이지네이션 -->
+        <div class="board_page_wrap">
+            <div class="board_page">
+                <ul id="userPagination">
                 </ul>
             </div>
         </div>
     </div>
-    <div class="foot_wrap">
-        <div class="foot">
-            <div class="cont_list cont_list_content">
-                <ul>
-                    <li>
-                        <div class="cont_text">
-                            <div class="cont_list cont_list_m cont_list_m1">
-                                <ul>
-                                    <li>
-                                        <div class="foot_logo">
-                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont_text foot_info">
-                            <div class="cont_list cont_list_small cont_list_width_m">
-                                <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+</div>
+
+<!-- 푸터 -->
+<div class="foot_wrap">
+    <div class="foot_content">
+        <div class="foot_logo">
+            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+        </div>
+        <div class="foot_info">
+            <strong>팀 부리또</strong> | 대표 서재홍<br>
+            연락처 010-3030-7038 | 이메일 wtme3@naver.com<br>
+            주소 동서울대학교 | 팀원 이주희, 박윤호, 하성호
+        </div>
+        <div class="foot_links">
+            <a href="/policy/privacy_policy">개인정보처리방침</a>
+            <a href="/policy/service_policy">이용약관</a>
         </div>
     </div>
+</div>
 
-    <!-- 상단 이동 버튼 -->
-    <a href="javascript:go_top()">
-        <div class="go_top_wrap">
-            <div class="go_top"></div>
+<!-- 수정 모달 -->
+<div class="modal_wrap" id="editModal">
+    <div class="modal_content">
+        <div class="modal_header">
+            <div class="modal_title">회원 수정</div>
+            <button class="modal_close" onclick="closeEditModal()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </a>
-
-    <!-- 사용자 수정 모달 -->
-    <div class="user_modal_overlay" id="userModal">
-        <div class="user_modal">
-            <div class="user_modal_header">
-                <div class="user_modal_title">사용자 수정</div>
-                <button class="user_modal_close" onclick="closeUserModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+        <form id="editForm">
+            <div class="modal_form_item">
+                <label class="modal_form_label">이름</label>
+                <input type="text" class="modal_form_input" id="editName" required>
             </div>
-            <form id="userForm">
-                <div class="user_modal_form_item">
-                    <label class="user_modal_label">이름</label>
-                    <input type="text" class="user_modal_input" id="userName" required>
-                </div>
-                <div class="user_modal_form_item">
-                    <label class="user_modal_label">이메일</label>
-                    <input type="email" class="user_modal_input" id="userEmail" required>
-                </div>
-                <div class="user_modal_form_item">
-                    <label class="user_modal_label">권한</label>
-                    <select class="user_modal_input" id="userRole" required>
-                        <option value="">선택하세요</option>
-                        <option value="admin">관리자</option>
-                        <option value="owner">점주</option>
-                        <option value="user">일반 사용자</option>
-                    </select>
-                </div>
-                <div class="user_modal_form_item">
-                    <label class="user_modal_label">비밀번호 변경 (선택사항)</label>
-                    <input type="password" class="user_modal_input" id="userPassword" placeholder="새 비밀번호를 입력하세요 (변경하지 않으려면 비워두세요)">
-                    <div style="font-size: 12px; color: #999; margin-top: 5px;">8자 이상, 영문/숫자/특수문자 조합</div>
-                </div>
-                <div class="user_modal_form_item">
-                    <label class="user_modal_label">비밀번호 확인</label>
-                    <input type="password" class="user_modal_input" id="userPasswordConfirm" placeholder="새 비밀번호를 다시 입력하세요">
-                </div>
-                <div class="user_modal_actions">
-                    <button type="button" class="user_modal_btn cancel" onclick="closeUserModal()">취소</button>
-                    <button type="submit" class="user_modal_btn save">저장</button>
-                </div>
-            </form>
+            <div class="modal_form_item">
+                <label class="modal_form_label">이메일</label>
+                <input type="email" class="modal_form_input" id="editEmail" required>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">권한</label>
+                <select class="modal_form_input" id="editRole" required>
+                    <option value="">선택하세요</option>
+                    <option value="admin">관리자</option>
+                    <option value="store_owner">점주</option>
+                    <option value="member">일반 사용자</option>
+                </select>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">비밀번호 변경 (선택)</label>
+                <input type="password" class="modal_form_input" id="editPassword" placeholder="새 비밀번호">
+                <div class="modal_form_hint">변경하지 않으려면 비워두세요</div>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">비밀번호 확인</label>
+                <input type="password" class="modal_form_input" id="editPasswordConfirm" placeholder="비밀번호 확인">
+            </div>
+            <div class="modal_actions">
+                <button type="button" class="modal_btn cancel" onclick="closeEditModal()">취소</button>
+                <button type="submit" class="modal_btn primary">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 확인 모달 -->
+<div class="modal_wrap" id="confirmModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="confirmTitle">확인</div>
+        </div>
+        <div class="modal_text" id="confirmText">정말 진행하시겠습니까?</div>
+        <div class="modal_actions">
+            <button class="modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+            <button class="modal_btn danger" id="confirmOkBtn">확인</button>
         </div>
     </div>
+</div>
 
-    <!-- 삭제 확인 모달 -->
-    <div class="delete_modal" id="deleteModal">
-        <div class="delete_modal_content">
-            <div class="delete_modal_title">삭제 확인</div>
-            <div class="delete_modal_text" id="deleteModalText">
-                정말 삭제하시겠습니까?
-            </div>
-            <div class="delete_modal_buttons" id="deleteModalButtons">
-                <button type="button" class="delete_modal_btn cancel" onclick="closeDeleteModal()">취소</button>
-                <button type="button" class="delete_modal_btn confirm" onclick="confirmDelete()">확인</button>
-            </div>
+<!-- 알림 모달 -->
+<div class="modal_wrap" id="alertModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="alertTitle">알림</div>
+        </div>
+        <div class="modal_text" id="alertText">메시지</div>
+        <div class="modal_actions">
+            <button class="modal_btn primary" id="alertOkBtn" style="flex: none; min-width: 120px; margin: 0 auto;">확인</button>
         </div>
     </div>
+</div>
 
-    <!-- 삭제 완료 모달 -->
-    <div class="delete_modal" id="deleteSuccessModal">
-        <div class="delete_modal_content">
-            <div class="delete_modal_title">완료</div>
-            <div class="delete_modal_text">
-                사용자가 삭제되었습니다.
-            </div>
-            <button type="button" class="delete_modal_btn close" onclick="closeDeleteSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
-        </div>
-    </div>
+<script>
+    var currentPage = 0;
+    var totalPages = 0;
+    var editUserId = null;
+    var confirmCallback = null;
+    var alertCallback = null;
 
-    <!-- 수정 완료 모달 -->
-    <div class="delete_modal" id="editSuccessModal">
-        <div class="delete_modal_content">
-            <div class="delete_modal_title">완료</div>
-            <div class="delete_modal_text">
-                사용자 정보가 수정되었습니다.
-            </div>
-            <button type="button" class="delete_modal_btn close" onclick="closeEditSuccessModal()" style="background: #D95B3B !important; background-color: #D95B3B !important; background-image: none !important; color: #fff !important; opacity: 1 !important; border: none !important;">확인</button>
-        </div>
-    </div>
+    $(document).ready(function() {
+        var userRole = localStorage.getItem('userRole');
+        if (userRole !== 'admin' && userRole !== 'store_owner') {
+            showAlert('관리자 또는 점주 권한이 필요합니다.', function() {
+                window.location.href = '/';
+            });
+            return;
+        }
 
-    <script>
-        AOS.init({
-            duration: 1200,
+        var userName = localStorage.getItem('userName') || 'Admin';
+        $('.head_user_name').text(userName);
+
+        $('.head_login_trigger').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('.head_login_wrap').toggleClass('active');
         });
 
-        // 권한 체크
-        $(document).ready(function() {
-            // 모달 버튼 스타일 초기화 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                'background': '#fff',
-                'background-color': '#fff',
-                'color': '#666',
-                'border': '2px solid #ddd'
-            });
-            
-            $('#confirmOkBtn, #alertConfirmBtn').css({
-                'background': '#D95B3B',
-                'background-color': '#D95B3B',
-                'color': 'white',
-                'border': 'none',
-                'padding': '12px 30px',
-                'border-radius': '8px',
-                'font-size': '16px'
-            });
-            
-            var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin' && userRole !== 'store_owner') {
-                showCustomAlert('관리자 또는 점주 권한이 필요합니다.', function() {
-                    window.location.href = '/admin/login';
-                });
-                return;
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.head_login_wrap').length) {
+                $('.head_login_wrap').removeClass('active');
             }
-            
-            // 사용자명 표시
-            var userName = localStorage.getItem('userName') || 'Admin';
-            $('.head_user_name').text(userName);
-            
-            // 로그인 드롭다운 토글
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $('.head_login_wrap').toggleClass('active');
-            });
+        });
 
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-            
-            // 로그아웃 버튼
-            $('#adminLogoutBtn').on('click', function(e) {
-                e.preventDefault();
-                showCustomConfirm('로그아웃하시겠습니까?', function() {
-                    localStorage.clear();
-                    window.location.href = '/';
-                });
-            });
+        $('#adminLogoutBtn').click(function(e) {
+            e.preventDefault();
+            showConfirm('로그아웃하시겠습니까?', function() {
+                localStorage.clear();
+                window.location.href = '/';
+            }, '로그아웃');
+        });
 
-            // 필터 변경
-            $('#roleFilter').change(function() {
-                loadUsers();
-            });
-            
-            // 검색 버튼 클릭
-            $('.user_search_btn').click(function() {
-                loadUsers();
-            });
-            
-            // 검색 입력 엔터키
-            $('.user_search_input').on('keypress', function(e) {
-                if (e.which === 13) {
-                    loadUsers();
-                }
-            });
-            
-            // 사용자 목록 로드
+        $('#searchBtn').click(function() {
+            currentPage = 0;
             loadUsers();
         });
-        
-        // 사용자 목록 로드 (API 연동)
-        var currentPage = 0;
-        var totalPages = 0;
 
-        function loadUsers() {
-            var filterRole = $('#roleFilter').val();
-            var searchTerm = $('.user_search_input').val().trim();
-
-            // API Gateway를 통해 admin-service 호출
-            var url = '/api/admin/users?page=' + currentPage + '&size=10';
-            if (filterRole) {
-                url += '&userType=' + filterRole;
+        $('#searchInput').keypress(function(e) {
+            if (e.which === 13) {
+                currentPage = 0;
+                loadUsers();
             }
-            if (searchTerm) {
-                url += '&keyword=' + encodeURIComponent(searchTerm);
+        });
+
+        $('#roleFilter').change(function() {
+            currentPage = 0;
+            loadUsers();
+        });
+
+        $('#editForm').submit(function(e) {
+            e.preventDefault();
+            saveUser();
+        });
+
+        loadUsers();
+    });
+
+    function loadUsers() {
+        var filterRole = $('#roleFilter').val();
+        var searchTerm = $('#searchInput').val().trim();
+        var token = localStorage.getItem('accessToken');
+
+        var url = '/api/admin/users?page=' + currentPage + '&size=10';
+        if (filterRole) url += '&userType=' + filterRole;
+        if (searchTerm) url += '&keyword=' + encodeURIComponent(searchTerm);
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('회원 목록을 불러오는데 실패했습니다.');
+            return response.json();
+        })
+        .then(function(data) {
+            var users = Array.isArray(data) ? data : (data.users || data.content || []);
+            totalPages = data.totalPages || Math.ceil(users.length / 10) || 1;
+            renderUsers(users);
+            renderPagination();
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert('회원 목록을 불러오는데 실패했습니다.');
+        });
+    }
+
+    function renderUsers(users) {
+        var tbody = $('#userTableBody');
+        tbody.empty();
+
+        if (!users || users.length === 0) {
+            $('#userEmpty').show();
+            return;
+        }
+
+        $('#userEmpty').hide();
+
+        users.forEach(function(user, index) {
+            var userType = (user.userType || user.role || 'member').toLowerCase();
+            var roleText = '', badgeClass = '';
+
+            switch(userType) {
+                case 'admin': roleText = '관리자'; badgeClass = 'admin'; break;
+                case 'store_owner': case 'owner': roleText = '점주'; badgeClass = 'owner'; break;
+                default: roleText = '일반 회원'; badgeClass = 'member'; break;
             }
 
+            var userId = user.userId || user.id;
+            var actions = '<div class="user_actions">';
+            actions += '<button class="user_action_btn edit" onclick="editUser(\'' + userId + '\')">수정</button>';
+            if (userType !== 'admin') actions += '<button class="user_action_btn delete" onclick="deleteUser(\'' + userId + '\')">삭제</button>';
+            if (userType === 'member' || userType === 'user') actions += '<button class="user_action_btn promote" onclick="promoteToOwner(\'' + userId + '\')">점주 전환</button>';
+            actions += '</div>';
+
+            var row = '<tr>' +
+                '<td>' + (currentPage * 10 + index + 1) + '</td>' +
+                '<td>' + escapeHtml(user.name || user.username || '이름 없음') + '</td>' +
+                '<td>' + escapeHtml(user.email || '이메일 없음') + '</td>' +
+                '<td><span class="user_badge ' + badgeClass + '">' + roleText + '</span></td>' +
+                '<td>' + formatDate(user.createdAt) + '</td>' +
+                '<td>' + actions + '</td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+    }
+
+    function renderPagination() {
+        var ul = $('#userPagination');
+        ul.empty();
+        if (totalPages <= 1) return;
+
+        var firstClass = currentPage === 0 ? 'disabled' : '';
+        ul.append('<li class="' + firstClass + '"><a onclick="goToPage(0)">처음</a></li>');
+
+        var startPage = Math.max(0, currentPage - 2);
+        var endPage = Math.min(totalPages - 1, currentPage + 2);
+
+        for (var i = startPage; i <= endPage; i++) {
+            var activeClass = i === currentPage ? 'active' : '';
+            ul.append('<li class="' + activeClass + '"><a onclick="goToPage(' + i + ')">' + (i + 1) + '</a></li>');
+        }
+
+        var lastClass = currentPage >= totalPages - 1 ? 'disabled' : '';
+        ul.append('<li class="' + lastClass + '"><a onclick="goToPage(' + (totalPages - 1) + ')">마지막</a></li>');
+    }
+
+    function goToPage(page) {
+        if (page < 0 || page >= totalPages) return;
+        currentPage = page;
+        loadUsers();
+    }
+
+    function editUser(userId) {
+        var token = localStorage.getItem('accessToken');
+        fetch('/api/admin/users/' + userId, {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('사용자 정보를 불러오는데 실패했습니다.');
+            return response.json();
+        })
+        .then(function(user) {
+            editUserId = userId;
+            $('#editName').val(user.name || user.username || '');
+            $('#editEmail').val(user.email || '');
+            var roleValue = user.userType || user.role || 'member';
+            if (roleValue === 'owner') roleValue = 'store_owner';
+            $('#editRole').val(roleValue);
+            $('#editPassword').val('');
+            $('#editPasswordConfirm').val('');
+            $('#editModal').addClass('show');
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert('사용자 정보를 불러오는데 실패했습니다.');
+        });
+    }
+
+    function closeEditModal() {
+        $('#editModal').removeClass('show');
+        editUserId = null;
+        $('#editForm')[0].reset();
+    }
+
+    function saveUser() {
+        var password = $('#editPassword').val();
+        var passwordConfirm = $('#editPasswordConfirm').val();
+        if (password && password !== passwordConfirm) {
+            showAlert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        var token = localStorage.getItem('accessToken');
+        var updateData = {
+            name: $('#editName').val(),
+            username: $('#editName').val(),
+            email: $('#editEmail').val(),
+            role: $('#editRole').val()
+        };
+        if (password) updateData.password = password;
+
+        fetch('/api/admin/users/' + editUserId, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('수정에 실패했습니다.');
+            return response.json();
+        })
+        .then(function(data) {
+            closeEditModal();
+            showAlert('사용자 정보가 수정되었습니다.', function() { loadUsers(); });
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert(error.message || '수정에 실패했습니다.');
+        });
+    }
+
+    function deleteUser(userId) {
+        showConfirm('정말 이 사용자를 삭제하시겠습니까?', function() {
             var token = localStorage.getItem('accessToken');
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                }
+            fetch('/api/admin/users/' + userId, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
             })
             .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('회원 목록을 불러오는데 실패했습니다.');
-                }
+                if (!response.ok) throw new Error('삭제에 실패했습니다.');
                 return response.json();
             })
             .then(function(data) {
-                // API가 배열을 직접 반환하거나 users 배열을 반환하는 경우 모두 처리
-                var users = Array.isArray(data) ? data : (data.users || []);
-                totalPages = data.totalPages || Math.ceil(users.length / 10) || 0;
-                renderUserList(users);
+                showAlert('사용자가 삭제되었습니다.', function() { loadUsers(); });
             })
             .catch(function(error) {
                 console.error('Error:', error);
-                showCustomAlert('회원 목록을 불러오는데 실패했습니다.');
+                showAlert(error.message || '삭제에 실패했습니다.');
             });
-        }
-        
-        // 사용자 목록 렌더링
-        function renderUserList(users) {
-            var tbody = $('#userListBody');
-            var emptyMessage = $('#userListEmpty');
+        }, '삭제 확인');
+    }
 
-            tbody.empty();
-
-            if (!users || users.length === 0) {
-                emptyMessage.show();
-                return;
-            }
-
-            emptyMessage.hide();
-
-            users.forEach(function(user, index) {
-                var roleText = '';
-                var roleClass = '';
-                var userType = (user.userType || user.role || 'member').toLowerCase();
-
-                switch(userType) {
-                    case 'admin':
-                        roleText = '관리자';
-                        roleClass = 'admin';
-                        break;
-                    case 'store_owner':
-                    case 'owner':
-                        roleText = '점주';
-                        roleClass = 'owner';
-                        break;
-                    case 'member':
-                    case 'user':
-                    default:
-                        roleText = '일반 회원';
-                        roleClass = 'user';
-                        break;
-                }
-
-                var row = $('<tr></tr>');
-                row.append('<td>' + (currentPage * 10 + index + 1) + '</td>');
-                row.append('<td>' + escapeHtml(user.name || user.username || '이름 없음') + '</td>');
-                row.append('<td>' + escapeHtml(user.email || '이메일 없음') + '</td>');
-                row.append('<td><span class="user_role ' + roleClass + '">' + roleText + '</span></td>');
-                row.append('<td>' + formatDate(user.createdAt) + '</td>');
-
-                // 관리 버튼
-                var actionCell = $('<td></td>');
-                var userId = user.userId || user.id;
-                actionCell.append('<button class="user_action_btn edit" onclick="editUser(\'' + userId + '\')">수정</button>');
-
-                // 일반 회원에게만 점주 전환 버튼 표시
-                if (userType === 'member' || userType === 'user') {
-                    actionCell.append('<button class="user_action_btn promote" onclick="promoteToOwner(\'' + userId + '\')">점주 전환</button>');
-                }
-
-                // 관리자 계정은 삭제 버튼 숨김
-                if (userType !== 'admin') {
-                    actionCell.append('<button class="user_action_btn delete" onclick="deleteUser(\'' + userId + '\')">삭제</button>');
-                }
-                row.append(actionCell);
-
-                tbody.append(row);
-            });
-        }
-
-        // HTML 이스케이프 함수
-        function escapeHtml(text) {
-            if (!text) return '';
-            var div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // 날짜 포맷 함수
-        function formatDate(dateStr) {
-            if (!dateStr) return '-';
-            try {
-                var date = new Date(dateStr);
-                return date.getFullYear() + '-' +
-                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(date.getDate()).padStart(2, '0');
-            } catch (e) {
-                return dateStr;
-            }
-        }
-        
-        // 점주로 전환 (API 연동)
-        function promoteToOwner(userId) {
-            showCustomConfirm('이 회원을 점주로 전환하시겠습니까?', function() {
-                var token = localStorage.getItem('accessToken');
-
-                fetch('/api/admin/users/' + userId + '/role', {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userType: 'store_owner' })
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        return response.text().then(function(text) {
-                            throw new Error(text || '권한 변경에 실패했습니다.');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                    showCustomAlert('점주로 전환되었습니다.', function() {
-                        loadUsers();
-                    });
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                    showCustomAlert(error.message || '점주 전환에 실패했습니다.');
-                });
-            });
-        }
-
-        // 사용자 수정 (API 연동)
-        function editUser(userId) {
+    function promoteToOwner(userId) {
+        showConfirm('이 회원을 점주로 전환하시겠습니까?', function() {
             var token = localStorage.getItem('accessToken');
-
-            fetch('/api/admin/users/' + userId, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                }
+            fetch('/api/admin/users/' + userId + '/role', {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userType: 'store_owner' })
             })
             .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('사용자 정보를 불러오는데 실패했습니다.');
-                }
+                if (!response.ok) throw new Error('권한 변경에 실패했습니다.');
                 return response.json();
             })
-            .then(function(user) {
-                $('#userName').val(user.name || user.username || '');
-                $('#userEmail').val(user.email || '');
-                // userType 매핑 수정
-                var roleValue = user.userType || user.role || 'member';
-                if (roleValue === 'store_owner') roleValue = 'owner';
-                if (roleValue === 'member') roleValue = 'user';
-                $('#userRole').val(roleValue);
-                $('#userForm').data('userId', userId);
-
-                // 취소 버튼 스타일 강제 적용
-                $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                    'background': '#fff',
-                    'background-color': '#fff',
-                    'color': '#666',
-                    'border': '2px solid #ddd'
-                });
-
-                $('#userModal').addClass('active');
-
-                // 모달이 열릴 때마다 버튼 스타일 강제 적용
-                setTimeout(function() {
-                    $('.user_modal_btn.cancel').attr('style',
-                        'background: #fff !important; ' +
-                        'background-color: #fff !important; ' +
-                        'color: #666 !important; ' +
-                        'border: 2px solid #ddd !important; ' +
-                        'padding: 12px 30px !important; ' +
-                        'border-radius: 8px !important; ' +
-                        'font-size: 16px !important; ' +
-                        'min-width: 100px !important; ' +
-                        'cursor: pointer !important;'
-                    );
-                    $('.user_modal_btn.save').attr('style',
-                        'background: #D95B3B !important; ' +
-                        'background-color: #D95B3B !important; ' +
-                        'color: white !important; ' +
-                        'border: none !important; ' +
-                        'padding: 12px 30px !important; ' +
-                        'border-radius: 8px !important; ' +
-                        'font-size: 16px !important; ' +
-                        'min-width: 100px !important; ' +
-                        'cursor: pointer !important;'
-                    );
-                }, 10);
+            .then(function(data) {
+                showAlert('점주로 전환되었습니다.', function() { loadUsers(); });
             })
             .catch(function(error) {
                 console.error('Error:', error);
-                showCustomAlert('사용자 정보를 불러오는데 실패했습니다.');
+                showAlert(error.message || '점주 전환에 실패했습니다.');
             });
-        }
+        }, '점주 전환');
+    }
 
-        // 스크롤바 너비 계산
-        function getScrollbarWidth() {
-            const outer = document.createElement('div');
-            outer.style.visibility = 'hidden';
-            outer.style.overflow = 'scroll';
-            outer.style.msOverflowStyle = 'scrollbar';
-            document.body.appendChild(outer);
-            const scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            outer.parentNode.removeChild(outer);
-            return scrollbarWidth;
-        }
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
-        // 모달 열기 (스크롤바 고정)
-        function openModal(modalId) {
-            const scrollbarWidth = getScrollbarWidth();
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = scrollbarWidth + 'px';
-            $(modalId).addClass('show');
-            
-            // 모달이 열릴 때마다 취소 버튼 스타일 강제 적용
-            setTimeout(function() {
-                $(modalId + ' .delete_modal_btn.cancel').attr('style', 
-                    'background: #fff !important; ' +
-                    'background-color: #fff !important; ' +
-                    'color: #666 !important; ' +
-                    'border: 2px solid #ddd !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-                $(modalId + ' .delete_modal_btn.confirm').attr('style',
-                    'background: #D95B3B !important; ' +
-                    'background-color: #D95B3B !important; ' +
-                    'color: white !important; ' +
-                    'border: none !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-            }, 10);
-        }
+    function formatDate(dateStr) {
+        if (!dateStr) return '-';
+        try {
+            var date = new Date(dateStr);
+            return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+        } catch (e) { return dateStr; }
+    }
 
-        // 모달 닫기 (스크롤바 복원)
-        function closeModal(modalId) {
-            $(modalId).removeClass('show');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }
+    function showConfirm(message, callback, title) {
+        $('#confirmTitle').text(title || '확인');
+        $('#confirmText').text(message);
+        confirmCallback = callback;
+        $('#confirmModal').addClass('show');
+    }
 
-        // 사용자 삭제
-        let deleteUserId = null;
-        function deleteUser(userId) {
-            deleteUserId = userId;
-            openModal('#deleteModal');
-        }
+    function closeConfirmModal() {
+        $('#confirmModal').removeClass('show');
+        confirmCallback = null;
+    }
 
-        // 삭제 확인 (API 연동)
-        function confirmDelete() {
-            if (deleteUserId) {
-                var token = localStorage.getItem('accessToken');
+    function showAlert(message, callback, title) {
+        $('#alertTitle').text(title || '알림');
+        $('#alertText').text(message);
+        alertCallback = callback;
+        $('#alertModal').addClass('show');
+    }
 
-                fetch('/api/admin/users/' + deleteUserId, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        return response.text().then(function(text) {
-                            throw new Error(text || '삭제에 실패했습니다.');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                    closeModal('#deleteModal');
-                    openModal('#deleteSuccessModal');
-                    deleteUserId = null;
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                    closeModal('#deleteModal');
-                    showCustomAlert(error.message || '삭제에 실패했습니다.');
-                    deleteUserId = null;
-                });
-            }
-        }
-
-        // 삭제 모달 닫기
-        function closeDeleteModal() {
-            closeModal('#deleteModal');
-            deleteUserId = null;
-        }
-
-        // 삭제 완료 모달 닫기
-        function closeDeleteSuccessModal() {
-            closeModal('#deleteSuccessModal');
-            loadUsers(); // 목록 새로고침
-        }
-
-        // 수정 완료 모달 닫기
-        function closeEditSuccessModal() {
-            closeModal('#editSuccessModal');
-            loadUsers(); // 목록 새로고침
-        }
-
-        // 모달 외부 클릭 시 닫기
-        $(document).on('click', '.delete_modal', function(e) {
-            if ($(e.target).hasClass('delete_modal')) {
-                closeDeleteModal();
-                closeDeleteSuccessModal();
-                closeEditSuccessModal();
-            }
+    $(document).ready(function() {
+        $('#confirmOkBtn').click(function() {
+            $('#confirmModal').removeClass('show');
+            if (confirmCallback) confirmCallback();
+            confirmCallback = null;
         });
 
-        // 모달 닫기
-        function closeUserModal() {
-            $('#userModal').removeClass('active');
-            $('#userForm')[0].reset();
-            
-            // 취소 버튼 스타일 강제 적용 (모달이 다시 열릴 때를 대비) - 모든 취소 버튼
-            setTimeout(function() {
-                $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                    'background': '#fff',
-                    'background-color': '#fff',
-                    'color': '#666',
-                    'border': '2px solid #ddd'
-                });
-            }, 100);
-        }
-
-        // 사용자 수정 폼 제출
-        $(document).ready(function() {
-            // 취소 버튼 스타일 강제 적용 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                'background': '#fff',
-                'background-color': '#fff',
-                'color': '#666',
-                'border': '2px solid #ddd'
-            });
-            
-            // 취소 버튼 hover 이벤트 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').off('mouseenter mouseleave').on('mouseenter', function() {
-                $(this).css({
-                    'background': '#f5f5f5',
-                    'background-color': '#f5f5f5'
-                });
-            }).on('mouseleave', function() {
-                $(this).css({
-                    'background': '#fff',
-                    'background-color': '#fff'
-                });
-            });
-            
-            $('#userForm').submit(function(e) {
-                e.preventDefault();
-                var userId = $(this).data('userId');
-
-                // 이메일 형식 검증
-                var email = $('#userEmail').val().trim();
-                var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                if (!emailRegex.test(email)) {
-                    showCustomAlert('올바른 이메일 형식을 입력해주세요. (예: example@domain.com)');
-                    return;
-                }
-
-                // 비밀번호 확인
-                const newPassword = $('#userPassword').val();
-                const passwordConfirm = $('#userPasswordConfirm').val();
-                if (newPassword && newPassword !== passwordConfirm) {
-                    showCustomAlert('비밀번호가 일치하지 않습니다.');
-                    return;
-                }
-                if (newPassword && newPassword.length < 8) {
-                    showCustomAlert('비밀번호는 8자 이상이어야 합니다.');
-                    return;
-                }
-
-                var token = localStorage.getItem('accessToken');
-                var nameValue = $('#userName').val();
-
-                // role 값 변환 (프론트 -> 백엔드)
-                var roleValue = $('#userRole').val();
-                if (roleValue === 'owner') roleValue = 'store_owner';
-                if (roleValue === 'user') roleValue = 'member';
-
-                var updateData = {
-                    name: nameValue,
-                    username: nameValue,
-                    email: email,
-                    role: roleValue
-                };
-                if (newPassword) {
-                    updateData.password = newPassword;
-                }
-
-                fetch('/api/admin/users/' + userId, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updateData)
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        return response.text().then(function(text) {
-                            throw new Error(text || '수정에 실패했습니다.');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                    closeUserModal();
-                    openModal('#editSuccessModal');
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                    showCustomAlert(error.message || '수정에 실패했습니다.');
-                });
-            });
-
-            // 모달 외부 클릭 시 닫기
-            $(document).on('click', '.user_modal_overlay', function(e) {
-                if ($(e.target).hasClass('user_modal_overlay')) {
-                    closeUserModal();
-                }
-            });
+        $('#alertOkBtn').click(function() {
+            $('#alertModal').removeClass('show');
+            if (alertCallback) alertCallback();
+            alertCallback = null;
         });
-    </script>
-    
-    <!-- 커스텀 Confirm 모달 -->
-    <div id="customConfirmModal" style="display: none;">
-        <div class="modal_overlay"></div>
-        <div class="modal_content">
-            <div class="modal_header">
-                <h3 id="confirmTitle">확인</h3>
-            </div>
-            <div class="modal_body">
-                <p id="confirmMessage"></p>
-            </div>
-            <div class="modal_footer">
-                <button id="confirmCancelBtn" class="modal_cancel_btn">취소</button>
-                <button id="confirmOkBtn" class="modal_confirm_btn">확인</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- 커스텀 Alert 모달 -->
-    <div id="customAlertModal" style="display: none;">
-        <div class="modal_overlay"></div>
-        <div class="modal_content">
-            <div class="modal_header">
-                <h3 id="alertTitle">알림</h3>
-            </div>
-            <div class="modal_body">
-                <p id="alertMessage"></p>
-            </div>
-            <div class="modal_footer">
-                <button id="alertConfirmBtn" class="modal_confirm_btn">확인</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Alert 모달 함수
-        function showCustomAlert(message, callback, title) {
-            title = title || '알림';
-            $('#alertTitle').text(title);
-            $('#alertMessage').text(message);
-            
-            // 확인 버튼 스타일 강제 적용
-            $('#alertConfirmBtn').css({
-                'background': '#D95B3B',
-                'background-color': '#D95B3B',
-                'color': 'white',
-                'border': 'none'
-            });
-            
-            // 확인 버튼 hover 이벤트
-            $('#alertConfirmBtn').off('mouseenter mouseleave').on('mouseenter', function() {
-                $(this).css({
-                    'background': '#C74A2A',
-                    'background-color': '#C74A2A'
-                });
-            }).on('mouseleave', function() {
-                $(this).css({
-                    'background': '#D95B3B',
-                    'background-color': '#D95B3B'
-                });
-            });
-            
-            $('#customAlertModal').fadeIn(200);
-            
-            $('#alertConfirmBtn').off('click').on('click', function() {
-                $('#customAlertModal').fadeOut(200, function() {
-                    if (callback && typeof callback === 'function') {
-                        callback();
-                    }
-                });
-            });
-            
-            // 배경 클릭 시 닫기
-            $('#customAlertModal .modal_overlay').off('click').on('click', function() {
-                $('#customAlertModal').fadeOut(200);
-            });
-            
-            // 모달이 열릴 때마다 버튼 스타일 강제 적용
-            setTimeout(function() {
-                $('#alertConfirmBtn').attr('style', 
-                    'background: #D95B3B !important; ' +
-                    'background-color: #D95B3B !important; ' +
-                    'color: white !important; ' +
-                    'border: none !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-            }, 10);
-        }
-
-        // Confirm 모달 함수
-        function showCustomConfirm(message, onConfirm, title) {
-            title = title || '확인';
-            $('#confirmTitle').text(title);
-            $('#confirmMessage').text(message);
-            
-            // 취소 버튼 스타일 강제 적용 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').css({
-                'background': '#fff',
-                'background-color': '#fff',
-                'color': '#666',
-                'border': '2px solid #ddd'
-            });
-            
-            // 확인 버튼 스타일 강제 적용
-            $('#confirmOkBtn').css({
-                'background': '#D95B3B',
-                'background-color': '#D95B3B',
-                'color': 'white',
-                'border': 'none',
-                'padding': '12px 30px',
-                'border-radius': '8px',
-                'font-size': '16px'
-            });
-            
-            $('#customConfirmModal').fadeIn(200);
-            
-            $('#confirmCancelBtn').off('click').on('click', function() {
-                $('#customConfirmModal').fadeOut(200);
-            });
-            
-            // 취소 버튼 hover 이벤트 - 모든 취소 버튼
-            $('.modal_cancel_btn, #confirmCancelBtn, .user_modal_btn.cancel').off('mouseenter mouseleave').on('mouseenter', function() {
-                $(this).css({
-                    'background': '#f5f5f5',
-                    'background-color': '#f5f5f5'
-                });
-            }).on('mouseleave', function() {
-                $(this).css({
-                    'background': '#fff',
-                    'background-color': '#fff'
-                });
-            });
-            
-            // 확인 버튼 hover 이벤트
-            $('#confirmOkBtn').off('mouseenter mouseleave').on('mouseenter', function() {
-                $(this).css({
-                    'background': '#C74A2A',
-                    'background-color': '#C74A2A'
-                });
-            }).on('mouseleave', function() {
-                $(this).css({
-                    'background': '#D95B3B',
-                    'background-color': '#D95B3B'
-                });
-            });
-            
-            $('#confirmOkBtn').off('click').on('click', function() {
-                $('#customConfirmModal').fadeOut(200, function() {
-                    if (onConfirm && typeof onConfirm === 'function') {
-                        onConfirm();
-                    }
-                });
-            });
-            
-            // 배경 클릭 시 닫기
-            $('#customConfirmModal .modal_overlay').off('click').on('click', function() {
-                $('#customConfirmModal').fadeOut(200);
-            });
-            
-            // 모달이 열릴 때마다 버튼 스타일 강제 적용
-            setTimeout(function() {
-                $('#confirmCancelBtn').attr('style', 
-                    'background: #fff !important; ' +
-                    'background-color: #fff !important; ' +
-                    'color: #666 !important; ' +
-                    'border: 2px solid #ddd !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-                $('#confirmOkBtn').attr('style',
-                    'background: #D95B3B !important; ' +
-                    'background-color: #D95B3B !important; ' +
-                    'color: white !important; ' +
-                    'border: none !important; ' +
-                    'padding: 12px 30px !important; ' +
-                    'border-radius: 8px !important; ' +
-                    'font-size: 16px !important; ' +
-                    'min-width: 100px !important; ' +
-                    'cursor: pointer !important;'
-                );
-            }, 10);
-        }
-    </script>
+        $('.modal_wrap').click(function(e) {
+            if ($(e.target).hasClass('modal_wrap')) {
+                $(this).removeClass('show');
+            }
+        });
+    });
+</script>
 </body>
 </html>
-

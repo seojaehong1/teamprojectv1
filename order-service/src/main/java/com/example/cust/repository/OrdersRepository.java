@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,10 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
             "LEFT JOIN FETCH oi.orderOptions oo " +
             "WHERE o.orderId = :orderId")
     Optional<Orders> findDetailByIdWithItemsAndOptions(@Param("orderId") Integer orderId);
+
+    /**
+     * 4. 특정 고객의 주문 내역을 기간별로 조회 (최신순)
+     */
+    List<Orders> findAllByCustomerIdAndOrderDateAfterOrderByOrderDateDesc(
+            String customerId, LocalDateTime startDate);
 }

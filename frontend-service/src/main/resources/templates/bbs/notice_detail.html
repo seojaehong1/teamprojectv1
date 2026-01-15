@@ -280,134 +280,69 @@
             }
         }
         
-        /* 공지사항 상세 스타일 */
-        .notice_detail_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-        }
-        .notice_detail_content_wrap {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px 40px;
-        }
-        .notice_detail_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 30px;
-        }
-        .notice_detail_back {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
-        .notice_detail_back:hover {
-            color: #D95B3B;
-        }
-        .notice_detail_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .notice_detail_content {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        .notice_detail_content_header {
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .notice_detail_content_title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .notice_detail_content_meta {
-            display: flex;
-            gap: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-        .notice_detail_content_meta_item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .notice_detail_content_body {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .notice_detail_pinned {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #D95B3B;
-            color: #fff;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .notice_detail_actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        .notice_detail_btn {
-            padding: 12px 30px;
-            background: #D95B3B;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .notice_detail_btn:hover {
-            background: #c04a2f;
-        }
-        .notice_detail_btn.secondary {
-            background: #666;
-        }
-        .notice_detail_btn.secondary:hover {
-            background: #555;
-        }
+        /* 공지사항 상세 스타일 - FAQ 스타일과 통일 */
+        .notice_detail_wrap { max-width: 100%; margin: 0 auto; padding: 0; background: #fff; min-height: calc(100vh - 200px); }
+        .notice_detail_content_wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px 40px; }
+        .notice_detail_header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e0e0e0; margin-bottom: 30px; }
+        .notice_detail_back { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #333; }
+        .notice_detail_back:hover { color: #D95B3B; }
+        .notice_detail_title { font-size: 20px; font-weight: 700; color: #333; }
+        .notice_detail_content { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 30px; margin-bottom: 30px; }
+        .notice_detail_content_header { border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px; }
+        .notice_detail_tag { display: inline-block; padding: 4px 12px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+        .notice_detail_content_title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .notice_detail_content_meta { display: flex; gap: 20px; font-size: 14px; color: #666; flex-wrap: wrap; }
+        .notice_detail_content_meta_item { display: flex; align-items: center; gap: 5px; }
+
+        /* 공지 내용 섹션 */
+        .notice_detail_body { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #D95B3B; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .notice_detail_body_label { font-size: 14px; font-weight: 600; color: #D95B3B; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .notice_detail_body_label i { font-size: 18px; }
+        .notice_detail_body_text { font-size: 16px; line-height: 1.9; color: #444; white-space: pre-wrap; word-wrap: break-word; }
+
+        .notice_detail_actions { display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 60px; }
+        .notice_detail_btn { padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .notice_detail_btn:hover { background: #c04a2f; }
+
+        /* 섹션 공통 스타일 */
+        .notice_section { margin-top: 30px; padding: 25px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+        .section_title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section_title i { color: #D95B3B; }
+
+        /* 피드백 섹션 */
+        .notice_feedback_section { text-align: center; padding: 30px; background: linear-gradient(135deg, #fff5f3 0%, #fff 100%); border: 1px solid #ffe0db; }
+        .feedback_title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px; }
+        .feedback_buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .feedback_btn { display: flex; align-items: center; gap: 8px; padding: 12px 25px; border: 2px solid #e0e0e0; background: #fff; border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .feedback_btn:hover { border-color: #D95B3B; color: #D95B3B; }
+        .feedback_btn.active { background: #D95B3B; border-color: #D95B3B; color: #fff; }
+        .feedback_btn i { font-size: 18px; }
+        .feedback_result { display: none; padding: 15px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; }
+        .feedback_result.show { display: block; }
+
+        /* 1:1 문의 안내 */
+        .notice_inquiry_section { background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%); text-align: center; }
+        .inquiry_icon { font-size: 40px; color: #D95B3B; margin-bottom: 15px; }
+        .inquiry_text { font-size: 15px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+        .inquiry_btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; background: #333; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .inquiry_btn:hover { background: #D95B3B; color: #fff; }
+
+        /* 관련 공지 */
+        .related_notice_list { display: flex; flex-direction: column; gap: 10px; }
+        .related_notice_item { display: flex; align-items: center; gap: 12px; padding: 15px; background: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .related_notice_item:hover { background: #f5f5f5; transform: translateX(5px); }
+        .related_notice_tag { display: inline-block; padding: 4px 10px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .related_notice_title { font-size: 14px; color: #333; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .related_notice_arrow { color: #999; font-size: 14px; }
+
         @media (max-width: 768px) {
-            .notice_detail_content_wrap {
-                padding: 20px 15px;
-            }
-            .notice_detail_content {
-                padding: 20px;
-            }
-            .notice_detail_content_title {
-                font-size: 20px;
-            }
-            .notice_detail_content_meta {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .notice_detail_content_wrap { padding: 20px 15px; }
+            .notice_detail_content { padding: 20px; }
+            .notice_detail_content_title { font-size: 18px; }
+            .notice_detail_content_meta { flex-direction: column; gap: 10px; }
+            .notice_section { padding: 20px; margin-top: 20px; }
+            .feedback_buttons { flex-direction: column; }
+            .feedback_btn { justify-content: center; }
         }
     </style>
     
@@ -509,7 +444,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="../mypage/index">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -604,7 +539,7 @@
             </div>
 
             <div class="notice_detail_wrap">
-                <div class="notice_detraail_content_wp">
+                <div class="notice_detail_content_wrap">
                     <div class="notice_detail_header">
                         <button class="notice_detail_back" type="button" onclick="history.back()">
                             <i class="fas fa-arrow-left"></i>
@@ -630,9 +565,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -656,14 +591,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -835,10 +768,10 @@
             function renderNoticeDetail(notice) {
                 const createdAt = notice.createdAt ? new Date(notice.createdAt).toLocaleDateString('ko-KR') : '';
                 const authorName = notice.authorName || 'TORI COFFEE';
-                
+
                 let html = `
                     <div class="notice_detail_content_header">
-                        ${notice.isPinned ? '<span class="notice_detail_pinned">공지</span>' : ''}
+                        <span class="notice_detail_tag">${notice.isPinned ? '중요 공지' : '공지사항'}</span>
                         <div class="notice_detail_content_title">${notice.title || ''}</div>
                         <div class="notice_detail_content_meta">
                             <div class="notice_detail_content_meta_item">
@@ -849,15 +782,50 @@
                                 <i class="fas fa-calendar"></i>
                                 <span>${createdAt}</span>
                             </div>
+                            <div class="notice_detail_content_meta_item">
+                                <i class="fas fa-eye"></i>
+                                <span>조회 ${notice.viewCount || 0}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="notice_detail_content_body">
-                        ${notice.content || ''}
+                    <div class="notice_detail_body">
+                        <div class="notice_detail_body_label"><i class="fas fa-bullhorn"></i> 공지 내용</div>
+                        <div class="notice_detail_body_text">${notice.content || ''}</div>
+                    </div>
+
+                    <div class="notice_section notice_feedback_section">
+                        <div class="feedback_title"><i class="fas fa-smile"></i> 이 공지가 도움이 되었나요?</div>
+                        <div class="feedback_buttons">
+                            <button class="feedback_btn" onclick="submitFeedback('yes', this)">
+                                <i class="far fa-thumbs-up"></i> 네, 도움이 됐어요
+                            </button>
+                            <button class="feedback_btn" onclick="submitFeedback('no', this)">
+                                <i class="far fa-thumbs-down"></i> 아니요
+                            </button>
+                        </div>
+                        <div class="feedback_result" id="feedbackResult">
+                            <i class="fas fa-heart"></i> 소중한 피드백 감사합니다!
+                        </div>
+                    </div>
+
+                    <div class="notice_section notice_inquiry_section">
+                        <div class="inquiry_icon"><i class="fas fa-headset"></i></div>
+                        <div class="inquiry_text">추가 문의사항이 있으신가요?<br>1:1 문의를 통해 더 자세한 안내를 받아보세요.</div>
+                        <a href="../mypage/inquiry" class="inquiry_btn">
+                            <i class="fas fa-pen"></i> 1:1 문의하기
+                        </a>
                     </div>
                 `;
-                
+
                 $('#noticeDetailContent').html(html);
             }
+
+            // 피드백 제출 함수
+            window.submitFeedback = function(type, btn) {
+                $('.feedback_btn').removeClass('active');
+                $(btn).addClass('active');
+                $('#feedbackResult').addClass('show');
+            };
 
             // 페이지 로드 시 공지사항 상세 정보 로드
             loadNoticeDetail();

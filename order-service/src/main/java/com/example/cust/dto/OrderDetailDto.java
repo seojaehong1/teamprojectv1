@@ -16,6 +16,7 @@ public class OrderDetailDto {
     private Integer orderId;
     private LocalDateTime orderDate;
     private String customerId;
+    private String customerName; // 고객 이름
     private String request; //요청사항
     private Integer totalAmount; // 전체 주문 총 금액
     private String status; // 주문 상태 (Enum의 description)

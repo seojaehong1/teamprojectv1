@@ -32,6 +32,9 @@ public class Orders {
     @Column(name = "customer_id")
     private String customerId; // 고객 테이블의 FK
 
+    @Column(name = "customer_name")
+    private String customerName; // 고객 이름
+
     @Enumerated(EnumType.STRING) // 💡 [수정] Enum 타입으로 변경
     @Column(name = "status", length = 20)
     private OrderStatus status;

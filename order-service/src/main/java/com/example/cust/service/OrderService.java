@@ -26,10 +26,12 @@ public class OrderService {
      * 장바구니 데이터를 Orders, OrderItem, OrderOption 테이블에 저장하고 장바구니를 비웁니다.
      * (결제는 성공했다고 가정하며, 초기 상태는 PAYMENT_COMPLETED로 설정됩니다.)
      * @param customerId 주문을 요청한 고객 ID
+     * @param customerName 주문을 요청한 고객 이름
+     * @param requestMessage 주문 요청사항
      * @return 저장된 Orders 엔티티
      */
     @Transactional
-    public Orders placeOrder(String customerId, String requestMessage) {
+    public Orders placeOrder(String customerId, String customerName, String requestMessage) {
 
         // 1. 장바구니 헤더 및 아이템 조회
         CartHeader cartHeader = cartDetailService.getCartHeaderByCustomerId(customerId);
@@ -44,6 +46,7 @@ public class OrderService {
         Orders order = Orders.builder()
                 .orderDate(LocalDateTime.now())
                 .customerId(customerId)
+                .customerName(customerName) // 고객 이름 저장
                 .totalAmount(totalOrderAmount)
                 .status(OrderStatus.PENDING)
                 .request(requestMessage) // 이 부분이 추가되어야 DB에 저장됩니다!
@@ -161,6 +164,7 @@ public class OrderService {
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .customerId(order.getCustomerId())
+                .customerName(order.getCustomerName()) // 고객 이름 포함
                 .request(order.getRequest())
                 .totalAmount(order.getTotalAmount())
                 .status(order.getStatus().getDescription())
@@ -196,6 +200,36 @@ public class OrderService {
                         .totalAmount(order.getTotalAmount())
                         .status(order.getStatus().getDescription()) // Enum의 한글 설명값
                         .itemCount(order.getOrderItems().size())    // Set<OrderItem>의 크기
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 주문 history 조회 (기간별 필터링)
+     * @param customerId 고객 ID
+     * @param months 조회할 개월 수 (null이면 전체)
+     */
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> getOrderHistoryListByPeriod(String customerId, Integer months) {
+        List<Orders> orders;
+
+        if (months == null || months <= 0) {
+            // 전체 조회
+            orders = ordersRepository.findAllByCustomerIdOrderByOrderDateDesc(customerId);
+        } else {
+            // 기간별 조회
+            LocalDateTime startDate = LocalDateTime.now().minusMonths(months);
+            orders = ordersRepository.findAllByCustomerIdAndOrderDateAfterOrderByOrderDateDesc(customerId, startDate);
+        }
+
+        // 엔티티를 DTO로 변환
+        return orders.stream()
+                .map(order -> OrderHistoryDto.builder()
+                        .orderId(order.getOrderId())
+                        .orderDate(order.getOrderDate())
+                        .totalAmount(order.getTotalAmount())
+                        .status(order.getStatus().getDescription())
+                        .itemCount(order.getOrderItems().size())
                         .build())
                 .collect(Collectors.toList());
     }

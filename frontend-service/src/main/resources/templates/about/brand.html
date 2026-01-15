@@ -303,10 +303,132 @@
         }
         .cont_gallery_list_box {
             border: 1px solid rgba(207, 74, 35, 0.2) !important;
+            border-radius: 16px;
+            padding: 30px 25px;
+            background: #fff;
+            transition: all 0.3s ease;
         }
         .cont_gallery_list_box:hover {
             border-color: #cf4a23 !important;
-            box-shadow: 0 4px 12px rgba(207, 74, 35, 0.15) !important;
+            box-shadow: 0 8px 24px rgba(207, 74, 35, 0.15) !important;
+            transform: translateY(-4px);
+        }
+
+        /* 브랜드 이미지 레이아웃 개선 */
+        .brand_content_layout {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+            margin-top: 50px;
+        }
+        .brand_content_left {
+            flex: 1;
+        }
+        .brand_content_right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .brand_main_img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+        .brand_sub_img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* 기존 이미지 스타일 오버라이드 */
+        .brand01 .cont_list_content_align > ul {
+            display: flex;
+            align-items: flex-start;
+            gap: 60px;
+        }
+        .brand01 .cont_list_content_align > ul > li:first-child {
+            flex: 1;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child {
+            flex: 0 0 450px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child img {
+            max-width: 100%;
+            width: 450px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child img:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(207, 74, 35, 0.2);
+        }
+        .cont_list3 .cont_text_box img {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .cont_list3 .cont_text_box img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 반응형 브랜드 레이아웃 */
+        @media (max-width: 1024px) {
+            .brand01 .cont_list_content_align > ul {
+                flex-direction: column;
+            }
+            .brand01 .cont_list_content_align > ul > li:last-child {
+                flex: none;
+                width: 100%;
+            }
+            .brand01 .cont_list_content_align > ul > li:last-child img {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+
+        /* 카드 그리드 개선 */
+        .cont_list4.cont_list_m1 {
+            margin-top: 40px;
+        }
+        .cont_list4.cont_list_m1 > ul {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .cont_list4.cont_list_m1 > ul > li {
+            width: 100%;
+        }
+        @media (max-width: 1024px) {
+            .cont_list4.cont_list_m1 > ul {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .cont_list4.cont_list_m1 > ul {
+                grid-template-columns: 1fr;
+            }
+            .brand_content_layout {
+                flex-direction: column;
+                gap: 30px;
+            }
         }
     </style>
     
@@ -407,7 +529,7 @@
                             <div class="head_login_dropdown">
                                 <ul>
                                     <li><a href="../mypage/index">마이페이지</a></li>
-                                    <li><a href="../order/history">주문/배송조회</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -632,7 +754,7 @@
                                                 </li>
                                                 <li>
                                                     <div class="cont_text_box">
-                                                        <img alt="TORI COFFEE 브랜드 가이드">
+                                                        <img alt="TORI COFFEE 브랜드 가이드" th:src="@{/src/tori.png}">
                                                     </div>
                                                 </li>
                                                 <li>
@@ -645,7 +767,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <img>
+                                    <img alt="TORI COFFEE" th:src="@{/src/tori1.jpg}">
                                 </li>
                             </ul>
                         </div>
@@ -660,9 +782,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -686,14 +808,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 토리커피</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>

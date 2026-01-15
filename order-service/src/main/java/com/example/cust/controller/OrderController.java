@@ -119,15 +119,22 @@ public class OrderController {
     @PostMapping("/place")
     public ResponseEntity<String> placeOrder(@RequestBody Map<String, String> requestBody) {
         try {
-            // 프론트엔드에서 보낸 "request" 키값을 추출
+            // 프론트엔드에서 보낸 "request", "customerName" 키값을 추출
             String requestMessage = requestBody.get("request");
+            String customerName = requestBody.get("customerName");
 
-            // 서비스 메서드에 요청사항 전달
-            Orders savedOrder = orderService.placeOrder("1", requestMessage);
+            log.info("[주문] 받은 요청 데이터 - requestMessage: {}, customerName: {}", requestMessage, customerName);
+            log.info("[주문] 전체 requestBody: {}", requestBody);
+
+            // 서비스 메서드에 customerId, customerName, 요청사항 전달
+            Orders savedOrder = orderService.placeOrder("1", customerName, requestMessage);
+
+            log.info("[주문] 주문 완료 - orderId: {}, customerName: {}", savedOrder.getOrderId(), savedOrder.getCustomerName());
 
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body("주문 완료 ID: " + savedOrder.getOrderId());
         } catch (Exception e) {
+            log.error("[주문] 주문 실패: ", e);
             return ResponseEntity.internalServerError().body("주문 실패: " + e.getMessage());
         }
     }
@@ -156,15 +163,18 @@ public class OrderController {
     }
 
     /**
-     * 9. 주문 내역 목록 조회
-     * GET /api/order/history
+     * 9. 주문 내역 목록 조회 (기간별 필터링 지원)
+     * GET /api/order/history?period=1 (1개월)
+     * GET /api/order/history?period=3 (3개월)
+     * GET /api/order/history (전체)
      */
     @GetMapping("/history")
-    public ResponseEntity<List<OrderHistoryDto>> getOrderHistory() {
+    public ResponseEntity<List<OrderHistoryDto>> getOrderHistory(
+            @RequestParam(value = "period", required = false) Integer period) {
         final String customerId = "1";
-        log.info("주문 내역 DTO 조회 요청 - 고객: {}", customerId);
+        log.info("주문 내역 DTO 조회 요청 - 고객: {}, 기간: {}개월", customerId, period);
         try {
-            List<OrderHistoryDto> historyList = orderService.getOrderHistoryList(customerId);
+            List<OrderHistoryDto> historyList = orderService.getOrderHistoryListByPeriod(customerId, period);
             return ResponseEntity.ok(historyList);
         } catch (Exception e) {
             log.error("주문 내역 조회 실패: {}", e.getMessage());
