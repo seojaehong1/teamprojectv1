@@ -311,6 +311,62 @@
       }
     </style>
 
+    <!-- 공지사항 스타일 -->
+    <style>
+      /* 중요공지 행 스타일 */
+      .board_list tr.notice_important {
+        background: linear-gradient(135deg, #fff8f6 0%, #fff 100%);
+        border-left: 4px solid #d95b3b;
+      }
+      .board_list tr.notice_important:hover {
+        background: linear-gradient(135deg, #fff0eb 0%, #fff8f6 100%);
+      }
+      /* 중요공지 배지 */
+      .notice_badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .notice_badge.important {
+        background: linear-gradient(135deg, #d95b3b 0%, #e57a5f 100%);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(217, 91, 59, 0.3);
+        animation: pulse_badge 2s infinite;
+      }
+      @keyframes pulse_badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      .notice_badge.normal {
+        background: #f0f0f0;
+        color: #666;
+      }
+      /* 중요공지 제목 스타일 */
+      .notice_important .text a {
+        color: #d95b3b !important;
+        font-weight: 600 !important;
+      }
+      .notice_important .text a:hover {
+        color: #b94a2f !important;
+      }
+      /* 중요공지 아이콘 */
+      .notice_important_icon {
+        display: inline-block;
+        margin-right: 6px;
+        color: #d95b3b;
+        font-size: 14px;
+        vertical-align: middle;
+      }
+      /* 일반 공지 번호 스타일 */
+      .notice_num {
+        color: #888;
+        font-weight: 400;
+      }
+    </style>
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
@@ -755,13 +811,17 @@
             if (data.notices && data.notices.length > 0) {
               data.notices.forEach(function (notice, index) {
                 var noticeId = notice.id || notice.noticeId;
-                var displayNum = notice.isPinned ? "공지" : noticeId;
-                var titleText = notice.isPinned
-                  ? "<em>" + escapeHtml(notice.title) + "</em>"
-                  : escapeHtml(notice.title);
+                var rowClass = notice.isPinned ? ' class="notice_important"' : '';
+                var displayNum = notice.isPinned
+                  ? '<span class="notice_badge important"><i class="fas fa-thumbtack"></i> 중요</span>'
+                  : '<span class="notice_num">' + noticeId + '</span>';
+                var titleIcon = notice.isPinned
+                  ? '<i class="fas fa-bell notice_important_icon"></i>'
+                  : '';
+                var titleText = titleIcon + escapeHtml(notice.title);
 
                 var row =
-                  "<tr>" +
+                  "<tr" + rowClass + ">" +
                   '<td class="board_pc">' +
                   displayNum +
                   "</td>" +

@@ -406,74 +406,87 @@
         .mypage_withdraw_link:hover {
             color: #666;
         }
-        /* 회원 탈퇴 확인 모달 */
+        /* 회원 탈퇴 확인 모달 (Admin 스타일) */
         .withdraw_modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
         }
         .withdraw_modal.active {
-            display: flex;
+            display: flex !important;
         }
         .withdraw_modal_content {
-            background: #fff;
-            border-radius: 12px;
-            width: calc(100% - 40px);
-            max-width: 400px;
-            padding: 30px 25px 25px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: withdrawModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes withdrawModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .withdraw_modal_header {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 16px !important;
         }
         .withdraw_modal_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
         }
-        .withdraw_modal_message {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .withdraw_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.6 !important;
         }
-        .withdraw_modal_buttons {
-            display: flex;
-            gap: 10px;
+        .withdraw_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
         }
         .withdraw_modal_btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            flex: 1 !important;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
         }
-        .withdraw_modal_btn:active {
-            opacity: 0.8;
+        .withdraw_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
         }
-        .withdraw_modal_cancel {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #e0e0e0;
+        .withdraw_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
         }
-        .withdraw_modal_cancel:hover {
-            background: #e8e8e8;
+        .withdraw_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
         }
-        .withdraw_modal_confirm {
-            background: #D95B3B;
-            color: #fff;
-            border: none;
-        }
-        .withdraw_modal_confirm:hover {
-            background: #c04a2f;
+        .withdraw_modal_btn.danger:hover {
+            background: #DC2626 !important;
         }
         @media (min-width: 769px) {
             .mypage_content_wrap {
@@ -662,7 +675,7 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="/">마이페이지</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
                                     <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
@@ -797,16 +810,16 @@
         </div>
     </div>
 
-    <!-- 회원 탈퇴 확인 모달 -->
+    <!-- 회원 탈퇴 확인 모달 (Admin 스타일) -->
     <div class="withdraw_modal">
         <div class="withdraw_modal_content">
-            <div class="withdraw_modal_title">회원 탈퇴</div>
-            <div class="withdraw_modal_message">
-                정말 탈퇴하시겠습니까?<br>모든 정보가 삭제됩니다.
+            <div class="withdraw_modal_header">
+                <div class="withdraw_modal_title">회원 탈퇴</div>
             </div>
-            <div class="withdraw_modal_buttons">
-                <button class="withdraw_modal_btn withdraw_modal_cancel" type="button">취소</button>
-                <button class="withdraw_modal_btn withdraw_modal_confirm" type="button">탈퇴하기</button>
+            <div class="withdraw_modal_text">정말 탈퇴하시겠습니까?<br>모든 정보가 삭제됩니다.</div>
+            <div class="withdraw_modal_actions">
+                <button class="withdraw_modal_btn cancel withdraw_modal_cancel" type="button">취소</button>
+                <button class="withdraw_modal_btn danger withdraw_modal_confirm" type="button">탈퇴하기</button>
             </div>
         </div>
     </div>

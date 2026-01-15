@@ -819,6 +819,115 @@
         }
 
         /* ========================================
+           Confirm Modal (로그아웃용)
+           ======================================== */
+        .modal_wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal_wrap.show {
+            display: flex;
+        }
+
+        .modal_content {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .modal_content.confirm {
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .modal_content.confirm .modal_header {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal_text {
+            font-size: 15px;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal_actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .modal_btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .modal_btn.cancel:hover {
+            background: var(--gray-200);
+        }
+
+        .modal_btn.primary {
+            background: var(--primary-gradient);
+            color: #fff;
+        }
+
+        .modal_btn.primary:hover {
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
+        }
+
+        .modal_btn.danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .modal_btn.danger:hover {
+            background: #DC2626;
+        }
+
+        /* ========================================
            Footer
            ======================================== */
         .foot_menu_wrap {
@@ -1169,6 +1278,20 @@
     </div>
 </div>
 
+<!-- 확인 모달 (로그아웃용) -->
+<div class="modal_wrap" id="confirmModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="confirmTitle">확인</div>
+        </div>
+        <div class="modal_text" id="confirmText">정말 진행하시겠습니까?</div>
+        <div class="modal_actions">
+            <button class="modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+            <button class="modal_btn danger" id="confirmOkBtn">확인</button>
+        </div>
+    </div>
+</div>
+
 <script>
     // Go to top function
     function go_top() {
@@ -1204,12 +1327,41 @@
         // 로그아웃 버튼
         $('#adminLogoutBtn').on('click', function(e) {
             e.preventDefault();
-            if (confirm('로그아웃하시겠습니까?')) {
+            showConfirm('로그아웃하시겠습니까?', function() {
                 localStorage.clear();
                 window.location.href = '/';
+            }, '로그아웃');
+        });
+
+        // 확인 모달 OK 버튼 클릭
+        $('#confirmOkBtn').click(function() {
+            $('#confirmModal').removeClass('show');
+            if (confirmCallback) confirmCallback();
+            confirmCallback = null;
+        });
+
+        // 모달 배경 클릭 시 닫기
+        $('.modal_wrap').click(function(e) {
+            if ($(e.target).hasClass('modal_wrap')) {
+                $(this).removeClass('show');
             }
         });
     });
+
+    // 확인 모달용 변수 및 함수
+    var confirmCallback = null;
+
+    function showConfirm(message, callback, title) {
+        $('#confirmTitle').text(title || '확인');
+        $('#confirmText').text(message);
+        confirmCallback = callback;
+        $('#confirmModal').addClass('show');
+    }
+
+    function closeConfirmModal() {
+        $('#confirmModal').removeClass('show');
+        confirmCallback = null;
+    }
 
     // 공지사항 목록 로드 (API 연동)
     var currentPage = 1;

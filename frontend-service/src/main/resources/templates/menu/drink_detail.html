@@ -1203,6 +1203,15 @@
 
         // 주문 선택 버튼
         $('.drink_detail_order_btn').on('click', function() {
+            // 로그인 체크
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                showToast('로그인 필요', '로그인이 필요한 서비스입니다', 'warning');
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1000);
+                return;
+            }
             placeOrderDirectly();
         });
 
@@ -1624,6 +1633,15 @@
 
     // HTML의 장바구니 담기 버튼에 바인딩 (클래스명 확인 필요)
     $('.drink_detail_cart_btn').on('click', function() {
+        // 로그인 체크
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        if (!isLoggedIn) {
+            showToast('로그인 필요', '로그인이 필요한 서비스입니다', 'warning');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1000);
+            return;
+        }
         addToCart();
     });
 
