@@ -318,6 +318,96 @@
             line-height: 1.8;
             color: #666;
         }
+
+        /* 로그아웃 확인 모달 스타일 */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
+        }
+        .logout_modal_wrap.show {
+            display: flex !important;
+        }
+        .logout_modal_content {
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+            animation: logoutModalSlideIn 0.3s ease !important;
+            text-align: center !important;
+            margin: 0 auto !important;
+            position: relative !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .logout_modal_header {
+            margin-bottom: 16px !important;
+        }
+        .logout_modal_title {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #1F2937 !important;
+            margin: 0 !important;
+        }
+        .logout_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.5 !important;
+        }
+        .logout_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
+        }
+        .logout_modal_btn {
+            padding: 12px 32px !important;
+            border-radius: 8px !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+            border: none !important;
+            min-width: 100px !important;
+        }
+        .logout_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
+        }
+        .logout_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
+        }
+        .logout_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
+        }
+        .logout_modal_btn.danger:hover {
+            background: #DC2626 !important;
+        }
     </style>
     
     <!-- JavaScript -->
@@ -1006,10 +1096,7 @@
             // 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '/';
+                openLogoutModal();
             });
 
             // FAQ 페이지네이션
@@ -1094,7 +1181,36 @@
                 $('.board_page_wrap').hide();
             }
         });
+
+        // 로그아웃 모달 함수 (전역)
+        function openLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            window.location.href = '/';
+        }
     </script>
+
+    <!-- 로그아웃 확인 모달 -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title">로그아웃</div>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">확인</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 
