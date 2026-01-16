@@ -21,14 +21,28 @@ k8s/
 
 ## 배포 순서
 
-### 1. AWS 설정 변경
+### 1. AWS 환경변수 설정
 
-`scripts/build-and-push.sh`와 `scripts/deploy.sh`에서 다음 값을 수정:
-
+#### 방법 1: .env 파일 사용 (권장)
 ```bash
-AWS_ACCOUNT_ID="YOUR_AWS_ACCOUNT_ID"
-AWS_REGION="ap-northeast-2"
+# .env.example을 복사하여 .env 파일 생성
+cp k8s/scripts/.env.example k8s/scripts/.env
+
+# .env 파일을 편집하여 실제 AWS 값 입력
+vi k8s/scripts/.env
 ```
+
+#### 방법 2: 환경변수 직접 설정
+```bash
+export AWS_ACCOUNT_ID="123456789012"
+export AWS_REGION="ap-northeast-2"
+```
+
+#### 필수 환경변수
+| 변수 | 설명 | 예시 |
+|------|------|------|
+| AWS_ACCOUNT_ID | AWS 계정 ID | 123456789012 |
+| AWS_REGION | AWS 리전 | ap-northeast-2 |
 
 ### 2. ECR 이미지 빌드 및 푸시
 
