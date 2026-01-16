@@ -4,7 +4,7 @@ metadata:
   name: gateway-service
   namespace: tori-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: gateway-service
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/tori-app/gateway-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/gateway-service:latest
           ports:
             - containerPort: 8000
           env:
@@ -30,10 +30,10 @@ spec:
               value: "http://frontend-service:8005"
           resources:
             requests:
-              memory: "512Mi"
+              memory: "256Mi"
               cpu: "250m"
             limits:
-              memory: "1Gi"
+              memory: "384Mi"
               cpu: "500m"
           livenessProbe:
             httpGet:
