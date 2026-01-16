@@ -64,6 +64,10 @@ kubectl apply -f k8s/services/admin-service.yaml
 echo "7. Ingress 배포..."
 kubectl apply -f k8s/ingress.yaml
 
+# 8. HPA (Auto Scaling) 배포
+echo "8. HPA (Auto Scaling) 배포..."
+kubectl apply -f k8s/hpa/
+
 echo "=========================================="
 echo "배포 완료!"
 echo "=========================================="
@@ -76,3 +80,6 @@ kubectl get svc -n tori-app
 echo ""
 echo "Ingress 확인:"
 kubectl get ingress -n tori-app
+echo ""
+echo "HPA (Auto Scaling) 상태:"
+kubectl get hpa -n tori-app
