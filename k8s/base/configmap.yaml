@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: tori-app
+data:
+  EUREKA_SERVER_URL: "http://eureka-server:8761/eureka/"
+  RABBITMQ_HOST: "rabbitmq"
+  RABBITMQ_PORT: "5672"
+  # MySQL hosts
+  MYSQL_MEMBER_HOST: "mysql-member"
+  MYSQL_PRODUCT_HOST: "mysql-product"
+  MYSQL_ORDER_HOST: "mysql-order"
+  MYSQL_INVENTORY_HOST: "mysql-inventory"
+  # Service URLs
+  SERVICE_MEMBER_URL: "http://member-service:8004"
+  SERVICE_BOARD_URL: "http://board-service:8006"
+  SERVICE_ADMIN_URL: "http://admin-service:8007"
+  SERVICE_PRODUCT_URL: "http://product-service:8001"
+  SERVICE_ORDER_URL: "http://order-service:8002"
+  SERVICE_INVENTORY_URL: "http://inventory-service:8008"

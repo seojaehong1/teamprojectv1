@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-product-pvc
+  namespace: tori-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-product
+  namespace: tori-app
+spec:
+  serviceName: mysql-product
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-product
+  template:
+    metadata:
+      labels:
+        app: mysql-product
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: MYSQL_PRODUCT_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              value: "product_db"
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: MYSQL_PRODUCT_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: MYSQL_PRODUCT_PASSWORD
+          args:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-product-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-product
+  namespace: tori-app
+spec:
+  selector:
+    app: mysql-product
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None
