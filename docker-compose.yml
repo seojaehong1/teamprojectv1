@@ -1,6 +1,102 @@
 version: '3.8'
 
 services:
+  # ============================================
+  # MySQL Databases (4개 분리)
+  # ============================================
+
+  # MySQL - Member/Admin/Board 공유 DB
+  mysql-member:
+    image: mysql:8.0
+    container_name: mysql-member
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: member_db
+      MYSQL_USER: member_user
+      MYSQL_PASSWORD: member_pass
+    volumes:
+      - mysql-member-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Product DB
+  mysql-product:
+    image: mysql:8.0
+    container_name: mysql-product
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: product_db
+      MYSQL_USER: product_user
+      MYSQL_PASSWORD: product_pass
+    volumes:
+      - mysql-product-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Order DB
+  mysql-order:
+    image: mysql:8.0
+    container_name: mysql-order
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: order_db
+      MYSQL_USER: order_user
+      MYSQL_PASSWORD: order_pass
+    volumes:
+      - mysql-order-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Inventory DB
+  mysql-inventory:
+    image: mysql:8.0
+    container_name: mysql-inventory
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: inventory_db
+      MYSQL_USER: inventory_user
+      MYSQL_PASSWORD: inventory_pass
+    volumes:
+      - mysql-inventory-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # ============================================
+  # Infrastructure Services
+  # ============================================
+
   # RabbitMQ - Message Queue
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -87,8 +183,13 @@ services:
       - .env
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
     depends_on:
       eureka-server:
+        condition: service_healthy
+      mysql-member:
         condition: service_healthy
     networks:
       - tori-network
@@ -104,10 +205,15 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-product:3306/product_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: product_user
+      SPRING_DATASOURCE_PASSWORD: product_pass
     depends_on:
       eureka-server:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      mysql-product:
         condition: service_healthy
     networks:
       - tori-network
@@ -123,10 +229,15 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-order:3306/order_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: order_user
+      SPRING_DATASOURCE_PASSWORD: order_pass
     depends_on:
       eureka-server:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      mysql-order:
         condition: service_healthy
     networks:
       - tori-network
@@ -142,10 +253,15 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-inventory:3306/inventory_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: inventory_user
+      SPRING_DATASOURCE_PASSWORD: inventory_pass
     depends_on:
       eureka-server:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      mysql-inventory:
         condition: service_healthy
     networks:
       - tori-network
@@ -160,8 +276,13 @@ services:
       - "8006:8006"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
     depends_on:
       eureka-server:
+        condition: service_healthy
+      mysql-member:
         condition: service_healthy
     networks:
       - tori-network
@@ -176,8 +297,13 @@ services:
       - "8007:8007"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
     depends_on:
       eureka-server:
+        condition: service_healthy
+      mysql-member:
         condition: service_healthy
     networks:
       - tori-network
@@ -185,3 +311,9 @@ services:
 networks:
   tori-network:
     driver: bridge
+
+volumes:
+  mysql-member-data:
+  mysql-product-data:
+  mysql-order-data:
+  mysql-inventory-data:
