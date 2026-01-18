@@ -1,6 +1,7 @@
 package com.toricoffee.frontend.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -10,7 +11,8 @@ public class ApiClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String GATEWAY_URL = "http://localhost:8000";
+    @Value("${gateway.url:http://gateway-service:8000}")
+    private String GATEWAY_URL;
 
     public <T> T get(String path, Class<T> responseType) {
         String url = GATEWAY_URL + path;

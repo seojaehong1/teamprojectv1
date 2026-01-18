@@ -5,6 +5,7 @@ metadata:
   namespace: tori-app
 data:
   EUREKA_SERVER_URL: "http://eureka-server:8761/eureka/"
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
   RABBITMQ_HOST: "rabbitmq"
   RABBITMQ_PORT: "5672"
   # MySQL hosts

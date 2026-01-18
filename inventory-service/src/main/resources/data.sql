@@ -1,4 +1,4 @@
-INSERT INTO material_master (ingredient_name, base_unit, stock_qty) VALUES
+INSERT IGNORE INTO material_master (ingredient_name, base_unit, stock_qty) VALUES
                                                                         ('24oz 아이스컵', 'ea', 500.00),
                                                                         ('32oz 아이스컵', 'ea', 300.00),
                                                                         ('16oz 핫컵', 'ea', 400.00),
@@ -39,7 +39,7 @@ INSERT INTO material_master (ingredient_name, base_unit, stock_qty) VALUES
                                                                         ('레몬 농축 베이스', 'g', 700.00),
                                                                         ('유자청', 'g', 900.00);
 
-INSERT INTO option_master
+INSERT IGNORE INTO option_master
 (option_group_name, option_name, default_price, from_material, to_material, quantity, unit, process_method)
 VALUES
 -- 1. 텀블러
@@ -65,7 +65,7 @@ VALUES
 -- 5. 음료 변경
 ('제로사이다변경', '제로사이다변경', 0, '사이다', '제로 사이다', 200.00, 'ml', '변경');
 
-INSERT INTO recipe (menu_code, ingredient_name, ingredient_category, required_quantity, unit) VALUES
+INSERT IGNORE INTO recipe (menu_code, ingredient_name, ingredient_category, required_quantity, unit) VALUES
 -- COFFEE (1-5)
 (1,'정수','Base',500,'ml'), (1,'에스프레소 원두','Coffee',2,'shot'), (1,'각얼음','Ice',200,'g'), (1,'24oz 아이스컵','Cup',1,'ea'), (1,'톨 리드','Lid',1,'ea'),
 (2,'정수','Base',480,'ml'), (2,'에스프레소 원두','Coffee',2,'shot'), (2,'꿀','Syrup',20,'g'), (2,'각얼음','Ice',200,'g'), (2,'24oz 아이스컵','Cup',1,'ea'), (2,'톨 리드','Lid',1,'ea'),

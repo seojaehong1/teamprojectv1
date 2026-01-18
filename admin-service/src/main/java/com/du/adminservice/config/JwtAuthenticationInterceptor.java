@@ -25,6 +25,7 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("text/plain; charset=UTF-8");
             response.getWriter().write("인증 토큰이 필요합니다.");
             return false;
         }
@@ -36,6 +37,7 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
             if (!"ADMIN".equalsIgnoreCase(role)) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("text/plain; charset=UTF-8");
                 response.getWriter().write("관리자 권한이 필요합니다.");
                 return false;
             }
@@ -46,6 +48,7 @@ public class JwtAuthenticationInterceptor implements HandlerInterceptor {
 
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("text/plain; charset=UTF-8");
             response.getWriter().write("유효하지 않은 토큰입니다.");
             return false;
         }

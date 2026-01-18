@@ -924,7 +924,7 @@
             // 2. 서버에서 장바구니 정보 가져오기
             async function loadOrderSummary() {
                 try {
-                    const response = await fetch('http://localhost:8000/api/order/cart');
+                    const response = await fetch('/api/order/cart');
                     if (!response.ok) throw new Error('데이터 로드 실패');
 
                     currentCart = await response.json();
@@ -1029,7 +1029,7 @@
                     };
                     console.log('[주문] 전송할 데이터:', requestData);
 
-                    const response = await fetch('http://localhost:8000/api/order/place', {
+                    const response = await fetch('/api/order/place', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(requestData)
@@ -1113,7 +1113,7 @@
             async function updateCartBadge() {
                 try {
                     // 컨트롤러의 @RequestMapping("/api/order")와 @GetMapping("/cart/count") 합쳐진 주소
-                    const response = await fetch('http://localhost:8000/api/order/cart/count');
+                    const response = await fetch('/api/order/cart/count');
                     if (response.ok) {
                         const data = await response.json();
                         // 헤더의 .head_user_badge 요소에 숫자 넣기

@@ -4,6 +4,7 @@ import com.example.member.model.Member;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,6 +19,9 @@ import java.util.Map;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final MemberService memberService;
+
+    @Value("${app.base-url:http://localhost:8000}")
+    private String baseUrl;
 
     public OAuth2SuccessHandler(MemberService memberService) {
         this.memberService = memberService;
@@ -47,7 +51,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 프론트엔드로 리다이렉트 (토큰 전달)
         // Provider 필드가 Member에 없으므로 제거
-        String redirectUrl = "http://localhost:8000/oauth2/callback?token=" + token
+        String redirectUrl = baseUrl + "/oauth2/callback?token=" + token
                            + "&username=" + encodedUsername
                            + "&userId=" + member.getUserId()
                            + "&role=" + member.getUserType();

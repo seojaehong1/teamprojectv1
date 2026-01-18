@@ -1,9 +1,7 @@
 // API 설정
 const API_CONFIG = {
-    // 환경에 따라 자동으로 baseURL 설정
-    baseURL: window.location.origin.includes('localhost')
-        ? 'http://localhost:8000'  // 개발 환경
-        : window.location.origin,   // 프로덕션 환경 (현재 도메인 사용)
+    // 상대 경로 사용 (모든 환경에서 동작)
+    baseURL: '',  // 상대 경로 사용
 
     // API 엔드포인트
     endpoints: {

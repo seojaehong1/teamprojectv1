@@ -24,6 +24,11 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: EUREKA_SERVER_URL
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: EUREKA_INSTANCE_PREFER_IP_ADDRESS
             - name: SERVICE_MEMBER_URL
               valueFrom:
                 configMapKeyRef:
@@ -63,13 +68,13 @@ spec:
               cpu: "500m"
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /
               port: 8005
             initialDelaySeconds: 60
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /
               port: 8005
             initialDelaySeconds: 30
             periodSeconds: 5

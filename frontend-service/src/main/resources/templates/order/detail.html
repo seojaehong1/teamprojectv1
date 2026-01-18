@@ -1068,8 +1068,8 @@
             async function loadOrderDetailFromServer(id) {
                 try {
                     // 주소를 아래와 같이 정확히 입력하세요.
-                    // http://localhost:8000/api/order/detail/3 형태가 되어야 합니다.
-                    const response = await fetch(`http://localhost:8000/api/order/detail/${id}`);
+                    // /api/order/detail/3 형태가 되어야 합니다.
+                    const response = await fetch(`/api/order/detail/${id}`);
 
                     if (!response.ok) {
                         throw new Error('주문 정보를 찾을 수 없습니다.');
@@ -1235,7 +1235,7 @@
                 pollingInterval = setInterval(async () => {
                     try {
                         console.log('[Polling] 상태 확인 중...');
-                        const response = await fetch(`http://localhost:8000/api/order/detail/${orderId}`);
+                        const response = await fetch(`/api/order/detail/${orderId}`);
                         console.log('[Polling] API 응답:', response.status);
                         if (response.ok) {
                             const order = await response.json();
@@ -1385,7 +1385,7 @@
             // 장바구니 카운트 API 호출 함수
             async function updateCartBadge() {
                 try {
-                    const response = await fetch('http://localhost:8000/api/order/cart/count');
+                    const response = await fetch('/api/order/cart/count');
                     if (response.ok) {
                         const data = await response.json();
                         $('.head_user_badge').text(data.count);

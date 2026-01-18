@@ -24,6 +24,11 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: EUREKA_SERVER_URL
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: EUREKA_INSTANCE_PREFER_IP_ADDRESS
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
             - name: SPRING_DATASOURCE_USERNAME
@@ -38,23 +43,24 @@ spec:
                   key: MYSQL_MEMBER_PASSWORD
           resources:
             requests:
-              memory: "256Mi"
+              memory: "384Mi"
               cpu: "250m"
             limits:
-              memory: "384Mi"
+              memory: "512Mi"
               cpu: "500m"
           livenessProbe:
-            httpGet:
-              path: /actuator/health
+            tcpSocket:
               port: 8006
-            initialDelaySeconds: 90
-            periodSeconds: 10
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
           readinessProbe:
-            httpGet:
-              path: /actuator/health
+            tcpSocket:
               port: 8006
             initialDelaySeconds: 60
-            periodSeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 10
 ---
 apiVersion: v1
 kind: Service

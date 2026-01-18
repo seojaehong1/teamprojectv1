@@ -1,6 +1,6 @@
-INSERT INTO allergy (allergy_name) values ('우유'),('견과류(헤이즐넛)'),('대두'),('복숭아'),('아황산류');
+INSERT IGNORE INTO allergy (allergy_name) values ('우유'),('견과류(헤이즐넛)'),('대두'),('복숭아'),('아황산류');
 
-INSERT INTO menu
+INSERT IGNORE INTO menu
 (menu_name, category, base_price, base_volume, allergy_ids, description, create_time, is_available)
 VALUES
     ('아메리카노', '커피/라떼', 2500, 'L (710ml)', NULL, '메가MGC커피 블렌드 원두로 추출한 에스프레소에 물을 더해, 풍부한 바디감을 느낄 수 있는 스탠다드 커피.', 1, true),
@@ -33,7 +33,7 @@ VALUES
     ('레몬차(ice)', '티', 3300, '710mL', NULL, '상큼한 레몬의 맛과 향을 오롯이 살린 비타민C 가득한 과일티.', 1, true),
     ('유자차(hot)', '티', 3300, '591mL', NULL, '비타민이 가득 든 상큼달콤한 유자를 듬뿍 넣어 향긋한 즐거움을 전하는 과일티.', 11, true);
 
-INSERT INTO option_master
+INSERT IGNORE INTO option_master
 (option_group_name, option_name, default_price, from_material_id, to_material_id, quantity, unit, process_method)
 VALUES
 -- 1. 텀블러
@@ -59,7 +59,7 @@ VALUES
 -- 5. 음료 변경
 ('제로사이다변경', '제로사이다변경', 0, NULL, NULL, 200.00, 'ml', '변경');
 
-INSERT INTO nutrition
+INSERT IGNORE INTO nutrition
 (menu_code, calories, sodium, carbs, sugars, protein, fat, saturated_fat, caffeine)
 VALUES
     (1, 12, 5, 0, 0, 0.5, 0, 0, 200),
@@ -92,7 +92,7 @@ VALUES
     (24, 327.5, 101.3, 0, 68.9, 0.3, 0, 0, 0),
     (25, 286.4, 104, 0, 47.9, 0.3, 0, 0, 0);
 
-INSERT INTO menu_option (menu_code, option_group_name) VALUES
+INSERT IGNORE INTO menu_option (menu_code, option_group_name) VALUES
 -- COFFEE (1-5)
 (1, '텀블러'), (1, '샷선택'), (1, '당도선택'), (1, '토핑선택'),
 (2, '텀블러'), (2, '샷선택'), (2, '당도선택'), (2, '토핑선택'),
@@ -130,7 +130,7 @@ INSERT INTO menu_option (menu_code, option_group_name) VALUES
 
 
 -- 1. 옵션 마스터 입력 (임시 주석처리 - material_master 데이터 필요)
--- INSERT INTO option_master
+-- INSERT IGNORE INTO option_master
 -- (option_group_name, option_name, default_price, from_material_id, to_material_id, quantity, unit, process_method)
 -- VALUES
 -- -- 1. 텀블러

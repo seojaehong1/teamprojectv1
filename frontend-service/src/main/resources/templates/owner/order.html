@@ -1022,7 +1022,7 @@
 
     async function loadStatistics() {
         try {
-            const response = await fetch('http://localhost:8000/api/owner/total');
+            const response = await fetch('/api/owner/total');
             if (response.ok) {
                 const stats = await response.json();
                 $('#pendingCount').text(stats.pendingCount);
@@ -1037,7 +1037,7 @@
 
     async function loadOrders(filterStatus) {
         try {
-            const response = await fetch('http://localhost:8000/api/owner/order');
+            const response = await fetch('/api/owner/order');
             if (!response.ok) throw new Error("데이터 로드 실패");
 
             allOrders = await response.json();
@@ -1162,9 +1162,9 @@
 
     async function confirmOrderAction() {
         try {
-            var url = 'http://localhost:8000/api/owner/order/' + currentOrderId + '/status';
+            var url = '/api/owner/order/' + currentOrderId + '/status';
             if (currentActionText === '주문 취소') {
-                url = 'http://localhost:8000/api/owner/order/' + currentOrderId + '/cancel';
+                url = '/api/owner/order/' + currentOrderId + '/cancel';
             }
 
             const response = await fetch(url, { method: 'PATCH' });
@@ -1185,7 +1185,7 @@
 
     async function viewOrder(orderId) {
         try {
-            const response = await fetch('http://localhost:8000/api/owner/order/' + orderId);
+            const response = await fetch('/api/owner/order/' + orderId);
             if (!response.ok) throw new Error('상세 정보 로드 실패');
             const order = await response.json();
 

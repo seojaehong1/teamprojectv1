@@ -36,15 +36,24 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // Local development
         configuration.addAllowedOrigin("http://localhost:8000");
         configuration.addAllowedOrigin("http://localhost:8004");
-        configuration.addAllowedOrigin("http://localhost:8005"); // frontend-service
-        configuration.addAllowedOrigin("http://localhost:8006"); // board-service
-        configuration.addAllowedOrigin("http://localhost:8007"); // admin-service
+        configuration.addAllowedOrigin("http://localhost:8005");
+        configuration.addAllowedOrigin("http://localhost:8006");
+        configuration.addAllowedOrigin("http://localhost:8007");
+        // Kubernetes internal services
+        configuration.addAllowedOrigin("http://gateway-service:8000");
+        configuration.addAllowedOrigin("http://frontend-service:8005");
+        configuration.addAllowedOrigin("http://member-service:8004");
+        configuration.addAllowedOrigin("http://board-service:8006");
+        configuration.addAllowedOrigin("http://admin-service:8007");
+        // Allow all origins for K8s ALB/Ingress
+        configuration.addAllowedOriginPattern("*");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -1220,8 +1220,8 @@
         }
     });
 
-    const API_BASE_URL = 'http://localhost:8000/api/menu/drinks';
-    const OPTION_API_URL = 'http://localhost:8000/api/menu/options'; // 옵션 API 주소 추가
+    const API_BASE_URL = '/api/menu/drinks';
+    const OPTION_API_URL = '/api/menu/options'; // 옵션 API 주소 추가
 
     const urlParams = new URLSearchParams(window.location.search);
     const menuCode = urlParams.get('menuCode');
@@ -1604,7 +1604,7 @@
         const payload = [productData];
 
         try {
-            const response = await fetch('http://localhost:8000/api/order/add', {
+            const response = await fetch('/api/order/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1648,7 +1648,7 @@
 
         try {
             // 장바구니 API를 그대로 사용하여 서버 세션/DB에 먼저 저장
-            const response = await fetch('http://localhost:8000/api/order/add', {
+            const response = await fetch('/api/order/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

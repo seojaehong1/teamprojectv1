@@ -15,7 +15,9 @@ import java.util.Map;
 public class AdminNoticeController {
 
     private final RestTemplate restTemplate;
-    private static final String BOARD_SERVICE_URL = "http://localhost:8006";
+
+    @org.springframework.beans.factory.annotation.Value("${board.service.url:http://board-service:8006}")
+    private String boardServiceUrl;
 
     public AdminNoticeController() {
         this.restTemplate = new RestTemplate();
@@ -46,7 +48,7 @@ public class AdminNoticeController {
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "title") String searchType) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices?page=" + page + "&limit=" + size;
+            String url = boardServiceUrl + "/api/notices?page=" + page + "&limit=" + size;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 // 먼저 URL 디코딩 (프론트엔드에서 이미 인코딩되어 올 수 있음)
                 String decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
@@ -71,7 +73,7 @@ public class AdminNoticeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getNoticeDetail(@PathVariable Long id) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices/" + id;
+            String url = boardServiceUrl + "/api/notices/" + id;
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
             return ResponseEntity.ok(response.getBody());
 
@@ -86,7 +88,7 @@ public class AdminNoticeController {
             @RequestBody Map<String, Object> request,
             HttpServletRequest httpRequest) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices/admin";
+            String url = boardServiceUrl + "/api/notices/admin";
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(convertNoticeData(request), createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
@@ -103,7 +105,7 @@ public class AdminNoticeController {
             @PathVariable Long id,
             @RequestBody Map<String, Object> request) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id;
+            String url = boardServiceUrl + "/api/notices/admin/" + id;
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(convertNoticeData(request), createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
@@ -118,7 +120,7 @@ public class AdminNoticeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable Long id) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id;
+            String url = boardServiceUrl + "/api/notices/admin/" + id;
             HttpEntity<?> entity = new HttpEntity<>(createAdminHeaders());
             restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
             return ResponseEntity.ok(Map.of("message", "공지사항이 삭제되었습니다."));
@@ -133,7 +135,7 @@ public class AdminNoticeController {
     @PatchMapping("/{id}/pin")
     public ResponseEntity<?> togglePin(@PathVariable Long id) {
         try {
-            String url = BOARD_SERVICE_URL + "/api/notices/admin/" + id + "/toggle-pin";
+            String url = boardServiceUrl + "/api/notices/admin/" + id + "/toggle-pin";
             HttpEntity<?> entity = new HttpEntity<>(createAdminHeaders());
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PATCH, entity, Map.class);
             return ResponseEntity.ok(response.getBody());
