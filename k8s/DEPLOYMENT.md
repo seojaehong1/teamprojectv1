@@ -23,34 +23,36 @@
 
 ## 1. 사전 준비 (처음 1회만)
 
-### 1.1 필수 프로그램 설치
+### 1.1 필수 프로그램 설치 (PowerShell 관리자 권한 실행)
 
-| 프로그램 | 다운로드 링크 | 설명 |
-|----------|--------------|------|
-| AWS CLI v2 | https://aws.amazon.com/cli/ | AWS 서비스 접근용 |
-| kubectl | https://kubernetes.io/docs/tasks/tools/ | K8s 클러스터 관리용 |
-| eksctl | https://eksctl.io/ | EKS 클러스터 생성/삭제용 |
-| Docker Desktop | https://www.docker.com/products/docker-desktop/ | 이미지 빌드용 |
-| Helm | https://helm.sh/docs/intro/install/ | ALB Controller 설치용 |
-
-#### PowerShell 명령어로 설치하기 (권장)
-
-**1단계: Chocolatey 설치** (PowerShell 관리자 권한 실행)
 ```powershell
+# 1. Chocolatey 설치 (패키지 관리자)
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 ```
 
-> ※ 설치 후 PowerShell 재시작 필요!
+> ※ 설치 후 PowerShell 재시작!
 
-**2단계: 필수 프로그램 한 번에 설치**
 ```powershell
-choco install awscli kubectl eksctl docker-desktop kubernetes-helm -y
+# 2. AWS CLI v2 설치 (AWS 서비스 접근용)
+choco install awscli -y
+
+# 3. kubectl 설치 (K8s 클러스터 관리용)
+choco install kubectl -y
+
+# 4. eksctl 설치 (EKS 클러스터 생성/삭제용)
+choco install eksctl -y
+
+# 5. Docker Desktop 설치 (이미지 빌드용)
+choco install docker-desktop -y
+
+# 6. Helm 설치 (ALB Controller 설치용)
+choco install kubernetes-helm -y
 ```
 
-> ※ 설치 후 PowerShell 재시작 필요!
+> ※ 설치 후 PowerShell 재시작!
 
-**3단계: 설치 확인**
 ```powershell
+# 7. 설치 확인
 aws --version
 kubectl version --client
 eksctl version
