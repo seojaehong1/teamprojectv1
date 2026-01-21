@@ -13,9 +13,20 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# AWS 설정
-AWS_ACCOUNT_ID="490866675691"
-AWS_REGION="ap-northeast-2"
+# .env 파일 로드 (있으면)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "${SCRIPT_DIR}/.env" ]; then
+  source "${SCRIPT_DIR}/.env"
+fi
+
+# AWS 설정 - 환경변수 또는 .env 파일에서 로드
+if [ -z "$AWS_ACCOUNT_ID" ]; then
+  echo -e "${RED}Error: AWS_ACCOUNT_ID 환경변수가 설정되지 않았습니다.${NC}"
+  echo "export AWS_ACCOUNT_ID=your-account-id 또는 .env 파일을 생성하세요."
+  exit 1
+fi
+
+AWS_REGION="${AWS_REGION:-ap-northeast-2}"
 ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
 
 # 서비스 목록
