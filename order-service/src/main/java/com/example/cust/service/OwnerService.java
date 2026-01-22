@@ -124,8 +124,9 @@ public class OwnerService {
                 .filter(o -> o.getStatus() == OrderStatus.COMPLETED)
                 .count();
 
-        // 2. 전체 매출 합계 계산 (totalAmount가 null인 경우 대비)
+        // 2. 전체 매출 합계 계산 (취소된 주문 제외)
         long totalRevenue = allOrders.stream()
+                .filter(o -> o.getStatus() != OrderStatus.CANCELED)
                 .mapToLong(o -> o.getTotalAmount() != null ? o.getTotalAmount().longValue() : 0L)
                 .sum();
 

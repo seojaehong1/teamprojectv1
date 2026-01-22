@@ -874,11 +874,16 @@
         </div>
 
         <!-- 필터 -->
-        <div class="order_filter_wrap">
-            <button class="order_filter_btn active" data-status="전체">전체</button>
-            <button class="order_filter_btn" data-status="결제 완료">결제 완료</button>
-            <button class="order_filter_btn" data-status="주문 접수">주문 접수</button>
-            <button class="order_filter_btn" data-status="주문 완료">준비 완료</button>
+        <div class="order_filter_wrap" style="justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="order_filter_btn active" data-status="전체">전체</button>
+                <button class="order_filter_btn" data-status="결제 완료">결제 완료</button>
+                <button class="order_filter_btn" data-status="주문 접수">주문 접수</button>
+                <button class="order_filter_btn" data-status="주문 완료">준비 완료</button>
+            </div>
+            <button class="order_action_btn danger" id="resetAllOrdersBtn" style="padding: 10px 20px;">
+                <i class="fas fa-trash-alt" style="margin-right: 6px;"></i>전체 초기화
+            </button>
         </div>
 
         <!-- 주문 목록 -->
@@ -1016,9 +1021,32 @@
             loadOrders(status);
         });
 
+        // 전체 초기화 버튼 클릭
+        $('#resetAllOrdersBtn').click(function() {
+            showConfirm('모든 주문 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.', resetAllOrders, '전체 초기화');
+        });
+
         loadStatistics();
         loadOrders('전체');
     });
+
+    // 전체 주문 초기화
+    async function resetAllOrders() {
+        try {
+            const response = await fetch('/api/owner/order/reset', { method: 'POST' });
+            if (response.ok) {
+                showAlert('모든 주문 데이터가 초기화되었습니다.', function() {
+                    loadStatistics();
+                    loadOrders('전체');
+                });
+            } else {
+                showAlert('초기화에 실패했습니다.');
+            }
+        } catch (e) {
+            console.error(e);
+            showAlert('서버 연결 오류가 발생했습니다.');
+        }
+    }
 
     async function loadStatistics() {
         try {

@@ -115,4 +115,9 @@ public class MainController {
     public String servicePolicy() {
         return "policy/service_policy";
     }
+
+    @GetMapping("/policy/terms_of_service")
+    public String termsOfService() {
+        return "policy/terms_of_service";
+    }
 }

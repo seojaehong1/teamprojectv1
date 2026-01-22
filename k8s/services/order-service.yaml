@@ -34,6 +34,16 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: RABBITMQ_HOST
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: RABBITMQ_USER
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: RABBITMQ_PASSWORD
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://mysql-order:3306/order_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
             - name: SPRING_DATASOURCE_USERNAME
