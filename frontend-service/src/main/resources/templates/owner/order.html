@@ -4,1004 +4,1270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>주문 관리 - TORI COFFEE</title>
-    
-    <!-- CSS -->
+
+    <!-- Fonts & Icons Only -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
-    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
-    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
-    
+
     <style>
-        /* 헤더 고정 해제 - 스크롤 시 사라지도록 */
+        /* ========================================
+           Design System - CSS Custom Properties
+           ======================================== */
+        :root {
+            /* Primary Colors */
+            --primary: #D95B3B;
+            --primary-hover: #C74A2A;
+            --primary-light: #FFF5F2;
+            --primary-gradient: linear-gradient(135deg, #D95B3B, #E8734F);
+
+            /* Grayscale */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+
+            /* Status Colors */
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========================================
+           Reset & Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           Fixed Header
+           ======================================== */
         .head_wrap {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap.head_fixed {
-            position: static !important;
-            position: relative !important;
-        }
-        .head_wrap .head {
-            position: relative !important;
-        }
-        /* 로고 중복 방지 - 모든 가상 요소 및 배경 이미지 제거 */
-        .head_wrap .head_logo,
-        .head_wrap .head .head_logo {
-            display: block !important;
-            visibility: visible !important;
-            position: relative !important;
-            z-index: 1 !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo::before,
-        .head_wrap .head_logo::after,
-        .head_wrap .head .head_logo::before,
-        .head_wrap .head .head_logo::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a,
-        .head_wrap .head .head_logo a {
-            display: block !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo a::before,
-        .head_wrap .head_logo a::after,
-        .head_wrap .head .head_logo a::before,
-        .head_wrap .head .head_logo a::after {
-            display: none !important;
-            content: "" !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo img,
-        .head_wrap .head .head_logo img {
-            display: block !important;
-            visibility: visible !important;
-            max-height: 60px !important;
-            height: auto !important;
-            width: auto !important;
-            position: relative !important;
-            background: none !important;
-            background-image: none !important;
-        }
-        .head_wrap .head_logo .head_logo_img,
-        .head_wrap .head .head_logo .head_logo_img {
-            display: block !important;
-            visibility: visible !important;
-        }
-        /* 중복 로고 요소 숨기기 */
-        .head_wrap .head_logo + .head_logo,
-        .head_wrap .head .head_logo + .head_logo {
-            display: none !important;
-        }
-        .head_user_wrap {
-            position: absolute;
+            position: fixed;
+            top: 0;
+            left: 0;
             right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            height: 70px;
+            background: #fff;
+            box-shadow: var(--shadow-md);
             z-index: 1000;
         }
+
+        .head {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .head_logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .head_logo_img {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Center Navigation */
+        .head_menu_wrap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .head_menu ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .head_menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .head_menu ul li a:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .head_menu ul li.active a {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* User Menu */
+        .head_user_wrap {
+            display: flex;
+            align-items: center;
+        }
+
         .head_user_menu {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-        .head_user_item {
+
+        .head_login_wrap {
             position: relative;
         }
+
         .head_user_link {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            gap: 4px;
             text-decoration: none;
-            color: #333;
+            color: var(--gray-600);
             cursor: pointer;
-            position: relative;
-            padding: 5px 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            transition: var(--transition);
         }
+
         .head_user_link:hover {
-            color: #000;
+            background: var(--gray-100);
+            color: var(--gray-900);
         }
+
         .head_user_link i {
-            font-size: 20px;
-            margin-bottom: 5px;
+            font-size: 18px;
         }
+
         .head_user_text {
             font-size: 12px;
-            font-weight: 400;
+            font-weight: 500;
         }
-        .head_login_wrap {
-            position: relative;
-        }
+
         .head_login_dropdown {
             position: absolute;
             top: 100%;
             right: 0;
-            margin-top: 10px;
+            margin-top: 8px;
             background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
             min-width: 150px;
             display: none;
             z-index: 1001;
+            overflow: hidden;
         }
+
         .head_login_wrap.active .head_login_dropdown {
             display: block;
         }
-        .head_login_dropdown::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid #fff;
-        }
+
         .head_login_dropdown ul {
             list-style: none;
-            margin: 0;
-            padding: 8px 0;
         }
-        .head_login_dropdown ul li {
-            margin: 0;
-        }
+
         .head_login_dropdown ul li a {
             display: block;
-            padding: 10px 20px;
-            color: #333;
+            padding: 12px 16px;
+            color: var(--gray-700);
             text-decoration: none;
             font-size: 14px;
-            transition: background 0.2s;
+            transition: var(--transition);
         }
+
         .head_login_dropdown ul li a:hover {
-            background: #f5f5f5;
+            background: var(--gray-50);
+            color: var(--primary);
         }
-        
-        /* 점주 관리 스타일 */
+
+        /* ========================================
+           Main Content Area
+           ======================================== */
         .owner_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-            padding-top: 100px; /* 헤더 높이만큼 여백 추가 */
+            padding-top: 70px;
+            min-height: 100vh;
+            background: var(--gray-50);
         }
+
         .owner_content_wrap {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 32px 24px;
         }
+
         .owner_header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 24px;
         }
+
         .owner_title {
             font-size: 28px;
             font-weight: 700;
-            color: #333;
+            color: var(--gray-900);
         }
+
+        /* Navigation Pills */
         .owner_nav {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
         }
+
         .owner_nav_item {
             padding: 10px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            border: none;
+            border-radius: var(--radius-full);
             background: #fff;
-            color: #666;
+            color: var(--gray-600);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
         }
+
         .owner_nav_item:hover {
-            border-color: #333;
-            color: #333;
+            background: var(--gray-100);
+            color: var(--gray-900);
         }
+
         .owner_nav_item.active {
-            background: #333;
+            background: var(--primary-gradient);
             color: #fff;
-            border-color: #333;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
         }
-        
-        /* 주문 관리 필터 */
-        .order_filter_wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .order_filter_btn {
-            padding: 8px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            background: #fff;
-            color: #666;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .order_filter_btn:hover {
-            border-color: #333;
-            color: #333;
-        }
-        .order_filter_btn.active {
-            background: #333;
-            color: #fff;
-            border-color: #333;
-        }
-        
-        /* 주문 목록 */
-        .order_list_table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .order_list_table thead {
-            background: #f9f9f9;
-        }
-        .order_list_table th {
-            padding: 15px;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 700;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        .order_list_table td {
-            padding: 15px;
-            font-size: 14px;
-            color: #666;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .order_list_table tbody tr:hover {
-            background: #f9f9f9;
-        }
-        .order_status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .order_status.waiting {
-            background: #fff3cd;
-            color: #856404;
-        }
-        .order_status.preparing {
-            background: #cfe2ff;
-            color: #084298;
-        }
-        .order_status.ready {
-            background: #d1e7dd;
-            color: #0f5132;
-        }
-        .order_status.completed {
-            background: #e2e3e5;
-            color: #383d41;
-        }
-        .order_action_btn {
-            padding: 6px 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            background: #fff;
-            color: #333;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .order_action_btn:hover {
-            background: #333;
-            color: #fff;
-            border-color: #333;
-        }
-        .order_action_btn.primary {
-            background: #ffd700;
-            border-color: #ffd700;
-            color: #333;
-        }
-        .order_action_btn.primary:hover {
-            background: #e6c200;
-        }
-        
-        /* 통계 카드 */
+
+        /* Stats Cards */
         .owner_stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
+
         .owner_stat_card {
             background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: var(--radius-lg);
+            padding: 24px;
             text-align: center;
+            box-shadow: var(--shadow);
         }
+
         .owner_stat_value {
             font-size: 32px;
             font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
+            color: var(--primary);
+            margin-bottom: 8px;
         }
+
         .owner_stat_label {
             font-size: 14px;
-            color: #666;
+            color: var(--gray-500);
+            font-weight: 500;
         }
-        
-        @media (max-width: 768px) {
-            .owner_header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .owner_nav {
-                flex-wrap: wrap;
-            }
-            .order_list_table {
-                font-size: 12px;
-            }
-            .order_list_table th,
-            .order_list_table td {
-                padding: 10px 8px;
-            }
+
+        /* Filter Buttons */
+        .order_filter_wrap {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
         }
-        
-        /* 주문 관리 모달 */
-        .order_modal {
+
+        .order_filter_btn {
+            padding: 10px 20px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            background: #fff;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .order_filter_btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .order_filter_btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* ========================================
+           Order Table
+           ======================================== */
+        .cont_text_wrap {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .order_list_table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order_list_table thead {
+            background: var(--gray-50);
+        }
+
+        .order_list_table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .order_list_table td {
+            padding: 18px 20px;
+            font-size: 14px;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .order_list_table tbody tr {
+            transition: var(--transition);
+        }
+
+        .order_list_table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .order_list_table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .order_status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .order_status.waiting {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #fff;
+        }
+
+        .order_status.preparing {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: #fff;
+        }
+
+        .order_status.completed {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: #fff;
+        }
+
+        .order_status.canceled {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        /* Action Buttons */
+        .order_actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .order_action_btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            background: #fff;
+            color: var(--gray-600);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .order_action_btn:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .order_action_btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .order_action_btn.primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .order_action_btn.danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: #fff;
+        }
+
+        .order_action_btn.danger:hover {
+            background: #DC2626;
+        }
+
+        /* Empty State */
+        .order_empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 15px;
+        }
+
+        /* ========================================
+           Pagination
+           ======================================== */
+        .board_page_wrap {
+            display: flex;
+            justify-content: center;
+            padding: 32px 0;
+        }
+
+        .board_page ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .board_page li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .board_page li a:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .board_page li.active a,
+        .board_page li.board_page_check a {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .board_page li.disabled a {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ========================================
+           Modal
+           ======================================== */
+        .modal_wrap {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
             display: none;
-            z-index: 9999;
-            overflow: auto;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        .order_modal.show {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+
+        .modal_wrap.show {
+            display: flex;
         }
-        .order_modal_content {
+
+        .modal_content {
             background: #fff;
-            border-radius: 12px;
-            padding: 30px 25px 20px;
-            max-width: 360px;
-            width: calc(100% - 40px);
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            position: relative;
-            margin: auto;
-            transform: translateY(-60px);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-        .order_modal_title {
-            font-size: 18px;
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal_title {
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 16px;
-            color: #333;
+            color: var(--gray-900);
         }
-        .order_modal_text {
-            font-size: 14px;
-            color: #555;
+
+        .modal_close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+
+        .modal_close:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .modal_text {
+            font-size: 15px;
+            color: var(--gray-600);
             margin-bottom: 24px;
             line-height: 1.6;
+            text-align: center;
         }
-        .order_modal_text strong {
-            color: #ffd700;
-        }
-        .order_modal_buttons {
+
+        .modal_actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 28px;
         }
-        .order_modal_btn {
+
+        .modal_btn {
             flex: 1;
-            padding: 12px 30px;
-            border-radius: 8px;
+            padding: 14px;
             border: none;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition);
         }
-        /* 취소 버튼 - TORI COFFEE 스타일 (흰색 배경, 회색 테두리) */
-        .order_modal_btn.cancel {
-            background: #fff !important;
-            background-color: #fff !important;
-            border: 2px solid #ddd !important;
-            color: #666 !important;
+
+        .modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
         }
-        .order_modal_btn.cancel:hover {
-            background: #f5f5f5 !important;
-            background-color: #f5f5f5 !important;
-            border-color: #ccc !important;
+
+        .modal_btn.cancel:hover {
+            background: var(--gray-200);
         }
-        /* 확인 버튼 - TORI COFFEE 주황색 */
-        .order_modal_content .order_modal_btn.confirm,
-        .order_modal_content .order_modal_btn.close,
-        .order_modal_content .order_modal_btn.close.confirm,
-        #orderModal .order_modal_btn.confirm,
-        #orderSuccessModal .order_modal_btn.close,
-        #orderSuccessModal .order_modal_btn.close.confirm,
-        #orderDetailModal .order_modal_btn.close,
-        #orderDetailModal .order_modal_btn.close.confirm,
-        button.order_modal_btn.confirm,
-        button.order_modal_btn.close.confirm {
-            background: #D95B3B !important;
-            background-color: #D95B3B !important;
-            background-image: none !important;
-            color: #fff !important;
-            opacity: 1 !important;
-            border: none !important;
-            box-shadow: none !important;
+
+        .modal_btn.primary {
+            background: var(--primary-gradient);
+            color: #fff;
         }
-        .order_modal_content .order_modal_btn.confirm:hover,
-        .order_modal_content .order_modal_btn.close:hover,
-        .order_modal_content .order_modal_btn.close.confirm:hover,
-        #orderModal .order_modal_btn.confirm:hover,
-        #orderSuccessModal .order_modal_btn.close:hover,
-        #orderSuccessModal .order_modal_btn.close.confirm:hover,
-        #orderDetailModal .order_modal_btn.close:hover,
-        #orderDetailModal .order_modal_btn.close.confirm:hover,
-        button.order_modal_btn.confirm:hover,
-        button.order_modal_btn.close.confirm:hover {
-            background: #C74A2A !important;
-            background-color: #C74A2A !important;
-            background-image: none !important;
-            opacity: 1 !important;
+
+        .modal_btn.primary:hover {
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
         }
-        .order_modal_btn.close {
-            width: 100%;
-            padding: 12px 30px;
+
+        .modal_btn.danger {
+            background: var(--danger);
+            color: #fff;
         }
-        
-        /* 주문 상세 모달 */
-        .order_detail_list {
-            text-align: left;
-            margin-bottom: 20px;
+
+        .modal_btn.danger:hover {
+            background: #DC2626;
         }
+
+        /* Confirm Modal */
+        .modal_content.confirm {
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .modal_content.confirm .modal_header {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        /* Order Detail */
         .order_detail_item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--gray-100);
         }
+
         .order_detail_item:last-child {
             border-bottom: none;
         }
+
         .order_detail_item_name {
             font-size: 14px;
-            color: #333;
+            color: var(--gray-700);
             font-weight: 500;
         }
+
         .order_detail_item_price {
             font-size: 14px;
-            color: #333;
+            color: var(--gray-900);
             font-weight: 700;
         }
+
         .order_detail_time {
-            text-align: left;
             font-size: 13px;
-            color: #666;
+            color: var(--gray-500);
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
+        .foot_wrap {
+            background: var(--gray-800);
+            color: var(--gray-400);
+            padding: 40px 24px;
+            margin-top: 60px;
+        }
+
+        .foot_content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .foot_logo img {
+            height: 40px;
+            opacity: 0.8;
+        }
+
+        .foot_info {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .foot_links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .foot_links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .foot_links a:hover {
+            color: #fff;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 1024px) {
+            .head_menu_wrap {
+                position: static;
+                transform: none;
+            }
+
+            .head {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 16px 24px;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .owner_content_wrap {
+                padding: 24px 16px;
+            }
+
+            .head_menu ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .owner_nav {
+                justify-content: center;
+            }
+
+            .order_list_table th,
+            .order_list_table td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            .order_action_btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .foot_content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .foot_links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
-    
-    <!-- JavaScript -->
+
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
-    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
 </head>
 <body>
-    
-    <!-- 헤더 -->
-    <div class="head_wrap">
-        <div class="head">
-            <div class="head_logo">
-                <a href="inventory.html">
-                    <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
-                </a>
+
+<!-- 헤더 -->
+<div class="head_wrap">
+    <div class="head">
+        <div class="head_logo">
+            <a href="/owner/order">
+                <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+            </a>
+        </div>
+        <div class="head_menu_wrap">
+            <div class="head_menu">
+                <ul>
+                    <li class="active"><a href="/owner/order">주문 관리</a></li>
+                    <li><a href="/owner/inventory">재고 관리</a></li>
+                </ul>
             </div>
-            <div class="head_menu_wrap">
-                <div class="head_menu">
-                    <ul>
-                        <li>
-                            <a href="order.html" class="pc">주문 관리</a>
-                        </li>
-                        <li>
-                            <a href="inventory.html" class="pc">재고 관리</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="head_user_wrap">
-                <div class="head_user_menu">
-                    <div class="head_user_item head_login_wrap">
-                        <div class="head_login_state head_login_state_member">
-                            <a href="#" class="head_user_link head_login_trigger">
-                                <i class="far fa-user"></i>
-                                <span class="head_user_text head_user_name">점주님</span>
-                            </a>
-                            <div class="head_login_dropdown">
-                                <ul>
-                                    <li><a href="#" id="ownerLogoutBtn">로그아웃</a></li>
-                                </ul>
-                            </div>
+        </div>
+        <div class="head_user_wrap">
+            <div class="head_user_menu">
+                <div class="head_user_item head_login_wrap">
+                    <div class="head_login_state head_login_state_member">
+                        <a href="#" class="head_user_link head_login_trigger">
+                            <i class="far fa-user"></i>
+                            <span class="head_user_text head_user_name">점주님</span>
+                        </a>
+                        <div class="head_login_dropdown">
+                            <ul>
+                                <li><a href="#" id="ownerLogoutBtn">로그아웃</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- 메인 콘텐츠 -->
-    <div class="owner_wrap">
-        <div class="owner_content_wrap">
-            <div class="owner_header">
-                <div class="owner_title">주문 관리</div>
+<!-- 메인 콘텐츠 -->
+<div class="owner_wrap">
+    <div class="owner_content_wrap">
+        <div class="owner_header">
+            <div class="owner_title">주문 관리</div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <div class="owner_nav">
+            <a href="/owner/order" class="owner_nav_item active">주문 관리</a>
+            <a href="/owner/inventory" class="owner_nav_item">재고 관리</a>
+        </div>
+
+        <!-- 통계 카드 -->
+        <div class="owner_stats">
+            <div class="owner_stat_card">
+                <div class="owner_stat_value" id="pendingCount">0</div>
+                <div class="owner_stat_label">결제 완료</div>
             </div>
-            
-            <!-- 네비게이션 -->
-            <div class="owner_nav">
-                <a href="../../owner/order.html" class="owner_nav_item active">주문 관리</a>
-                <a href="../../owner/inventory.html" class="owner_nav_item">재고 관리</a>
+            <div class="owner_stat_card">
+                <div class="owner_stat_value" id="preparingCount">0</div>
+                <div class="owner_stat_label">주문 접수</div>
             </div>
-            
-            <!-- 통계 카드 -->
-            <div class="owner_stats">
-                <div class="owner_stat_card">
-                    <div class="owner_stat_value">12</div>
-                    <div class="owner_stat_label">대기 중인 주문</div>
-                </div>
-                <div class="owner_stat_card">
-                    <div class="owner_stat_value">5</div>
-                    <div class="owner_stat_label">준비 중인 주문</div>
-                </div>
-                <div class="owner_stat_card">
-                    <div class="owner_stat_value">28</div>
-                    <div class="owner_stat_label">오늘 완료된 주문</div>
-                </div>
-                <div class="owner_stat_card">
-                    <div class="owner_stat_value">₩450,000</div>
-                    <div class="owner_stat_label">오늘 매출</div>
-                </div>
+            <div class="owner_stat_card">
+                <div class="owner_stat_value" id="completedCount">0</div>
+                <div class="owner_stat_label">준비 완료</div>
             </div>
-            
-            <!-- 필터 -->
-            <div class="order_filter_wrap">
-                <button class="order_filter_btn active" data-status="all">전체</button>
-                <button class="order_filter_btn" data-status="waiting">주문 대기</button>
-                <button class="order_filter_btn" data-status="preparing">준비 중</button>
-                <button class="order_filter_btn" data-status="ready">준비 완료</button>
-                <button class="order_filter_btn" data-status="completed">완료</button>
-            </div>
-            
-            <!-- 주문 목록 -->
-            <div class="cont_text_wrap">
-                <table class="order_list_table">
-                    <thead>
-                        <tr>
-                            <th>주문번호</th>
-                            <th>주문시간</th>
-                            <th>메뉴</th>
-                            <th>수량</th>
-                            <th>금액</th>
-                            <th>상태</th>
-                            <th>관리</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#ORD-2025-001</td>
-                            <td>2025-12-16 14:30</td>
-                            <td>아메리카노 외 2개</td>
-                            <td>3</td>
-                            <td>₩12,000</td>
-                            <td><span class="order_status waiting">주문 대기</span></td>
-                            <td>
-                                <button class="order_action_btn primary" onclick="acceptOrder('ORD-2025-001')">접수</button>
-                                <button class="order_action_btn" onclick="cancelOrderByOwner('ORD-2025-001')" style="background: #dc3545; color: #fff; border-color: #dc3545;">취소</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-002</td>
-                            <td>2025-12-16 14:25</td>
-                            <td>카페라떼</td>
-                            <td>1</td>
-                            <td>₩4,500</td>
-                            <td><span class="order_status preparing">준비 중</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="completeOrder('ORD-2025-002')">완료</button>
-                                <button class="order_action_btn" onclick="cancelOrderByOwner('ORD-2025-002')" style="background: #dc3545; color: #fff; border-color: #dc3545;">취소</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-003</td>
-                            <td>2025-12-16 14:20</td>
-                            <td>바닐라라떼 외 1개</td>
-                            <td>2</td>
-                            <td>₩9,000</td>
-                            <td><span class="order_status ready">준비 완료</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="pickupOrder('ORD-2025-003')">픽업 완료</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#ORD-2025-004</td>
-                            <td>2025-12-16 14:15</td>
-                            <td>카푸치노</td>
-                            <td>1</td>
-                            <td>₩4,500</td>
-                            <td><span class="order_status completed">완료</span></td>
-                            <td>
-                                <button class="order_action_btn" onclick="viewOrder('ORD-2025-004')">상세보기</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- 페이지네이션 -->
-            <div class="board_page_wrap">
-                <div class="board_page">
-                    <ul>
-                        <li><a><span>처음</span></a></li>
-                        <li class="board_page_check"><a><span>1</span></a></li>
-                        <li><a><span>2</span></a></li>
-                        <li><a><span>다음</span></a></li>
-                        <li><a><span>마지막</span></a></li>
-                    </ul>
-                </div>
+            <div class="owner_stat_card">
+                <div class="owner_stat_value" id="totalRevenue">₩0</div>
+                <div class="owner_stat_label">오늘 매출</div>
             </div>
         </div>
-    </div>
 
-    <!-- 푸터 -->
-    <div class="foot_menu_wrap">
-        <div class="foot_menu">
-            <div class="cont_list">
-                <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+        <!-- 필터 -->
+        <div class="order_filter_wrap">
+            <button class="order_filter_btn active" data-status="전체">전체</button>
+            <button class="order_filter_btn" data-status="결제 완료">결제 완료</button>
+            <button class="order_filter_btn" data-status="주문 접수">주문 접수</button>
+            <button class="order_filter_btn" data-status="주문 완료">준비 완료</button>
+        </div>
+
+        <!-- 주문 목록 -->
+        <div class="cont_text_wrap">
+            <table class="order_list_table">
+                <thead>
+                    <tr>
+                        <th>주문번호</th>
+                        <th>주문시간</th>
+                        <th>메뉴</th>
+                        <th>수량</th>
+                        <th>금액</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                </tbody>
+            </table>
+            <div class="order_empty" id="orderEmpty" style="display: none;">
+                주문 내역이 없습니다.
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="board_page_wrap">
+            <div class="board_page">
+                <ul id="orderPagination">
                 </ul>
             </div>
         </div>
     </div>
-    <div class="foot_wrap">
-        <div class="foot">
-            <div class="cont_list cont_list_content">
-                <ul>
-                    <li>
-                        <div class="cont_text">
-                            <div class="cont_list cont_list_m cont_list_m1">
-                                <ul>
-                                    <li>
-                                        <div class="foot_logo">
-                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="cont_text foot_info">
-                            <div class="cont_list cont_list_small cont_list_width_m">
-                                <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+</div>
+
+<!-- 푸터 -->
+<div class="foot_wrap">
+    <div class="foot_content">
+        <div class="foot_logo">
+            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+        </div>
+        <div class="foot_info">
+            <strong>팀 부리또</strong> | 대표 서재홍<br>
+            연락처 010-3030-7038 | 이메일 wtme3@naver.com<br>
+            주소 동서울대학교 | 팀원 이주희, 박윤호, 하성호
+        </div>
+        <div class="foot_links">
+            <a href="/policy/privacy_policy">개인정보처리방침</a>
+            <a href="/policy/service_policy">이용약관</a>
         </div>
     </div>
+</div>
 
-    <!-- 상단 이동 버튼 -->
-    <a href="javascript:go_top()">
-        <div class="go_top_wrap">
-            <div class="go_top"></div>
+<!-- 확인 모달 -->
+<div class="modal_wrap" id="confirmModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="confirmTitle">확인</div>
         </div>
-    </a>
-
-    <!-- 주문 관리 모달 -->
-    <div class="order_modal" id="orderModal">
-        <div class="order_modal_content">
-            <div class="order_modal_title" id="orderModalTitle">주문 접수</div>
-            <div class="order_modal_text" id="orderModalText">
-                주문을 접수하시겠습니까?
-            </div>
-            <div class="order_modal_buttons" id="orderModalButtons">
-                <button type="button" class="order_modal_btn cancel" onclick="closeOrderModal()">취소</button>
-                <button type="button" class="order_modal_btn confirm" onclick="confirmOrderAction()">확인</button>
-            </div>
+        <div class="modal_text" id="confirmText">정말 진행하시겠습니까?</div>
+        <div class="modal_actions">
+            <button class="modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+            <button class="modal_btn primary" id="confirmOkBtn">확인</button>
         </div>
     </div>
+</div>
 
-    <!-- 주문 완료 모달 -->
-    <div class="order_modal" id="orderSuccessModal">
-        <div class="order_modal_content">
-            <div class="order_modal_title" id="orderSuccessModalTitle">완료</div>
-            <div class="order_modal_text" id="orderSuccessModalText">
-                처리가 완료되었습니다.
-            </div>
-            <button type="button" class="order_modal_btn close confirm" onclick="closeOrderSuccessModal()">확인</button>
+<!-- 알림 모달 -->
+<div class="modal_wrap" id="alertModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="alertTitle">알림</div>
+        </div>
+        <div class="modal_text" id="alertText">메시지</div>
+        <div class="modal_actions">
+            <button class="modal_btn primary" id="alertOkBtn" style="flex: none; min-width: 120px; margin: 0 auto;">확인</button>
         </div>
     </div>
+</div>
 
-    <!-- 주문 상세 모달 -->
-    <div class="order_modal" id="orderDetailModal">
-        <div class="order_modal_content">
-            <div class="order_modal_title">주문 상세</div>
-            <div class="order_detail_time" id="orderDetailTime">2025-12-16 14:15</div>
-            <div class="order_detail_list" id="orderDetailList">
-                <!-- 주문 상세 항목들이 여기에 동적으로 추가됩니다 -->
-            </div>
-            <button type="button" class="order_modal_btn close confirm" onclick="closeOrderDetailModal()">확인</button>
+<!-- 주문 상세 모달 -->
+<div class="modal_wrap" id="orderDetailModal">
+    <div class="modal_content">
+        <div class="modal_header">
+            <div class="modal_title">주문 상세</div>
+            <button class="modal_close" onclick="closeOrderDetailModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="order_detail_time" id="orderDetailTime"></div>
+        <div id="orderDetailList"></div>
+        <div class="modal_actions">
+            <button class="modal_btn primary" onclick="closeOrderDetailModal()" style="flex: none; min-width: 120px; margin: 0 auto;">확인</button>
         </div>
     </div>
+</div>
 
-    <script>
-        AOS.init({
-            duration: 1200,
-        });
+<script>
+    var currentPage = 1;
+    var itemsPerPage = 10;
+    var allOrders = [];
+    var filteredOrders = [];
+    var currentOrderId = '';
+    var currentActionText = '';
+    var confirmCallback = null;
+    var alertCallback = null;
 
-        // 로그인 드롭다운 토글
-        $(document).ready(function() {
-            // 권한 체크
-            var userRole = localStorage.getItem('userRole');
-            if (userRole !== 'owner') {
-                alert('점주 권한이 필요합니다.');
-                window.location.href = '../login.html';
-                return;
-            }
-            
-            // 사용자명 표시
-            var userName = localStorage.getItem('userName') || '점주';
-            $('.head_user_name').text(userName + '님');
-            
-            // 로그인 드롭다운 토글
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $('.head_login_wrap').toggleClass('active');
-            });
+    $(document).ready(function() {
+        var userName = localStorage.getItem('userName') || '점주';
+        $('.head_user_name').text(userName + '님');
 
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-            
-            // 로그아웃 버튼
-            $('#ownerLogoutBtn').on('click', function(e) {
-                e.preventDefault();
-                if (confirm('로그아웃하시겠습니까?')) {
-                    localStorage.clear();
-                    window.location.href = '../login.html';
-                }
-            });
-
-            // 필터 버튼 클릭
-            $('.order_filter_btn').click(function() {
-                $('.order_filter_btn').removeClass('active');
-                $(this).addClass('active');
-                var status = $(this).data('status');
-                // 여기에 필터링 로직 추가
-            });
-        });
-
-        // 전역 변수
-        var currentOrderId = '';
-        var currentAction = '';
-        var currentActionText = '';
-
-        // 주문 접수
-        function acceptOrder(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'accept';
-            currentActionText = '주문 접수';
-            $('#orderModalTitle').text('주문 접수');
-            $('#orderModalText').text('주문을 접수하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 주문 완료
-        function completeOrder(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'complete';
-            currentActionText = '주문 준비 완료';
-            $('#orderModalTitle').text('주문 준비 완료');
-            $('#orderModalText').text('주문 준비를 완료하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 픽업 완료
-        function pickupOrder(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'pickup';
-            currentActionText = '픽업 완료';
-            $('#orderModalTitle').text('픽업 완료');
-            $('#orderModalText').text('픽업을 완료 처리하시겠습니까?');
-            $('#orderModal').addClass('show');
-        }
-
-        // 주문 취소
-        function cancelOrderByOwner(orderId) {
-            currentOrderId = orderId;
-            currentAction = 'cancel';
-            currentActionText = '주문 취소';
-            $('#orderModalTitle').text('주문 취소');
-            $('#orderModalText').text('주문을 취소하시겠습니까? 취소 시 재고가 복구됩니다.');
-            $('#orderModal').addClass('show');
-        }
-
-        // 모달에서 확인 버튼 클릭
-        function confirmOrderAction() {
-            closeOrderModal();
-            
-            // 처리 완료 모달 표시
-            $('#orderSuccessModalTitle').text(currentActionText);
-            var successMessage = '';
-            if (currentAction === 'accept') {
-                successMessage = '주문이 접수되었습니다.';
-            } else if (currentAction === 'complete') {
-                successMessage = '주문 준비가 완료되었습니다.';
-            } else if (currentAction === 'pickup') {
-                successMessage = '픽업이 완료되었습니다.';
-            } else if (currentAction === 'cancel') {
-                successMessage = '주문이 취소되었습니다.';
-            }
-            $('#orderSuccessModalText').text(successMessage);
-            $('#orderSuccessModal').addClass('show');
-            
-            // 실제로는 여기서 서버에 요청을 보내고, 성공 시 페이지 새로고침
-            // setTimeout(function() {
-            //     location.reload();
-            // }, 1500);
-        }
-
-        // 주문 확인 모달 닫기
-        function closeOrderModal() {
-            $('#orderModal').removeClass('show');
-        }
-
-        // 주문 완료 모달 닫기
-        function closeOrderSuccessModal() {
-            $('#orderSuccessModal').removeClass('show');
-            location.reload();
-        }
-
-        // 모달 배경 클릭 시 닫기
-        $(document).on('click', '.order_modal', function(e) {
-            if ($(e.target).hasClass('order_modal')) {
-                $(this).removeClass('show');
-            }
-        });
-
-        // 모달 내용 클릭 시 닫히지 않도록
-        $(document).on('click', '.order_modal_content', function(e) {
+        $('.head_login_trigger').click(function(e) {
+            e.preventDefault();
             e.stopPropagation();
+            $('.head_login_wrap').toggleClass('active');
         });
 
-        // 주문 상세보기
-        function viewOrder(orderId) {
-            // 주문 정보 (실제로는 서버에서 가져와야 함)
-            var orderData = {
-                'ORD-2025-004': {
-                    time: '2025-12-16 14:15',
-                    items: [
-                        { name: '카푸치노', price: 4500, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-003': {
-                    time: '2025-12-16 14:20',
-                    items: [
-                        { name: '바닐라라떼', price: 5000, quantity: 1, size: '레귤러', options: [{ optionName: '바닐라 시럽 추가', optionPrice: 500 }] },
-                        { name: '아메리카노', price: 4000, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-002': {
-                    time: '2025-12-16 14:25',
-                    items: [
-                        { name: '카페라떼', price: 4500, quantity: 1, size: '레귤러', options: [] }
-                    ]
-                },
-                'ORD-2025-001': {
-                    time: '2025-12-16 14:30',
-                    items: [
-                        { name: '아메리카노', price: 4000, quantity: 1, size: '레귤러', options: [] },
-                        { name: '카페라떼', price: 5000, quantity: 1, size: '라지', options: [{ optionName: '우유 변경', optionPrice: 500 }] },
-                        { name: '바닐라라떼', price: 5500, quantity: 1, size: '레귤러', options: [{ optionName: '바닐라 시럽 추가', optionPrice: 500 }, { optionName: '휘핑크림 추가', optionPrice: 500 }] }
-                    ]
-                }
-            };
-            
-            var order = orderData[orderId] || orderData['ORD-2025-004'];
-            
-            // 시간 표시
-            $('#orderDetailTime').text(order.time);
-            
-            // 주문 항목 표시
-            var detailList = $('#orderDetailList');
-            detailList.empty();
-            
-            var totalPrice = 0;
-            order.items.forEach(function(item) {
-                totalPrice += item.price;
-                var detailItem = $('<div class="order_detail_item"></div>');
-                var itemName = item.name;
-                if (item.size && item.size !== '기본') {
-                    itemName += ' (' + item.size + ')';
-                }
-                detailItem.append('<div class="order_detail_item_name">' + itemName + '</div>');
-                
-                // 옵션 표시
-                if (item.options && item.options.length > 0) {
-                    var optionsHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px; margin-left: 10px;">';
-                    item.options.forEach(function(option) {
-                        optionsHtml += '<div>+ ' + option.optionName + ' (+' + (option.optionPrice || 0).toLocaleString() + '원)</div>';
-                    });
-                    optionsHtml += '</div>';
-                    detailItem.append(optionsHtml);
-                }
-                
-                detailItem.append('<div class="order_detail_item_price">' + (item.quantity || 1) + '개 | ₩' + item.price.toLocaleString() + '</div>');
-                detailList.append(detailItem);
-            });
-            
-            // 총액 표시
-            var totalItem = $('<div class="order_detail_item" style="margin-top: 10px; padding-top: 15px; border-top: 2px solid #e0e0e0;"></div>');
-            totalItem.append('<div class="order_detail_item_name" style="font-weight: 700;">총액</div>');
-            totalItem.append('<div class="order_detail_item_price">₩' + totalPrice.toLocaleString() + '</div>');
-            detailList.append(totalItem);
-            
-            // 모달 표시
-            $('#orderDetailModal').addClass('show');
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.head_login_wrap').length) {
+                $('.head_login_wrap').removeClass('active');
+            }
+        });
+
+        $('#ownerLogoutBtn').click(function(e) {
+            e.preventDefault();
+            showConfirm('로그아웃하시겠습니까?', function() {
+                localStorage.clear();
+                window.location.href = '/login';
+            }, '로그아웃');
+        });
+
+        $('.order_filter_btn').click(function() {
+            $('.order_filter_btn').removeClass('active');
+            $(this).addClass('active');
+            var status = $(this).data('status');
+            loadOrders(status);
+        });
+
+        loadStatistics();
+        loadOrders('전체');
+    });
+
+    async function loadStatistics() {
+        try {
+            const response = await fetch('/api/owner/total');
+            if (response.ok) {
+                const stats = await response.json();
+                $('#pendingCount').text(stats.pendingCount);
+                $('#preparingCount').text(stats.preparingCount);
+                $('#completedCount').text(stats.completedCount);
+                $('#totalRevenue').text('₩' + stats.totalRevenue.toLocaleString());
+            }
+        } catch (e) {
+            console.error("통계 로드 오류:", e);
+        }
+    }
+
+    async function loadOrders(filterStatus) {
+        try {
+            const response = await fetch('/api/owner/order');
+            if (!response.ok) throw new Error("데이터 로드 실패");
+
+            allOrders = await response.json();
+
+            if (filterStatus !== '전체') {
+                filteredOrders = allOrders.filter(o => o.status === filterStatus);
+            } else {
+                filteredOrders = allOrders;
+            }
+
+            currentPage = 1;
+            renderOrderTable(filteredOrders);
+        } catch (e) {
+            console.error("오류:", e);
+            $('#orderEmpty').show();
+        }
+    }
+
+    function renderOrderTable(orders) {
+        var $tbody = $('#orderTableBody');
+        $tbody.empty();
+
+        if (!orders || orders.length === 0) {
+            $('#orderEmpty').show();
+            renderPagination(0);
+            return;
         }
 
-        // 주문 상세 모달 닫기
-        function closeOrderDetailModal() {
-            $('#orderDetailModal').removeClass('show');
+        $('#orderEmpty').hide();
+
+        var startIndex = (currentPage - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+        var paginatedOrders = orders.slice(startIndex, endIndex);
+
+        paginatedOrders.forEach(function(order) {
+            var statusClass = 'waiting';
+            if (order.status === '주문 접수') statusClass = 'preparing';
+            if (order.status === '주문 완료') statusClass = 'completed';
+            if (order.status === '주문 취소') statusClass = 'canceled';
+
+            var btnText = '';
+            if (order.status === '결제 완료') btnText = '접수';
+            else if (order.status === '주문 접수') btnText = '완료';
+
+            var showCancelBtn = (order.status !== '주문 완료' && order.status !== '주문 취소');
+
+            var menuName = '메뉴 없음';
+            if (order.items && order.items.length > 0) {
+                menuName = order.items.length > 1 ? order.items[0].menuName + ' 외 ' + (order.items.length-1) : order.items[0].menuName;
+            }
+
+            var actions = '<div class="order_actions">' +
+                '<button class="order_action_btn" onclick="viewOrder(' + order.orderId + ')">상세보기</button>';
+            if (btnText) {
+                actions += '<button class="order_action_btn primary" onclick="handleStatusChange(' + order.orderId + ', \'' + order.status + '\')">' + btnText + '</button>';
+            }
+            if (showCancelBtn) {
+                actions += '<button class="order_action_btn danger" onclick="handleCancelOrder(' + order.orderId + ')">취소</button>';
+            }
+            actions += '</div>';
+
+            var row = '<tr>' +
+                '<td>#' + order.orderId + '</td>' +
+                '<td>' + formatDate(order.orderDate) + '</td>' +
+                '<td>' + menuName + '</td>' +
+                '<td>' + (order.items ? order.items.length : 0) + '개</td>' +
+                '<td>₩' + (order.totalAmount || 0).toLocaleString() + '</td>' +
+                '<td><span class="order_status ' + statusClass + '">' + order.status + '</span></td>' +
+                '<td>' + actions + '</td>' +
+                '</tr>';
+            $tbody.append(row);
+        });
+
+        renderPagination(orders.length);
+    }
+
+    function renderPagination(totalItems) {
+        var totalPages = Math.ceil(totalItems / itemsPerPage);
+        var $ul = $('#orderPagination');
+        $ul.empty();
+
+        if (totalPages <= 1) return;
+
+        var firstClass = currentPage === 1 ? 'disabled' : '';
+        $ul.append('<li class="' + firstClass + '"><a onclick="changePage(1)">처음</a></li>');
+
+        var startPage = Math.max(1, currentPage - 2);
+        var endPage = Math.min(totalPages, currentPage + 2);
+
+        for (var i = startPage; i <= endPage; i++) {
+            var activeClass = i === currentPage ? 'active' : '';
+            $ul.append('<li class="' + activeClass + '"><a onclick="changePage(' + i + ')">' + i + '</a></li>');
         }
-    </script>
+
+        var lastClass = currentPage >= totalPages ? 'disabled' : '';
+        $ul.append('<li class="' + lastClass + '"><a onclick="changePage(' + totalPages + ')">마지막</a></li>');
+    }
+
+    function changePage(page) {
+        var totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderOrderTable(filteredOrders);
+    }
+
+    function handleStatusChange(orderId, currentStatus) {
+        currentOrderId = orderId;
+        if (currentStatus === '결제 완료') {
+            currentActionText = '주문 접수';
+            showConfirm('주문을 접수하시겠습니까?', confirmOrderAction, '주문 접수');
+        } else if (currentStatus === '주문 접수') {
+            currentActionText = '준비 완료';
+            showConfirm('상품 준비를 완료하시겠습니까?', confirmOrderAction, '준비 완료');
+        }
+    }
+
+    function handleCancelOrder(orderId) {
+        currentOrderId = orderId;
+        currentActionText = '주문 취소';
+        showConfirm('정말로 이 주문을 취소하시겠습니까?', confirmOrderAction, '주문 취소');
+    }
+
+    async function confirmOrderAction() {
+        try {
+            var url = '/api/owner/order/' + currentOrderId + '/status';
+            if (currentActionText === '주문 취소') {
+                url = '/api/owner/order/' + currentOrderId + '/cancel';
+            }
+
+            const response = await fetch(url, { method: 'PATCH' });
+
+            if (response.ok) {
+                showAlert(currentActionText + ' 처리가 완료되었습니다.', function() {
+                    loadStatistics();
+                    loadOrders($('.order_filter_btn.active').data('status') || '전체');
+                });
+            } else {
+                showAlert('처리에 실패했습니다.');
+            }
+        } catch (e) {
+            console.error(e);
+            showAlert('서버 연결 오류가 발생했습니다.');
+        }
+    }
+
+    async function viewOrder(orderId) {
+        try {
+            const response = await fetch('/api/owner/order/' + orderId);
+            if (!response.ok) throw new Error('상세 정보 로드 실패');
+            const order = await response.json();
+
+            $('#orderDetailTime').text(formatDate(order.orderDate));
+            var detailList = $('#orderDetailList').empty();
+
+            var items = order.items || [];
+            items.forEach(function(item) {
+                var optionsText = '';
+                if (item.orderOptions && item.orderOptions.length > 0) {
+                    var optionNames = item.orderOptions.map(function(opt) { return opt.optionName; }).join(', ');
+                    optionsText = '<div style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">옵션: ' + optionNames + '</div>';
+                }
+
+                var itemHtml = '<div class="order_detail_item">' +
+                    '<div>' +
+                    '<div class="order_detail_item_name">' + item.menuName + ' <span style="color: var(--primary);">' + item.quantity + '개</span></div>' +
+                    optionsText +
+                    '</div>' +
+                    '<div class="order_detail_item_price">₩' + (item.totalItemPrice || 0).toLocaleString() + '</div>' +
+                    '</div>';
+                detailList.append(itemHtml);
+            });
+
+            detailList.append('<div class="order_detail_item" style="margin-top:15px; padding-top:15px; border-top: 2px solid var(--gray-800);">' +
+                '<div class="order_detail_item_name"><strong style="font-size: 16px;">총 결제 금액</strong></div>' +
+                '<div class="order_detail_item_price"><strong style="font-size: 20px; color: var(--primary);">₩' + (order.totalAmount || 0).toLocaleString() + '</strong></div>' +
+                '</div>');
+
+            $('#orderDetailModal').addClass('show');
+        } catch (e) {
+            console.error("상세보기 오류:", e);
+            showAlert('상세 정보를 불러올 수 없습니다.');
+        }
+    }
+
+    function closeOrderDetailModal() {
+        $('#orderDetailModal').removeClass('show');
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '-';
+        var d = new Date(dateString);
+        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    }
+
+    function showConfirm(message, callback, title) {
+        $('#confirmTitle').text(title || '확인');
+        $('#confirmText').text(message);
+        confirmCallback = callback;
+        $('#confirmModal').addClass('show');
+    }
+
+    function closeConfirmModal() {
+        $('#confirmModal').removeClass('show');
+        confirmCallback = null;
+    }
+
+    $('#confirmOkBtn').click(function() {
+        $('#confirmModal').removeClass('show');
+        if (confirmCallback) confirmCallback();
+        confirmCallback = null;
+    });
+
+    function showAlert(message, callback, title) {
+        $('#alertTitle').text(title || '알림');
+        $('#alertText').text(message);
+        alertCallback = callback;
+        $('#alertModal').addClass('show');
+    }
+
+    $('#alertOkBtn').click(function() {
+        $('#alertModal').removeClass('show');
+        if (alertCallback) alertCallback();
+        alertCallback = null;
+    });
+
+    $('.modal_wrap').click(function(e) {
+        if ($(e.target).hasClass('modal_wrap')) {
+            $(this).removeClass('show');
+        }
+    });
+</script>
 </body>
 </html>
-

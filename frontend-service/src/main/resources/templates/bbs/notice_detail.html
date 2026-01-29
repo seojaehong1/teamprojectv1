@@ -280,135 +280,114 @@
             }
         }
         
-        /* 공지사항 상세 스타일 */
-        .notice_detail_wrap {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            background: #fff;
-            min-height: calc(100vh - 200px);
-        }
-        .notice_detail_content_wrap {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px 40px;
-        }
-        .notice_detail_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 30px;
-        }
-        .notice_detail_back {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-        }
-        .notice_detail_back:hover {
-            color: #D95B3B;
-        }
-        .notice_detail_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-        }
-        .notice_detail_content {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        .notice_detail_content_header {
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .notice_detail_content_title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        .notice_detail_content_meta {
-            display: flex;
-            gap: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-        .notice_detail_content_meta_item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .notice_detail_content_body {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #333;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        .notice_detail_pinned {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #D95B3B;
-            color: #fff;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .notice_detail_actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-        .notice_detail_btn {
-            padding: 12px 30px;
-            background: #D95B3B;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .notice_detail_btn:hover {
-            background: #c04a2f;
-        }
-        .notice_detail_btn.secondary {
-            background: #666;
-        }
-        .notice_detail_btn.secondary:hover {
-            background: #555;
-        }
+        /* 공지사항 상세 스타일 - FAQ 스타일과 통일 */
+        .notice_detail_wrap { max-width: 100%; margin: 0 auto; padding: 0; background: #fff; min-height: calc(100vh - 200px); }
+        .notice_detail_content_wrap { max-width: 900px; margin: 0 auto; padding: 40px 20px 40px; }
+        .notice_detail_header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e0e0e0; margin-bottom: 30px; }
+        .notice_detail_back { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #333; }
+        .notice_detail_back:hover { color: #D95B3B; }
+        .notice_detail_title { font-size: 20px; font-weight: 700; color: #333; }
+        .notice_detail_content { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 30px; margin-bottom: 30px; }
+        .notice_detail_content_header { border-bottom: 1px solid #e0e0e0; padding-bottom: 20px; margin-bottom: 30px; }
+        .notice_detail_tag { display: inline-block; padding: 4px 12px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+        .notice_detail_content_title { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .notice_detail_content_meta { display: flex; gap: 20px; font-size: 14px; color: #666; flex-wrap: wrap; }
+        .notice_detail_content_meta_item { display: flex; align-items: center; gap: 5px; }
+
+        /* 공지 내용 섹션 */
+        .notice_detail_body { background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%); padding: 25px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #D95B3B; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .notice_detail_body_label { font-size: 14px; font-weight: 600; color: #D95B3B; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .notice_detail_body_label i { font-size: 18px; }
+        .notice_detail_body_text { font-size: 16px; line-height: 1.9; color: #444; white-space: pre-wrap; word-wrap: break-word; }
+
+        .notice_detail_actions { display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 60px; }
+        .notice_detail_btn { padding: 12px 30px; background: #D95B3B; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .notice_detail_btn:hover { background: #c04a2f; }
+
+        /* 섹션 공통 스타일 */
+        .notice_section { margin-top: 30px; padding: 25px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+        .section_title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section_title i { color: #D95B3B; }
+
+        /* 피드백 섹션 */
+        .notice_feedback_section { text-align: center; padding: 30px; background: linear-gradient(135deg, #fff5f3 0%, #fff 100%); border: 1px solid #ffe0db; }
+        .feedback_title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 20px; }
+        .feedback_buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .feedback_btn { display: flex; align-items: center; gap: 8px; padding: 12px 25px; border: 2px solid #e0e0e0; background: #fff; border-radius: 25px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .feedback_btn:hover { border-color: #D95B3B; color: #D95B3B; }
+        .feedback_btn.active { background: #D95B3B; border-color: #D95B3B; color: #fff; }
+        .feedback_btn i { font-size: 18px; }
+        .feedback_result { display: none; padding: 15px; background: #e8f5e9; border-radius: 8px; color: #2e7d32; font-size: 14px; }
+        .feedback_result.show { display: block; }
+
+        /* 1:1 문의 안내 */
+        .notice_inquiry_section { background: linear-gradient(135deg, #f5f5f5 0%, #fff 100%); text-align: center; }
+        .inquiry_icon { font-size: 40px; color: #D95B3B; margin-bottom: 15px; }
+        .inquiry_text { font-size: 15px; color: #666; margin-bottom: 20px; line-height: 1.6; }
+        .inquiry_btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 30px; background: #333; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .inquiry_btn:hover { background: #D95B3B; color: #fff; }
+
+        /* 관련 공지 */
+        .related_notice_list { display: flex; flex-direction: column; gap: 10px; }
+        .related_notice_item { display: flex; align-items: center; gap: 12px; padding: 15px; background: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .related_notice_item:hover { background: #f5f5f5; transform: translateX(5px); }
+        .related_notice_tag { display: inline-block; padding: 4px 10px; background: #D95B3B; color: #fff; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .related_notice_title { font-size: 14px; color: #333; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .related_notice_arrow { color: #999; font-size: 14px; }
+
         @media (max-width: 768px) {
-            .notice_detail_content_wrap {
-                padding: 20px 15px;
-            }
-            .notice_detail_content {
-                padding: 20px;
-            }
-            .notice_detail_content_title {
-                font-size: 20px;
-            }
-            .notice_detail_content_meta {
-                flex-direction: column;
-                gap: 10px;
-            }
+            .notice_detail_content_wrap { padding: 20px 15px; }
+            .notice_detail_content { padding: 20px; }
+            .notice_detail_content_title { font-size: 18px; }
+            .notice_detail_content_meta { flex-direction: column; gap: 10px; }
+            .notice_section { padding: 20px; margin-top: 20px; }
+            .feedback_buttons { flex-direction: column; }
+            .feedback_btn { justify-content: center; }
         }
+
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        .logout_modal_wrap.show { display: flex !important; }
+        .logout_modal_content {
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: logoutModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header { display: flex !important; justify-content: center !important; align-items: center !important; margin-bottom: 16px !important; }
+        .logout_modal_title { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
+        .logout_modal_text { font-size: 15px !important; color: #6B7280 !important; margin-bottom: 24px !important; line-height: 1.6 !important; }
+        .logout_modal_actions { display: flex !important; gap: 12px !important; justify-content: center !important; }
+        .logout_modal_btn { flex: 1 !important; padding: 14px !important; border: none !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.2s !important; }
+        .logout_modal_btn.cancel { background: #F3F4F6 !important; color: #6B7280 !important; }
+        .logout_modal_btn.cancel:hover { background: #E5E7EB !important; }
+        .logout_modal_btn.danger { background: #EF4444 !important; color: #fff !important; }
+        .logout_modal_btn.danger:hover { background: #DC2626 !important; }
     </style>
     
     <!-- JavaScript -->
@@ -423,7 +402,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -431,50 +410,50 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">소식</a>
+                            <a href="notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="notice">공지사항</a></li>
+                                    <li><a href="../bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="../bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="../bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -486,7 +465,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -495,7 +474,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -508,8 +487,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -569,7 +548,7 @@
                         <a href="/about/map/">오시는 길</a>
                     </div>
                     <div class="mobile_menu_sub">
-                        <a href="notice.html">공지사항</a>
+                        <a href="notice">공지사항</a>
                         <a href="/bbs/?bbs_category=4">FAQ</a>
                     </div>
                     <div class="mobile_menu_sub">
@@ -618,7 +597,7 @@
                     </div>
                     
                     <div class="notice_detail_actions">
-                        <button class="notice_detail_btn" onclick="location.href='notice.html'">목록</button>
+                        <button class="notice_detail_btn" onclick="location.href='notice'">목록</button>
                     </div>
                 </div>
             </div>
@@ -630,9 +609,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -656,14 +635,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -786,71 +763,84 @@
             // 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                openLogoutModal();
             });
 
+            // 모달 배경 클릭 시 닫기
+            $('.logout_modal_wrap').on('click', function(e) {
+                if ($(e.target).hasClass('logout_modal_wrap')) {
+                    closeLogoutModal();
+                }
+            });
+        });
+
+        // 로그아웃 모달 함수
+        function openLogoutModal() {
+            $('#logoutModal').addClass('show');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeLogoutModal() {
+            $('#logoutModal').removeClass('show');
+            $('body').css('overflow', '');
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            closeLogoutModal();
+            window.location.href = '/';
+        }
+
+        $(document).ready(function() {
             // 공지사항 상세 정보 로드
             function loadNoticeDetail() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const noticeId = urlParams.get('noticeId');
-                
+                const noticeId = urlParams.get('id') || urlParams.get('noticeId');
+
                 if (!noticeId) {
                     // 공지사항 ID가 없으면 에러 메시지 표시
                     $('#noticeDetailContent').html(`
                         <div style="text-align: center; padding: 60px 20px;">
                             <div style="font-size: 16px; color: #999; margin-bottom: 20px;">공지사항을 찾을 수 없습니다</div>
-                            <a href="notice.html" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">목록으로 가기</a>
+                            <a href="notice" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">목록으로 가기</a>
                         </div>
                     `);
                     return;
                 }
 
-                // API 호출 또는 localStorage에서 데이터 가져오기
-                // 실제 구현 시에는 API를 호출해야 합니다
-                // 예시: fetch(`/api/notices/${noticeId}`)
-                
-                // URL 파라미터에서 직접 내용 가져오기
-                const urlParams = new URLSearchParams(window.location.search);
-                const title = urlParams.get('title') || '';
-                const content = urlParams.get('content') || '';
-                const authorName = urlParams.get('authorName') || 'TORI COFFEE';
-                const createdAt = urlParams.get('createdAt') || new Date().toLocaleDateString('ko-KR');
-                const isPinned = urlParams.get('isPinned') === 'true';
-                
-                // localStorage에서 데이터 가져오기
-                const noticesData = localStorage.getItem('notices');
-                const notices = noticesData ? JSON.parse(noticesData) : [];
-                let notice = notices.find(function(n) {
-                    return n.noticeId == noticeId;
-                });
-                
-                // localStorage에 없으면 URL 파라미터로 생성
-                if (!notice) {
-                    notice = {
-                        noticeId: noticeId,
-                        title: title || '공지사항 제목',
-                        content: content || '공지사항 내용이 여기에 표시됩니다.\n\n이 공지사항은 TORI COFFEE에서 제공하는 중요한 정보를 담고 있습니다.',
-                        authorName: authorName,
-                        createdAt: createdAt,
-                        isPinned: isPinned
-                    };
-                }
-                
-                // 공지사항 정보 표시
-                renderNoticeDetail(notice);
+                // 서버에서 공지사항 상세 정보 가져오기
+                fetch('/api/notices/' + noticeId)
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('공지사항을 찾을 수 없습니다');
+                        }
+                        return response.json();
+                    })
+                    .then(function(notice) {
+                        // 공지사항 정보 표시
+                        renderNoticeDetail(notice);
+                    })
+                    .catch(function(error) {
+                        console.error('공지사항 로드 오류:', error);
+                        $('#noticeDetailContent').html(`
+                            <div style="text-align: center; padding: 60px 20px;">
+                                <div style="font-size: 16px; color: #999; margin-bottom: 20px;">공지사항을 불러올 수 없습니다</div>
+                                <a href="notice" style="display: inline-block; padding: 12px 24px; background: #D95B3B; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">목록으로 가기</a>
+                            </div>
+                        `);
+                    });
             }
 
             // 공지사항 상세 정보 렌더링 함수
             function renderNoticeDetail(notice) {
                 const createdAt = notice.createdAt ? new Date(notice.createdAt).toLocaleDateString('ko-KR') : '';
                 const authorName = notice.authorName || 'TORI COFFEE';
-                
+
                 let html = `
                     <div class="notice_detail_content_header">
-                        ${notice.isPinned ? '<span class="notice_detail_pinned">공지</span>' : ''}
+                        <span class="notice_detail_tag">${notice.isPinned ? '중요 공지' : '공지사항'}</span>
                         <div class="notice_detail_content_title">${notice.title || ''}</div>
                         <div class="notice_detail_content_meta">
                             <div class="notice_detail_content_meta_item">
@@ -861,20 +851,69 @@
                                 <i class="fas fa-calendar"></i>
                                 <span>${createdAt}</span>
                             </div>
+                            <div class="notice_detail_content_meta_item">
+                                <i class="fas fa-eye"></i>
+                                <span>조회 ${notice.viewCount || 0}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="notice_detail_content_body">
-                        ${notice.content || ''}
+                    <div class="notice_detail_body">
+                        <div class="notice_detail_body_label"><i class="fas fa-bullhorn"></i> 공지 내용</div>
+                        <div class="notice_detail_body_text">${notice.content || ''}</div>
+                    </div>
+
+                    <div class="notice_section notice_feedback_section">
+                        <div class="feedback_title"><i class="fas fa-smile"></i> 이 공지가 도움이 되었나요?</div>
+                        <div class="feedback_buttons">
+                            <button class="feedback_btn" onclick="submitFeedback('yes', this)">
+                                <i class="far fa-thumbs-up"></i> 네, 도움이 됐어요
+                            </button>
+                            <button class="feedback_btn" onclick="submitFeedback('no', this)">
+                                <i class="far fa-thumbs-down"></i> 아니요
+                            </button>
+                        </div>
+                        <div class="feedback_result" id="feedbackResult">
+                            <i class="fas fa-heart"></i> 소중한 피드백 감사합니다!
+                        </div>
+                    </div>
+
+                    <div class="notice_section notice_inquiry_section">
+                        <div class="inquiry_icon"><i class="fas fa-headset"></i></div>
+                        <div class="inquiry_text">추가 문의사항이 있으신가요?<br>1:1 문의를 통해 더 자세한 안내를 받아보세요.</div>
+                        <a href="../mypage/inquiry" class="inquiry_btn">
+                            <i class="fas fa-pen"></i> 1:1 문의하기
+                        </a>
                     </div>
                 `;
-                
+
                 $('#noticeDetailContent').html(html);
             }
+
+            // 피드백 제출 함수
+            window.submitFeedback = function(type, btn) {
+                $('.feedback_btn').removeClass('active');
+                $(btn).addClass('active');
+                $('#feedbackResult').addClass('show');
+            };
 
             // 페이지 로드 시 공지사항 상세 정보 로드
             loadNoticeDetail();
         });
     </script>
+
+    <!-- 로그아웃 확인 모달 -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title">로그아웃</div>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">확인</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

@@ -9,13 +9,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductItemDto { //임시로 쓸듯
+public class ProductItemDto {
 
     // 주문자 정보
-    private Long customerId;
+    private String customerId;
 
     // 메뉴 기본 정보
-    private String menuCode;
+    private Long menuCode;
     private String menuName;
     private Integer quantity;
     private Integer unitPrice; // 메뉴 기본 가격 (unit_price)

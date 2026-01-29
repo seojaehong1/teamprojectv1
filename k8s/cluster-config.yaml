@@ -1,0 +1,80 @@
+# ===========================================
+# TORI COFFEE - EKS 클러스터 설정
+# eksctl로 클러스터 생성/삭제 시 사용
+# ===========================================
+#
+# 클러스터 생성:
+#   eksctl create cluster -f cluster-config.yaml
+#
+# 클러스터 삭제:
+#   eksctl delete cluster -f cluster-config.yaml
+#
+# ===========================================
+
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: teamproject-cluster
+  region: ap-northeast-2
+  version: "1.30"
+
+# IAM OIDC 프로바이더 (ALB Controller에 필요)
+iam:
+  withOIDC: true
+  serviceAccounts:
+    - metadata:
+        name: aws-load-balancer-controller
+        namespace: kube-system
+      wellKnownPolicies:
+        awsLoadBalancerController: true
+
+# 노드 그룹 설정
+managedNodeGroups:
+  - name: tori-nodes
+    instanceType: t3.medium
+    desiredCapacity: 5
+    minSize: 3
+    maxSize: 7
+    volumeSize: 20
+    volumeType: gp3
+
+    # 스팟 인스턴스 사용 (비용 절약 - 약 70% 저렴)
+    # spot: true
+
+    # 레이블
+    labels:
+      role: worker
+
+    # 태그
+    tags:
+      Environment: production
+      Project: tori-coffee
+
+    # SSH 접근 (선택사항)
+    # ssh:
+    #   allow: true
+    #   publicKeyName: your-key-name
+
+# VPC 설정 (기본 설정 사용)
+vpc:
+  cidr: 192.168.0.0/16
+  nat:
+    gateway: Single  # 비용 절약을 위해 단일 NAT Gateway
+
+# CloudWatch 로깅 (선택사항 - 비용 발생)
+# cloudWatch:
+#   clusterLogging:
+#     enableTypes:
+#       - api
+#       - audit
+#       - authenticator
+
+# 애드온
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: coredns
+    version: latest
+  - name: kube-proxy
+    version: latest

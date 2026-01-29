@@ -2,6 +2,16 @@
 .env
 .env.local
 .env.*.local
+env
+**/env
+
+# K8s Secrets (민감한 정보 포함)
+k8s/scripts/env
+k8s/scripts/backup/
+
+# AWS/IAM 정책 파일
+iam_policy*.json
+alb-policy.json
 
 # IDE
 .idea/

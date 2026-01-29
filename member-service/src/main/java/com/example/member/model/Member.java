@@ -1,61 +1,86 @@
 package com.example.member.model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
-import java.time.LocalDate;
+import org.hibernate.annotations.CreationTimestamp;
 
-// 회원 엔티티
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Data
 public class Member {
-    
-    // 회원 고유 ID
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    // 회원 이름
-    @Column(name = "user_name", nullable = false)
-    private String username;
-    
-    // 회원 아이디 (로그인용)
-    @Column(name = "user_id", unique = true, nullable = false)
+    @Column(name = "userId", length = 50)
     private String userId;
-    
-    // 비밀번호 (소셜 로그인은 NULL)
-    @Column(nullable = true)
-    private String password;
-    
-    // 이메일
-    @Column(unique = true, nullable = false)
+
+    @Column(name = "name", length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "email", length = 100, unique = true, nullable = false)
     private String email;
-    
-    // 생년월일 (소셜 로그인은 NULL)
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
-    
-    // 전화번호 (소셜 로그인은 NULL)
-    @Column(name = "phone_num")
-    private String phoneNum;
-    
-    // 로그인 제공자 (DEFAULT, NAVER, GOOGLE)
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Provider provider = Provider.DEFAULT;
-    
-    // 권한 (USER, ADMIN)
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.USER;
-    
-    // 권한 enum
-    public enum Role {
-        USER, ADMIN
+
+    @JsonIgnore
+    @Column(name = "password", length = 255, nullable = false)
+    private String password;
+
+    @Column(name = "userType", nullable = false)
+    private String userType = "member";
+
+    @CreationTimestamp
+    @Column(name = "createdAt", updatable = false)
+    private LocalDateTime createdAt;
+
+    // 로그인 실패 관련 필드
+    @Column(name = "failedLoginAttempts", columnDefinition = "INT DEFAULT 0")
+    private Integer failedLoginAttempts = 0;
+
+    @Column(name = "accountLockedUntil")
+    private LocalDateTime accountLockedUntil;
+
+    public enum UserType {
+        MEMBER, ADMIN, STORE_OWNER
     }
-    
-    // 로그인 제공자 enum
-    public enum Provider {
-        DEFAULT, NAVER, GOOGLE
+
+    // 계정 잠금 확인 메서드
+    public boolean isAccountLocked() {
+        if (accountLockedUntil == null) {
+            return false;
+        }
+        if (LocalDateTime.now().isAfter(accountLockedUntil)) {
+            // 잠금 시간이 지났으면 잠금 해제
+            accountLockedUntil = null;
+            failedLoginAttempts = 0;
+            return false;
+        }
+        return true;
+    }
+
+    // 로그인 실패 처리
+    public void recordLoginFailure() {
+        if (failedLoginAttempts == null) {
+            failedLoginAttempts = 0;
+        }
+        failedLoginAttempts++;
+        if (failedLoginAttempts >= 5) {
+            // 5회 실패 시 30분 잠금
+            accountLockedUntil = LocalDateTime.now().plusMinutes(30);
+        }
+    }
+
+    // 로그인 성공 시 실패 횟수 초기화
+    public void resetLoginFailures() {
+        failedLoginAttempts = 0;
+        accountLockedUntil = null;
+    }
+
+    // Getter에서 null 처리
+    public Integer getFailedLoginAttempts() {
+        return failedLoginAttempts != null ? failedLoginAttempts : 0;
     }
 }

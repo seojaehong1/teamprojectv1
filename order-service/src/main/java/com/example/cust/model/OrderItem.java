@@ -27,8 +27,11 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Orders order;
 
-    @Column(name = "menu_code", length = 10, nullable = false)
-    private String menuCode; // Menu Entity는 Product Module에 있으므로 String으로 유지
+    @Column(name = "menu_code", nullable = false)
+    private Long menuCode; // Menu Entity는 Product Module에 있으므로 String으로 유지
+
+    @Column(name = "menu_name", nullable = false)
+    private String menuName;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

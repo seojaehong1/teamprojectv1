@@ -16,7 +16,7 @@ public class MakeCart {
     private final CartHeaderRepository cartHeaderRepository;
 
     @Transactional
-    public CartHeader getOrCreateCartHeader(int customerId) {
+    public CartHeader getOrCreateCartHeader(String customerId) {
 
         // 1. 고객 ID를 기준으로 기존 CartHeader를 조회합니다.
         Optional<CartHeader> existingHeader = cartHeaderRepository.findByCustomerId(customerId);

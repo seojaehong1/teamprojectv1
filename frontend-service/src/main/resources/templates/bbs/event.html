@@ -294,6 +294,46 @@
             object-fit: cover;
             display: block;
         }
+
+        
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .logout_modal_wrap.show { display: flex !important; }
+        .logout_modal_content {
+            background: #fff !important;
+            padding: 32px !important;
+            border-radius: 16px !important;
+            width: 90% !important;
+            max-width: 340px !important;
+            text-align: center !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+            animation: logoutModalSlideIn 0.3s ease !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header { display: flex !important; justify-content: center !important; align-items: center !important; margin-bottom: 16px !important; }
+        .logout_modal_title { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
+        .logout_modal_text { font-size: 15px !important; color: #6B7280 !important; margin-bottom: 24px !important; line-height: 1.6 !important; }
+        .logout_modal_actions { display: flex !important; gap: 12px !important; justify-content: center !important; }
+        .logout_modal_btn { flex: 1 !important; padding: 14px !important; border: none !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.2s !important; }
+        .logout_modal_btn.cancel { background: #F3F4F6 !important; color: #6B7280 !important; }
+        .logout_modal_btn.cancel:hover { background: #E5E7EB !important; }
+        .logout_modal_btn.danger { background: #EF4444 !important; color: #fff !important; }
+        .logout_modal_btn.danger:hover { background: #DC2626 !important; }
     </style>
     
     <!-- JavaScript -->
@@ -308,7 +348,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -316,49 +356,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="notice.html" class="pc">소식</a>
+                            <a href="notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="notice.html">공지사항</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
+                                    <li><a href="notice">공지사항</a></li>
+                                    <li><a href="faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="event.html" class="pc">이벤트</a>
+                            <a href="event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="event.html">이벤트</a></li>
+                                    <li><a href="event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -370,7 +410,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -379,7 +419,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -392,8 +432,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -499,12 +539,9 @@
                     </div>
                     <div class="cont_tab">
                         <ul>
-                            <li class="check"><a href="?bbs_category=3">전체</a></li>
-                            <li><a href="?bbs_category=3&bbs_detail_category=14">토리 콘서트</a></li>
-                            <li><a href="?bbs_category=3&bbs_detail_category=15">SMGC</a></li>
-                            <li><a href="?bbs_category=3&bbs_detail_category=11">토리 메뉴 이벤트</a></li>
-                            <li><a href="?bbs_category=3&bbs_detail_category=12">제휴 이벤트</a></li>
-                            <li><a href="?bbs_category=3&bbs_detail_category=13">제휴 혜택</a></li>
+                            <li class="check" data-category="전체"><a href="javascript:void(0)" onclick="filterEvent('전체')">전체</a></li>
+                            <li data-category="이벤트"><a href="javascript:void(0)" onclick="filterEvent('이벤트')">토리 이벤트</a></li>
+                            <li data-category="제휴"><a href="javascript:void(0)" onclick="filterEvent('제휴')">제휴 이벤트</a></li>
                         </ul>
                     </div>
                     <div class="cont_list cont_list_content cont_list_content_search">
@@ -512,23 +549,19 @@
                             <li>
                                 <div class="board_search_wrap">
                                     <div class="board_search">
-                                        <form method="GET">
-                                            <input type="hidden" name="bbs_category" id="bbs_category" value="3">
-                                            <input type="hidden" name="bbs_detail_category" id="bbs_detail_category" value="">
+                                        <form onsubmit="searchEvent(); return false;">
                                             <ul>
                                                 <li class="board_search_select">
                                                     <div class="input_select_wrap input_wrap2">
-                                                        <select name="bbs_search_category" id="bbs_search_category">
-                                                            <option value="bbs_tbl_title">제목</option>
-                                                            <option value="bbs_tbl_content">내용</option>
-                                                            <option value="bbs_tbl_name">작성자</option>
+                                                        <select id="event_search_category">
+                                                            <option value="title">제목</option>
                                                         </select>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="input_text_wrap input_wrap2">
                                                         <label>
-                                                            <input type="text" name="bbs_search" id="bbs_search" placeholder="검색어를 입력하세요" required>
+                                                            <input type="text" id="event_search_input" placeholder="검색어를 입력하세요">
                                                         </label>
                                                     </div>
                                                 </li>
@@ -548,10 +581,10 @@
                         <div class="cont_list cont_list4 cont_list_m cont_list_m2 cont_gallery_list board_list_gallery">
                             <ul>
                                 <li>
-                                    <a href="#">
+                                    <a href="event_detail?id=1">
                                         <div class="cont_gallery_list_box">
                                             <div class="cont_gallery_list_img cont_gallery_list_img_height">
-                                                <img alt="[이벤트] 겨울 미니 시즌 신메뉴 출시" style="object-fit: cover; width: 100%; height: 100%;">
+                                                <img alt="[이벤트] 겨울 미니 시즌 신메뉴 출시" th:src="@{/src/event01.png}" style="object-fit: cover; width: 100%; height: 100%;">
                                             </div>
                                             <div class="cont_text_box">
                                                 <div class="cont_text cont_text_title">
@@ -569,10 +602,10 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="event_detail?id=2">
                                         <div class="cont_gallery_list_box">
                                             <div class="cont_gallery_list_img cont_gallery_list_img_height">
-                                                <img alt="[제휴] 토리TRC커피 X 미래카드" style="object-fit: cover; width: 100%; height: 100%;">
+                                                <img alt="[제휴] 토리TRC커피 X 미래카드" th:src="@{/src/event02.png}" style="object-fit: cover; width: 100%; height: 100%;">
                                             </div>
                                             <div class="cont_text_box">
                                                 <div class="cont_text cont_text_title">
@@ -590,10 +623,10 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="event_detail?id=3">
                                         <div class="cont_gallery_list_box">
                                             <div class="cont_gallery_list_img cont_gallery_list_img_height">
-                                                <img alt="[이벤트] 크리스마스 시즌 한정 음료" style="object-fit: cover; width: 100%; height: 100%;">
+                                                <img alt="[이벤트] 크리스마스 시즌 한정 음료" th:src="@{/src/event03.png}" style="object-fit: cover; width: 100%; height: 100%;">
                                             </div>
                                             <div class="cont_text_box">
                                                 <div class="cont_text cont_text_title">
@@ -611,15 +644,99 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="event_detail?id=4">
                                         <div class="cont_gallery_list_box">
                                             <div class="cont_gallery_list_img cont_gallery_list_img_height">
-                                                <img alt="[이벤트] 12월 토리TRC 별빛 결제 이벤트" style="object-fit: cover; width: 100%; height: 100%;">
+                                                <img alt="[이벤트] 12월 토리TRC 별빛 결제 이벤트" th:src="@{/src/event04.png}" style="object-fit: cover; width: 100%; height: 100%;">
                                             </div>
                                             <div class="cont_text_box">
                                                 <div class="cont_text cont_text_title">
                                                     <div class="text_wrap">
                                                         <div class="text text1">[이벤트] 12월 토리TRC 별빛 결제 이벤트</div>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap">
+                                                        <div class="text text2">TORI COFFEE</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="event_detail?id=5">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img alt="[제휴] 토리 TORI커피 X KT구독팩 출시" th:src="@{/src/event05.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap">
+                                                        <div class="text text1">[제휴] 토리 TORI커피 X KT구독팩 출시</div>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap">
+                                                        <div class="text text2">TORI COFFEE</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="event_detail?id=6">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img alt="[제휴] 이제 TORI에서도 페이코 식권 사용 가능!" th:src="@{/src/event06.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap">
+                                                        <div class="text text1">[제휴] 이제 TORI에서도 페이코 식권 사용 가능!</div>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap">
+                                                        <div class="text text2">TORI COFFEE</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="event_detail?id=7">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img alt="[이벤트] 1월 메가MGC커피 X 당근페이 적립 EVENT" th:src="@{/src/event07.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap">
+                                                        <div class="text text1">[이벤트] 1월 메가MGC커피 X 당근페이 적립 EVENT</div>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info">
+                                                    <div class="text_wrap">
+                                                        <div class="text text2">TORI COFFEE</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="event_detail?id=8">
+                                        <div class="cont_gallery_list_box">
+                                            <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                <img alt="[이벤트] 12월 토리 TORI커피 X 하나페이 할인 EVENT" th:src="@{/src/event08.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                            </div>
+                                            <div class="cont_text_box">
+                                                <div class="cont_text cont_text_title">
+                                                    <div class="text_wrap">
+                                                        <div class="text text1">[이벤트] 12월 토리 TORI커피 X 하나페이 할인 EVENT</div>
                                                     </div>
                                                 </div>
                                                 <div class="cont_text cont_text_info">
@@ -654,9 +771,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -680,14 +797,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -708,6 +823,77 @@
         AOS.init({
             duration: 1200,
         });
+
+        // 이벤트 카테고리 필터 함수
+        function filterEvent(category) {
+            // 탭 활성화 상태 변경
+            $('.cont_tab li').removeClass('check');
+            $('.cont_tab li[data-category="' + category + '"]').addClass('check');
+
+            // 이벤트 목록 필터링
+            const $items = $('.board_list_gallery ul > li');
+            $('.no_result_msg').remove();
+
+            if (category === '전체') {
+                // 전체 선택 시 모든 항목 표시
+                $items.show();
+            } else {
+                // 카테고리별 필터링
+                $items.each(function() {
+                    const $item = $(this);
+                    const titleText = $item.find('.text1').text() || '';
+
+                    // 제목에서 카테고리 추출 (예: [이벤트], [제휴] 등)
+                    if (titleText.includes('[' + category + ']')) {
+                        $item.show();
+                    } else {
+                        $item.hide();
+                    }
+                });
+            }
+
+            // 필터 후 보이는 항목이 없으면 메시지 표시
+            const visibleItems = $items.filter(':visible').length;
+            if (visibleItems === 0) {
+                $('.board_list_gallery ul').append('<li class="no_result_msg" style="width:100%; text-align:center; padding:60px 20px; color:#999; font-size:16px;">해당 카테고리의 이벤트가 없습니다.</li>');
+            }
+        }
+
+        // 이벤트 검색 함수
+        function searchEvent() {
+            const searchText = $('#event_search_input').val().trim().toLowerCase();
+
+            // 검색어가 비어있으면 전체 표시
+            if (!searchText) {
+                filterEvent('전체');
+                return;
+            }
+
+            // 카테고리 탭 초기화
+            $('.cont_tab li').removeClass('check');
+            $('.cont_tab li[data-category="전체"]').addClass('check');
+
+            // 이벤트 목록 검색
+            const $items = $('.board_list_gallery ul > li').not('.no_result_msg');
+            $('.no_result_msg').remove();
+
+            $items.each(function() {
+                const $item = $(this);
+                const titleText = ($item.find('.text1').text() || '').toLowerCase();
+
+                if (titleText.includes(searchText)) {
+                    $item.show();
+                } else {
+                    $item.hide();
+                }
+            });
+
+            // 검색 결과가 없으면 메시지 표시
+            const visibleItems = $items.filter(':visible').length;
+            if (visibleItems === 0) {
+                $('.board_list_gallery ul').append('<li class="no_result_msg" style="width:100%; text-align:center; padding:60px 20px; color:#999; font-size:16px;">"' + $('#event_search_input').val() + '" 검색 결과가 없습니다.</li>');
+            }
+        }
 
         // 헤더 메뉴 호버
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
@@ -810,13 +996,52 @@
             // 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                openLogoutModal();
             });
         });
+
+        // 로그아웃 모달 열기
+        function openLogoutModal() {
+            $('#logoutModal').addClass('show');
+        }
+
+        // 로그아웃 모달 닫기
+        function closeLogoutModal() {
+            $('#logoutModal').removeClass('show');
+        }
+
+        // 로그아웃 확인
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userId');
+            closeLogoutModal();
+            window.location.href = '/';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        $(document).on('click', '.logout_modal_wrap', function(e) {
+            if ($(e.target).hasClass('logout_modal_wrap')) {
+                closeLogoutModal();
+            }
+        });
     </script>
+
+    <!-- 로그아웃 확인 모달 -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title">로그아웃</div>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">확인</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

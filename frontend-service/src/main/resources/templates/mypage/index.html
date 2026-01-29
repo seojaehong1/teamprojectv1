@@ -406,80 +406,176 @@
         .mypage_withdraw_link:hover {
             color: #666;
         }
-        /* 회원 탈퇴 확인 모달 */
+        /* 회원 탈퇴 확인 모달 (Admin 스타일) */
         .withdraw_modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
         }
         .withdraw_modal.active {
-            display: flex;
+            display: flex !important;
         }
         .withdraw_modal_content {
-            background: #fff;
-            border-radius: 12px;
-            width: calc(100% - 40px);
-            max-width: 400px;
-            padding: 30px 25px 25px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: withdrawModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes withdrawModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .withdraw_modal_header {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 16px !important;
         }
         .withdraw_modal_title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
         }
-        .withdraw_modal_message {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .withdraw_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.6 !important;
         }
-        .withdraw_modal_buttons {
-            display: flex;
-            gap: 10px;
+        .withdraw_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
         }
         .withdraw_modal_btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            flex: 1 !important;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
         }
-        .withdraw_modal_btn:active {
-            opacity: 0.8;
+        .withdraw_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
         }
-        .withdraw_modal_cancel {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #e0e0e0;
+        .withdraw_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
         }
-        .withdraw_modal_cancel:hover {
-            background: #e8e8e8;
+        .withdraw_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
         }
-        .withdraw_modal_confirm {
-            background: #D95B3B;
-            color: #fff;
-            border: none;
-        }
-        .withdraw_modal_confirm:hover {
-            background: #c04a2f;
+        .withdraw_modal_btn.danger:hover {
+            background: #DC2626 !important;
         }
         @media (min-width: 769px) {
             .mypage_content_wrap {
                 max-width: 600px;
                 padding: 40px 40px 40px;
             }
+        }
+
+        /* 확인 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        .logout_modal_wrap.show {
+            display: flex !important;
+        }
+        .logout_modal_content {
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: logoutModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 16px !important;
+        }
+        .logout_modal_title {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+        .logout_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.6 !important;
+        }
+        .logout_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
+        }
+        .logout_modal_btn {
+            flex: 1 !important;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+        .logout_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
+        }
+        .logout_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
+        }
+        .logout_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
+        }
+        .logout_modal_btn.danger:hover {
+            background: #DC2626 !important;
         }
     </style>
     
@@ -495,7 +591,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -503,49 +599,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="../bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="../bbs/notice">공지사항</a></li>
+                                    <li><a href="../bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="../bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="../bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -557,7 +653,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -566,7 +662,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -579,8 +675,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -611,33 +707,33 @@
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">메가 스토리</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/brand.html">브랜드</a>
-                        <a href="../about/bi.html">BI</a>
+                        <a href="../about/brand">브랜드</a>
+                        <a href="../about/bi">BI</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">메뉴소개</div>
                     <div class="mobile_menu_sub">
-                        <a href="../menu/drink.html">음료</a>
+                        <a href="../menu/drink">음료</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">매장</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/map.html">오시는 길</a>
+                        <a href="../about/map">오시는 길</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">소식</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/notice.html">공지사항</a>
-                        <a href="../bbs/faq.html">FAQ</a>
+                        <a href="../bbs/notice">공지사항</a>
+                        <a href="../bbs/faq">FAQ</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">이벤트</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/event.html">이벤트</a>
+                        <a href="../bbs/event">이벤트</a>
                     </div>
                 </div>
             </div>
@@ -659,17 +755,17 @@
                 <div class="mypage_profile_image">
                     <i class="far fa-user"></i>
                 </div>
-                <div class="mypage_profile_name">백조9688님</div>
-                <div class="mypage_profile_info">010-1234-5678</div>
-                <div class="mypage_profile_info">user@example.com</div>
+                <div class="mypage_profile_name" id="profileName">님</div>
+                <div class="mypage_profile_info" id="profilePhone"></div>
+                <div class="mypage_profile_info" id="profileEmail"></div>
                 <div class="mypage_profile_edit">
-                    <a href="/mypage/edit.html" class="mypage_profile_edit_btn">회원 정보 수정</a>
+                    <a href="/mypage/edit" class="mypage_profile_edit_btn">회원 정보 수정</a>
                 </div>
             </div>
 
             <!-- 메뉴 리스트 -->
             <div class="mypage_menu_list">
-                <div class="mypage_menu_item" onclick="window.location.href='/order/history.html'">
+                <div class="mypage_menu_item" onclick="window.location.href='/order/history'">
                     <div class="mypage_menu_item_left">
                         <div class="mypage_menu_icon">
                             <i class="fas fa-receipt"></i>
@@ -680,7 +776,7 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <div class="mypage_menu_item" onclick="window.location.href='/mypage/inquiry_list.html'">
+                <div class="mypage_menu_item" onclick="window.location.href='/mypage/inquiry_list'">
                     <div class="mypage_menu_item_left">
                         <div class="mypage_menu_icon">
                             <i class="fas fa-question-circle"></i>
@@ -714,16 +810,16 @@
         </div>
     </div>
 
-    <!-- 회원 탈퇴 확인 모달 -->
+    <!-- 회원 탈퇴 확인 모달 (Admin 스타일) -->
     <div class="withdraw_modal">
         <div class="withdraw_modal_content">
-            <div class="withdraw_modal_title">회원 탈퇴</div>
-            <div class="withdraw_modal_message">
-                정말 탈퇴하시겠습니까?<br>모든 정보가 삭제됩니다.
+            <div class="withdraw_modal_header">
+                <div class="withdraw_modal_title">회원 탈퇴</div>
             </div>
-            <div class="withdraw_modal_buttons">
-                <button class="withdraw_modal_btn withdraw_modal_cancel" type="button">취소</button>
-                <button class="withdraw_modal_btn withdraw_modal_confirm" type="button">탈퇴하기</button>
+            <div class="withdraw_modal_text">정말 탈퇴하시겠습니까?<br>모든 정보가 삭제됩니다.</div>
+            <div class="withdraw_modal_actions">
+                <button class="withdraw_modal_btn cancel withdraw_modal_cancel" type="button">취소</button>
+                <button class="withdraw_modal_btn danger withdraw_modal_confirm" type="button">탈퇴하기</button>
             </div>
         </div>
     </div>
@@ -733,9 +829,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -759,14 +855,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -783,7 +877,36 @@
         </div>
     </a>
 
+    <!-- 확인 모달 (Admin 스타일) -->
+    <div class="logout_modal_wrap" id="confirmModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title" id="confirmTitle">확인</div>
+            </div>
+            <div class="logout_modal_text" id="confirmText">진행하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+                <button class="logout_modal_btn danger" id="confirmOkBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // 확인 모달 함수 (Admin 스타일)
+        var confirmCallback = null;
+
+        function showConfirm(message, callback, title) {
+            $('#confirmTitle').text(title || '확인');
+            $('#confirmText').text(message);
+            confirmCallback = callback;
+            $('#confirmModal').addClass('show');
+        }
+
+        function closeConfirmModal() {
+            $('#confirmModal').removeClass('show');
+            confirmCallback = null;
+        }
+
         AOS.init({
             duration: 1200,
         });
@@ -829,6 +952,13 @@
             function checkLoginStatus() {
                 const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
                 const userName = localStorage.getItem('userName') || '사용자명';
+                const userEmail = localStorage.getItem('userEmail') || '';
+                const userPhone = localStorage.getItem('userPhone') || '';
+
+                // 마이페이지 프로필 정보 업데이트
+                $('#profileName').text(userName + '님');
+                $('#profileEmail').text(userEmail);
+                $('#profilePhone').text(userPhone);
 
                 if (isLoggedIn) {
                     // 로그인 상태일 때
@@ -863,18 +993,36 @@
             // 헤더 드롭다운의 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                showConfirm('로그아웃하시겠습니까?', function() {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    window.location.href = '/';
+                }, '로그아웃');
             });
 
             // 본문 로그아웃 버튼 클릭 이벤트
             $('.mypage_logout_btn').on('click', function() {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                showConfirm('로그아웃하시겠습니까?', function() {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    window.location.href = '/';
+                }, '로그아웃');
+            });
+
+            // 확인 모달 버튼 클릭 이벤트
+            $('#confirmOkBtn').click(function() {
+                $('#confirmModal').removeClass('show');
+                if (confirmCallback) confirmCallback();
+                confirmCallback = null;
+            });
+
+            // 모달 외부 클릭 시 닫기
+            $('.logout_modal_wrap').click(function(e) {
+                if ($(e.target).hasClass('logout_modal_wrap')) {
+                    closeConfirmModal();
+                }
             });
 
             // 회원 탈퇴 모달 관련 함수
@@ -888,15 +1036,47 @@
                 $('body').css('overflow', '');
             }
 
-            function handleWithdraw() {
-                // 모든 localStorage 데이터 삭제
-                localStorage.clear();
-                
-                // 회원탈퇴 완료 알림
-                alert('회원탈퇴가 완료되었습니다');
-                
-                // 메인 페이지로 이동
-                window.location.href = '../index.html';
+            async function handleWithdraw() {
+                const token = localStorage.getItem('accessToken');
+
+                if (!token) {
+                    alert('로그인이 필요합니다.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/users/withdraw', {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // 모든 localStorage 데이터 삭제
+                        localStorage.clear();
+
+                        // 회원탈퇴 완료 알림
+                        alert('회원탈퇴가 완료되었습니다.');
+
+                        // 메인 페이지로 이동
+                        window.location.href = '/';
+                    } else {
+                        // 관리자 탈퇴 방지 등 에러 처리
+                        if (result.code === 'ADMIN_CANNOT_WITHDRAW') {
+                            alert('관리자 계정은 탈퇴할 수 없습니다.');
+                        } else {
+                            alert(result.message || '회원탈퇴에 실패했습니다.');
+                        }
+                    }
+                } catch (error) {
+                    console.error('회원탈퇴 오류:', error);
+                    alert('회원탈퇴 처리 중 오류가 발생했습니다.');
+                }
             }
 
             // 회원 탈퇴 버튼 클릭 이벤트 - 모달 표시

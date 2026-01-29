@@ -148,6 +148,11 @@
             }
         }
         
+        /* 드롭다운 메뉴 기본 숨김 */
+        .head_menu_down_menu {
+            display: none;
+        }
+
         /* 네비게이션 메뉴 hover 스타일 */
         .head_menu > ul > li > a.pc:hover,
         .head_menu > ul > li.check > a.pc,
@@ -155,14 +160,28 @@
             background: #D95B3B !important;
             color: #ffffff !important;
         }
-        
+
         /* 드롭다운 서브메뉴 hover 스타일 */
         .head_menu_down_menu a:hover,
         .head_menu_down_menu li:hover > a {
             background: #D95B3B !important;
             color: #ffffff !important;
         }
-        
+
+        /* 체크박스 색상 변경 */
+        .checkbox input[type="checkbox"]:checked + .check_mark,
+        .checkbox input[type="checkbox"]:checked ~ .check_mark {
+            background-color: #D95B3B !important;
+            border-color: #D95B3B !important;
+        }
+        .checkbox input[type="checkbox"]:checked + .check_mark::after,
+        .checkbox input[type="checkbox"]:checked ~ .check_mark::after {
+            border-color: #fff !important;
+        }
+        .checkbox:hover .check_mark {
+            border-color: #D95B3B !important;
+        }
+
         /* 모바일 메뉴 오버레이 */
         .mobile_menu_overlay {
             position: fixed;
@@ -279,6 +298,21 @@
                 flex: none;
             }
         }
+
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.5) !important; backdrop-filter: blur(4px); z-index: 10000 !important; display: none !important; align-items: center !important; justify-content: center !important; padding: 20px !important; margin: 0 !important; }
+        .logout_modal_wrap.show { display: flex !important; }
+        .logout_modal_content { background: #fff !important; width: 100% !important; max-width: 380px !important; border-radius: 16px !important; padding: 32px !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important; animation: logoutModalSlideIn 0.3s ease; text-align: center !important; margin: 0 auto !important; }
+        @keyframes logoutModalSlideIn { from { opacity: 0; transform: scale(0.9) translateY(-20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .logout_modal_header { display: flex !important; justify-content: center !important; align-items: center !important; margin-bottom: 16px !important; }
+        .logout_modal_title { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
+        .logout_modal_text { font-size: 15px !important; color: #6B7280 !important; margin-bottom: 24px !important; line-height: 1.6 !important; }
+        .logout_modal_actions { display: flex !important; gap: 12px !important; justify-content: center !important; }
+        .logout_modal_btn { flex: 1 !important; padding: 14px !important; border: none !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.2s !important; }
+        .logout_modal_btn.cancel { background: #F3F4F6 !important; color: #6B7280 !important; }
+        .logout_modal_btn.cancel:hover { background: #E5E7EB !important; }
+        .logout_modal_btn.danger { background: #EF4444 !important; color: #fff !important; }
+        .logout_modal_btn.danger:hover { background: #DC2626 !important; }
     </style>
     
     <!-- JavaScript -->
@@ -293,7 +327,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -301,49 +335,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
-                            <a class="m head_menu_down">메가 스토리</a>
+                            <a href="/about/brand" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="/about/brand">브랜드</a></li>
+                                    <li><a href="/about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="drink.html" class="pc">메뉴소개</a>
-                            <a class="m head_menu_down">메뉴소개</a>
+                            <a href="/menu/drink" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="drink.html">음료</a></li>
+                                    <li><a href="/menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="/about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="/about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="/bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="/bbs/notice">공지사항</a></li>
+                                    <li><a href="/bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="/bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="/bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -355,7 +389,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="/order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -364,7 +398,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="/login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -377,8 +411,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -553,64 +587,37 @@
                         </div>
                         <div class="checkbox_wrap list_checkbox">
                             <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="1">
+                                <input type="checkbox" id="" name="list_checkbox" value="커피/라떼">
                                 <span class="check_mark"></span>
                                 <div class="checkbox_text">
-                                    커피
+                                    커피/라떼
                                 </div>
                             </label>
                         </div>
                         <div class="checkbox_wrap list_checkbox">
                             <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="2">
+                                <input type="checkbox" id="" name="list_checkbox" value="스무디">
+                                <span class="check_mark"></span>
+                                <div class="checkbox_text">
+                                    스무디
+                                </div>
+                            </label>
+                        </div>
+                        <div class="checkbox_wrap list_checkbox">
+                            <label class="checkbox">
+                                <input type="checkbox" id="" name="list_checkbox" value="에이드">
+                                <span class="check_mark"></span>
+                                <div class="checkbox_text">
+                                    에이드
+                                </div>
+                            </label>
+                        </div>
+                        <div class="checkbox_wrap list_checkbox">
+                            <label class="checkbox">
+                                <input type="checkbox" id="" name="list_checkbox" value="티">
                                 <span class="check_mark"></span>
                                 <div class="checkbox_text">
                                     티
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="3">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    에이드&주스
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="4">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    스무디&프라페
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="5">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    디카페인
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="6">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    음료
-                                </div>
-                            </label>
-                        </div>
-                        <div class="checkbox_wrap list_checkbox">
-                            <label class="checkbox">
-                                <input type="checkbox" id="" name="list_checkbox" value="9">
-                                <span class="check_mark"></span>
-                                <div class="checkbox_text">
-                                    신상품
                                 </div>
                             </label>
                         </div>
@@ -638,37 +645,6 @@
                         </div>
                         <div class="cont_gallery_list cont_gallery_list2 cont_list cont_list4 cont_list_m cont_list_m2">
                             <ul id="menu_list">
-                                <li data-category="6,9">
-                                    <a href="drink_detail.html">
-                                        <div class="cont_gallery_list_box">
-                                            <div class="cont_gallery_list_img" style="width: 305px; height: 305px;">
-                                                <div class="cont_gallery_list_label cont_gallery_list_label2">ICE</div>
-                                                <img>
-                                            </div>
-                                            <div class="cont_text_box">
-                                                <div class="cont_text">
-                                                    <div class="cont_text_inner text_wrap cont_text_title">
-                                                        <div class="text text1">
-                                                            <b>감튀스틱 밀크쉐이크</b>
-                                                        </div>
-                                                    </div>
-                                                    <div class="cont_text_inner text_wrap cont_text_info">
-                                                        <div class="text text1">
-                                                            French Fries Milkshake
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="cont_text cont_text_info">
-                                                    <div class="text_wrap">
-                                                        <div class="text text2">
-                                                            부드럽고 달콤한 밀크쉐이크에 바삭한 감자튀김스틱을 더해 짭짤함과 달콤함이 어우러지는 단짠 매력의 겨울시즌 한정 밀크쉐이크
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -695,9 +671,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -721,14 +697,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -750,15 +724,21 @@
             duration: 1200,
         });
 
+        // 페이지 로드 시 모든 드롭다운 숨김 처리
+        $(document).ready(function() {
+            $(".head_menu_down_menu").hide();
+        });
+
         // 헤더 메뉴 호버
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
             if ( $(".head_menu_wrap").is(".right0") == false ) {
                 $(".head_wrap .head .head_menu > ul > li").removeClass("check");
                 $(this).addClass("check");
-                $(".head_menu_down_menu").stop().slideDown("fast");
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
             };
         }, function() {
             $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
         });
 
         $(".head_wrap").hover(function() {
@@ -786,223 +766,47 @@
             }
         });
 
-        // 로그인 드롭다운 토글
-        $(document).ready(function() {
-            $('.head_login_trigger').click(function(e) {
-                e.preventDefault();
-                $('.head_login_wrap').toggleClass('active');
-            });
+        // 모바일 메뉴 오버레이 닫기
+        $(".mobile_menu_close").click(function(){
+            $(".mobile_menu_overlay").removeClass("active");
+            $("body").css("overflow", "");
+            $(".head_wrap").removeClass("head_over");
+            $(".head_menu_wrap").removeClass("right0");
+            $(".mobile_menu_icon").removeClass("mobile_menu_icon_open");
+        });
 
-            // 외부 클릭 시 드롭다운 닫기
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.head_login_wrap').length) {
-                    $('.head_login_wrap').removeClass('active');
-                }
-            });
-
-            // 모바일 메뉴 오버레이 닫기
-            $('.mobile_menu_close').click(function() {
-                $('.mobile_menu_overlay').removeClass('active');
-                $('body').css('overflow', '');
-                $('.head_wrap').removeClass('head_over');
-                $('.head_menu_wrap').removeClass('right0');
-                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-            });
-
-            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
-            $('.mobile_menu_overlay').click(function(e) {
-                if ($(e.target).hasClass('mobile_menu_overlay')) {
-                    $('.mobile_menu_overlay').removeClass('active');
-                    $('body').css('overflow', '');
-                    $('.head_wrap').removeClass('head_over');
-                    $('.head_menu_wrap').removeClass('right0');
-                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
-                }
-            });
-
-            // 화면 회전 시 뷰포트 리셋
-            window.addEventListener('orientationchange', function() {
-                setTimeout(function() {
-                    var viewport = document.querySelector('meta[name="viewport"]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
-                }, 100);
-            });
-
-            // 카테고리 필터 및 검색 기능
-            // 카테고리 필터 스타일 추가
-            $('<style>').prop('type', 'text/css').html(`
-                /* 체크박스 스타일 - 배경색 없이 깔끔하게 */
-                .list_checkbox_wrap .checkbox {
-                    display: flex;
-                    align-items: center;
-                    padding: 10px 15px;
-                    margin-bottom: 8px;
-                    border-radius: 6px;
-                    transition: background-color 0.2s;
-                    cursor: pointer;
-                }
-                .list_checkbox_wrap .checkbox:hover {
-                    background-color: #f5f5f5;
-                }
-                .list_checkbox_wrap .checkbox input[type="checkbox"] {
-                    display: none;
-                }
-                .list_checkbox_wrap .check_mark {
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border: 2px solid #ddd;
-                    border-radius: 4px;
-                    margin-right: 12px;
-                    position: relative;
-                    flex-shrink: 0;
-                    transition: all 0.2s;
-                }
-                .list_checkbox_wrap .checkbox input[type="checkbox"]:checked + .check_mark {
-                    background-color: #D95B3B;
-                    border-color: #D95B3B;
-                }
-                .list_checkbox_wrap .checkbox input[type="checkbox"]:checked + .check_mark::after {
-                    content: '';
-                    position: absolute;
-                    left: 6px;
-                    top: 2px;
-                    width: 6px;
-                    height: 10px;
-                    border: solid #fff;
-                    border-width: 0 2px 2px 0;
-                    transform: rotate(45deg);
-                }
-                .list_checkbox_wrap .checkbox_text {
-                    font-size: 14px;
-                    color: #333;
-                    flex: 1;
-                }
-                .menu_item_hidden {
-                    display: none !important;
-                }
-                #menuSearchInput:focus {
-                    outline: none;
-                    border-color: #D95B3B;
-                }
-                #menuSearchBtn:hover {
-                    color: #D95B3B;
-                }
-            `).appendTo('head');
-
-            // 통합 필터 적용 함수 (카테고리 + 검색)
-            function applyFilters() {
-                const searchText = $('#menuSearchInput').val().trim().toLowerCase();
-                const checkedCategories = [];
-                const isAllSelected = $('input[name="list_checkbox_all"]').prop('checked');
-                
-                // 선택된 카테고리 수집
-                if (!isAllSelected) {
-                    $('input[name="list_checkbox"]:checked').each(function() {
-                        checkedCategories.push($(this).val());
-                    });
-                }
-                
-                let visibleCount = 0;
-                
-                // 각 메뉴 아이템에 필터 적용
-                $('#menu_list > li').each(function() {
-                    let showItem = true;
-                    
-                    // 카테고리 필터 체크
-                    if (!isAllSelected) {
-                        if (checkedCategories.length === 0) {
-                            showItem = false;
-                        } else {
-                            const itemCategories = $(this).data('category');
-                            if (itemCategories) {
-                                const categories = itemCategories.toString().split(',');
-                                const hasCategoryMatch = categories.some(function(cat) {
-                                    return checkedCategories.indexOf(cat.trim()) !== -1;
-                                });
-                                if (!hasCategoryMatch) {
-                                    showItem = false;
-                                }
-                            } else {
-                                showItem = false;
-                            }
-                        }
-                    }
-                    
-                    // 검색 필터 체크
-                    if (showItem && searchText) {
-                        const menuName = $(this).find('.cont_text_title b').text().toLowerCase();
-                        const menuNameEn = $(this).find('.cont_text_info .text1').text().toLowerCase();
-                        const menuDesc = $(this).find('.cont_text_info .text2').text().toLowerCase();
-                        
-                        const hasSearchMatch = menuName.indexOf(searchText) !== -1 || 
-                                             menuNameEn.indexOf(searchText) !== -1 ||
-                                             menuDesc.indexOf(searchText) !== -1;
-                        
-                        if (!hasSearchMatch) {
-                            showItem = false;
-                        }
-                    }
-                    
-                    // 표시/숨김 처리
-                    if (showItem) {
-                        $(this).removeClass('menu_item_hidden').show();
-                        visibleCount++;
-                    } else {
-                        $(this).addClass('menu_item_hidden').hide();
-                    }
-                });
-                
-                // 검색 결과 없음 메시지 표시/숨김
-                if (visibleCount === 0) {
-                    $('#menuNoResult').show();
-                } else {
-                    $('#menuNoResult').hide();
-                }
-                
-                // 메뉴 개수 업데이트
-                $('#menuCount').text(visibleCount);
+        // 오버레이 배경 클릭 시 닫기
+        $(".mobile_menu_overlay").click(function(e) {
+            if ($(e.target).is(".mobile_menu_overlay")) {
+                $(this).removeClass("active");
+                $("body").css("overflow", "");
             }
+        });
 
-            // 전체 선택 체크박스
-            $('input[name="list_checkbox_all"]').on('change', function() {
-                const isChecked = $(this).prop('checked');
-                
-                if (isChecked) {
-                    // 전체 선택 시 모든 카테고리 체크박스 해제
-                    $('input[name="list_checkbox"]').prop('checked', false);
-                }
-                
-                // 통합 필터 적용
-                applyFilters();
-            });
+        // 로그인 드롭다운 메뉴 토글
+        $(".head_login_trigger").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(".head_login_wrap").toggleClass("active");
+        });
 
-            // 개별 카테고리 체크박스
-            $('input[name="list_checkbox"]').on('change', function() {
-                const isChecked = $(this).prop('checked');
-                
-                // 전체 선택 체크박스 해제
-                $('input[name="list_checkbox_all"]').prop('checked', false);
-                
-                // 통합 필터 적용
-                applyFilters();
-            });
+        // 외부 클릭 시 드롭다운 닫기
+        $(document).click(function(e) {
+            if (!$(e.target).closest(".head_login_wrap").length) {
+                $(".head_login_wrap").removeClass("active");
+            }
+        });
 
-            // 검색 입력 이벤트
-            $('#menuSearchInput').on('keyup', function() {
-                applyFilters();
-            });
+        const API_BASE_URL = '/api/menu/drinks';
 
-            // 검색 버튼 클릭 이벤트
-            $('#menuSearchBtn').on('click', function() {
-                applyFilters();
-            });
+        let currentPage = 1;
+        const PAGE_SIZE = 20;
+        let searchKeyword = "";
 
-            // 페이지 로드 시 초기화
-            // 초기 필터 적용
-            applyFilters();
+        let selectedCategories = []; // 배열로 변경
 
-            // 로그인 상태 체크 및 UI 업데이트
+        $(document).ready(function () {
+            // 로그인 상태 체크 함수
             function checkLoginStatus() {
                 const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
                 const userName = localStorage.getItem('userName') || '사용자명';
@@ -1019,19 +823,314 @@
                 }
             }
 
-            // 페이지 로드 시 로그인 상태 체크
+            // 로그인 상태 체크
             checkLoginStatus();
 
-            // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+            // 최초 로딩: 전체 메뉴 1페이지
+            fetchMenuList(1);
+
+            // 검색
+            $('#menuSearchInput').on('keyup', function () {
+                searchKeyword = $(this).val().trim();
+                currentPage = 1;
+                fetchMenuList(1);
+            });
+
+            $('#menuSearchBtn').on('click', function () {
+                searchKeyword = $('#menuSearchInput').val().trim();
+                currentPage = 1;
+                fetchMenuList(1);
+            });
+
+            /* ===============================
+               전체 상품보기
+            =============================== */
+            $('input[name="list_checkbox_all"]').on('change', function () {
+                if ($(this).prop('checked')) {
+                    $('input[name="list_checkbox"]').prop('checked', false);
+                    selectedCategories = [];
+                    currentPage = 1;
+                    fetchMenuList(1);
+                }
+            });
+
+            /* ===============================
+               카테고리 선택 (하나만 선택 가능)
+            =============================== */
+            $('input[name="list_checkbox"]').on('change', function () {
+                if ($(this).prop('checked')) {
+                    // 다른 모든 체크박스 해제
+                    $('input[name="list_checkbox"]').not(this).prop('checked', false);
+                    $('input[name="list_checkbox_all"]').prop('checked', false);
+
+                    selectedCategories = [$(this).val()];
+                } else {
+                    selectedCategories = [];
+                    // 아무것도 선택 안 했으면 전체 선택
+                    $('input[name="list_checkbox_all"]').prop('checked', true);
+                }
+
+                currentPage = 1;
+                fetchMenuList(1);
             });
         });
+
+
+        /**
+         * 1. 메뉴 목록 API 호출
+         */
+        function fetchMenuList(page = 1) {
+            const params = new URLSearchParams();
+            params.set("page", page);
+            params.set("limit", PAGE_SIZE);
+
+            // ✅ 다중 카테고리 처리
+            selectedCategories.forEach(cat => {
+                params.append("category", cat);
+            });
+
+            // ✅ 검색어
+            if (searchKeyword && searchKeyword.length > 0) {
+                params.set("keyword", searchKeyword);
+            }
+
+            fetch(`${API_BASE_URL}?${params.toString()}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('메뉴 목록 조회 실패');
+                    return res.json();
+                })
+                .then(data => {
+                    renderMenuList(data.content || []);
+                    renderPagination(data.totalPages, page);
+                    $('#menuCount').text(data.totalElements ?? 0);
+                    $('#menuNoResult').toggle((data.content || []).length === 0);
+                })
+                .catch(err => {
+                    console.error(err);
+                    $('#menuNoResult').show();
+                });
+        }
+
+
+
+        /**
+         * 2. 메뉴 리스트 렌더링
+         */
+        function renderMenuList(list) {
+            const $menuList = $('#menu_list');
+            $menuList.empty();
+
+            list.forEach(menu => {
+
+                /* ===============================
+                   카테고리 처리 (문자열 기준)
+                   DB 예:
+                   - "커피"
+                   - "커피,디카페인"
+                   - ["커피", "신상품"]
+                =============================== */
+                let categories = '';
+
+                if (Array.isArray(menu.categories)) {
+                    categories = menu.categories.join(',');
+                }
+                else if (typeof menu.categories === 'string') {
+                    categories = menu.categories;
+                }
+                else if (typeof menu.category === 'string') {
+                    categories = menu.category;
+                }
+
+                /* ===============================
+                   이미지 경로
+                =============================== */
+                const imagePath = `/src/tem/${menu.menuName}.png`;
+
+                const html = `
+            <li data-category="${categories}">
+                <a href="/menu/drink-detail?menuCode=${menu.menuCode}">
+                    <div class="cont_gallery_list_box">
+                        <div class="cont_gallery_list_img" style="width:305px;height:305px;">
+                            ${
+                    menu.temperature
+                        ? `<div class="cont_gallery_list_label cont_gallery_list_label2">${menu.temperature}</div>`
+                        : ''
+                }
+                            <img src="${imagePath}" alt="${menu.menuName}" onerror="this.src='/src/tem/no-image.png'">
+                        </div>
+                        <div class="cont_text_box">
+                            <div class="cont_text">
+                                <div class="cont_text_inner cont_text_title">
+                                    <b>${menu.menuName}</b>
+                                </div>
+                                <div class="cont_text_inner cont_text_info">
+                                    <div class="text text1">
+                                        ${menu.menuNameEn || ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cont_text cont_text_info">
+                                <div class="text text2">
+                                    ${menu.description || ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+        `;
+
+                $menuList.append(html);
+            });
+
+            /* ===============================
+               메뉴 개수 갱신
+            =============================== */
+            $('#menuCount').text(list.length);
+
+            // ⭐ 렌더링 후 필터 다시 적용
+            if (typeof applyFilters === 'function') {
+                applyFilters();
+            }
+        }
+
+        function renderPagination(totalPages, current) {
+            const $pager = $('.board_page ul');
+            $pager.empty();
+
+            if (!totalPages || totalPages <= 1) return;
+
+            for (let i = 1; i <= totalPages; i++) {
+                const active = i === current ? 'board_page_check' : '';
+                $pager.append(`
+            <li class="${active}">
+                <a href="#" data-page="${i}">
+                    <span>${i}</span>
+                </a>
+            </li>
+        `);
+            }
+
+            $('.board_page a').on('click', function (e) {
+                e.preventDefault();
+                const page = Number($(this).data('page'));
+                currentPage = page;
+                fetchMenuList(page);
+            });
+        }
+
+
+
+        /**
+         * 3. 카테고리 + 검색 통합 필터
+         */
+        function applyFilters() {
+            const searchText = $('#menuSearchInput').val().trim().toLowerCase();
+            const checkedCategories = [];
+            const isAll = $('input[name="list_checkbox_all"]').prop('checked');
+
+            if (!isAll) {
+                $('input[name="list_checkbox"]:checked').each(function () {
+                    checkedCategories.push($(this).val());
+                });
+            }
+
+            let visibleCount = 0;
+
+            $('#menu_list > li').each(function () {
+                let show = true;
+
+                // 카테고리 필터
+                if (!isAll) {
+                    if (checkedCategories.length === 0) {
+                        show = false;
+                    } else {
+                        const itemCats = $(this).data('category');
+                        if (!itemCats) {
+                            show = false;
+                        } else {
+                            const arr = itemCats.toString().split(',');
+                            show = arr.some(c => checkedCategories.includes(c.trim()));
+                        }
+                    }
+                }
+
+                // 검색 필터
+                if (show && searchText) {
+                    const name = $(this).find('b').text().toLowerCase();
+                    const desc = $(this).find('.text2').text().toLowerCase();
+                    if (!name.includes(searchText) && !desc.includes(searchText)) {
+                        show = false;
+                    }
+                }
+
+                if (show) {
+                    $(this).show();
+                    visibleCount++;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            $('#menuCount').text(visibleCount);
+            visibleCount === 0 ? $('#menuNoResult').show() : $('#menuNoResult').hide();
+        }
+
+        // 로그인 드롭다운 메뉴 토글
+        $(document).on('click', '.head_login_trigger', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('.head_login_wrap').toggleClass('active');
+        });
+
+        // 외부 클릭 시 드롭다운 닫기
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.head_login_wrap').length) {
+                $('.head_login_wrap').removeClass('active');
+            }
+        });
+
+        // 로그아웃 버튼 클릭 이벤트
+        $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            openLogoutModal();
+        });
+
+        // 로그아웃 모달 열기
+        function openLogoutModal() {
+            $('.logout_modal_wrap').addClass('show');
+            $('body').css('overflow', 'hidden');
+        }
+
+        // 로그아웃 모달 닫기
+        function closeLogoutModal() {
+            $('.logout_modal_wrap').removeClass('show');
+            $('body').css('overflow', '');
+        }
+
+        // 로그아웃 확인
+        function confirmLogout() {
+            closeLogoutModal();
+            window.location.href = '/';
+        }
     </script>
+
+    <!-- 로그아웃 확인 모달 -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title">로그아웃</div>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">확인</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
 

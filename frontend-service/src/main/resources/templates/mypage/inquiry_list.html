@@ -405,6 +405,45 @@
                 padding: 40px 40px 40px;
             }
         }
+
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .logout_modal_wrap.show { display: flex !important; }
+        .logout_modal_content {
+            background: #fff !important;
+            padding: 32px !important;
+            border-radius: 16px !important;
+            width: 90% !important;
+            max-width: 340px !important;
+            text-align: center !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+            animation: logoutModalSlideIn 0.3s ease !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header { display: flex !important; justify-content: center !important; align-items: center !important; margin-bottom: 16px !important; }
+        .logout_modal_title { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
+        .logout_modal_text { font-size: 15px !important; color: #6B7280 !important; margin-bottom: 24px !important; line-height: 1.6 !important; }
+        .logout_modal_actions { display: flex !important; gap: 12px !important; justify-content: center !important; }
+        .logout_modal_btn { flex: 1 !important; padding: 14px !important; border: none !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.2s !important; }
+        .logout_modal_btn.cancel { background: #F3F4F6 !important; color: #6B7280 !important; }
+        .logout_modal_btn.cancel:hover { background: #E5E7EB !important; }
+        .logout_modal_btn.danger { background: #EF4444 !important; color: #fff !important; }
+        .logout_modal_btn.danger:hover { background: #DC2626 !important; }
     </style>
     
     <!-- JavaScript -->
@@ -419,7 +458,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -427,49 +466,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a href="../about/brand" class="pc">메가 스토리</a>
                             <a class="m head_menu_down">메가 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/brand.html">브랜드</a></li>
-                                    <li><a href="../about/bi.html">BI</a></li>
+                                    <li><a href="../about/brand">브랜드</a></li>
+                                    <li><a href="../about/bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a href="../menu/drink" class="pc">메뉴소개</a>
                             <a class="m head_menu_down">메뉴소개</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../about/map.html" class="pc">매장</a>
+                            <a href="../about/map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                    <li><a href="../about/map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="../bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="../bbs/notice">공지사항</a></li>
+                                    <li><a href="../bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="../bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="../bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -481,7 +520,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -490,7 +529,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -503,9 +542,9 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
-                                    <li><a href="#">로그아웃</a></li>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
+                                    <li><a href="#" class="logout_link">로그아웃</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -535,33 +574,33 @@
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">메가 스토리</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/brand.html">브랜드</a>
-                        <a href="../about/bi.html">BI</a>
+                        <a href="../about/brand">브랜드</a>
+                        <a href="../about/bi">BI</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">메뉴소개</div>
                     <div class="mobile_menu_sub">
-                        <a href="../menu/drink.html">음료</a>
+                        <a href="../menu/drink">음료</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">매장</div>
                     <div class="mobile_menu_sub">
-                        <a href="../about/map.html">오시는 길</a>
+                        <a href="../about/map">오시는 길</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">소식</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/notice.html">공지사항</a>
-                        <a href="../bbs/faq.html">FAQ</a>
+                        <a href="../bbs/notice">공지사항</a>
+                        <a href="../bbs/faq">FAQ</a>
                     </div>
                 </div>
                 <div class="mobile_menu_item">
                     <div class="mobile_menu_main">이벤트</div>
                     <div class="mobile_menu_sub">
-                        <a href="../bbs/event.html">이벤트</a>
+                        <a href="../bbs/event">이벤트</a>
                     </div>
                 </div>
             </div>
@@ -589,7 +628,7 @@
                             <li>
                                 <div class="board_search_wrap">
                                     <div class="board_search">
-                                        <form method="GET">
+                                        <form onsubmit="searchInquiry(); return false;">
                                             <ul>
                                                 <li class="board_search_select">
                                                     <div class="input_select_wrap input_wrap2">
@@ -602,7 +641,7 @@
                                                 <li>
                                                     <div class="input_text_wrap input_wrap2">
                                                         <label>
-                                                            <input type="text" name="inquiry_search" id="inquiry_search" placeholder="검색어를 입력하세요" required>
+                                                            <input type="text" name="inquiry_search" id="inquiry_search" placeholder="검색어를 입력하세요">
                                                         </label>
                                                     </div>
                                                 </li>
@@ -619,11 +658,11 @@
                         </ul>
                     </div>
                     <div class="cont_text_wrap" style="text-align: right; margin-bottom: 30px;">
-                        <a href="/mypage/inquiry.html" class="btn btn1" style="padding: 15px 40px; font-size: 16px; font-weight: 700; min-width: 150px;">문의하기</a>
+                        <a href="/mypage/inquiry" class="btn btn1" style="padding: 15px 40px; font-size: 16px; font-weight: 700; min-width: 150px;">문의하기</a>
                     </div>
                     <div class="cont_text_wrap">
                         <div class="board_list">
-                            <table>
+                            <table id="inquiryTable">
                                 <colgroup>
                                     <col class="board_w75 board_pc">
                                     <col>
@@ -638,38 +677,10 @@
                                         <th>날짜</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="inquiryListBody">
+                                    <!-- API에서 동적으로 로드됨 -->
                                     <tr>
-                                        <td class="board_pc">2</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="inquiry_detail.html?inquiryId=2&title=배송 문의드립니다&content=주문한 상품의 배송 일정을 확인하고 싶습니다.%0A%0A주문번호: ORD-2024-001%0A배송 예정일이 언제인지 알려주시면 감사하겠습니다.&status=pending&createdAt=2024-01-15">
-                                                        배송 문의드립니다
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">
-                                            <span style="padding: 4px 12px; background: #fff3cd; color: #856404; border-radius: 12px; font-size: 12px; font-weight: 600;">답변 대기</span>
-                                        </td>
-                                        <td>2024-01-15</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="board_pc">1</td>
-                                        <td>
-                                            <div class="text_wrap">
-                                                <div class="text">
-                                                    <a href="inquiry_detail.html?inquiryId=1&title=회원 정보 수정 문의&content=회원 정보를 수정하고 싶은데 방법을 알려주세요.%0A%0A특히 이메일 주소와 전화번호를 변경하고 싶습니다.&answer=안녕하세요. 회원 정보 수정은 마이페이지에서 가능합니다.%0A%0A1. 마이페이지 접속%0A2. 정보 수정 메뉴 클릭%0A3. 수정할 정보 입력 후 저장%0A%0A추가 문의사항이 있으시면 언제든지 연락주세요.&status=answered&createdAt=2024-01-10">
-                                                        회원 정보 수정 문의
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="board_pc">
-                                            <span style="padding: 4px 12px; background: #d4edda; color: #155724; border-radius: 12px; font-size: 12px; font-weight: 600;">답변 완료</span>
-                                        </td>
-                                        <td>2024-01-10</td>
+                                        <td colspan="4" style="text-align:center;padding:50px;">로딩 중...</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -678,14 +689,8 @@
                     <div class="cont_text_wrap">
                         <div class="board_page_wrap">
                             <div class="board_page">
-                                <ul>
-                                    <li><a><span>처음</span></a></li>
-                                    <li class="board_page_check"><a><span>1</span></a></li>
-                                    <li><a href="#"><span>2</span></a></li>
-                                    <li><a href="#"><span>3</span></a></li>
-                                    <li><a href="#"><span>4</span></a></li>
-                                    <li><a href="#"><span>다음</span></a></li>
-                                    <li><a href="#"><span>마지막</span></a></li>
+                                <ul id="inquiryPagination">
+                                    <!-- 동적으로 로드됨 -->
                                 </ul>
                             </div>
                         </div>
@@ -700,9 +705,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -726,14 +731,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 앤하우스</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -754,6 +757,171 @@
         AOS.init({
             duration: 1200,
         });
+
+        // 현재 페이지와 검색어 저장
+        var currentPage = 0;
+        var currentKeyword = '';
+        var currentSearchCategory = 'title';
+
+        // 문의 목록 로드 함수 (전역 스코프)
+        function loadInquiries(page, keyword, searchCategory) {
+            page = page || 0;
+            keyword = keyword || '';
+            searchCategory = searchCategory || 'title';
+
+            currentPage = page;
+            currentKeyword = keyword;
+            currentSearchCategory = searchCategory;
+
+            var accessToken = localStorage.getItem('accessToken');
+            var userId = localStorage.getItem('userId');
+
+            if (!accessToken || !userId) {
+                alert('로그인이 필요합니다.');
+                window.location.href = '/login';
+                return;
+            }
+
+            var url = '/api/inquiries/my?page=' + page + '&size=10';
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+                .then(function(response) {
+                    if (response.status === 401) {
+                        alert('로그인이 필요합니다.');
+                        window.location.href = '/login';
+                        throw new Error('Unauthorized');
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    // 테이블 tbody 초기화
+                    var tbody = $('#inquiryListBody');
+                    tbody.empty();
+
+                    // 문의 목록 렌더링
+                    if (data.inquiries && data.inquiries.length > 0) {
+                        // 클라이언트 측에서 키워드 필터링
+                        var filteredInquiries = data.inquiries;
+                        if (keyword) {
+                            filteredInquiries = data.inquiries.filter(function(inquiry) {
+                                if (searchCategory === 'title') {
+                                    return inquiry.title && inquiry.title.toLowerCase().includes(keyword.toLowerCase());
+                                } else if (searchCategory === 'content') {
+                                    return inquiry.content && inquiry.content.toLowerCase().includes(keyword.toLowerCase());
+                                }
+                                return true;
+                            });
+                        }
+
+                        if (filteredInquiries.length > 0) {
+                            filteredInquiries.forEach(function(inquiry, index) {
+                                var inquiryId = inquiry.inquiryId || inquiry.id;
+                                var displayNum = (data.totalItems || 0) - (page * 10) - index;
+
+                                var statusHtml = getStatusHtml(inquiry.status);
+
+                                var row = '<tr>' +
+                                    '<td class="board_pc">' + displayNum + '</td>' +
+                                    '<td>' +
+                                    '<div class="text_wrap">' +
+                                    '<div class="text">' +
+                                    '<a href="/mypage/inquiry_detail?id=' + inquiryId + '">' +
+                                    escapeHtml(inquiry.title) +
+                                    '</a>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</td>' +
+                                    '<td class="board_pc">' + statusHtml + '</td>' +
+                                    '<td>' + formatDate(inquiry.createdAt) + '</td>' +
+                                    '</tr>';
+                                tbody.append(row);
+                            });
+                        } else {
+                            tbody.append('<tr><td colspan="4" style="text-align:center;padding:50px;">검색 결과가 없습니다.</td></tr>');
+                        }
+                    } else {
+                        tbody.append('<tr><td colspan="4" style="text-align:center;padding:50px;">등록된 문의가 없습니다.</td></tr>');
+                    }
+
+                    // 페이지네이션 렌더링
+                    renderPagination(data.currentPage, data.totalPages);
+                })
+                .catch(function(error) {
+                    if (error.message !== 'Unauthorized') {
+                        console.error('문의 목록 로드 오류:', error);
+                        $('#inquiryListBody').html('<tr><td colspan="4" style="text-align:center;padding:50px;color:#dc3545;">문의 목록을 불러오는데 실패했습니다.</td></tr>');
+                    }
+                });
+        }
+
+        // 상태 HTML 반환 함수
+        function getStatusHtml(status) {
+            if (status === 'ANSWERED' || status === 'answered') {
+                return '<span style="padding: 4px 12px; background: #d4edda; color: #155724; border-radius: 12px; font-size: 12px; font-weight: 600;">답변 완료</span>';
+            } else if (status === 'COMPLETED' || status === 'completed') {
+                return '<span style="padding: 4px 12px; background: #e2e3e5; color: #383d41; border-radius: 12px; font-size: 12px; font-weight: 600;">처리 완료</span>';
+            } else {
+                return '<span style="padding: 4px 12px; background: #fff3cd; color: #856404; border-radius: 12px; font-size: 12px; font-weight: 600;">답변 대기</span>';
+            }
+        }
+
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                var date = new Date(dateStr);
+                return date.getFullYear() + '-' +
+                    String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(date.getDate()).padStart(2, '0');
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        // 검색 함수
+        function searchInquiry() {
+            var keyword = $('#inquiry_search').val().trim();
+            var searchCategory = $('#inquiry_search_category').val();
+            // 빈 검색어는 전체 목록 표시
+            loadInquiries(0, keyword, searchCategory);
+        }
+
+        // 페이지네이션 렌더링 함수
+        function renderPagination(currentPageNum, totalPages) {
+            var paginationUl = $('#inquiryPagination');
+            paginationUl.empty();
+
+            if (totalPages <= 1) return;
+
+            // 처음 버튼
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadInquiries(0)"><span>처음</span></a></li>');
+
+            // 페이지 번호
+            for (var i = 0; i < totalPages; i++) {
+                if (i === currentPageNum) {
+                    paginationUl.append('<li class="board_page_check"><a><span>' + (i + 1) + '</span></a></li>');
+                } else {
+                    paginationUl.append('<li><a href="javascript:void(0)" onclick="loadInquiries(' + i + ')"><span>' + (i + 1) + '</span></a></li>');
+                }
+            }
+
+            // 마지막 버튼
+            paginationUl.append('<li><a href="javascript:void(0)" onclick="loadInquiries(' + (totalPages - 1) + ')"><span>마지막</span></a></li>');
+        }
 
         // 헤더 메뉴 호버
         $(".head_wrap .head .head_menu > ul > li").hover(function() {
@@ -802,14 +970,26 @@
                     $('.head_login_state_guest').hide();
                     $('.head_login_state_member').show();
                     $('.head_user_name').text(userName + '님');
+
+                    // 로그인 상태이면 문의 목록 로드
+                    loadInquiries(0);
                 } else {
                     // 비로그인 상태일 때 - 로그인 페이지로 리다이렉트
-                    window.location.href = '../login.html';
+                    alert('로그인이 필요합니다.');
+                    window.location.href = '/login';
                 }
             }
 
             // 페이지 로드 시 로그인 상태 체크
             checkLoginStatus();
+
+            // 검색 폼 제출 처리
+            $('.board_search form').on('submit', function(e) {
+                e.preventDefault();
+                var keyword = $('#inquiry_search').val();
+                var searchCategory = $('#inquiry_search_category').val();
+                loadInquiries(0, keyword, searchCategory);
+            });
 
             // 로그인 상태일 때 드롭다운 토글 기능
             $(document).on('click', '.head_login_state_member .head_login_trigger', function(e) {
@@ -827,14 +1007,9 @@
             });
 
             // 로그아웃 버튼 클릭 이벤트
-            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+            $(document).on('click', '.logout_link', function(e) {
                 e.preventDefault();
-                if (confirm('로그아웃 하시겠습니까?')) {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('userName');
-                    localStorage.removeItem('userRole');
-                    window.location.href = '../login.html';
-                }
+                openLogoutModal();
             });
 
             // 모바일 메뉴 오버레이 닫기
@@ -870,7 +1045,48 @@
         $('.inquiry_list_back').click(function() {
             history.back();
         });
+
+        // 로그아웃 모달 함수
+        function openLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('accessToken');
+            window.location.href = '/';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
     </script>
+
+    <!-- Logout Modal -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <span class="logout_modal_title">로그아웃</span>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">로그아웃</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 

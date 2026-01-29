@@ -277,7 +277,9 @@
         <!-- 헤더 -->
         <div class="signup_header">
             <div class="signup_logo">
-                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                <a href="/">
+                    <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                </a>
             </div>
         </div>
 
@@ -362,9 +364,9 @@
 
             <!-- 하단 링크 -->
             <div class="signup_links">
-                <a href="login.html">로그인</a>
-                <a href="find_id.html">아이디 찾기</a>
-                <a href="find_password.html">비밀번호 찾기</a>
+                <a href="/login">로그인</a>
+                <a href="/find_id">아이디 찾기</a>
+                <a href="/find_password">비밀번호 찾기</a>
             </div>
         </div>
     </div>
@@ -469,13 +471,14 @@
             // 인증번호 발송 버튼 클릭
             $('#emailSendBtn').on('click', function() {
                 var email = $('#signupEmail').val().trim();
-                
+                var sendBtn = $(this);
+
                 if (!email) {
                     $('#emailError').text('이메일을 입력해주세요').addClass('show');
                     $('#signupEmail').addClass('error').focus();
                     return;
                 }
-                
+
                 // 이메일 형식 검증
                 var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
@@ -483,44 +486,89 @@
                     $('#signupEmail').addClass('error').focus();
                     return;
                 }
-                
+
                 $('#emailError').removeClass('show');
                 $('#signupEmail').removeClass('error');
-                
-                // 임시 인증번호 생성 및 발송
-                authCode = '123456'; // 임시 인증번호
-                emailAuthSent = true;
-                emailAuthVerified = false; // 재발송 시 인증 상태 초기화
-                
-                // 인증번호 발송 알림 (알럿창 제거)
-                // 인증번호는 자동으로 입력됨
-                
-                // 인증번호 입력란 활성화
-                $('#signupEmailCode').prop('disabled', false);
-                $('#emailVerifyBtn').prop('disabled', false);
-                $('#emailCodeInputWrap').removeClass('disabled');
-                $('#signupEmailCode').focus();
-                
-                // 인증 상태 초기화
-                $('#emailCodeError').removeClass('show');
-                $('#emailCodeSuccess').hide();
-                $('#emailVerifiedStatus').hide();
-                $('#signupEmailCode').val('');
-                $('#emailVerifyBtn').text('인증번호 확인');
-                
-                // 발송 버튼 텍스트 변경 및 일시 비활성화
-                $(this).text('재발송').prop('disabled', true);
-                
-                // 3초 후 재발송 버튼 활성화
-                setTimeout(function() {
-                    $('#emailSendBtn').prop('disabled', false);
-                }, 3000);
+
+                // 발송 버튼 비활성화
+                sendBtn.prop('disabled', true).text('발송중...');
+
+                // 서버에 인증번호 발송 요청
+                fetch('/api/auth/email/send-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        purpose: 'register'
+                    })
+                })
+                .then(function(response) {
+                    // 응답 텍스트를 먼저 확인
+                    return response.text().then(function(text) {
+                        var data = {};
+                        try {
+                            data = text ? JSON.parse(text) : {};
+                        } catch (e) {
+                            console.error('JSON 파싱 오류:', e);
+                        }
+
+                        if (!response.ok) {
+                            // 중복 이메일 체크
+                            if (response.status === 409 || data.errorCode === 'DUPLICATE_EMAIL') {
+                                throw new Error('이미 등록된 이메일입니다.');
+                            }
+                            throw new Error(data.message || '인증번호 발송에 실패했습니다.');
+                        }
+                        return data;
+                    });
+                })
+                .then(function(data) {
+                    emailAuthSent = true;
+                    emailAuthVerified = false;
+
+                    // 인증번호 입력란 활성화
+                    $('#signupEmailCode').prop('disabled', false);
+                    $('#emailVerifyBtn').prop('disabled', false);
+                    $('#emailCodeInputWrap').removeClass('disabled');
+                    $('#signupEmailCode').focus();
+
+                    // 인증 상태 초기화
+                    $('#emailCodeError').removeClass('show');
+                    $('#emailCodeSuccess').hide();
+                    $('#emailVerifiedStatus').hide();
+                    $('#signupEmailCode').val('');
+                    $('#emailVerifyBtn').text('인증번호 확인');
+
+                    // 발송 버튼 텍스트 변경
+                    sendBtn.text('재발송');
+
+                    showCustomModal('알림', '인증번호가 발송되었습니다. 이메일을 확인해주세요.');
+
+                    // 3분 후 재발송 버튼 활성화
+                    setTimeout(function() {
+                        sendBtn.prop('disabled', false);
+                    }, 180000);
+                })
+                .catch(function(error) {
+                    console.error('인증번호 발송 오류:', error);
+                    // 중복 이메일인 경우 명확한 메시지 표시
+                    var errorMsg = error.message;
+                    if (errorMsg.includes('이미 등록된') || errorMsg.includes('DUPLICATE')) {
+                        errorMsg = '이미 등록된 이메일입니다.';
+                    }
+                    $('#emailError').text(errorMsg).addClass('show');
+                    sendBtn.prop('disabled', false).text('인증번호 발송');
+                });
             });
 
             // 인증번호 확인 버튼 클릭
             $('#emailVerifyBtn').on('click', function() {
                 var code = $('#signupEmailCode').val().trim();
-                
+                var email = $('#signupEmail').val().trim();
+                var verifyBtn = $(this);
+
                 if (!code) {
                     $('#emailCodeError').text('인증번호를 입력해주세요').addClass('show');
                     $('#emailCodeSuccess').hide();
@@ -528,25 +576,55 @@
                     emailAuthVerified = false;
                     return;
                 }
-                
-                // 인증번호 확인 (임시로 "123456"만 성공)
-                if (code === authCode && authCode === '123456') {
+
+                verifyBtn.prop('disabled', true).text('확인중...');
+
+                // 서버에 인증번호 확인 요청
+                fetch('/api/auth/email/verify-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        verificationCode: code
+                    })
+                })
+                .then(function(response) {
+                    return response.text().then(function(text) {
+                        try {
+                            var data = text ? JSON.parse(text) : {};
+                            if (!response.ok) {
+                                throw new Error(data.message || '인증번호 확인에 실패했습니다');
+                            }
+                            return data;
+                        } catch (e) {
+                            if (!response.ok) {
+                                throw new Error('인증번호 확인에 실패했습니다');
+                            }
+                            return {};
+                        }
+                    });
+                })
+                .then(function(data) {
                     emailAuthVerified = true;
                     $('#emailCodeError').removeClass('show');
                     $('#emailCodeSuccess').show();
                     $('#emailVerifiedStatus').show();
-                    $(this).prop('disabled', true).text('인증완료');
+                    verifyBtn.prop('disabled', true).text('인증완료');
                     $('#signupEmailCode').prop('disabled', true);
                     $('#signupSubmitBtn').prop('disabled', false);
-                    // 커스텀 모달로 인증 완료 표시
                     showCustomModal('인증 완료', '이메일 인증이 완료되었습니다!');
-                } else {
+                })
+                .catch(function(error) {
+                    console.error('인증번호 확인 오류:', error);
                     emailAuthVerified = false;
-                    $('#emailCodeError').text('인증번호가 일치하지 않습니다').addClass('show');
+                    $('#emailCodeError').text(error.message).addClass('show');
                     $('#emailCodeSuccess').hide();
                     $('#emailVerifiedStatus').hide();
                     $('#signupSubmitBtn').prop('disabled', true);
-                }
+                    verifyBtn.prop('disabled', false).text('인증번호 확인');
+                });
             });
             
             // 인증번호 입력란 엔터키 처리
@@ -576,7 +654,7 @@
                 if (!name) {
                     isValid = false;
                     errorMessage = '이름을 입력하세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupName').focus();
                     return false;
                 }
@@ -585,7 +663,7 @@
                 if (!id) {
                     isValid = false;
                     errorMessage = '아이디를 입력하세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupId').focus();
                     return false;
                 }
@@ -593,7 +671,7 @@
                 if (id.length < 4) {
                     isValid = false;
                     errorMessage = '아이디는 4자 이상 입력해주세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupId').focus();
                     return false;
                 }
@@ -602,7 +680,7 @@
                 if (!password) {
                     isValid = false;
                     errorMessage = '비밀번호를 입력하세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupPassword').focus();
                     return false;
                 }
@@ -610,7 +688,7 @@
                 if (password.length < 6) {
                     isValid = false;
                     errorMessage = '비밀번호는 6자 이상 입력해주세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupPassword').focus();
                     return false;
                 }
@@ -619,7 +697,7 @@
                 if (!passwordConfirm) {
                     isValid = false;
                     errorMessage = '비밀번호 확인을 입력하세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupPasswordConfirm').focus();
                     return false;
                 }
@@ -627,7 +705,7 @@
                 if (password !== passwordConfirm) {
                     isValid = false;
                     errorMessage = '비밀번호가 일치하지 않습니다';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupPasswordConfirm').focus();
                     return false;
                 }
@@ -636,7 +714,7 @@
                 if (!email) {
                     isValid = false;
                     errorMessage = '이메일을 입력하세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupEmail').focus();
                     return false;
                 }
@@ -646,7 +724,7 @@
                 if (!emailRegex.test(email)) {
                     isValid = false;
                     errorMessage = '올바른 이메일 형식을 입력해주세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupEmail').focus();
                     return false;
                 }
@@ -655,7 +733,7 @@
                 if (!emailAuthSent) {
                     isValid = false;
                     errorMessage = '인증번호를 발송해주세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#emailSendBtn').focus();
                     return false;
                 }
@@ -663,47 +741,52 @@
                 if (!emailAuthVerified) {
                     isValid = false;
                     errorMessage = '이메일 인증을 완료해주세요';
-                    alert(errorMessage);
+                    showCustomModal('알림', errorMessage);
                     $('#signupEmailCode').focus();
                     return false;
                 }
                 
                 // 모든 검증 통과
                 if (isValid) {
-                    // localStorage에서 users 배열 가져오기 또는 생성
-                    var users = JSON.parse(localStorage.getItem('users') || '[]');
-                    
-                    // 중복 체크 (아이디 또는 이메일)
-                    var isDuplicate = users.some(function(user) {
-                        return (user.username && user.username.toLowerCase() === id.toLowerCase()) ||
-                               (user.email && user.email.toLowerCase() === email.toLowerCase());
-                    });
-                    
-                    if (isDuplicate) {
-                        alert('이미 등록된 아이디 또는 이메일입니다.');
-                        return false;
-                    }
-                    
-                    // 새 유저 정보 생성
-                    var newUser = {
-                        id: Date.now().toString(), // 고유 ID
-                        username: id, // 입력한 아이디
-                        password: password, // 입력한 비밀번호
-                        name: name, // 입력한 이름
-                        email: email, // 입력한 이메일
-                        role: 'user', // 기본값
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    // users 배열에 추가
-                    users.push(newUser);
-                    
-                    // localStorage에 저장
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // 회원가입 성공 알림 (커스텀 모달)
-                    showCustomModal('회원가입 성공', '회원가입이 완료되었습니다!', function() {
-                        window.location.href = 'login.html';
+                    // 서버에 회원가입 요청
+                    fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: name,
+                            userId: id,
+                            password: password,
+                            passwordConfirm: passwordConfirm,
+                            email: email
+                        })
+                    })
+                    .then(function(response) {
+                        return response.text().then(function(text) {
+                            try {
+                                var data = text ? JSON.parse(text) : {};
+                                if (!response.ok) {
+                                    throw new Error(data.message || '회원가입에 실패했습니다');
+                                }
+                                return data;
+                            } catch (e) {
+                                if (!response.ok) {
+                                    throw new Error('회원가입에 실패했습니다');
+                                }
+                                return {};
+                            }
+                        });
+                    })
+                    .then(function(data) {
+                        // 회원가입 성공 알림 (커스텀 모달)
+                        showCustomModal('회원가입 성공', '회원가입이 완료되었습니다!', function() {
+                            window.location.href = '/login';
+                        });
+                    })
+                    .catch(function(error) {
+                        console.error('회원가입 오류:', error);
+                        showCustomModal('알림', error.message || '회원가입에 실패했습니다');
                     });
                 }
             });

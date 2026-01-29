@@ -19,4 +19,7 @@ public class OptionDto {
     private Integer optionPrice; // 옵션 가격 (option_price)
 
     private String optionGroupName; // 옵션 그룹 이름
+    
+    // 주문 시점의 개별 옵션 가격이 필요할 때 사용합니다. (OrderOptionDto를 통합하기 위함)
+    private Integer optionPriceAtOrder;
 }

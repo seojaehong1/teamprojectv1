@@ -7,6 +7,7 @@ import com.example.cust.model.CartOption;
 import com.example.cust.repository.CartHeaderRepository;
 import com.example.cust.repository.CartItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartDetailService {
@@ -22,54 +24,75 @@ public class CartDetailService {
     private final CartHeaderRepository cartHeaderRepository;
 
     /**
-     * [주요 API] 여러 ProductItemDto를 CartItem 및 CartOption 엔티티로 변환하여 DB에 저장합니다.
-     * 💡 NOT NULL 필드인 menuName 및 optionName 필드에 값을 설정하도록 수정되었습니다.
-     * @param cartHeader 현재 장바구니 헤더 (CartItem과 연결됨)
-     * @param productItems 장바구니에 추가할 상품/옵션 리스트
-     * @return 저장된 CartItem 엔티티 리스트
+     * 1. 장바구니에 상품 추가 (기존 로직)
      */
     @Transactional
     public List<CartItem> addItemsToCart(CartHeader cartHeader, List<ProductItemDto> productItems) {
-
         List<CartItem> newCartItems = new ArrayList<>();
 
         for (ProductItemDto itemDto : productItems) {
-
-            // 1. ProductItemDto를 CartItem 엔티티로 변환
+            // CartItem 생성
             CartItem cartItem = CartItem.builder()
-                    .cartHeader(cartHeader) // 연관된 CartHeader 설정
                     .menuCode(itemDto.getMenuCode())
-                    // 💡 [수정] menuName 설정 추가
                     .menuName(itemDto.getMenuName())
                     .quantity(itemDto.getQuantity())
                     .unitPrice(itemDto.getUnitPrice())
+                    .cartOptions(new ArrayList<>()) // 옵션 리스트 초기화
                     .build();
 
-            // 2. ProductItemDto 내의 옵션 리스트를 CartOption 엔티티로 변환
-            List<CartOption> cartOptions = itemDto.getOptions().stream()
-                    .map(optionDto -> CartOption.builder()
-                            .optionId(optionDto.getOptionId())
-                            .optionPrice(optionDto.getOptionPrice())
-                            // 💡 [수정] optionName 설정 추가
-                            .optionName(optionDto.getOptionName())
-                            .build())
-                    .collect(Collectors.toList());
-
-            // 3. CartItem에 CartOption 리스트 연결 및 양방향 관계 설정
-            cartItem.setCartOptions(cartOptions);
-
+            // CartOption 생성 및 연결
+            if (itemDto.getOptions() != null) {
+                List<CartOption> cartOptions = itemDto.getOptions().stream()
+                        .map(optionDto -> CartOption.builder()
+                                .optionId(optionDto.getOptionId())
+                                .optionPrice(optionDto.getOptionPrice())
+                                .optionName(optionDto.getOptionName())
+                                .build())
+                        .collect(Collectors.toList());
+                cartItem.getCartOptions().addAll(cartOptions);
+            }
             newCartItems.add(cartItem);
         }
 
-        // 4. CartItemRepository를 통해 DB에 저장 (이 라인이 오류 로그의 62번째 라인일 가능성이 높습니다.)
-        return cartItemRepository.saveAll(newCartItems);
+        // 부모(Header)에 자식(Items) 추가
+        cartHeader.getCartItems().addAll(newCartItems);
+        // CascadeType.ALL 설정에 의해 Header 저장 시 Item, Option도 함께 저장됨
+        cartHeaderRepository.save(cartHeader);
+
+        return newCartItems;
     }
 
-    @Transactional(readOnly = true) // 단순 조회이므로 readOnly = true 권장
-    public CartHeader getCartHeaderByCustomerId(Integer customerId) {
-        // 실제 구현에서는 상태(예: ACTIVE) 등을 확인하여 조회해야 할 수 있지만,
-        // 현재는 ID로만 조회한다고 가정합니다.
-        return cartHeaderRepository.findByCustomerId(customerId)
-                .orElse(null); // Optional 대신 null을 반환하도록 처리 (또는 Optional 반환)
+    /**
+     * 2. 장바구니 상품 수량 수정 (새로 추가)
+     */
+    @Transactional
+    public void updateQuantity(Long cartItemId, int quantity) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 없습니다. ID: " + cartItemId));
+
+        // Dirty Checking(변경 감지)으로 자동 업데이트
+        cartItem.setQuantity(quantity);
+        log.info("수량 변경 완료 - ID: {}, 변경수량: {}", cartItemId, quantity);
+    }
+
+    /**
+     * 3. 장바구니 상품 삭제 (새로 추가)
+     */
+    @Transactional
+    public void deleteItem(Long cartItemId) {
+        if (!cartItemRepository.existsById(cartItemId)) {
+            throw new IllegalArgumentException("삭제할 상품이 없습니다. ID: " + cartItemId);
+        }
+
+        cartItemRepository.deleteById(cartItemId);
+        log.info("상품 삭제 완료 - ID: {}", cartItemId);
+    }
+
+    /**
+     * 고객 ID로 장바구니 조회
+     */
+    @Transactional(readOnly = true)
+    public CartHeader getCartHeaderByCustomerId(String customerId) {
+        return cartHeaderRepository.findByCustomerId(customerId).orElse(null);
     }
 }

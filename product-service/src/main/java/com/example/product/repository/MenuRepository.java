@@ -1,22 +1,41 @@
 package com.example.product.repository;
 
 import com.example.product.model.Menu;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
-// JpaRepository의 두 번째 인자는 PK의 타입(String)으로 변경
-public interface MenuRepository extends JpaRepository<Menu, String> {
+public interface MenuRepository extends JpaRepository<Menu, Long> {
 
-    // 모든 메뉴 목록을 카테고리별로 정렬하여 조회
-    List<Menu> findAllByOrderByCategoryAscMenuNameAsc();
+    // 1. 전체 메뉴 조회
+    Page<Menu> findAll(Pageable pageable);
+    // 2. 카테고리별 메뉴 조회
+    Page<Menu> findByCategory(String category, Pageable pageable);
+    // 3. 메뉴명 검색
+    Page<Menu> findByMenuNameContaining(String keyword, Pageable pageable);
 
-    // 네비게이션을 위한 모든 카테고리 목록 조회
-    @Query("SELECT DISTINCT m.category FROM Menu m ORDER BY m.category")
-    List<String> findAllCategories();
+    Page<Menu> findByCategoryAndMenuNameContaining(
+            String category,
+            String keyword,
+            Pageable pageable
+    );
 
-    // 특정 카테고리의 메뉴 목록 조회
-    List<Menu> findByCategory(String category);
+    Page<Menu> findByCategoryIn(
+            List<String> categories,
+            Pageable pageable
+    );
+
+    Page<Menu> findByCategoryInAndMenuNameContainingIgnoreCase(
+            List<String> categories,
+            String keyword,
+            Pageable pageable
+    );
+
+    Page<Menu> findByMenuNameContainingIgnoreCase(
+            String keyword,
+            Pageable pageable
+    );
+
 }

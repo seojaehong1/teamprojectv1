@@ -1,20 +1,24 @@
 package com.example.product.service;
 
-
-
-import com.example.product.dto.OptionDto;
+import com.example.product.dto.user.AllergyDto;
+import com.example.product.dto.user.MenuDetailDto;
+import com.example.product.dto.user.MenuListDto;
+import com.example.product.dto.user.NutritionDto;
 import com.example.product.model.Menu;
-import com.example.product.model.MenuOption;
-import com.example.product.model.OptionMaster;
-import com.example.product.repository.MenuOptionRepository;
+import com.example.product.model.Nutrition;
+import com.example.product.repository.AllergyRepository;
 import com.example.product.repository.MenuRepository;
-import com.example.product.repository.OptionMasterRepository;
+import com.example.product.repository.NutritionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,66 +26,129 @@ import java.util.stream.Collectors;
 public class MenuService {
 
     private final MenuRepository menuRepository;
-    private final OptionMasterRepository optionMasterRepository;
-    private final MenuOptionRepository menuOptionRepository;
+    private final NutritionRepository nutritionRepository;
+    private final AllergyRepository allergyRepository;
 
-    /**
-     * 모든 메뉴 항목을 조회합니다.
-     */
-    public List<Menu> getAllMenus() {
-        return menuRepository.findAllByOrderByCategoryAscMenuNameAsc();
-    }
+    // 1. 메뉴 목록 조회 [GET /api/menu/drinks]
+    public Page<MenuListDto> getMenuList(
+            List<String> categories,
+            String keyword,
+            int page,
+            int limit
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Menu> menus;
 
-    /**
-     * 네비게이션에 사용할 모든 고유 카테고리 목록을 조회합니다.
-     */
-    public List<String> getAllCategories() {
-        // DB에서 조회된 카테고리 목록을 반환
-        return menuRepository.findAllCategories();
-    }
+        boolean hasCategory = categories != null && !categories.isEmpty();
+        boolean hasKeyword  = keyword != null && !keyword.isBlank();
 
-    public List<Menu> getMenusByCategory(String category) {
-        return menuRepository.findByCategory(category);
-    }
-
-    /**
-     * ID(menuCode)로 메뉴 조회
-     */
-    public Optional<Menu> getMenuById(String menuCode) {
-        return menuRepository.findById(menuCode);
-    }
-
-    public List<OptionDto> getAllOptions() {
-
-        // 1. DB에서 모든 OptionMaster Entity를 조회합니다.
-        List<OptionMaster> entities = optionMasterRepository.findAll();
-
-        // 2. Entity 리스트를 Stream으로 변환하고, 각 Entity의 toDto() 메서드를 호출하여 OptionDto로 매핑합니다.
-        return entities.stream()
-                .map(OptionMaster::toDto) // OptionMaster Entity에 정의된 toDto() 메서드 사용
-                .collect(Collectors.toList());
-    }
-
-    public List<OptionDto> getOptionsByMenuCode(String menuCode) {
-
-        // 1. menu_option 테이블에서 해당 메뉴 코드에 허용된 옵션 그룹 이름 목록을 조회
-        List<MenuOption> menuOptions = menuOptionRepository.findByMenuCode(menuCode);
-
-        Set<String> allowedGroupNames = menuOptions.stream()
-                .map(MenuOption::getOptionGroupName)
-                .collect(Collectors.toSet());
-
-        if (allowedGroupNames.isEmpty()) {
-            return List.of(); // 허용된 옵션 그룹이 없으면 빈 리스트 반환
+        if (hasCategory && hasKeyword) {
+            menus = menuRepository.findByCategoryInAndMenuNameContainingIgnoreCase(categories, keyword, pageable);
+        } else if (hasCategory) {
+            menus = menuRepository.findByCategoryIn(categories, pageable);
+        } else if (hasKeyword) {
+            menus = menuRepository.findByMenuNameContainingIgnoreCase(keyword, pageable);
+        } else {
+            menus = menuRepository.findAll(pageable);
         }
 
-        // 2. option_master 테이블에서 허용된 옵션 그룹에 속하는 모든 상세 옵션을 조회
-        // (주의: optionMasterRepository에 optionGroupName을 기준으로 조회하는 메서드가 필요합니다.)
-        List<OptionMaster> masterOptions = optionMasterRepository.findByOptionGroupNameIn(allowedGroupNames);
+        return menus.map(menu -> MenuListDto.builder()
+                .menuCode(menu.getMenuCode())
+                .menuName(menu.getMenuName())
+                .description(menu.getDescription())
+                .category(menu.getCategory())
+                .build());
+    }
 
-        // 3. OptionMaster Entity 리스트를 OptionDto로 변환하여 반환
-        return masterOptions.stream()
-                .map(OptionMaster::toDto)
+
+    // 2. 메뉴 검색 [GET /api/menu/drinks/search]
+    public Page<MenuListDto> searchMenus(String keyword, int page, int limit) {
+
+        if (keyword == null || keyword.isBlank()) { // 검색어 필수 처리
+            throw new IllegalArgumentException("검색어를 입력해 주세요.");
+        }
+
+        int safePage = Math.max(page, 1); // page 음수 처리 방어
+        int safeLimit = Math.max(limit, 1); // page 음수 처리 방어
+
+        Pageable pageable = PageRequest.of(safePage - 1, safeLimit);
+
+        Page<Menu> menus = menuRepository.findByMenuNameContaining(keyword, pageable);
+
+        return menus.map(menu ->
+                MenuListDto.builder()
+                        .menuCode(menu.getMenuCode())
+                        .imageUrl(buildImageUrl(menu.getMenuName()))
+                        .menuName(menu.getMenuName())
+                        .description(menu.getDescription())
+                        .category(menu.getCategory())
+                        .build()
+        );
+    }
+
+    // 3. 메뉴 상세 조회 [GET /api/menu/drinks/{menuCode}]
+    public MenuDetailDto getMenuDetail(Long menuCode) {
+
+        Menu menu = menuRepository.findById(menuCode)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("메뉴를 찾을 수 없습니다.")
+                );
+
+        // 1. 알레르기 정보 파싱
+        List<AllergyDto> allergies = parseAllergies(menu.getAllergyIds());
+
+        // 2. 영양 정보 조회 (없을 수도 있음)
+        Nutrition nutrition = nutritionRepository
+                .findById(menuCode)
+                .orElse(null);
+
+        NutritionDto nutritionDto = nutrition == null ? null :
+                NutritionDto.builder()
+                        .calories(nutrition.getCalories())
+                        .sodium(nutrition.getSodium())
+                        .carbs(nutrition.getCarbs())
+                        .sugars(nutrition.getSugars())
+                        .protein(nutrition.getProtein())
+                        .fat(nutrition.getFat())
+                        .saturatedFat(nutrition.getSaturatedFat())
+                        .caffeine(nutrition.getCaffeine())
+                        .build();
+
+        return MenuDetailDto.builder()
+                .menuCode(menu.getMenuCode())
+                .imageUrl(buildImageUrl(menu.getMenuName()))
+                .menuName(menu.getMenuName())
+                .description(menu.getDescription())
+                .category(menu.getCategory())
+                .basePrice(menu.getBasePrice())
+                .baseVolume(menu.getBaseVolume())
+                .allergies(allergies)
+                .nutrition(nutritionDto)
+                .build();
+    }
+
+    // 3.1 알레르기 문자열 파싱
+    private List<AllergyDto> parseAllergies(String allergyIds) {
+
+        if (allergyIds == null || allergyIds.isBlank()) {
+            return List.of();
+        }
+
+        List<Integer> ids = Arrays.stream(allergyIds.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isBlank()) // 잘못된 토큰 필터 처리
+                .map(Integer::parseInt)
+                .distinct()
+                .toList();
+
+        return allergyRepository.findAllById(ids).stream()
+                .map(a -> new AllergyDto(a.getAllergyId(), a.getAllergyName()))
                 .collect(Collectors.toList());
     }
+
+    // 이미지 경로 생성
+    private String buildImageUrl(String menuName) {
+        return "/src/tem/" + URLEncoder.encode(menuName, StandardCharsets.UTF_8) + ".png";
+    }
+
 }

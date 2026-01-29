@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>관리자 로그인 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 관리자 로그인 페이지 스타일 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+        .login_wrap {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+        .login_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .login_logo {
+            display: flex;
+            align-items: center;
+        }
+        .login_logo img {
+            height: 40px;
+            max-width: 100%;
+        }
+        .login_title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .login_title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .login_title p {
+            font-size: 14px;
+            color: #666;
+        }
+        .login_content {
+            background: #fff;
+        }
+        .login_form {
+            margin-bottom: 20px;
+        }
+        .login_form_item {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .login_form_label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .login_form_input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .login_form_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .login_form_input::placeholder {
+            color: #999;
+        }
+        .login_form_item_password {
+            position: relative;
+        }
+        .login_submit_btn {
+            width: 100%;
+            padding: 16px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .login_submit_btn:hover {
+            background: #C74A2A;
+        }
+        .login_submit_btn:active {
+            opacity: 0.9;
+        }
+        .admin_notice {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .login_wrap {
+                padding: 20px;
+            }
+            .login_header {
+                margin-bottom: 30px;
+            }
+            .login_title h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login_wrap">
+        <!-- 헤더 -->
+        <div class="login_header">
+            <div class="login_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+        </div>
+
+        <!-- 로그인 콘텐츠 -->
+        <div class="login_content">
+            <!-- 제목 -->
+            <div class="login_title">
+                <h1>관리자 로그인</h1>
+                <p>관리자 계정으로 로그인하세요</p>
+            </div>
+
+            <!-- 로그인 폼 -->
+            <form class="login_form" id="adminLoginForm">
+                <div class="login_form_item">
+                    <label class="login_form_label" for="adminId">아이디</label>
+                    <input type="text" class="login_form_input" id="adminId" name="adminId" placeholder="관리자 아이디를 입력하세요" required>
+                </div>
+                <div class="login_form_item login_form_item_password">
+                    <label class="login_form_label" for="adminPassword">비밀번호</label>
+                    <input type="password" class="login_form_input" id="adminPassword" name="adminPassword" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <button type="submit" class="login_submit_btn">로그인</button>
+            </form>
+
+            <!-- 안내 문구 -->
+            <div class="admin_notice">
+                일반 사용자 로그인은 메인 페이지에서 이용하실 수 있습니다.
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 관리자 로그인 폼 제출
+            $('#adminLoginForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // 입력값 가져오기
+                var adminId = $('#adminId').val().trim();
+                var adminPassword = $('#adminPassword').val().trim();
+                
+                // 유효성 검사
+                if (!adminId) {
+                    alert('아이디를 입력하세요');
+                    $('#adminId').focus();
+                    return false;
+                }
+                
+                if (!adminPassword) {
+                    alert('비밀번호를 입력하세요');
+                    $('#adminPassword').focus();
+                    return false;
+                }
+                
+                // 하드코딩된 관리자 계정 확인
+                const ADMIN_ID = 'admin';
+                const ADMIN_PASSWORD = 'admin1234';
+                
+                // 관리자 계정 확인
+                if (adminId === ADMIN_ID && adminPassword === ADMIN_PASSWORD) {
+                    // 로그인 성공
+                    // localStorage에 관리자 로그인 정보 저장
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userName', 'Admin');
+                    localStorage.setItem('userRole', 'admin');
+                    
+                    // 관리자 페이지로 이동
+                    window.location.href = 'user.html';
+                } else {
+                    // 로그인 실패
+                    alert('관리자 정보가 일치하지 않습니다');
+                    $('#adminPassword').val('');
+                    $('#adminPassword').focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

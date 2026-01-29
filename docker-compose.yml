@@ -1,0 +1,319 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # MySQL Databases (4개 분리)
+  # ============================================
+
+  # MySQL - Member/Admin/Board 공유 DB
+  mysql-member:
+    image: mysql:8.0
+    container_name: mysql-member
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: member_db
+      MYSQL_USER: member_user
+      MYSQL_PASSWORD: member_pass
+    volumes:
+      - mysql-member-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Product DB
+  mysql-product:
+    image: mysql:8.0
+    container_name: mysql-product
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: product_db
+      MYSQL_USER: product_user
+      MYSQL_PASSWORD: product_pass
+    volumes:
+      - mysql-product-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Order DB
+  mysql-order:
+    image: mysql:8.0
+    container_name: mysql-order
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: order_db
+      MYSQL_USER: order_user
+      MYSQL_PASSWORD: order_pass
+    volumes:
+      - mysql-order-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # MySQL - Inventory DB
+  mysql-inventory:
+    image: mysql:8.0
+    container_name: mysql-inventory
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: inventory_db
+      MYSQL_USER: inventory_user
+      MYSQL_PASSWORD: inventory_pass
+    volumes:
+      - mysql-inventory-data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # ============================================
+  # Infrastructure Services
+  # ============================================
+
+  # RabbitMQ - Message Queue
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tori-network
+
+  # Eureka Server - Service Discovery
+  eureka-server:
+    build:
+      context: .
+      dockerfile: eureka-server/Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tori-network
+
+  # Gateway Service
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8000:8000"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      INQUIRY_SERVICE_URL: http://admin-service:8007
+      FRONTEND_SERVICE_URL: http://frontend-service:8005
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Frontend Service
+  frontend-service:
+    build:
+      context: .
+      dockerfile: frontend-service/Dockerfile
+    container_name: frontend-service
+    ports:
+      - "8005:8005"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SERVICE_MEMBER_URL: http://member-service:8004
+      SERVICE_BOARD_URL: http://board-service:8006
+      SERVICE_ADMIN_URL: http://admin-service:8007
+      SERVICE_PRODUCT_URL: http://product-service:8001
+      SERVICE_ORDER_URL: http://order-service:8002
+      SERVICE_INVENTORY_URL: http://inventory-service:8008
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Member Service
+  member-service:
+    build:
+      context: .
+      dockerfile: member-service/Dockerfile
+    container_name: member-service
+    ports:
+      - "8004:8004"
+    env_file:
+      - .env
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      mysql-member:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Product Service
+  product-service:
+    build:
+      context: .
+      dockerfile: product-service/Dockerfile
+    container_name: product-service
+    ports:
+      - "8001:8001"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-product:3306/product_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: product_user
+      SPRING_DATASOURCE_PASSWORD: product_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mysql-product:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Order Service
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+    container_name: order-service
+    ports:
+      - "8002:8002"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-order:3306/order_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: order_user
+      SPRING_DATASOURCE_PASSWORD: order_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mysql-order:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Inventory Service
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    container_name: inventory-service
+    ports:
+      - "8008:8008"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-inventory:3306/inventory_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: inventory_user
+      SPRING_DATASOURCE_PASSWORD: inventory_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mysql-inventory:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Board Service
+  board-service:
+    build:
+      context: .
+      dockerfile: board-service/Dockerfile
+    container_name: board-service
+    ports:
+      - "8006:8006"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      mysql-member:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+  # Admin Service
+  admin-service:
+    build:
+      context: .
+      dockerfile: admin-service/Dockerfile
+    container_name: admin-service
+    ports:
+      - "8007:8007"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-member:3306/member_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: member_user
+      SPRING_DATASOURCE_PASSWORD: member_pass
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      mysql-member:
+        condition: service_healthy
+    networks:
+      - tori-network
+
+networks:
+  tori-network:
+    driver: bridge
+
+volumes:
+  mysql-member-data:
+  mysql-product-data:
+  mysql-order-data:
+  mysql-inventory-data:

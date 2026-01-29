@@ -1,54 +1,71 @@
 package com.example.cust.controller;
 
 import com.example.cust.dto.OrderDetailDto;
+import com.example.cust.dto.OrderTotalDto;
 import com.example.cust.model.Orders;
-import com.example.cust.service.OrderService;
+import com.example.cust.service.OwnerService; // 새로운 서비스 주입
+import com.example.cust.service.OrderService; // 상세 정보 조회는 기존 서비스 활용 가능
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Controller
-@RequestMapping("/admin")
+@Slf4j
+@RestController
+@RequestMapping("/api/owner")
 @RequiredArgsConstructor
 public class AdminController {
 
+    private final OwnerService ownerService;
     private final OrderService orderService;
 
-    /**
-     * [관리자] 모든 주문 목록 조회 (http://localhost:8002/admin)
-     */
-    @GetMapping
-    public String listOrders(Model model) {
-        List<Orders> orders = orderService.getAllOrders();
-        model.addAttribute("orders", orders);
-        return "admin/order-list"; // 💡 admin/order-list.html 템플릿 필요
+    @GetMapping("/order")
+    public ResponseEntity<List<OrderDetailDto>> getOrders() {
+        log.info("모든 주문 내역 조회 요청");
+        List<OrderDetailDto> dtoList = ownerService.getAllOrdersForOwner();
+        return ResponseEntity.ok(dtoList);
     }
 
     /**
-     * [관리자] 특정 주문 상세 정보 조회 (DTO 반환)
+     * 주문 초기화
+     * POST /api/owner/orders/reset
      */
-    @GetMapping("/orders/{orderId}")
-    public String orderDetail(@PathVariable Integer orderId, Model model) {
-        try {
-            OrderDetailDto detailDto = orderService.getOrderDetail(orderId);
-            model.addAttribute("order", detailDto);
-            return "admin/order-detail"; // 💡 admin/order-detail.html 템플릿 필요
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            return "error/404";
-        }
+    @PostMapping("/order/reset")
+    public ResponseEntity<?> resetOrders() {
+        ownerService.resetAllOrders();
+        return ResponseEntity.ok(Map.of("message", "주문 데이터가 초기화되었습니다."));
     }
 
-    @PostMapping("/reset")
-    public String resetOrders() {
-        orderService.deleteAllOrders();
-        // 삭제 후 목록 페이지로 리다이렉트
-        return "redirect:/admin?message=주문+데이터가+성공적으로+초기화되었습니다.";
+    // 상세 조회가 필요하다면 기존 orderService의 DTO 로직 호출
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<?> getOrderDetail(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(orderService.getOrderDetail(orderId));
+    }
+
+    @PatchMapping("/order/{orderId}/status")
+    public ResponseEntity<Void> updateOrderStatus(@PathVariable Integer orderId) {
+        ownerService.updateNextStatus(orderId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<OrderTotalDto> getStatistics() {
+        log.info("점주 통계 데이터 조회 요청");
+        OrderTotalDto stats = ownerService.getOrderTotals();
+        return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * 주문 취소
+     * PATCH /api/owner/order/{orderId}/cancel
+     */
+    @PatchMapping("/order/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Integer orderId) {
+        log.info("주문 취소 요청 - ID: {}", orderId);
+        ownerService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
     }
 }

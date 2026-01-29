@@ -25,6 +25,9 @@ public class OrderOption {
     @Column(name = "option_id", nullable = false)
     private Integer optionId; // OptionMaster Entity는 Product Module에 있으므로 Integer로 유지
 
+    @Column(name = "option_name", nullable = false)
+    private String optionName;
+
     @Column(name = "option_price_at_order", nullable = false)
     private Integer optionPriceAtOrder; // 주문 시점의 옵션 가격
 }

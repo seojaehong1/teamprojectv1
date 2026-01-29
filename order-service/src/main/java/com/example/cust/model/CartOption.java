@@ -17,17 +17,15 @@ public class CartOption {
     @Column(name = "cart_option_id")
     private Integer cartOptionId;
 
-    @Column(name = "option_name", length = 50, nullable = false) // 💡 [추가] 옵션 이름 필드
+    @Column(name = "option_name", length = 50, nullable = false)
     private String optionName;
 
-    // 연관 관계: CartOption(N) <-> CartItem(1)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_item_id", nullable = false)
-    private CartItem cartItem;
+    // 💡 [삭제] private CartItem cartItem;
+    // 이제 부모 엔티티를 직접 참조하지 않습니다.
 
     @Column(name = "option_id", nullable = false)
     private Integer optionId;
 
     @Column(name = "option_price", nullable = false)
-    private Integer optionPrice; // 장바구니 담을 시점의 옵션 가격
+    private Integer optionPrice;
 }

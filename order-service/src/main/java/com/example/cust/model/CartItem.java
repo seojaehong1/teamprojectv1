@@ -1,10 +1,9 @@
 package com.example.cust.model;
 
-
+import com.example.cust.model.CartOption;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,49 +21,42 @@ public class CartItem {
     @Column(name = "cart_item_id")
     private Integer cartItemId;
 
-    @Column(name = "menu_name", length = 50, nullable = false) // 💡 [추가] 메뉴 이름 필드
+    @Column(name = "menu_name", length = 50, nullable = false)
     private String menuName;
 
-    // 연관 관계: CartItem(N) <-> CartHeader(1)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id", nullable = false)
-    private CartHeader cartHeader;
+    // 💡 [삭제] private CartHeader cartHeader;
+    // 이제 CartItem은 부모 정보를 가지지 않습니다.
 
-    @Column(name = "menu_code", length = 10, nullable = false)
-    private String menuCode;
+    @Column(name = "menu_code",  nullable = false)
+    private Long menuCode;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @Column(name = "unit_price", nullable = false)
-    private Integer unitPrice; // 장바구니 담을 시점의 메뉴 기본 가격
+    private Integer unitPrice;
 
-    // 연관 관계: CartItem(1) <-> CartOption(N)
-    @OneToMany(mappedBy = "cartItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    // 💡 [수정] mappedBy 제거 후 @JoinColumn 추가 (단방향)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cart_item_id")
     @Builder.Default
     private List<CartOption> cartOptions = new ArrayList<>();
 
+    // 💡 [수정] 편의 메서드에서 option.setCartItem(this) 삭제
     public void setCartOptions(List<CartOption> cartOptions) {
         this.cartOptions = cartOptions;
-        // 💡 양방향 관계 설정 (핵심!)
-        for (CartOption option : cartOptions) {
-            option.setCartItem(this);
-        }
     }
 
     public Integer getTotalItemPrice() {
-        // 1. 단가 * 수량
-        int basePrice = this.unitPrice * this.quantity;
-
-        // 2. 옵션 가격 총합 계산 (옵션이 null이거나 비어있을 경우 0 처리)
-        int optionPrice = 0;
+        // 1. 개별 옵션들의 가격 합계를 먼저 구합니다.
+        int totalOptionPrice = 0;
         if (this.cartOptions != null && !this.cartOptions.isEmpty()) {
-            // CartOption 엔티티의 optionPrice 필드 (기존 필드)를 사용한다고 가정
-            optionPrice = this.cartOptions.stream()
+            totalOptionPrice = this.cartOptions.stream()
                     .mapToInt(CartOption::getOptionPrice)
                     .sum();
         }
 
-        return basePrice + optionPrice;
+        // 2. (메뉴 단가 + 옵션 합계)에 전체 수량을 곱합니다.
+        return (this.unitPrice + totalOptionPrice) * this.quantity;
     }
 }

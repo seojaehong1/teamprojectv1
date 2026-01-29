@@ -3,180 +3,281 @@ package com.example.member.service;
 import com.example.member.model.Member;
 import com.example.member.repository.MemberRepository;
 import com.example.member.util.JwtUtil;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-// 회원 관련 비즈니스 로직 서비스
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
 
-    // 기본 회원가입 (DEFAULT)
+    // 회원가입
     @Transactional
-    public Member register(String username, String userId, String password, String email, 
-                          LocalDate birthDate, String phoneNum) {
-        // 아이디 중복 체크
+    public Member register(String name, String userId, String password, String email,
+                           LocalDateTime createdAt, String userType) {
         if (memberRepository.existsByUserId(userId)) {
             throw new RuntimeException("이미 존재하는 아이디입니다.");
         }
-        // 이메일 중복 체크
         if (memberRepository.existsByEmail(email)) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
 
         Member member = new Member();
-        member.setUsername(username);
+        member.setName(name);
         member.setUserId(userId);
         member.setPassword(passwordEncoder.encode(password));
         member.setEmail(email);
-        member.setBirthDate(birthDate);
-        member.setPhoneNum(phoneNum);
-        member.setProvider(Member.Provider.DEFAULT);
-        member.setRole(Member.Role.USER);
+        member.setUserType(userType);
+        member.setCreatedAt(createdAt);
+        // enum 값을 직접 지정 (예: 회원가입 시 기본값으로 MEMBER 부여)
 
+        // @CreationTimestamp가 있으므로 member.setCreatedAt(createdAt)은 생략해도 자동으로 들어갑니다.
         return memberRepository.save(member);
     }
 
-    // 소셜 로그인용 회원가입/조회 (password, birthDate, phoneNum은 NULL)
-    @Transactional
-    public Member registerOrGetSocialMember(String email, String username, Member.Provider provider) {
-        Optional<Member> existing = memberRepository.findByEmail(email);
-        
-        // 기존 회원이면 반환
-        if (existing.isPresent()) {
-            return existing.get();
-        }
-
-        // 신규 소셜 회원 생성
-        Member member = new Member();
-        member.setUsername(username);
-        member.setUserId(provider.name().toLowerCase() + "_" + System.currentTimeMillis());
-        member.setEmail(email);
-        member.setProvider(provider);
-        member.setRole(Member.Role.USER);
-        // 소셜 로그인은 password, birthDate, phoneNum을 NULL로 명시
-        member.setPassword(null);
-        member.setBirthDate(null);
-        member.setPhoneNum(null);
-
-        return memberRepository.save(member);
-    }
-
-    // 일반 로그인
+    // 기존 로그인 (호환성 유지)
     public String login(String userId, String password) {
         Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다."));
 
-        // 소셜 로그인 계정은 일반 로그인 불가
-        if (member.getProvider() != Member.Provider.DEFAULT) {
-            throw new RuntimeException("소셜 로그인으로 가입된 계정입니다. " + member.getProvider() + " 로그인을 이용해주세요.");
-        }
-
-        // 비밀번호 검증
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        return jwtUtil.generateToken(member.getUserId(), member.getRole().name());
+        return jwtUtil.generateToken(member.getUserId(), member.getUserType());
     }
 
-    // 회원 정보로 JWT 토큰 생성
-    public String generateTokenForMember(Member member) {
-        return jwtUtil.generateToken(member.getUserId(), member.getRole().name());
+    // 아이디 찾기
+    public Member findByNameAndEmail(String name, String email) {
+        return memberRepository.findByNameAndEmail(name, email)
+                .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
     }
 
-    // username으로 회원 조회
-    public Member getMemberByUsername(String username) {
-        return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    // 비밀번호 찾기
+    public Member findByNameAndUserIdAndEmail(String name, String userId, String email) {
+        return memberRepository.findByNameAndUserIdAndEmail(name, userId, email)
+                .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
     }
 
-    // userId로 회원 조회
+    // 아이디 마스킹
+    public String maskUserId(String userId) {
+        if (userId == null || userId.length() <= 4) {
+            return userId;
+        }
+        return userId.substring(0, 3) + "***" + userId.substring(userId.length() - 1);
+    }
+
+    // 이메일 마스킹
+    public String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return email;
+        }
+        String[] parts = email.split("@");
+        String local = parts[0];
+        String domain = parts[1];
+        if (local.length() <= 3) {
+            return local.charAt(0) + "***@" + domain;
+        }
+        return local.substring(0, 3) + "***@" + domain;
+    }
+
+    // 임시 비밀번호 생성
+    public String generateTempPassword() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            sb.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+
+    // 비밀번호 업데이트
+    @Transactional
+    public void updatePassword(Member member, String newPassword) {
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
+
+    // 비밀번호 변경 (현재 비밀번호 확인)
+    @Transactional
+    public void changePassword(String userId, String currentPassword, String newPassword) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
+
+        // 소셜 로그인 계정 체크는 제거됨 (Provider 필드 없음)
+
+        if (!passwordEncoder.matches(currentPassword, member.getPassword())) {
+            throw new RuntimeException("INVALID_CURRENT_PASSWORD");
+        }
+
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
+
+    // 프로필 수정
+    @Transactional
+    public Member updateProfile(String userId, String name, String email) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
+
+        if (!member.getEmail().equals(email) && memberRepository.existsByEmail(email)) {
+            throw new RuntimeException("DUPLICATE_EMAIL");
+        }
+
+        member.setName(name);
+        member.setEmail(email);
+        return memberRepository.save(member);
+    }
+
+    // 중복 체크
+    public boolean isUserIdAvailable(String userId) {
+        return !memberRepository.existsByUserId(userId);
+    }
+
+    public boolean isEmailAvailable(String email) {
+        return !memberRepository.existsByEmail(email);
+    }
+
+    // 조회
     public Member getMemberByUserId(String userId) {
         return memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
+    }
+
+    public Member getMemberByName(String name) {
+        return memberRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    // email로 회원 조회
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    // 전체 회원 목록 조회
     public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
 
-    // ID로 회원 조회
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
+    // 전체 회원 조회 (admin 최상단, 나머지 최신순)
+    public List<Member> findAllOrderByAdminFirst() {
+        return memberRepository.findAllOrderByAdminFirst();
     }
 
-    // 회원 정보 수정
+    // 키워드로 검색 (이름, 이메일)
+    public List<Member> searchByKeyword(String keyword) {
+        String pattern = "%" + keyword + "%";
+        System.out.println("[MemberService] searchByKeyword - keyword: " + keyword + ", pattern: " + pattern);
+        return memberRepository.searchByKeyword(pattern);
+    }
+
+    // 회원 유형별 조회
+    public List<Member> findByUserTypeOrderByAdminFirst(String userType) {
+        return memberRepository.findByUserTypeOrderByAdminFirst(userType);
+    }
+
+    // 회원 유형 + 키워드 검색
+    public List<Member> searchByUserTypeAndKeyword(String userType, String keyword) {
+        String pattern = "%" + keyword + "%";
+        System.out.println("[MemberService] searchByUserTypeAndKeyword - userType: " + userType + ", keyword: " + keyword + ", pattern: " + pattern);
+        return memberRepository.searchByUserTypeAndKeyword(userType, pattern);
+    }
+
+    public Optional<Member> getMemberById(String userId) {
+        return memberRepository.findById(userId);
+    }
+
+    // 소셜 로그인 회원 등록 또는 조회
     @Transactional
-    public Member updateMember(Long id, String username, String email, String role) {
-        Member member = memberRepository.findById(id)
+    public Member registerOrGetSocialMember(String email, String name, String provider) {
+        // 이메일로 기존 회원 조회
+        Optional<Member> existingMember = memberRepository.findByEmail(email);
+        if (existingMember.isPresent()) {
+            return existingMember.get();
+        }
+
+        // 신규 회원 등록
+        Member member = new Member();
+        member.setUserId(provider + "_" + email.split("@")[0]); // 소셜 로그인용 userId 생성
+        member.setEmail(email);
+        member.setName(name);
+        member.setPassword(""); // 소셜 로그인은 비밀번호 불필요
+        member.setUserType("member");
+
+        return memberRepository.save(member);
+    }
+
+    // 토큰 생성
+    public String generateTokenForMember(Member member) {
+        return jwtUtil.generateToken(member.getUserId(), member.getUserType());
+    }
+
+    // 관리자용
+    @Transactional
+    public Member updateMember(String userId, String name, String email, String role) {
+        Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
 
-        // 이메일 중복 체크 (본인 제외)
         if (!member.getEmail().equals(email) && memberRepository.existsByEmail(email)) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
 
-        member.setUsername(username);
+        member.setName(name);
         member.setEmail(email);
-        
-        // 권한 변경
+
         if (role != null && !role.isEmpty()) {
-            try {
-                member.setRole(Member.Role.valueOf(role));
-            } catch (IllegalArgumentException e) {
-                throw new RuntimeException("유효하지 않은 역할입니다: " + role);
-            }
+            member.setUserType(role.toLowerCase());
         }
 
         return memberRepository.save(member);
     }
 
-    // 회원 삭제
+    // 회원 권한만 변경 (점주 전환 등)
     @Transactional
-    public void deleteMember(Long id) {
-        memberRepository.deleteById(id);
+    public Member updateMemberRole(String userId, String newRole) {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+
+        if (newRole != null && !newRole.isEmpty()) {
+            member.setUserType(newRole.toLowerCase());
+        }
+
+        return memberRepository.save(member);
     }
 
-    // 사용자 본인 인증 (아이디 + 이메일)
+    @Transactional
+    public void deleteMember(String userId) {
+        memberRepository.deleteByUserId(userId);
+    }
+
     public boolean verifyUser(String userId, String email) {
         Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         return member.getEmail().equals(email);
     }
 
-    // 비밀번호 재설정
     @Transactional
     public void resetPassword(String userId, String newPassword) {
         Member member = memberRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        
-        // 소셜 로그인 계정은 비밀번호 변경 불가
-        if (member.getProvider() != Member.Provider.DEFAULT) {
-            throw new RuntimeException("소셜 로그인 계정은 비밀번호를 변경할 수 없습니다.");
-        }
-        
+
+        // 소셜 로그인 계정 체크는 제거됨 (Provider 필드 없음)
+
         member.setPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
     }

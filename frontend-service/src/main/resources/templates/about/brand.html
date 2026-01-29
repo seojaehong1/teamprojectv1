@@ -303,10 +303,215 @@
         }
         .cont_gallery_list_box {
             border: 1px solid rgba(207, 74, 35, 0.2) !important;
+            border-radius: 16px;
+            padding: 30px 25px;
+            background: #fff;
+            transition: all 0.3s ease;
         }
         .cont_gallery_list_box:hover {
             border-color: #cf4a23 !important;
-            box-shadow: 0 4px 12px rgba(207, 74, 35, 0.15) !important;
+            box-shadow: 0 8px 24px rgba(207, 74, 35, 0.15) !important;
+            transform: translateY(-4px);
+        }
+
+        /* 브랜드 이미지 레이아웃 개선 */
+        .brand_content_layout {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+            margin-top: 50px;
+        }
+        .brand_content_left {
+            flex: 1;
+        }
+        .brand_content_right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .brand_main_img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+        .brand_sub_img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            object-fit: contain;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* 기존 이미지 스타일 오버라이드 */
+        .brand01 .cont_list_content_align > ul {
+            display: flex;
+            align-items: flex-start;
+            gap: 60px;
+        }
+        .brand01 .cont_list_content_align > ul > li:first-child {
+            flex: 1;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child {
+            flex: 0 0 450px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child img {
+            max-width: 100%;
+            width: 450px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+        .brand01 .cont_list_content_align > ul > li:last-child img:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(207, 74, 35, 0.2);
+        }
+        .cont_list3 .cont_text_box img {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .cont_list3 .cont_text_box img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 반응형 브랜드 레이아웃 */
+        @media (max-width: 1024px) {
+            .brand01 .cont_list_content_align > ul {
+                flex-direction: column;
+            }
+            .brand01 .cont_list_content_align > ul > li:last-child {
+                flex: none;
+                width: 100%;
+            }
+            .brand01 .cont_list_content_align > ul > li:last-child img {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+
+        /* 카드 그리드 개선 */
+        .cont_list4.cont_list_m1 {
+            margin-top: 40px;
+        }
+        .cont_list4.cont_list_m1 > ul {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .cont_list4.cont_list_m1 > ul > li {
+            width: 100%;
+        }
+        @media (max-width: 1024px) {
+            .cont_list4.cont_list_m1 > ul {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .cont_list4.cont_list_m1 > ul {
+                grid-template-columns: 1fr;
+            }
+            .brand_content_layout {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            margin: 0 !important;
+        }
+        .logout_modal_wrap.show {
+            display: flex !important;
+        }
+        .logout_modal_content {
+            background: #fff !important;
+            width: 100% !important;
+            max-width: 380px !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            animation: logoutModalSlideIn 0.3s ease;
+            text-align: center !important;
+            margin: 0 auto !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-bottom: 16px !important;
+        }
+        .logout_modal_title {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #111827 !important;
+        }
+        .logout_modal_text {
+            font-size: 15px !important;
+            color: #6B7280 !important;
+            margin-bottom: 24px !important;
+            line-height: 1.6 !important;
+        }
+        .logout_modal_actions {
+            display: flex !important;
+            gap: 12px !important;
+            justify-content: center !important;
+        }
+        .logout_modal_btn {
+            flex: 1 !important;
+            padding: 14px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+        .logout_modal_btn.cancel {
+            background: #F3F4F6 !important;
+            color: #6B7280 !important;
+        }
+        .logout_modal_btn.cancel:hover {
+            background: #E5E7EB !important;
+        }
+        .logout_modal_btn.danger {
+            background: #EF4444 !important;
+            color: #fff !important;
+        }
+        .logout_modal_btn.danger:hover {
+            background: #DC2626 !important;
         }
     </style>
     
@@ -322,7 +527,7 @@
     <div class="head_wrap">
         <div class="head">
             <div class="head_logo">
-                <a href="../index.html">
+                <a href="/">
                     <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
                 </a>
             </div>
@@ -330,49 +535,49 @@
                 <div class="head_menu">
                     <ul>
                         <li>
-                            <a href="brand.html" class="pc">토리 스토리</a>
+                            <a href="brand" class="pc">토리 스토리</a>
                             <a class="m head_menu_down">토리 스토리</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="brand.html">브랜드</a></li>
-                                    <li><a href="bi.html">BI</a></li>
+                                    <li><a href="brand">브랜드</a></li>
+                                    <li><a href="bi">BI</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../menu/drink.html" class="pc">메뉴</a>
+                            <a href="../menu/drink" class="pc">메뉴</a>
                             <a class="m head_menu_down">메뉴</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../menu/drink.html">음료</a></li>
+                                    <li><a href="../menu/drink">음료</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="map.html" class="pc">매장</a>
+                            <a href="map" class="pc">매장</a>
                             <a class="m head_menu_down">매장</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="map.html">오시는 길</a></li>
+                                    <li><a href="map">오시는 길</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a href="../bbs/notice" class="pc">소식</a>
                             <a class="m head_menu_down">소식</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/notice.html">공지사항</a></li>
-                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                    <li><a href="../bbs/notice">공지사항</a></li>
+                                    <li><a href="../bbs/faq">FAQ</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li>
-                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a href="../bbs/event" class="pc">이벤트</a>
                             <a class="m head_menu_down">이벤트</a>
                             <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
                                 <ul>
-                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                    <li><a href="../bbs/event">이벤트</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -384,7 +589,7 @@
                 <div class="head_user_menu">
                     <!-- 장바구니 아이콘 -->
                     <div class="head_user_item head_cart">
-                        <a href="../order/cart.html" class="head_user_link">
+                        <a href="../order/cart" class="head_user_link">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="head_user_badge">0</span>
                         </a>
@@ -393,7 +598,7 @@
                     <div class="head_user_item head_login_wrap">
                         <!-- 비로그인 상태 -->
                         <div class="head_login_state head_login_state_guest">
-                            <a href="../login.html" class="head_user_link">
+                            <a href="../login" class="head_user_link">
                                 <i class="far fa-user"></i>
                                 <span class="head_user_text">로그인</span>
                             </a>
@@ -406,8 +611,8 @@
                             </a>
                             <div class="head_login_dropdown">
                                 <ul>
-                                    <li><a href="../mypage/index.html">마이페이지</a></li>
-                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="../mypage/index">마이페이지</a></li>
+                                    <li><a href="../order/history">주문조회</a></li>
                                     <li><a href="#">로그아웃</a></li>
                                 </ul>
                             </div>
@@ -632,7 +837,7 @@
                                                 </li>
                                                 <li>
                                                     <div class="cont_text_box">
-                                                        <img alt="TORI COFFEE 브랜드 가이드">
+                                                        <img alt="TORI COFFEE 브랜드 가이드" th:src="@{/src/tori.png}">
                                                     </div>
                                                 </li>
                                                 <li>
@@ -645,7 +850,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <img>
+                                    <img alt="TORI COFFEE" th:src="@{/src/tori1.jpg}">
                                 </li>
                             </ul>
                         </div>
@@ -660,9 +865,9 @@
         <div class="foot_menu">
             <div class="cont_list">
                 <ul>
-                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
-                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
-                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
                 </ul>
             </div>
         </div>
@@ -686,14 +891,12 @@
                         <div class="cont_text foot_info">
                             <div class="cont_list cont_list_small cont_list_width_m">
                                 <ul>
-                                    <li><b>주식회사 토리커피</b></li>
-                                    <li>대표자 김대영</li>
-                                    <li>창업상담 1588-0656</li>
-                                    <li>고객센터 1588-8298</li>
-                                    <li>FAX 02-325-5199</li>
-                                    <li>사업자등록번호 105-87-51367</li>
-                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
-                                    <li>개인정보보호 책임자 이종원</li>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
                                 </ul>
                             </div>
                         </div>
@@ -709,6 +912,20 @@
             <div class="go_top"></div>
         </div>
     </a>
+
+    <!-- 로그아웃 확인 모달 -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <div class="logout_modal_title">로그아웃</div>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">확인</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         AOS.init({
@@ -807,12 +1024,35 @@
             // 로그아웃 버튼 클릭 이벤트
             $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
                 e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userName');
-                alert('로그아웃되었습니다');
-                window.location.href = '../login.html';
+                openLogoutModal();
+            });
+
+            // 모달 배경 클릭 시 닫기
+            $('.logout_modal_wrap').on('click', function(e) {
+                if ($(e.target).hasClass('logout_modal_wrap')) {
+                    closeLogoutModal();
+                }
             });
         });
+
+        // 로그아웃 모달 함수
+        function openLogoutModal() {
+            $('#logoutModal').addClass('show');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeLogoutModal() {
+            $('#logoutModal').removeClass('show');
+            $('body').css('overflow', '');
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            closeLogoutModal();
+            window.location.href = '/';
+        }
     </script>
 </body>
 </html>

@@ -22,13 +22,14 @@ public class CartHeader {
     private Integer cartId;
 
     @Column(name = "customer_id")
-    private Integer customerId;
+    private String customerId;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    // 연관 관계: CartHeader(1) <-> CartItem(N)
-    @OneToMany(mappedBy = "cartHeader", cascade = CascadeType.ALL, orphanRemoval = true)
+    // 💡 [수정] mappedBy 제거 후 @JoinColumn 추가 (단방향)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cart_id")
     @Builder.Default
     private List<CartItem> cartItems = new ArrayList<>();
 }
