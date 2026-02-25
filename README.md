@@ -303,3 +303,9 @@ docker-compose up -d mysql-member mysql-product mysql-order mysql-inventory rabb
 - **Backend Architect**: 서재홍 (팀장)
 - **Team Size**: 4명
 - **Duration**: 3주
+
+---
+
+## Demo
+
+**시연 영상 및 상세 설명**: [https://jaehong-dev.com/projects/msa](https://jaehong-dev.com/projects/msa)
