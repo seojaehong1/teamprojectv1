@@ -1,0 +1,1021 @@
+/**
+ * TORI COFFEE v2 Theme Override
+ * 기존 메가커피 테마(노란색/검정색)를 TORI COFFEE 로고 색상으로 오버라이딩
+ * 
+ * 색상 팔레트:
+ * - 메인 컬러: #D95B3B (주황색/적갈색)
+ * - 호버 컬러: #C74A2A (어두운 주황색)
+ * - 보조 컬러: #593326 (짙은 갈색)
+ * - 에러/링크 컬러: #D95B3B (주황색)
+ * - 배경 밝기 조정: rgba(217, 91, 59, 0.05) (연한 주황 배경)
+ */
+
+/* ============================================
+   전역 노란색 제거 및 오버라이딩
+   ============================================ */
+
+/* 모든 노란색 배경 강제 변경 */
+* {
+    /* 인라인 스타일의 노란색도 오버라이딩 */
+}
+
+[style*="#ffd700"],
+[style*="background: #ffd700"],
+[style*="background-color: #ffd700"],
+[style*="background:#ffd700"],
+[style*="background-color:#ffd700"],
+[style*="rgb(255, 215, 0)"],
+[style*="rgb(255,215,0)"] {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+}
+
+/* 푸터 메뉴 래퍼 전역 오버라이드 (최우선) */
+.foot_menu_wrap,
+div.foot_menu_wrap {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+    background-image: none !important;
+}
+
+/* 노란색 호버 색상 변경 */
+[style*="#e6c200"],
+[style*="background: #e6c200"],
+[style*="background-color: #e6c200"],
+[style*="background:#e6c200"],
+[style*="background-color:#e6c200"],
+[style*="rgb(230, 194, 0)"],
+[style*="rgb(230,194,0)"] {
+    background: #C74A2A !important;
+    background-color: #C74A2A !important;
+}
+
+/* 노란색 텍스트 색상 변경 */
+[style*="color: #ffd700"],
+[style*="color:#ffd700"],
+[style*="color: #e6c200"],
+[style*="color:#e6c200"],
+[style*="color: rgb(255, 215, 0)"],
+[style*="color:rgb(255,215,0)"] {
+    color: #D95B3B !important;
+}
+
+/* 노란색 보더 색상 변경 */
+[style*="border-color: #ffd700"],
+[style*="border-color:#ffd700"],
+[style*="border: #ffd700"],
+[style*="border:#ffd700"] {
+    border-color: #D95B3B !important;
+}
+
+/* ============================================
+   헤더 및 네비게이션 오버라이딩
+   ============================================ */
+
+/* 헤더 네비게이션 기본 상태 (안 눌렀을 때) - 노란색 제거 */
+.head_menu > ul > li > a.pc,
+.head_menu > ul > li > a.m {
+    background-color: transparent !important;
+    color: #333 !important;
+}
+
+/* 헤더 네비게이션 호버 상태 - 노란색 → TORI COFFEE 색상 (최우선) */
+/* 호버 시 check 클래스가 추가되므로, 호버가 항상 우선 */
+.head_menu > ul > li:hover > a.pc,
+.head_menu > ul > li:hover > a.m,
+.head_menu > ul > li a.pc:hover,
+.head_menu > ul > li a.m:hover,
+.head_menu > ul > li.check:hover > a.pc,
+.head_menu > ul > li.check:hover > a.m,
+.head_menu > ul > li:hover.check > a.pc,
+.head_menu > ul > li:hover.check > a.m {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+/* 헤더 네비게이션 활성화 상태 (클릭/선택된 상태, 호버 아님) - TORI COFFEE 색상 배경 */
+.head_menu > ul > li.check > a.pc,
+.head_menu > ul > li.check > a.m {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+/* 활성화된 메뉴의 왼쪽 노란색 세로 섹션 → TORI COFFEE 색상 (모든 상태) */
+.head_menu > ul > li.check::before,
+.head_menu > ul > li.check::after,
+.head_menu > ul > li.check::before[style*="#ffd700"],
+.head_menu > ul > li.check::after[style*="#ffd700"] {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+/* 활성화된 메뉴 항목 자체의 배경색 */
+.head_menu > ul > li.check {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+}
+
+/* 호버 시에도 노란색이 아닌 TORI COFFEE 색상 */
+.head_menu > ul > li:hover::before,
+.head_menu > ul > li:hover::after,
+.head_menu > ul > li:hover.check::before,
+.head_menu > ul > li:hover.check::after {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+/* 헤더 네비게이션 드롭다운 배경 - 노란색 제거 */
+/* 원본 기능을 방해하지 않도록 최소한만 오버라이딩 */
+/* display, position, z-index 등은 절대 건드리지 않음 */
+.head_menu_down_menu {
+    /* 배경색만 변경, 다른 속성은 원본 유지 */
+    background-color: #fff !important;
+    /* display, position, z-index 등은 원본 CSS 유지 */
+}
+
+.head_menu_down_menu ul {
+    background-color: #fff !important;
+    /* 다른 속성은 원본 유지 */
+}
+
+.head_menu_down_menu a {
+    color: #333 !important;
+    background-color: transparent !important;
+    /* 다른 속성은 원본 유지 */
+}
+
+/* 드롭다운 메뉴 초기 상태 및 트랜지션 중 노란색 완전 제거 */
+.head_menu_down_menu a::after,
+.head_menu_down_menu a::before,
+.head_menu_down_menu li a::after,
+.head_menu_down_menu li a::before,
+.head_menu_down_menu li::after,
+.head_menu_down_menu li::before {
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    /* 트랜지션 중에도 노란색이 보이지 않도록 즉시 적용 */
+    transition: none !important;
+    animation: none !important;
+}
+
+/* 드롭다운 메뉴가 나타나는 모든 상태에서 노란색 제거 */
+.head_menu_down_menu[style*="#ffd700"],
+.head_menu_down_menu[style*="#e6c200"],
+.head_menu_down_menu *[style*="#ffd700"],
+.head_menu_down_menu *[style*="#e6c200"] {
+    background-color: #fff !important;
+    background: #fff !important;
+    border-color: transparent !important;
+}
+
+/* 드롭다운 메뉴의 모든 요소 초기 색상 강제 설정 */
+.head_menu_down_menu,
+.head_menu_down_menu ul,
+.head_menu_down_menu li,
+.head_menu_down_menu a {
+    background-color: #fff !important;
+    background: #fff !important;
+    border-color: transparent !important;
+}
+
+/* 드롭다운 호버 - TORI COFFEE 색상 */
+.head_menu_down_menu a:hover,
+.head_menu_down_menu li:hover > a {
+    color: #D95B3B !important;
+    background-color: rgba(217, 91, 59, 0.1) !important;
+}
+
+/* 드롭다운 호버 시 노란색 가로 막대 → TORI COFFEE 색상 (색상만 변경, 레이아웃 유지) */
+.head_menu_down_menu a:hover::after,
+.head_menu_down_menu li:hover > a::after {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    /* position, width, height, display 등 레이아웃 속성은 원본 유지 */
+    /* 트랜지션 제거하여 노란색이 보이지 않도록 */
+    transition: none !important;
+    animation: none !important;
+}
+
+/* 드롭다운 메뉴가 나타나는 모든 상태에서 노란색 완전 제거 */
+.head_menu_down_menu[style*="#ffd700"],
+.head_menu_down_menu[style*="#e6c200"],
+.head_menu_down_menu *[style*="#ffd700"],
+.head_menu_down_menu *[style*="#e6c200"] {
+    background-color: #fff !important;
+    background: #fff !important;
+    border-color: transparent !important;
+}
+
+/* 드롭다운 활성화된 항목 */
+.head_menu_down_menu li.active > a,
+.head_menu_down_menu a.active {
+    color: #D95B3B !important;
+    background-color: rgba(217, 91, 59, 0.05) !important;
+    font-weight: 600 !important;
+}
+
+/* 헤더 로고 가시성 개선 (검정 배경 대응) */
+.head_wrap {
+    background-color: #fff !important;
+}
+
+.head {
+    background-color: #fff !important;
+}
+
+.head_logo img {
+    filter: brightness(1) !important;
+    opacity: 1 !important;
+}
+
+/* index 페이지 로고 위치 조정 (더 위로) */
+body.main_body .head_logo,
+.index .head_logo,
+[class*="index"] .head_logo {
+    padding-top: 5px !important;
+    margin-top: -5px !important;
+}
+
+/* 헤더 메뉴 래퍼 배경 */
+.head_menu_wrap {
+    background-color: transparent !important;
+}
+
+/* 헤더 메뉴 리스트 아이템 기본 스타일 - position만 유지, 나머지는 원본 */
+.head_menu > ul > li {
+    /* position: relative은 원본에도 있으므로 유지 */
+    position: relative !important;
+    /* 다른 속성은 원본 CSS에 맡김 */
+}
+
+/* 드롭다운 메뉴가 나타날 때 부모 li 스타일 - 노란색 제거 */
+.head_menu > ul > li:hover,
+.head_menu > ul > li.check {
+    /* 원본 CSS의 모든 속성 유지, 색상만 오버라이딩 */
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+}
+
+/* 활성화된 메뉴의 왼쪽 노란색 세로 섹션 강제 제거 (모든 가능한 선택자) */
+.head_menu > ul > li.check,
+.head_menu > ul > li.check *,
+.head_menu > ul > li:hover,
+.head_menu > ul > li:hover * {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+}
+
+/* 활성화된 메뉴의 왼쪽 노란색 세로 섹션 (가상 요소) - 모든 상태에서 TORI COFFEE 색상 */
+.head_menu > ul > li.check::before,
+.head_menu > ul > li.check::after,
+.head_menu > ul > li.check::before[style*="#ffd700"],
+.head_menu > ul > li.check::after[style*="#ffd700"] {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+/* 호버 시에도 노란색이 아닌 TORI COFFEE 색상 */
+.head_menu > ul > li:hover::before,
+.head_menu > ul > li:hover::after,
+.head_menu > ul > li:hover.check::before,
+.head_menu > ul > li:hover.check::after {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+/* 드롭다운 메뉴 화살표나 장식 요소 - 원본 동작 유지 */
+.head_menu_down_menu::before,
+.head_menu_down_menu::after {
+    /* 원본 스타일 완전히 유지, 건드리지 않음 */
+}
+
+/* 헤더 고정 시 배경 */
+.head_wrap.head_fixed {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   버튼 색상 오버라이딩
+   ============================================ */
+
+/* 기본 버튼 배경색 */
+.btn,
+button[class*="btn"],
+input[type="submit"],
+input[type="button"],
+.login_submit_btn,
+.signup_submit_btn,
+.find_id_submit_btn,
+.find_password_submit_btn,
+.order_modal_btn.confirm,
+.delete_modal_btn,
+.save_modal_btn,
+.add_modal_btn,
+.edit_modal_btn,
+.find_id_email_btn,
+.signup_email_btn,
+.find_password_email_btn,
+.email_btn,
+.cart_order_btn,
+.drink_detail_cart_btn {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+/* 버튼 호버 색상 */
+.btn:hover,
+button[class*="btn"]:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.login_submit_btn:hover,
+.signup_submit_btn:hover,
+.find_id_submit_btn:hover,
+.find_password_submit_btn:hover,
+.order_modal_btn.confirm:hover,
+.delete_modal_btn:hover,
+.save_modal_btn:hover,
+.add_modal_btn:hover,
+.edit_modal_btn:hover,
+.find_id_email_btn:hover,
+.signup_email_btn:hover,
+.find_password_email_btn:hover,
+.email_btn:hover,
+.cart_order_btn:hover,
+.drink_detail_cart_btn:hover {
+    background-color: #C74A2A !important;
+    background: #C74A2A !important;
+    border-color: #C74A2A !important;
+}
+
+/* 버튼 비활성화 상태 */
+.btn:disabled,
+button[class*="btn"]:disabled,
+input[type="submit"]:disabled,
+input[type="button"]:disabled {
+    background-color: #e0e0e0 !important;
+    color: #999 !important;
+    border-color: #e0e0e0 !important;
+}
+
+/* ============================================
+   링크 및 텍스트 색상 오버라이딩
+   ============================================ */
+
+/* 링크 호버 색상 */
+a:hover,
+.login_links a:hover,
+.find_id_links a:hover,
+.find_password_links a:hover,
+.mobile_menu_sub a:hover,
+.mobile_menu_main:hover {
+    color: #D95B3B !important;
+}
+
+/* 빨간색(#d32f2f) 텍스트를 주황색으로 변경 */
+[style*="#d32f2f"],
+[style*="color: #d32f2f"],
+[style*="color:#d32f2f"] {
+    color: #D95B3B !important;
+}
+
+/* ============================================
+   입력 필드 포커스 색상
+   ============================================ */
+
+input:focus,
+textarea:focus,
+select:focus,
+.login_form_input:focus,
+.signup_form_input:focus,
+.find_id_form_input:focus,
+.find_password_form_input:focus,
+.cart_item input:focus,
+.drink_detail_option input:focus {
+    border-color: #D95B3B !important;
+    outline-color: #D95B3B !important;
+    box-shadow: 0 0 0 2px rgba(217, 91, 59, 0.2) !important;
+}
+
+/* 라디오 버튼 체크 색상 */
+input[type="radio"]:checked,
+.login_type_item input[type="radio"]:checked {
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+input[type="radio"]:checked::before {
+    background-color: #D95B3B !important;
+}
+
+/* 체크박스 체크 색상 */
+input[type="checkbox"]:checked {
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+input[type="checkbox"]:checked::after {
+    border-color: #fff !important;
+}
+
+/* ============================================
+   배지 및 태그 색상
+   ============================================ */
+
+.badge,
+.tag,
+[class*="badge"],
+[class*="tag"],
+.head_user_badge,
+.cart_item_checkbox.checked {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+    border-color: #D95B3B !important;
+}
+
+/* ============================================
+   테이블 및 리스트 강조 색상
+   ============================================ */
+
+.table-striped tbody tr:nth-of-type(odd),
+.table-hover tbody tr:hover,
+.admin_table tbody tr:hover,
+.owner_table tbody tr:hover {
+    background-color: rgba(217, 91, 59, 0.05) !important;
+}
+
+/* ============================================
+   프로그레스 바 색상
+   ============================================ */
+
+.progress-bar,
+[class*="progress"] {
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   알림 및 모달 색상
+   ============================================ */
+
+.alert-success,
+.alert-info {
+    background-color: rgba(217, 91, 59, 0.1) !important;
+    border-color: #D95B3B !important;
+    color: #D95B3B !important;
+}
+
+/* 모달 확인 버튼 */
+.modal .btn-primary,
+.modal button[type="submit"],
+.cart_delete_modal_confirm,
+.order_modal_confirm {
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+.modal .btn-primary:hover,
+.modal button[type="submit"]:hover,
+.cart_delete_modal_confirm:hover,
+.order_modal_confirm:hover {
+    background-color: #C74A2A !important;
+    border-color: #C74A2A !important;
+}
+
+/* ============================================
+   네비게이션 및 메뉴 색상
+   ============================================ */
+
+.nav-link:hover,
+.nav-link.active,
+.nav-pills .nav-link.active,
+.cont_tab li.check a,
+.cont_tab li a:hover {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+    border-color: #D95B3B !important;
+}
+
+/* 모바일 메뉴 색상 */
+.mobile_menu_overlay {
+    background: #2a2a2a !important;
+}
+
+.mobile_menu_main:hover,
+.mobile_menu_sub a:hover {
+    color: #D95B3B !important;
+}
+
+.mobile_menu_logo_icon {
+    color: #D95B3B !important;
+}
+
+.mobile_menu_close:hover {
+    color: #D95B3B !important;
+}
+
+/* 모바일 메뉴 오른쪽 노란색 바 제거 */
+.mobile_menu_overlay_inner::after {
+    background: #D95B3B !important;
+}
+
+/* ============================================
+   오른쪽 노란색 세로 막대 (모든 페이지) - TORI COFFEE 색상 적용
+   ============================================ */
+
+/* 오른쪽에 고정된 세로 막대 (가상 요소) */
+body::after,
+html::after,
+.wrap::after,
+.container::after,
+.main::after,
+[class*="wrap"]::after,
+[class*="container"]::after {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+/* 오른쪽에 위치한 고정 요소 (4px 너비 세로 막대 패턴) */
+*[style*="position: fixed"][style*="right: 0"][style*="width"],
+*[style*="position:fixed"][style*="right:0"][style*="width"] {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   섹션 타이틀 하이라이트
+   ============================================ */
+
+.cont_title_bg,
+.cont_title_bg_active {
+    background: linear-gradient(to bottom, transparent 0%, transparent 60%, #D95B3B 60%, #D95B3B 100%) !important;
+    background-color: transparent !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: bottom !important;
+    color: inherit !important;
+    padding: 0 4px 2px 4px !important;
+    display: inline-block !important;
+    line-height: 1.2 !important;
+}
+
+/* MEGA SIZE & 2 SHOT 주변 노란색 장식 요소 - 원본 구조 유지하며 색상만 변경 */
+/* 원본의 가상 요소 구조를 그대로 유지하고 색상만 변경 */
+.cont_title.robo h2::after,
+.cont_title.robo h2::before {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    /* position, width, height, display 등 레이아웃 속성은 원본 유지 */
+}
+
+.cont_title_bg::before,
+.cont_title_bg::after {
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    /* position, width, height, display 등 레이아웃 속성은 원본 유지 */
+}
+
+/* ============================================
+   푸터 색상 (index.html 참고)
+   ============================================ */
+
+/* 푸터 메뉴 래퍼 - 모든 가능한 선택자로 강제 오버라이드 */
+.foot_menu_wrap,
+div.foot_menu_wrap,
+[class*="foot_menu_wrap"],
+.foot_menu_wrap[class],
+.foot_menu_wrap[id] {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+    background-image: linear-gradient(to bottom, #D95B3B, #D95B3B) !important;
+}
+
+/* 푸터 메뉴 래퍼의 모든 자식 요소와 가상 요소 */
+.foot_menu_wrap *,
+.foot_menu_wrap *::before,
+.foot_menu_wrap *::after,
+.foot_menu_wrap::before,
+.foot_menu_wrap::after,
+div.foot_menu_wrap *,
+div.foot_menu_wrap *::before,
+div.foot_menu_wrap *::after {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+}
+
+/* 인라인 스타일로 노란색이 지정된 경우도 오버라이드 */
+.foot_menu_wrap[style*="#ffd700"],
+.foot_menu_wrap[style*="#e6c200"],
+.foot_menu_wrap[style*="yellow"],
+.foot_menu_wrap[style*="rgb(255, 215, 0)"],
+.foot_menu_wrap[style*="rgb(255,215,0)"],
+*[style*="foot_menu_wrap"][style*="#ffd700"],
+*[style*="foot_menu_wrap"][style*="#e6c200"] {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+}
+
+.foot_menu a {
+    color: #fff !important;
+    background-color: transparent !important;
+}
+
+.foot_menu a:hover {
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 푸터 영역의 오른쪽 노란색 세로 막대 */
+.foot_wrap::after,
+.foot_wrap::before,
+.section_foot::after,
+.section_foot::before,
+[class*="foot"]::after,
+[class*="foot"]::before {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+.foot_wrap {
+    background-color: #2a2a2a !important;
+}
+
+/* ============================================
+   관리자/점주 UI 버튼
+   ============================================ */
+
+.admin_btn_primary,
+.owner_btn_primary,
+[class*="admin"][class*="btn"],
+[class*="owner"][class*="btn"],
+.user_action_btn.edit,
+.user_action_btn.delete,
+.product_action_btn,
+.inventory_action_btn {
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+.admin_btn_primary:hover,
+.owner_btn_primary:hover,
+[class*="admin"][class*="btn"]:hover,
+[class*="owner"][class*="btn"]:hover,
+.user_action_btn.edit:hover,
+.user_action_btn.delete:hover,
+.product_action_btn:hover,
+.inventory_action_btn:hover {
+    background-color: #C74A2A !important;
+    border-color: #C74A2A !important;
+}
+
+/* ============================================
+   모달 버튼 색상 (강제 오버라이딩)
+   ============================================ */
+
+.delete_modal_btn.close,
+.delete_modal_btn.close[style*="#ffd700"],
+.delete_modal_btn.close[style*="#e6c200"],
+#editSuccessModal .delete_modal_btn.close,
+#deleteSuccessModal .delete_modal_btn.close,
+#addSuccessModal .delete_modal_btn.close,
+#editSuccessModal .delete_modal_btn.close[style*="#ffd700"],
+#deleteSuccessModal .delete_modal_btn.close[style*="#ffd700"],
+#addSuccessModal .delete_modal_btn.close[style*="#ffd700"] {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: #D95B3B !important;
+}
+
+.delete_modal_btn.close:hover,
+#editSuccessModal .delete_modal_btn.close:hover,
+#deleteSuccessModal .delete_modal_btn.close:hover,
+#addSuccessModal .delete_modal_btn.close:hover,
+#addSuccessModalBtn {
+    background: #C74A2A !important;
+    background-color: #C74A2A !important;
+    background-image: none !important;
+    color: #fff !important;
+    border-color: #C74A2A !important;
+}
+
+#addSuccessModalBtn {
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+    background-image: none !important;
+    color: #fff !important;
+    border: none !important;
+    border-color: #D95B3B !important;
+}
+
+#addSuccessModalBtn:hover {
+    background: #C74A2A !important;
+    background-color: #C74A2A !important;
+}
+
+/* ============================================
+   장바구니 및 주문 관련
+   ============================================ */
+
+.cart_item_checkbox.checked {
+    background-color: #D95B3B !important;
+    border-color: #D95B3B !important;
+}
+
+.cart_item_checkbox.checked i {
+    color: #fff !important;
+}
+
+.cart_quantity_btn:hover {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   페이지네이션 색상
+   ============================================ */
+
+.board_page_check,
+.board_page_check a,
+.board_page_check span {
+    background-color: #D95B3B !important;
+    color: #fff !important;
+}
+
+.board_page_check:hover,
+.board_page_check a:hover,
+.board_page_check span:hover {
+    background-color: #C74A2A !important;
+    color: #fff !important;
+}
+
+/* ============================================
+   배너 색상 (BIG SIZE 2 SHOT 배너)
+   ============================================ */
+
+.cont_banner,
+.cont_box.cont_banner,
+.cont_box.cont_banner[class*="cont_banner"],
+div.cont_box.cont_banner {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+}
+
+.cont_banner .cont_title,
+.cont_banner .cont_title b,
+.cont_box.cont_banner .cont_title,
+.cont_box.cont_banner .cont_title b {
+    color: #fff !important;
+}
+
+/* 배너 하단 다이아몬드 장식 (노란색 제거) */
+.cont_banner::after,
+.cont_banner::before,
+.cont_box.cont_banner::after,
+.cont_box.cont_banner::before,
+.cont_box.cont_banner .cont_boxs::after,
+.cont_box.cont_banner .cont_boxs::before,
+.cont_box.cont_banner .cont_title_wrap::after,
+.cont_box.cont_banner .cont_title_wrap::before {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    border-color: #D95B3B !important;
+    background-image: none !important;
+}
+
+/* 배너 내부 모든 요소의 가상 요소도 오버라이딩 */
+.cont_banner *::after,
+.cont_banner *::before,
+.cont_box.cont_banner *::after,
+.cont_box.cont_banner *::before {
+    background-color: transparent !important;
+    background: transparent !important;
+    border-color: #D95B3B !important;
+}
+
+/* 다이아몬드 모양이 border로 만들어졌을 경우 - 모든 border 색상 변경 */
+.cont_banner::after,
+.cont_box.cont_banner::after,
+.cont_banner::before,
+.cont_box.cont_banner::before {
+    border-top-color: #D95B3B !important;
+    border-left-color: #D95B3B !important;
+    border-right-color: #D95B3B !important;
+    border-bottom-color: #D95B3B !important;
+}
+
+/* 노란색 border 강제 제거 */
+.cont_banner::after[style*="#ffd700"],
+.cont_banner::after[style*="#e6c200"],
+.cont_box.cont_banner::after[style*="#ffd700"],
+.cont_box.cont_banner::after[style*="#e6c200"],
+.cont_banner::before[style*="#ffd700"],
+.cont_banner::before[style*="#e6c200"],
+.cont_box.cont_banner::before[style*="#ffd700"],
+.cont_box.cont_banner::before[style*="#e6c200"] {
+    border-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   챗봇 색상
+   ============================================ */
+
+.chatbot_floating_icon {
+    background: linear-gradient(135deg, #D95B3B 0%, #C74A2A 100%) !important;
+    border-color: #D95B3B !important;
+}
+
+.chatbot_panel_send_btn {
+    background: #D95B3B !important;
+}
+
+.chatbot_panel_send_btn:hover:not(:disabled) {
+    background: #C74A2A !important;
+}
+
+.chatbot_panel_welcome_icon {
+    color: #D95B3B !important;
+}
+
+.chatbot_panel_welcome_btn {
+    border-color: #D95B3B !important;
+    color: #D95B3B !important;
+}
+
+.chatbot_panel_welcome_btn:hover {
+    background: #D95B3B !important;
+    color: #fff !important;
+}
+
+.chatbot_panel_message.user .chatbot_panel_message_content {
+    background: #D95B3B !important;
+}
+
+/* ============================================
+   스와이퍼 및 슬라이더
+   ============================================ */
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #D95B3B !important;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   스크롤 다운 아이콘
+   ============================================ */
+
+.scroll_down_icon_mouse_move {
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   섹션 네비게이션 (사이드바)
+   ============================================ */
+
+.chap_list.on span,
+.chap_list:hover span {
+    background-color: #D95B3B !important;
+}
+
+/* ============================================
+   상단 이동 버튼
+   ============================================ */
+
+.go_top_wrap .go_top {
+    background-color: #D95B3B !important;
+}
+
+.go_top_wrap:hover .go_top {
+    background-color: #C74A2A !important;
+}
+
+/* ============================================
+   제목 색상 (robo.color 클래스)
+   ============================================ */
+
+/* 페이지 제목의 노란색을 TORI COFFEE 색상으로 변경 */
+.cont_title.robo.color,
+.cont_title.robo.color h2,
+.cont_title.robo.color h3,
+.cont_title.robo.color h4,
+.cont_title.robo.color h5,
+.cont_title.robo.color h6,
+.cont_text.robo.color,
+.cont_text_title.robo.color {
+    color: #D95B3B !important;
+}
+
+/* 제목 배경색도 변경 (있는 경우) */
+.cont_title.robo.color[style*="background"],
+.cont_text.robo.color[style*="background"] {
+    background-color: #D95B3B !important;
+}
+
+/* 제목 내부 요소들도 색상 변경 */
+.cont_title.robo.color *,
+.cont_text.robo.color * {
+    color: #D95B3B !important;
+}
+
+/* ============================================
+   강제 오버라이딩 (인라인 스타일 대응)
+   ============================================ */
+
+/* 모든 요소의 인라인 스타일에서 노란색 제거 */
+*[style*="ffd700"],
+*[style*="e6c200"],
+*[style*="rgb(255, 215, 0)"],
+*[style*="rgb(230, 194, 0)"] {
+    /* 개별 속성 오버라이딩은 위에서 처리 */
+}
+
+/* 배경이 검정색인 경우 로고 가시성 개선 */
+[style*="background: #000"],
+[style*="background-color: #000"],
+[style*="background:#000"],
+[style*="background-color:#000"],
+[style*="background: #2a2a2a"],
+[style*="background-color: #2a2a2a"],
+[style*="background:#2a2a2a"],
+[style*="background-color:#2a2a2a"] {
+    /* 배경은 유지하되, 로고는 별도 처리 */
+}
+
+/* 검정 배경 위의 로고/텍스트 가시성 개선 */
+.head_wrap[style*="background"] .head_logo img,
+.foot_wrap .foot_logo img {
+    filter: brightness(1.2) contrast(1.1) !important;
+}
+
+/* ============================================
+   푸터 노란색 강제 제거 (최우선 적용)
+   ============================================ */
+
+/* 모든 가능한 선택자로 푸터 메뉴 래퍼의 노란색 제거 */
+.foot_menu_wrap,
+div.foot_menu_wrap,
+[class*="foot_menu_wrap"],
+body .foot_menu_wrap,
+html body .foot_menu_wrap,
+.section_foot .foot_menu_wrap,
+.cont_box .foot_menu_wrap {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+    background-image: none !important;
+}
+
+/* 푸터 메뉴 래퍼의 모든 자식 요소 */
+.foot_menu_wrap *,
+.foot_menu_wrap * *,
+.foot_menu_wrap div,
+.foot_menu_wrap ul,
+.foot_menu_wrap li {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* 푸터 메뉴 래퍼의 가상 요소 */
+.foot_menu_wrap::before,
+.foot_menu_wrap::after,
+.foot_menu_wrap *::before,
+.foot_menu_wrap *::after {
+    background-color: #D95B3B !important;
+    background: #D95B3B !important;
+}
+
+/* ============================================
+   반응형 대응
+   ============================================ */
+
+@media (max-width: 768px) {
+    .head_wrap {
+        background-color: #fff !important;
+    }
+    
+    .mobile_menu_overlay {
+        background: #2a2a2a !important;
+    }
+}

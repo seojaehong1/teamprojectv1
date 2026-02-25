@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>멤버십 이용약관 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <style>
+        /* 헤더 조건부 배경색 변경 */
+        .head_wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: #fff !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .head_wrap .head {
+            position: relative;
+            background: #fff !important;
+        }
+        .head_wrap .head_menu > ul > li > a.pc {
+            color: #333 !important;
+        }
+        .head_wrap .head_user_link {
+            color: #333 !important;
+        }
+        .head_wrap .head_user_link i {
+            color: #333 !important;
+        }
+        .head_wrap .head_user_text {
+            color: #333 !important;
+        }
+        .head_wrap .head_logo img {
+            filter: none !important;
+        }
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+            transition: filter 0.3s ease;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown li {
+            margin: 0;
+        }
+        .head_login_dropdown li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .head_login_dropdown li a:hover {
+            background-color: #f5f5f5;
+            color: #D95B3B;
+        }
+        .head_login_dropdown li:first-child a,
+        .head_login_dropdown li:nth-child(2) a {
+            color: #D95B3B;
+        }
+        .head_user_name {
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                display: none;
+            }
+        }
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2a2a2a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay_inner {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            padding: 60px 20px 40px;
+            box-sizing: border-box;
+        }
+        .mobile_menu_overlay_inner::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: #D95B3B;
+            z-index: 10000;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+        .mobile_menu_logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .mobile_menu_logo_icon {
+            color: #D95B3B;
+            font-size: 28px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #fff;
+            padding-top: 120px;
+            padding-bottom: 0;
+        }
+        .policy_wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .policy_header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .policy_header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .policy_date {
+            font-size: 14px;
+            color: #666;
+        }
+        .policy_content {
+            line-height: 1.8;
+            color: #333;
+        }
+        .policy_section {
+            margin-bottom: 40px;
+        }
+        .policy_section_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .policy_section_content {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .policy_section_content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .policy_section_content li {
+            margin-bottom: 8px;
+        }
+        .back_btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #D95B3B;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .back_btn:hover {
+            background: #C74A2A;
+        }
+        
+        /* 커스텀 모달 스타일 */
+        .custom_modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom_modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .custom_modal_content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .custom_modal_content.terms_modal {
+            max-width: 700px;
+        }
+        .custom_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .custom_modal_message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .custom_modal_message.terms_content {
+            text-align: left;
+            font-size: 14px;
+        }
+        .custom_modal_buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .custom_modal_btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom_modal_btn_primary {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .custom_modal_btn_primary:hover {
+            background: #C74A2A;
+        }
+        .custom_modal_btn_secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .custom_modal_btn_secondary:hover {
+            background: #e0e0e0;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/jquery.flexslider.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+</head>
+<body>
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="../index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand.html" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand.html">브랜드</a></li>
+                                    <li><a href="../about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink.html" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/notice.html">공지사항</a></li>
+                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="../order/cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index.html">마이페이지</a></li>
+                                    <li><a href="../order/history.html">주문/배송조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_overlay_inner">
+            <div class="mobile_menu_header">
+                <div class="mobile_menu_logo">
+                    <span class="mobile_menu_logo_text">TORI</span>
+                    <span class="mobile_menu_logo_icon">☕</span>
+                    <span class="mobile_menu_logo_text">COFFEE</span>
+                </div>
+                <button class="mobile_menu_close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile_menu_content">
+                <div class="mobile_menu_left">
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">토리 스토리</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메뉴</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">매장</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">소식</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">이벤트</div>
+                    </div>
+                </div>
+                <div class="mobile_menu_right">
+                    <div class="mobile_menu_sub">
+                        <a href="../about/brand.html">브랜드</a>
+                        <a href="../about/bi.html">BI</a>
+                        <a href="../about/map.html">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="../menu/drink.html">음료</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="../about/map.html">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="../bbs/notice.html">공지사항</a>
+                        <a href="../bbs/faq.html">FAQ</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="../bbs/event.html">이벤트</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="policy_wrap">
+        <div class="policy_header">
+            <h1>멤버십 이용약관</h1>
+            <div class="policy_date">시행일자: 2025.10.19</div>
+        </div>
+        
+        <div class="policy_content">
+            <div class="policy_section">
+                <div class="policy_section_title">제 1조 (목적)</div>
+                <div class="policy_section_content">
+                    본 약관은 주식회사 토리커피(이하 "회사"라 함)가 제공하는 TORI COFFEE 멤버십 서비스(이하 "서비스"라 함)의 이용과 관련하여 회사와 회원 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 2조 (정의)</div>
+                <div class="policy_section_content">
+                    본 약관에서 사용하는 용어의 정의는 다음과 같습니다.
+                </div>
+                <div class="policy_section_content">
+                    <ul>
+                        <li>"서비스"란 회사가 제공하는 멤버십 프로그램 및 관련 서비스를 의미합니다.</li>
+                        <li>"회원"이란 본 약관에 동의하고 회사와 이용계약을 체결하여 회사가 제공하는 서비스를 이용하는 고객을 의미합니다.</li>
+                        <li>"멤버십 포인트"란 회원이 회사의 매장에서 상품 구매 시 적립되는 포인트를 의미합니다.</li>
+                        <li>"쿠폰"이란 회사가 회원에게 제공하는 할인쿠폰, 증정쿠폰 등을 의미합니다.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 3조 (약관의 효력 및 변경)</div>
+                <div class="policy_section_content">
+                    본 약관은 회원이 서비스 이용 신청 시 동의함으로써 효력이 발생하며, 회사는 관련 법령에 위배되지 않는 범위 내에서 본 약관을 변경할 수 있습니다.
+                </div>
+                <div class="policy_section_content">
+                    변경된 약관은 서비스 화면에 공지하거나 기타의 방법으로 회원에게 공지함으로써 효력을 발생하며, 회원이 변경된 약관에 동의하지 않는 경우 서비스 이용을 중단하고 탈퇴할 수 있습니다.
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 4조 (회원가입)</div>
+                <div class="policy_section_content">
+                    회원가입은 고객이 온라인 또는 오프라인 매장에서 회원가입 신청을 하고 회사가 이를 승인함으로써 완료됩니다.
+                </div>
+                <div class="policy_section_content">
+                    회사는 다음 각 호에 해당하는 경우 회원가입을 거부할 수 있습니다.
+                </div>
+                <div class="policy_section_content">
+                    <ul>
+                        <li>가입 신청자가 본 약관에 의하여 이전에 회원자격을 상실한 적이 있는 경우</li>
+                        <li>실명이 아니거나 타인의 명의를 이용한 경우</li>
+                        <li>허위의 정보를 기재하거나 회사가 제시하는 내용을 기재하지 않은 경우</li>
+                        <li>기타 회원으로 등록하는 것이 회사의 기술상 현저히 지장이 있다고 판단되는 경우</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 5조 (멤버십 포인트 적립 및 사용)</div>
+                <div class="policy_section_content">
+                    회원이 회사의 매장에서 상품을 구매할 경우, 회사가 정한 적립률에 따라 멤버십 포인트가 적립됩니다.
+                </div>
+                <div class="policy_section_content">
+                    멤버십 포인트는 회사가 정한 방법 및 기준에 따라 사용할 수 있으며, 포인트 사용 시 현금으로 환불되지 않습니다.
+                </div>
+                <div class="policy_section_content">
+                    멤버십 포인트는 적립일로부터 1년간 유효하며, 유효기간 내에 사용하지 않은 포인트는 자동으로 소멸됩니다.
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 6조 (쿠폰)</div>
+                <div class="policy_section_content">
+                    회사는 회원에게 다양한 쿠폰을 제공할 수 있으며, 쿠폰의 종류, 사용 조건, 유효기간 등은 회사가 정한 바에 따릅니다.
+                </div>
+                <div class="policy_section_content">
+                    쿠폰은 유효기간 내에만 사용 가능하며, 유효기간이 경과한 쿠폰은 자동으로 소멸됩니다.
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 7조 (회원의 의무)</div>
+                <div class="policy_section_content">
+                    회원은 다음 행위를 하여서는 안 됩니다.
+                </div>
+                <div class="policy_section_content">
+                    <ul>
+                        <li>신청 또는 변경 시 허위내용의 등록</li>
+                        <li>타인의 정보 도용</li>
+                        <li>회사가 게시한 정보의 변경</li>
+                        <li>회사가 정한 정보 이외의 정보 등의 송신 또는 게시</li>
+                        <li>회사와 기타 제3자의 저작권 등 지적재산권에 대한 침해</li>
+                        <li>회사 및 기타 제3자의 명예를 손상시키거나 업무를 방해하는 행위</li>
+                        <li>외설 또는 폭력적인 메시지, 화상, 음성, 기타 공서양속에 반하는 정보를 공개 또는 게시하는 행위</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="policy_section">
+                <div class="policy_section_title">제 8조 (회원 탈퇴 및 자격 상실)</div>
+                <div class="policy_section_content">
+                    회원은 언제든지 서비스 이용을 중단하고 탈퇴할 수 있으며, 탈퇴 시 보유 중인 멤버십 포인트 및 쿠폰은 모두 소멸됩니다.
+                </div>
+                <div class="policy_section_content">
+                    회사는 회원이 본 약관의 의무를 위반하거나 서비스의 정상적인 운영을 방해한 경우, 경고, 일시정지, 영구이용정지 등으로 서비스 이용을 단계적으로 제한할 수 있습니다.
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="cont_box section section_foot">
+        <div class="section_inner">
+            <div class="foot_menu_wrap">
+                <div class="foot_menu">
+                    <div class="cont_list">
+                        <ul>
+                            <li><a href="javascript:void(0);" onclick="if(typeof showTermsModal === 'function') showTermsModal(); return false;"><b>이용약관</b></a></li>
+                            <li><a href="privacy_policy.html"><b>개인정보처리방침</b></a></li>
+                            <li><a href="service_policy.html"><b>멤버십 이용약관</b></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="foot_wrap">
+                <div class="foot">
+                    <div class="cont_list cont_list_content">
+                        <ul>
+                            <li>
+                                <div class="cont_text">
+                                    <div class="cont_list cont_list_m cont_list_m1">
+                                        <ul>
+                                            <li>
+                                                <div class="foot_logo">
+                                                    <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="cont_text foot_info">
+                                    <div class="cont_list cont_list_small cont_list_width_m">
+                                        <ul>
+                                            <li><b>주식회사 토리커피</b></li>
+                                            <li>대표자 김대영</li>
+                                            <li>창업상담 1588-0656</li>
+                                            <li>고객센터 1588-8298</li>
+                                            <li>FAX 02-325-5199</li>
+                                            <li>사업자등록번호 105-87-51367</li>
+                                            <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                            <li>개인정보보호 책임자 이종원</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="cont_list cont_list6 pc">
+                                    <ul>
+                                        <li>
+                                            <div class="cont_text cont_text_title">토리 스토리</div>
+                                            <div class="cont_text">
+                                                <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                    <ul>
+                                                        <li><a href="../about/brand.html">브랜드</a></li>
+                                                        <li><a href="../about/bi.html">BI</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cont_text cont_text_title">메뉴</div>
+                                            <div class="cont_text">
+                                                <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                    <ul>
+                                                        <li><a href="../menu/drink.html">음료</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cont_text cont_text_title">매장</div>
+                                            <div class="cont_text">
+                                                <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                    <ul>
+                                                        <li><a href="../about/map.html">오시는 길</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cont_text cont_text_title">소식</div>
+                                            <div class="cont_text">
+                                                <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                    <ul>
+                                                        <li><a href="../bbs/notice.html">공지사항</a></li>
+                                                        <li><a href="../bbs/faq.html">FAQ</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cont_text cont_text_title">이벤트</div>
+                                            <div class="cont_text">
+                                                <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                    <ul>
+                                                        <li><a href="../bbs/event.html">이벤트</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        $(".mobile_menu_close").click(function(){
+            $(".mobile_menu_overlay").removeClass("active");
+            $("body").css("overflow", "");
+            $(".head_wrap").removeClass("head_over");
+            $(".head_menu_wrap").removeClass("right0");
+            $(".mobile_menu_icon").removeClass("mobile_menu_icon_open");
+        });
+
+        // 로그인 상태 체크 및 UI 업데이트
+        $(document).ready(function() {
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            checkLoginStatus();
+
+            $(document).on('click', '.head_login_state_member .head_login_trigger', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const $loginWrap = $(this).closest('.head_login_wrap');
+                $loginWrap.toggleClass('active');
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                if (confirm('로그아웃 하시겠습니까?')) {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userRole');
+                    window.location.href = '../login.html';
+                }
+            });
+        });
+        
+        // 이용약관 모달 표시 함수
+        function showTermsModal() {
+            const modal = document.getElementById('customModal');
+            const modalContent = document.querySelector('.custom_modal_content');
+            const modalTitle = document.getElementById('customModalTitle');
+            const modalMessage = document.getElementById('customModalMessage');
+            const modalButtons = document.getElementById('customModalButtons');
+            
+            if (modalContent) modalContent.classList.add('terms_modal');
+            modalTitle.textContent = '이용안내';
+            
+            const termsHTML = `
+                <div style="text-align:left; font-size:14px; line-height:1.8; color:#333;">
+                    <div style="margin-bottom:15px;">개인정보수집 범위 : 이름, 연락처</div>
+                    <div style="margin-bottom:15px;">개인정보수집 및 이용목적 : 온라인 문의 및 상담 자료와 결과 회신</div>
+                    <div style="margin-bottom:15px; color:#999; font-size:13px; padding-left:10px;">* 매장과 관련된 CS의 경우, 해결 과정 안내 혹은 결과 회신을 위해 매장 관리자(슈퍼바이저, 매장점주), 본사 유관부서가 연락을 드릴 수 있습니다.</div>
+                    <div style="margin-bottom:15px;">개인정보수집 및 보유기간 : 개인정보 수집 및 이용에 대한 목적이 달성되면 지체없이 파기하며 최대 보유기간은 1년을 넘기지 아니한다.</div>
+                </div>
+            `;
+            
+            modalMessage.innerHTML = termsHTML;
+            modalMessage.classList.add('terms_content');
+            
+            // 버튼 초기화 - 취소 버튼만 (중앙 정렬)
+            modalButtons.innerHTML = '';
+            modalButtons.style.justifyContent = 'center';
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'custom_modal_btn custom_modal_btn_secondary';
+            cancelBtn.textContent = '취소';
+            cancelBtn.style.cssText = 'border:1px solid #e0e0e0; background:#fff; color:#333;';
+            cancelBtn.onclick = function() {
+                modal.classList.remove('show');
+                if (modalContent) modalContent.classList.remove('terms_modal');
+                modalMessage.classList.remove('terms_content');
+            };
+            modalButtons.appendChild(cancelBtn);
+            
+            modal.classList.add('show');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('customModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                        const modalContent = document.querySelector('.custom_modal_content');
+                        const modalMessage = document.getElementById('customModalMessage');
+                        if (modalContent) modalContent.classList.remove('terms_modal');
+                        if (modalMessage) modalMessage.classList.remove('terms_content');
+                    }
+                });
+            }
+        });
+    </script>
+    
+    <!-- 커스텀 모달 -->
+    <div id="customModal" class="custom_modal">
+        <div class="custom_modal_content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div class="custom_modal_title" id="customModalTitle" style="margin-bottom:0;">알림</div>
+                <button onclick="document.getElementById('customModal').classList.remove('show'); const modalContent = document.querySelector('.custom_modal_content'); const modalMessage = document.getElementById('customModalMessage'); if(modalContent) modalContent.classList.remove('terms_modal'); if(modalMessage) modalMessage.classList.remove('terms_content');" style="background:none; border:none; font-size:24px; cursor:pointer; color:#333; padding:0; width:24px; height:24px; display:flex; align-items:center; justify-content:center; line-height:1;">×</button>
+            </div>
+            <div class="custom_modal_message" id="customModalMessage"></div>
+            <div class="custom_modal_buttons" id="customModalButtons" style="justify-content:center;">
+                <button class="custom_modal_btn custom_modal_btn_primary" id="customModalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

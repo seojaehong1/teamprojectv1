@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="modal" class="modal fade" id="menuDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMenuName">메뉴 이름</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-5 text-center">
+                        <div class="menu-image-container mb-3">
+                            <img id="modalMenuImage" src="" alt="메뉴 이미지"
+                                 class="img-fluid rounded" style="max-height: 250px; width: 100%; object-fit: cover;">
+                        </div>
+
+                        <p class="text-muted" id="modalDescription">메뉴 상세 설명입니다.</p>
+                        <h4 class="text-secondary" id="modalBasePrice">0원</h4>
+                    </div>
+
+                    <div class="col-md-7">
+                        <form id="orderForm">
+                            <hr>
+                            <h5 class="fw-bold mb-3">옵션 선택</h5>
+
+                            <div id="optionsContainer">
+                            </div>
+
+                            <h5 class="fw-bold mt-4 mb-3">수량 선택</h5>
+                            <div class="d-flex align-items-center mb-4">
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(-1)">-</button>
+
+                                <input type="number"
+                                       id="modalQuantity"
+                                       value="1"
+                                       min="1"
+                                       class="form-control text-center mx-2"
+                                       style="width: 80px;"
+                                       onchange="updateTotalPriceDisplay()">
+
+                                <button type="button" class="btn btn-outline-secondary" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer justify-content-between">
+                <div>
+                    총 주문 금액: <strong class="text-danger fs-4" id="modalTotalPrice" data-base-price="0">0원</strong>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-warning me-2" onclick="addToCart()">🛒 장바구니</button>
+                    <button type="button" class="btn btn-success" onclick="placeOrder()">바로 주문</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

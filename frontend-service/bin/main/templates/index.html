@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/swiper.min.css?ver=202508271045">
+    
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        /* 헤더 조건부 배경색 변경 */
+        /* 상태 1: 평상시 - 투명 배경, 흰색 텍스트 */
+        .head_wrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: transparent !important;
+            transition: all 0.3s ease;
+        }
+        .head_wrap .head {
+            position: relative;
+            background: transparent !important;
+            transition: all 0.3s ease;
+        }
+        /* 평상시 메뉴 텍스트 색상 - 흰색 (배경 이미지 위에서 잘 보이도록) */
+        .head_wrap .head_menu > ul > li > a.pc {
+            color: #fff !important;
+        }
+        .head_wrap .head_user_link {
+            color: #fff !important;
+        }
+        .head_wrap .head_user_link i {
+            color: #fff !important;
+        }
+        .head_wrap .head_user_text {
+            color: #fff !important;
+        }
+        .head_wrap .head_logo img {
+            filter: brightness(0) invert(1) !important; /* 로고를 흰색으로 */
+        }
+        
+        /* 상태 2: 마우스 호버 - 흰색 배경, 검은색 텍스트 */
+        .head_wrap.head_over,
+        .head_wrap:hover {
+            background: #fff !important;
+        }
+        .head_wrap.head_over .head,
+        .head_wrap:hover .head {
+            background: #fff !important;
+        }
+        .head_wrap.head_over .head_menu > ul > li > a.pc,
+        .head_wrap:hover .head_menu > ul > li > a.pc {
+            color: #333 !important;
+        }
+        .head_wrap.head_over .head_user_link,
+        .head_wrap:hover .head_user_link {
+            color: #333 !important;
+        }
+        .head_wrap.head_over .head_user_link i,
+        .head_wrap:hover .head_user_link i {
+            color: #333 !important;
+        }
+        .head_wrap.head_over .head_user_text,
+        .head_wrap:hover .head_user_text {
+            color: #333 !important;
+        }
+        .head_wrap.head_over .head_logo img,
+        .head_wrap:hover .head_logo img {
+            filter: none !important; /* 로고 원래 색상으로 */
+        }
+        
+        /* 상태 3: 스크롤 시 - 흰색 배경 고정 */
+        .head_wrap.head_fixed {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #fff !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .head_wrap.head_fixed .head {
+            background: #fff !important;
+        }
+        .head_wrap.head_fixed .head_menu > ul > li > a.pc {
+            color: #333 !important;
+        }
+        .head_wrap.head_fixed .head_user_link {
+            color: #333 !important;
+        }
+        .head_wrap.head_fixed .head_user_link i {
+            color: #333 !important;
+        }
+        .head_wrap.head_fixed .head_user_text {
+            color: #333 !important;
+        }
+        .head_wrap.head_fixed .head_logo img {
+            filter: none !important; /* 로고 원래 색상으로 */
+        }
+        
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+            transition: filter 0.3s ease;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown li {
+            margin: 0;
+        }
+        .head_login_dropdown li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .head_login_dropdown li a:hover {
+            background-color: #f5f5f5;
+            color: #D95B3B;
+        }
+        .head_login_dropdown li:first-child a,
+        .head_login_dropdown li:nth-child(2) a {
+            color: #D95B3B;
+        }
+        .head_user_name {
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                display: none;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2a2a2a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay_inner {
+            position: relative;
+            width: 100%;
+            min-height: 100%;
+            padding: 60px 20px 40px;
+            box-sizing: border-box;
+        }
+        .mobile_menu_overlay_inner::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: #D95B3B;
+            z-index: 10000;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+        .mobile_menu_logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        .mobile_menu_logo_icon {
+            color: #D95B3B;
+            font-size: 28px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+            line-height: 1;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        
+        /* 메뉴 섹션 카드 - 원본 사이트 느낌으로 복원 */
+        .section_menu .cont_gallery_list_box {
+            padding: 0 !important;
+            overflow: visible !important;
+        }
+        /* 흰색 카드(이미지 영역) */
+        .section_menu .cont_gallery_list_img {
+            min-height: 420px !important;
+            padding: 60px 40px 40px 40px !important;
+            display: flex !important;
+            align-items: flex-end !important;
+            justify-content: center !important;
+        }
+        .section_menu .cont_gallery_list_img img {
+            max-height: 460px !important;
+            max-width: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+        }
+        /* 아래 회색 설명 영역 */
+        .section_menu .cont_gallery_list_box .cont_text_box {
+            padding: 20px 30px 25px 30px !important;
+        }
+        
+        /* Section 06 이벤트 이미지 영역 스타일 */
+        .section_event .board_list_gallery .cont_gallery_list_img {
+            min-height: 200px;
+            height: 200px;
+            overflow: hidden;
+            display: block;
+            position: relative;
+        }
+        .section_event .board_list_gallery .cont_gallery_list_img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* 커스텀 모달 스타일 */
+        .custom_modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom_modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .custom_modal_content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .custom_modal_content.terms_modal {
+            max-width: 700px;
+        }
+        .custom_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .custom_modal_message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .custom_modal_message.terms_content {
+            text-align: left;
+            font-size: 14px;
+        }
+        .custom_modal_message.terms_content .terms_section {
+            margin-bottom: 20px;
+        }
+        .custom_modal_message.terms_content .terms_section_title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .custom_modal_message.terms_content .terms_section_content {
+            color: #666;
+            line-height: 1.8;
+            padding-left: 10px;
+        }
+        .custom_modal_message.terms_content .terms_note {
+            color: #999;
+            font-size: 13px;
+            margin-top: 5px;
+            padding-left: 10px;
+        }
+        .custom_modal_message.terms_content {
+            text-align: left;
+            font-size: 14px;
+        }
+        .custom_modal_message.terms_content .terms_section {
+            margin-bottom: 20px;
+        }
+        .custom_modal_message.terms_content .terms_section_title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        .custom_modal_message.terms_content .terms_section_content {
+            color: #666;
+            line-height: 1.8;
+            padding-left: 10px;
+        }
+        .custom_modal_message.terms_content .terms_note {
+            color: #999;
+            font-size: 13px;
+            margin-top: 5px;
+            padding-left: 10px;
+        }
+        .custom_modal_buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .custom_modal_btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom_modal_btn_primary {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .custom_modal_btn_primary:hover {
+            background: #C74A2A;
+        }
+        .custom_modal_btn_secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .custom_modal_btn_secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Section 02 이미지 스타일 - 이미지가 잘리지 않도록 조정 */
+        .section_story .table0 {
+            display: table;
+            width: 100%;
+        }
+        .section_story .table0 .cell50:first-child {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50%;
+        }
+        .section_story .table0 .cell50:last-child {
+            display: table-cell;
+            vertical-align: bottom;
+            width: 50%;
+            text-align: right;
+        }
+        .section_story .cell50 img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            object-position: center bottom;
+            display: block;
+        }
+        .section_story .cell50:last-child {
+            padding-top: 60px;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/jquery.flexslider.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/jquery.fullPage.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/swiper.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0" class="main_body">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="about/brand.html" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="about/brand.html">브랜드</a></li>
+                                    <li><a href="about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="menu/drink.html" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="bbs/notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="bbs/notice.html">공지사항</a></li>
+                                    <li><a href="bbs/faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="bbs/event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="bbs/event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="order/cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="mypage/index.html">마이페이지</a></li>
+                                    <li><a href="order/history.html">주문내역</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_overlay_inner">
+            <div class="mobile_menu_header">
+                <div class="mobile_menu_logo">
+                    <span class="mobile_menu_logo_text">TORI</span>
+                    <span class="mobile_menu_logo_icon">☕</span>
+                    <span class="mobile_menu_logo_text">COFFEE</span>
+                </div>
+                <button class="mobile_menu_close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile_menu_content">
+                <div class="mobile_menu_left">
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">토리 스토리</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">메뉴</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">매장</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">소식</div>
+                    </div>
+                    <div class="mobile_menu_item">
+                        <div class="mobile_menu_main">이벤트</div>
+                    </div>
+                </div>
+                <div class="mobile_menu_right">
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=1">공지사항</a>
+                        <a href="/bbs/?bbs_category=4">FAQ</a>
+                    </div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=3">이벤트</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap main_wrap">
+        <div class="cont main">
+            
+            <!-- Section 01 - MAIN -->
+            <div id="section01" class="cont_box section section_main" data-anchor="main">
+                <div class="section_inner">
+                    <div class="swiper_wrap">
+                        <div class="swiper">
+                            <div class="swiper-container section_main_swiper section_main_swiper1">
+                                <ul class="swiper-wrapper">
+                                    <li class="swiper-slide swiper-slide-active">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" 
+                                            style="background:url('src/main1.png'); width:100%; height:100vh; background-size:cover; background-position:center center;">
+                                        </div>
+                                        
+                                        <div class="swiper-slide_img swiper-slide_img_m" 
+                                            style="background:url('src/main1.png'); width:100%; height:100vh; background-size:cover; background-position:center center;">
+                                        </div>
+
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251203192750_1764757670996_LrPhMy03_8.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251203192750_1764757670996_LrPhMy03_8.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251105224149_1762350109012_hXPC0XaBXG.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251105224149_1762350109012_hXPC0XaBXG.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251023110728_1761185248895_41p1zdqV0x.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20251023110728_1761185248895_41p1zdqV0x.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250516164107_1747381267051_ImhzD_CLQI.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250516164107_1747381267051_ImhzD_CLQI.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250424000230_1745420550423_8nOaXZV6Ww.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250424000230_1745420550423_8nOaXZV6Ww.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250319235554_1742396154719_ZFON8RAMW6.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20250319235554_1742396154719_ZFON8RAMW6.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="swiper-slide">
+                                        <div class="swiper-slide_img swiper-slide_img_pc" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20240926210426_1727352266910_QC_A3rqBQj.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="swiper-slide_img swiper-slide_img_m" style="background:url('https://img.79plus.co.kr/megahp/manager/upload/main/20240926210426_1727352266910_QC_A3rqBQj.jpg?ver=202207071306'); width:100%; height:100vh; background-size:cover; background-position:center center;"></div>
+                                        <div class="section_middle">
+                                            <div class="cont_boxs">
+                                                <div class="cont_title_wrap section_main_fade animation_fade_up animation01">
+                                                    <div class="cont_title"><b></b></div>
+                                                </div>
+                                                <div class="cont_text_box section_main_fade animation_fade_up animation02">
+                                                    <div class="cont_text cont_text_title"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="swiper-button_wrap">
+                                    <div class="swiper-button_box">
+                                        <div class="swiper-button-next"></div>
+                                        <div class="swiper-button-prev"></div>
+                                    </div>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scroll_down_icon_wrap">
+                        <div class="scroll_down_icon">
+                            <span class="scroll_down_icon_mouse">
+                                <span class="scroll_down_icon_mouse_move"></span>
+                            </span>
+                            <div class="scroll_down_text">스크롤을 내리세요!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 02 - 메가 스토리 -->
+            <div id="section02" class="cont_box section section_story" data-anchor="story">
+                <div class="section_inner">
+                    <div class="table0">
+                        <div class="cell50"></div>
+                        <div class="cell50">
+                            <img alt="TORI COFFEE 브랜드 소개">
+                        </div>
+                    </div>
+                    <div class="section_middle">
+                        <div class="cont_boxs">
+                            <div class="cont_list cont_list_content">
+                                <ul>
+                                    <li>
+                                        <div class="cont_title_wrap">
+                                            <div class="cont_title_info">TORI COFFEE 이야기</div>
+                                            <div class="cont_title robo section_main_fade animation_fade_up animation03">
+                                                <h2>본질에 집중한 깊은 2샷</h2>
+                                            </div>
+                                        </div>
+                                        <div class="cont_text_box">
+                                            <div class="cont_text cont_text_title section_main_fade animation_fade_up animation04">
+                                                <b>수많은 메뉴보다 단 하나의 완벽한 맛을 지향합니다.</b>
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation05">
+                                                100% 프리미엄 아라비카 원두를 로스팅하여,<br class="pc">
+                                                깊고 부드러운 커피 본질에 집중합니다.<br class="pc">
+                                                가짓수보다는 <span style="color:#cf4a23;">가장 자신 있는 맛</span>에만 집중하여<br class="pc">
+                                                매일 만나도 변함없는 확실한 한 잔을 선사합니다.
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation06">
+                                                <div class="cont_list">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="about/brand.html">
+                                                                <div class="input_btn_wrap input_wrap3">
+                                                                    <input type="button" value="브랜드소개" class="btn btn1 btn_ani">
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="about/bi.html">
+                                                                <div class="input_btn_wrap input_wrap3">
+                                                                    <input type="button" value="BI" class="btn btn1 btn_ani">
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 03 - 메뉴소개 -->
+            <div id="section03" class="cont_box section section_menu" data-anchor="menu">
+                <div class="section_inner">
+                    <div class="section_middle">
+                        <div class="cont_boxs">
+                            <div class="cont_list cont_list_content swiper_overflow_left">
+                                <ul style="display:flex; width:100%; flex-wrap:wrap; align-items:center;">
+                                    <li style="display:inline-block; vertical-align:middle; margin-right:50px; margin-top:0; width:calc(50% - 25px);">
+                                        <div class="cont_title_wrap">
+                                            <div class="cont_title_info">TORI COFFEE 메뉴</div>
+                                            <div class="cont_title robo section_main_fade animation_fade_up animation03">
+                                                <h3><span class="cont_title_bg cont_title_bg_active">TORI'S ESSENTIAL</span></h3>
+                                            </div>
+                                        </div>
+                                        <div class="cont_text_box">
+                                            <div class="cont_text cont_text_title section_main_fade animation_fade_up animation04">
+                                                <b>우리가 가장 자신 있는 메뉴만 엄선했습니다.</b>
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation05">
+                                                메뉴의 가짓수보다는 <span style="color:#cf4a23;">최고의 맛을 내는 소수 정예 메뉴</span>에 집중합니다.<br>
+                                                각 메뉴 하나하나에 자신감을 담아<br>
+                                                고민 없이 선택해도 확실한 만족을 드립니다.
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation06">
+                                                <a href="menu/drink.html">
+                                                    <div class="input_btn_wrap input_wrap3 input_width">
+                                                        <input type="button" value="메뉴 더보기" class="btn btn1 btn_ani">
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li style="display:inline-block; vertical-align:middle; margin-right:0; margin-top:0; width:calc(50% - 25px); overflow:visible;">
+                                        <div class="swiper_wrap" style="height:100%; width:100%; max-width:100%; margin:0;">
+                                            <div class="swiper" style="height:100%; width:100%; max-width:420px;">
+                                                <div class="swiper_overflow_container" style="overflow:visible; position:relative;">
+                                                    <div class="swiper-container section_menu_swiper cont_gallery_list" style="width:100%; height:100%; overflow:visible !important;">
+                                                        <ul class="swiper-wrapper">
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img">
+                                                                        <img alt="골드망고 스무디" th:src="@{/src/골드망고 스무디.png}">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b>골드망고 스무디</b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1">French Fries Milkshake</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2">부드럽고 달콤한 밀크쉐이크에 바삭한 감자튀김스틱을 더해 짭짤함과 달콤함이 어우러지는 단짠 매력의 겨울시즌 한정 밀크쉐이크</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img">
+                                                                        <img alt="메뉴">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img">
+                                                                        <img alt="메뉴">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img">
+                                                                        <img alt="메뉴">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
+                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
+                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="swiper-slide" style="opacity:1; overflow:visible; width:100% !important;">
+                                                                <div class="cont_gallery_list_box" style="height:100%; overflow:visible; border-radius:10px; border:1px solid rgba(0,0,0,0.1); margin:0; background:#fff;">
+                                                                    <div class="cont_gallery_list_img" style="position:relative; overflow:visible; width:100% !important; min-height:500px; padding-top:50px; display:flex; align-items:flex-end; justify-content:center;">
+                                                                        <img alt="메뉴" style="position:relative; width:100%; height:auto; display:block; max-width:100%; object-fit:contain;">
+                                                                    </div>
+                                                                    <div class="cont_text_box">
+                                                                        <div class="cont_text">
+                                                                            <div class="cont_text_inner text_wrap cont_text_title">
+                                                                                <div class="text text1">
+                                                                                    <b></b>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="cont_text_inner text_wrap cont_text_info">
+                                                                                <div class="text text1"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="cont_text cont_text_info">
+                                                                            <div class="text_wrap">
+                                                                                <div class="text text2"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="swiper-button-next"></div>
+                                                        <div class="swiper-button-prev"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 04 - 매장 -->
+            <div id="section04" class="cont_box section section_store" data-anchor="store">
+                <div class="section_inner">
+                    <div class="section_middle">
+                        <div class="cont_boxs">
+                            <div class="cont_list cont_list_content">
+                                <ul style="display:flex; width:100%; flex-wrap:wrap; align-items:center;">
+                                    <li style="display:inline-block; vertical-align:middle; margin-right:50px; margin-top:0; width:calc(50% - 25px);">
+                                        <div class="cont_title_wrap">
+                                            <div class="cont_title_info">오시는 길</div>
+                                            <div class="cont_title robo section_main_fade animation_fade_up animation03">
+                                                <h2>OFFICE MAP</h2>
+                                            </div>
+                                        </div>
+                                        <div class="cont_text_box">
+                                            <div class="cont_text cont_text_title section_main_fade animation_fade_up animation04">
+                                                <b>TORI COFFEE 본사 오시는 길</b>
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation05">
+                                                서울특별시 강남구 강남대로 518 11층, 13층, (주)앤하우스<br>
+                                                지번: 서울특별시 강남구 논현동 164-1<br>
+                                                Tel. 1588-0656 | Fax. 02-325-5199
+                                            </div>
+                                            <div class="cont_text section_main_fade animation_fade_up animation06">
+                                                <a href="about/map.html">
+                                                    <div class="input_btn_wrap input_wrap3 input_width">
+                                                        <input type="button" value="오시는 길" class="btn btn1 btn_ani">
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li style="display:inline-block; vertical-align:middle; margin-right:0; margin-top:0; width:calc(50% - 25px);">
+                                        <div class="map_wrap">
+                                            <!-- 지도 영역 -->
+                                            <img alt="TORI COFFEE 오시는 길 지도" th:src="@{/src/map.png}" style="width:100%;height:auto;display:block;">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 05 - 소식 -->
+            <div id="section05" class="cont_box section section_news" data-anchor="news">
+                <div class="section_inner">
+                    <div class="section_middle">
+                        <div class="cont_boxs">
+                            <div class="cont_title_wrap text_center">
+                                <div class="cont_title_info">TORI COFFEE 소식</div>
+                                <div class="cont_title robo section_main_fade animation_fade_up animation03">
+                                    <h2><span class="cont_title_bg">토리커피의 알찬 소식</span></h2>
+                                </div>
+                            </div>
+                            <div class="cont_text_wrap">
+                                <div class="cont_tab">
+                                    <ul>
+                                        <li class="check" id="noticeTab"><a href="javascript:void(0);" onclick="switchTab('notice')">공지사항</a></li>
+                                        <li id="faqTab"><a href="javascript:void(0);" onclick="switchTab('faq')">FAQ</a></li>
+                                    </ul>
+                                </div>
+                                <!-- 공지사항 목록 -->
+                                <div class="cont_list cont_list_content" id="noticeList">
+                                    <ul style="display:flex; width:100%; flex-wrap:wrap; gap:15px; align-items:stretch;">
+                                        <li style="display:flex; vertical-align:top; margin-right:0; margin-top:0; width:calc(50% - 7.5px);">
+                                            <div class="cont_text_box" style="padding:20px; background:#f9f9f9; border-radius:8px; border:1px solid #e0e0e0; width:100%; display:flex; flex-direction:column; justify-content:space-between; min-height:120px;">
+                                                <div class="cont_text cont_text_title" style="margin-bottom:10px;">
+                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                        <span style="display:inline-block; padding:4px 10px; background:#D95B3B; color:#fff; border-radius:4px; font-size:12px; font-weight:700; white-space:nowrap; flex-shrink:0;">공지</span>
+                                                        <b style="font-size:16px; color:#333; line-height:1.4;">TORI COFFEE 앱 업그레이드 오픈 안내</b>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info" style="font-size:14px; color:#666; margin-top:auto;">
+                                                    <div>2025-10-19</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li style="display:flex; vertical-align:top; margin-right:0; margin-top:0; width:calc(50% - 7.5px);">
+                                            <div class="cont_text_box" style="padding:20px; background:#f9f9f9; border-radius:8px; border:1px solid #e0e0e0; width:100%; display:flex; flex-direction:column; justify-content:space-between; min-height:120px;">
+                                                <div class="cont_text cont_text_title" style="margin-bottom:10px;">
+                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                        <span style="display:inline-block; padding:4px 10px; background:#D95B3B; color:#fff; border-radius:4px; font-size:12px; font-weight:700; white-space:nowrap; flex-shrink:0;">공지</span>
+                                                        <b style="font-size:16px; color:#333; line-height:1.4;">TORI COFFEE 원두 관련 공지</b>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info" style="font-size:14px; color:#666; margin-top:auto;">
+                                                    <div>2023-02-21</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- FAQ 목록 -->
+                                <div class="cont_list cont_list_content" id="faqList" style="display:none;">
+                                    <ul style="display:flex; width:100%; flex-wrap:wrap; gap:15px; align-items:stretch;">
+                                        <li style="display:flex; vertical-align:top; margin-right:0; margin-top:0; width:calc(50% - 7.5px);">
+                                            <div class="cont_text_box" style="padding:20px; background:#f9f9f9; border-radius:8px; border:1px solid #e0e0e0; width:100%; display:flex; flex-direction:column; justify-content:space-between; min-height:120px;">
+                                                <div class="cont_text cont_text_title" style="margin-bottom:10px;">
+                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                        <span style="display:inline-block; padding:4px 10px; background:#17a2b8; color:#fff; border-radius:4px; font-size:12px; font-weight:700; white-space:nowrap; flex-shrink:0;">고객센터</span>
+                                                        <b style="font-size:16px; color:#333; line-height:1.4;">9월 1일부터 인상되는 디저트 가격이 어떻게 되나요?</b>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info" style="font-size:14px; color:#666; margin-top:auto;">
+                                                    <div>2022-08-30</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li style="display:flex; vertical-align:top; margin-right:0; margin-top:0; width:calc(50% - 7.5px);">
+                                            <div class="cont_text_box" style="padding:20px; background:#f9f9f9; border-radius:8px; border:1px solid #e0e0e0; width:100%; display:flex; flex-direction:column; justify-content:space-between; min-height:120px;">
+                                                <div class="cont_text cont_text_title" style="margin-bottom:10px;">
+                                                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                                        <span style="display:inline-block; padding:4px 10px; background:#17a2b8; color:#fff; border-radius:4px; font-size:12px; font-weight:700; white-space:nowrap; flex-shrink:0;">모바일상품권</span>
+                                                        <b style="font-size:16px; color:#333; line-height:1.4;">매장에서 모바일상품권 사용을 거부당했습니다. 사용 가능한가요?</b>
+                                                    </div>
+                                                </div>
+                                                <div class="cont_text cont_text_info" style="font-size:14px; color:#666; margin-top:auto;">
+                                                    <div>2025-11-18</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="cont_text_wrap text_center" style="margin-top:30px;">
+                                    <div class="cont_text_box" style="display:flex; justify-content:center; align-items:center; gap:15px; flex-wrap:wrap; margin:0; padding:0;">
+                                        <div class="cont_text" style="display:flex; align-items:center; justify-content:center; margin:0; padding:0;">
+                                            <a href="bbs/notice.html" style="display:flex; align-items:center; margin:0; padding:0; text-decoration:none;">
+                                                <div class="input_btn_wrap input_wrap3 input_width" style="min-width:150px; margin:0; padding:0; display:flex; align-items:center;">
+                                                    <input type="button" value="공지사항 더보기" class="btn btn1 btn_ani" style="width:100%; padding:12px 20px; font-size:14px; height:44px; min-height:44px; max-height:44px; box-sizing:border-box; margin:0; line-height:1; display:block;">
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="cont_text" style="display:flex; align-items:center; justify-content:center; margin:0; padding:0;">
+                                            <a href="bbs/faq.html" style="display:flex; align-items:center; margin:0; padding:0; text-decoration:none;">
+                                                <div class="input_btn_wrap input_wrap3 input_width" style="min-width:150px; margin:0; padding:0; display:flex; align-items:center;">
+                                                    <input type="button" value="FAQ 더보기" class="btn btn1 btn_ani" style="width:100%; padding:12px 20px; font-size:14px; height:44px; min-height:44px; max-height:44px; box-sizing:border-box; margin:0; line-height:1; display:block;">
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 06 - 이벤트 -->
+            <div id="section06" class="cont_box section section_event" data-anchor="event">
+                <div class="section_inner">
+                    <div class="section_middle">
+                        <div class="cont_boxs">
+                            <div class="cont_title_wrap text_center">
+                                <div class="cont_title_info">TORI COFFEE 이벤트</div>
+                                <div class="cont_title robo section_main_fade animation_fade_up animation03">
+                                    <h2><span class="cont_title_bg">야무진 이벤트</span></h2>
+                                </div>
+                            </div>
+                            <div class="cont_text_wrap">
+                                <div class="cont_text_box">
+                                    <div class="cont_text">
+                                        <b>TORI COFFEE 이벤트</b>
+                                    </div>
+                                    <div class="cont_text">다양한 이벤트를 확인하고 참여해보세요!</div>
+                                </div>
+                                <div class="cont_list cont_list4 cont_list_m cont_list_m2 cont_gallery_list board_list_gallery">
+                                    <ul style="display:flex; width:100%; flex-wrap:nowrap; gap:20px;">
+                                        <li style="flex:1; min-width:0;">
+                                            <a href="#">
+                                                <div class="cont_gallery_list_box">
+                                                    <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                        <img alt="[이벤트] 겨울 미니 시즌 신메뉴 출시" th:src="@{/src/event01.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                                    </div>
+                                                    <div class="cont_text_box">
+                                                        <div class="cont_text cont_text_title">
+                                                            <div class="text_wrap">
+                                                                <div class="text text1">[이벤트] 겨울 미니 시즌 신메뉴 출시</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont_text cont_text_info">
+                                                            <div class="text_wrap">
+                                                                <div class="text text2">TORI COFFEE</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li style="flex:1; min-width:0;">
+                                            <a href="#">
+                                                <div class="cont_gallery_list_box">
+                                                    <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                        <img alt="[제휴] 토리TRC커피 X 미래카드" th:src="@{/src/event02.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                                    </div>
+                                                    <div class="cont_text_box">
+                                                        <div class="cont_text cont_text_title">
+                                                            <div class="text_wrap">
+                                                                <div class="text text1">[제휴] 토리TRC커피 X 미래카드</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont_text cont_text_info">
+                                                            <div class="text_wrap">
+                                                                <div class="text text2">TORI COFFEE</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li style="flex:1; min-width:0;">
+                                            <a href="#">
+                                                <div class="cont_gallery_list_box">
+                                                    <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                        <img alt="[이벤트] 크리스마스 시즌 한정 음료" th:src="@{/src/event03.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                                    </div>
+                                                    <div class="cont_text_box">
+                                                        <div class="cont_text cont_text_title">
+                                                            <div class="text_wrap">
+                                                                <div class="text text1">[이벤트] 크리스마스 시즌 한정 음료</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont_text cont_text_info">
+                                                            <div class="text_wrap">
+                                                                <div class="text text2">TORI COFFEE</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li style="flex:1; min-width:0;">
+                                            <a href="#">
+                                                <div class="cont_gallery_list_box">
+                                                    <div class="cont_gallery_list_img cont_gallery_list_img_height">
+                                                        <img alt="[이벤트] 12월 토리TRC 별빛 결제 이벤트" th:src="@{/src/event04.png}" style="object-fit: cover; width: 100%; height: 100%;">
+                                                    </div>
+                                                    <div class="cont_text_box">
+                                                        <div class="cont_text cont_text_title">
+                                                            <div class="text_wrap">
+                                                                <div class="text text1">[이벤트] 12월 토리TRC 별빛 결제 이벤트</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont_text cont_text_info">
+                                                            <div class="text_wrap">
+                                                                <div class="text text2">TORI COFFEE</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="cont_text_wrap text_center">
+                                    <div class="cont_text_box">
+                                        <div class="cont_text">전체 매장 및 각 매장에서 다양한 이벤트가 진행중 입니다.</div>
+                                        <div class="cont_text">
+                                            <a href="bbs/event.html">
+                                                <div class="input_btn_wrap input_wrap3 input_width">
+                                                    <input type="button" value="이벤트 더보기" class="btn btn1 btn_ani">
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 07 - FOOT -->
+            <div id="section07" class="cont_box section section_foot" data-anchor="foot">
+                <div class="section_inner">
+                    <div class="foot_menu_wrap">
+                        <div class="foot_menu">
+                            <div class="cont_list">
+                                <ul>
+                                    <li><a href="javascript:void(0);" onclick="showTermsModal(); return false;"><b>이용약관</b></a></li>
+                                    <li><a href="policy/privacy_policy.html"><b>개인정보처리방침</b></a></li>
+                                    <li><a href="policy/service_policy.html"><b>멤버십 이용약관</b></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="foot_wrap">
+                        <div class="foot">
+                            <div class="cont_list cont_list_content">
+                                <ul>
+                                    <li>
+                                        <div class="cont_text">
+                                            <div class="cont_list cont_list_m cont_list_m1">
+                                                <ul>
+                                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="cont_text foot_info">
+                                            <div class="cont_list cont_list_small cont_list_width_m">
+                                                <ul>
+                                                    <li><b>주식회사 토리커피</b></li>
+                                                    <li>대표자 김대영</li>
+                                                    <li>창업상담 1588-0656</li>
+                                                    <li>고객센터 1588-8298</li>
+                                                    <li>FAX 02-325-5199</li>
+                                                    <li>사업자등록번호 105-87-51367</li>
+                                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                                    <li>개인정보보호 책임자 이종원</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="cont_list cont_list6 pc">
+                                            <ul>
+                                                <li>
+                                                    <div class="cont_text cont_text_title">토리 스토리</div>
+                                                    <div class="cont_text">
+                                                        <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                            <ul>
+                                                                <li><a href="/about/brand/">브랜드</a></li>
+                                                                <li><a href="/about/bi/">BI</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="cont_text cont_text_title">메뉴소개</div>
+                                                    <div class="cont_text">
+                                                        <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                            <ul>
+                                                                <li><a href="/menu/?menu_category1=1&menu_category2=1">음료</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="cont_text cont_text_title">매장</div>
+                                                    <div class="cont_text">
+                                                        <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                            <ul>
+                                                                <li><a href="/about/map/">오시는 길</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="cont_text cont_text_title">소식</div>
+                                                    <div class="cont_text">
+                                                        <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                            <ul>
+                                                                <li><a href="/bbs/?bbs_category=1">공지사항</a></li>
+                                                                <li><a href="/bbs/?bbs_category=4">FAQ</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="cont_text cont_text_title">이벤트</div>
+                                                    <div class="cont_text">
+                                                        <div class="cont_list cont_list1 cont_list_small cont_list_small1">
+                                                            <ul>
+                                                                <li><a href="/bbs/?bbs_category=3">이벤트</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 섹션 네비게이션 -->
+    <div class="chap_list_wrap robo">
+        <ul>
+            <li class="chap_list on">
+                <span></span>
+                <div class="chap_list_wrap_title">MAIN</div>
+            </li>
+            <li class="chap_list">
+                <span></span>
+                <div class="chap_list_wrap_title">토리 스토리</div>
+            </li>
+            <li class="chap_list">
+                <span></span>
+                <div class="chap_list_wrap_title">메뉴소개</div>
+            </li>
+            <li class="chap_list">
+                <span></span>
+                <div class="chap_list_wrap_title">매장</div>
+            </li>
+            <li class="chap_list">
+                <span></span>
+                <div class="chap_list_wrap_title">소식</div>
+            </li>
+            <li class="chap_list">
+                <span></span>
+                <div class="chap_list_wrap_title">이벤트</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <!-- 모달 -->
+    <div class="overlay none"></div>
+    <div class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("body").addClass("main_body");
+            
+            // 뷰포트 강제 리셋 (모바일 뷰포트 인식 문제 해결)
+            if (window.innerWidth <= 768) {
+                var viewport = document.querySelector('meta[name="viewport"]');
+                if (viewport) {
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+                }
+            }
+            
+            fullpage();
+        });
+
+        function fullpage() {
+            var ChapList = $(".chap_list_wrap ul li");
+            $(".main").fullpage({
+                anchors: ["main", "story", "menu", "store", "news", "event", "foot"],
+                onLeave: function(index, nextIndex, direction){
+                    ChapList.removeClass("on");
+                    ChapList.eq(nextIndex-1).addClass("on");
+                    
+                    if ( nextIndex !== 1 ) {
+                        $(".head_wrap").addClass("head_fixed");
+                    } else {
+                        $(".head_wrap").removeClass("head_fixed");
+                    }
+                },
+                afterLoad: function(anchorLink, index){
+                    $(".section").eq(index-1).find(".cont_title_bg").addClass("cont_title_bg_active");
+                },
+                afterRender: function(anchorLink, index){
+                    ChapList.each(function(idx){
+                        $(this).click(function(){
+                            $.fn.fullpage.moveTo(idx+1);
+                        });
+                    });
+                    $(".scroll_down_icon_wrap").click(function(){
+                        $.fn.fullpage.moveTo(2);
+                    });
+                },
+            });
+        }
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                // 해당 li의 드롭다운만 표시
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            // 해당 li의 드롭다운만 숨김
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                // 모든 드롭다운 숨김
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        $(".mobile_menu_close").click(function(){
+            $(".mobile_menu_overlay").removeClass("active");
+            $("body").css("overflow", "");
+            $(".head_wrap").removeClass("head_over");
+            $(".head_menu_wrap").removeClass("right0");
+            $(".mobile_menu_icon").removeClass("mobile_menu_icon_open");
+        });
+
+        // 스크롤 시 헤더 고정 (메인 섹션을 지나면 고정)
+        $(window).scroll(function() {
+            var scrollTop = $(window).scrollTop();
+            var mainSectionHeight = $(".section_main").outerHeight() || window.innerHeight;
+            
+            if (scrollTop > mainSectionHeight - 100) {
+                $(".head_wrap").addClass("head_fixed");
+            } else {
+                $(".head_wrap").removeClass("head_fixed");
+            }
+        });
+        
+        // fullpage.js의 onLeave 이벤트에서도 처리
+        // 이미 fullpage 함수 내부에 있지만, 스크롤 이벤트와 함께 동작하도록 보완
+
+        // AOS 초기화
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 메인 슬라이더
+        var section_main_swiper1 = new Swiper(".section_main_swiper1", {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: false,
+            autoplay: false,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                type: "bullets",
+                clickable: true,
+            },
+        });
+
+        // 메뉴 슬라이더
+        new Swiper(".section_menu_swiper", {
+            loop: false,
+            slidesPerView: 1,
+            spaceBetween: 15,
+            autoplay: {
+                delay: 5000,
+            },
+            breakpoints: {
+                1280: {
+                    slidesPerView: 1,
+                },
+                760: {
+                    slidesPerView: 2,
+                },
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+
+        // 공지사항/FAQ 탭 전환
+        function switchTab(tab) {
+            if (tab === 'notice') {
+                $('#noticeTab').addClass('check');
+                $('#faqTab').removeClass('check');
+                $('#noticeList').show();
+                $('#faqList').hide();
+            } else if (tab === 'faq') {
+                $('#faqTab').addClass('check');
+                $('#noticeTab').removeClass('check');
+                $('#faqList').show();
+                $('#noticeList').hide();
+            }
+        }
+
+        // 로그인 상태 체크 및 UI 업데이트
+        $(document).ready(function() {
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 체크
+            checkLoginStatus();
+
+            // 로그인 상태일 때 드롭다운 토글 기능
+            $(document).on('click', '.head_login_state_member .head_login_trigger', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const $loginWrap = $(this).closest('.head_login_wrap');
+                $loginWrap.toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                if (typeof showCustomModal === 'function') {
+                    showCustomModal(
+                        '로그아웃',
+                        '로그아웃 하시겠습니까?',
+                        function() {
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userRole');
+                            window.location.href = 'login.html';
+                        },
+                        true
+                    );
+                } else {
+                    if (confirm('로그아웃 하시겠습니까?')) {
+                        localStorage.removeItem('isLoggedIn');
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('userRole');
+                        window.location.href = 'login.html';
+                    }
+                }
+            });
+        });
+        
+        // 커스텀 모달 함수
+        function showCustomModal(title, message, onConfirm, showCancel) {
+            const modal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('customModalTitle');
+            const modalMessage = document.getElementById('customModalMessage');
+            const modalButtons = document.getElementById('customModalButtons');
+            
+            modalTitle.textContent = title || '알림';
+            modalMessage.textContent = message || '';
+            
+            // 버튼 초기화
+            modalButtons.innerHTML = '';
+            
+            if (showCancel) {
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'custom_modal_btn custom_modal_btn_secondary';
+                cancelBtn.textContent = '취소';
+                cancelBtn.onclick = function() {
+                    modal.classList.remove('show');
+                };
+                modalButtons.appendChild(cancelBtn);
+            }
+            
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'custom_modal_btn custom_modal_btn_primary';
+            confirmBtn.textContent = '확인';
+            confirmBtn.onclick = function() {
+                modal.classList.remove('show');
+                if (onConfirm) {
+                    onConfirm();
+                }
+            };
+            modalButtons.appendChild(confirmBtn);
+            
+            modal.classList.add('show');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('customModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                        const modalContent = document.querySelector('.custom_modal_content');
+                        const modalMessage = document.getElementById('customModalMessage');
+                        if (modalContent) modalContent.classList.remove('terms_modal');
+                        if (modalMessage) modalMessage.classList.remove('terms_content');
+                    }
+                });
+            }
+        });
+        
+        // 이용약관 모달 표시 함수
+        function showTermsModal() {
+            const modal = document.getElementById('customModal');
+            const modalContent = document.querySelector('.custom_modal_content');
+            const modalTitle = document.getElementById('customModalTitle');
+            const modalMessage = document.getElementById('customModalMessage');
+            const modalButtons = document.getElementById('customModalButtons');
+            
+            if (modalContent) modalContent.classList.add('terms_modal');
+            modalTitle.textContent = '이용안내';
+            
+            const termsHTML = `
+                <div style="text-align:left; font-size:14px; line-height:1.8; color:#333;">
+                    <div style="margin-bottom:15px;">개인정보수집 범위 : 이름, 연락처</div>
+                    <div style="margin-bottom:15px;">개인정보수집 및 이용목적 : 온라인 문의 및 상담 자료와 결과 회신</div>
+                    <div style="margin-bottom:15px; color:#999; font-size:13px; padding-left:10px;">* 매장과 관련된 CS의 경우, 해결 과정 안내 혹은 결과 회신을 위해 매장 관리자(슈퍼바이저, 매장점주), 본사 유관부서가 연락을 드릴 수 있습니다.</div>
+                    <div style="margin-bottom:15px;">개인정보수집 및 보유기간 : 개인정보 수집 및 이용에 대한 목적이 달성되면 지체없이 파기하며 최대 보유기간은 1년을 넘기지 아니한다.</div>
+                </div>
+            `;
+            
+            modalMessage.innerHTML = termsHTML;
+            modalMessage.classList.add('terms_content');
+            
+            // 버튼 초기화 - 취소 버튼만 (중앙 정렬)
+            modalButtons.innerHTML = '';
+            modalButtons.style.justifyContent = 'center';
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'custom_modal_btn custom_modal_btn_secondary';
+            cancelBtn.textContent = '취소';
+            cancelBtn.style.cssText = 'border:1px solid #e0e0e0; background:#fff; color:#333;';
+            cancelBtn.onclick = function() {
+                modal.classList.remove('show');
+                if (modalContent) modalContent.classList.remove('terms_modal');
+                modalMessage.classList.remove('terms_content');
+            };
+            modalButtons.appendChild(cancelBtn);
+            
+            modal.classList.add('show');
+        }
+    </script>
+    
+    <!-- 커스텀 모달 -->
+    <div id="customModal" class="custom_modal">
+        <div class="custom_modal_content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div class="custom_modal_title" id="customModalTitle" style="margin-bottom:0;">알림</div>
+                <button onclick="document.getElementById('customModal').classList.remove('show'); const modalContent = document.querySelector('.custom_modal_content'); const modalMessage = document.getElementById('customModalMessage'); if(modalContent) modalContent.classList.remove('terms_modal'); if(modalMessage) modalMessage.classList.remove('terms_content');" style="background:none; border:none; font-size:24px; cursor:pointer; color:#333; padding:0; width:24px; height:24px; display:flex; align-items:center; justify-content:center; line-height:1;">×</button>
+            </div>
+            <div class="custom_modal_message" id="customModalMessage"></div>
+            <div class="custom_modal_buttons" id="customModalButtons" style="justify-content:center;">
+                <button class="custom_modal_btn custom_modal_btn_primary" id="customModalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

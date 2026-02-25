@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니 데이터 확인</title>
+</head>
+<body>
+<h1>🛒 장바구니 데이터 수신 테스트</h1>
+
+<div style="background: #f0f0f0; padding: 10px; margin-bottom: 20px;">
+    <p><strong>서버 메시지:</strong> <span th:text="${message}">메시지 없음</span></p>
+    <p th:if="${error}" style="color: red;"><strong>에러 발생:</strong> <span th:text="${error}"></span></p>
+</div>
+
+<h3>객체 리스트 전체 내용 (toString):</h3>
+<pre th:text="${cartItems}"></pre>
+
+<hr>
+
+<h3>품목 리스트 개별 확인:</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <th>메뉴명</th>
+        <th>금액</th>
+        <th>수량</th>
+        <th>옵션 개수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cartItems}">
+        <td th:text="${item.menuName}">메뉴명</td>
+        <td th:text="${item.quantity}">0</td>
+        <td th:text="${item.unitPrice}">0</td>
+        <td th:text="${#numbers.formatInteger(item.totalItemPrice, 0, 'COMMA')} + '원'">0원</td>
+
+        <td>
+            <span th:each="opt, iter : ${item.cartOptions}"
+                  th:text="${opt.optionName} + (${iter.last} ? '' : ', ')">
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(cartItems)}" style="color: blue;">
+    알림: cartItems 리스트가 현재 비어 있습니다.
+</p>
+
+<button onclick="location.reload()">데이터 다시 생성(새로고침)</button>
+</body>
+</html>

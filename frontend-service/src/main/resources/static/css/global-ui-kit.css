@@ -1,0 +1,722 @@
+/* ============================================
+   TORI COFFEE - Global UI Kit
+   메인 컬러: #D95B3B (Terracotta Orange)
+   ============================================ */
+
+/* ========== 1. CSS Variables (Design Tokens) ========== */
+:root {
+    /* === Primary Colors (Brand) === */
+    --color-primary: #D95B3B;
+    --color-primary-light: #E67A5B;      /* +20% lighter */
+    --color-primary-lighter: #F29B7E;    /* +40% lighter */
+    --color-primary-dark: #C74A2A;       /* -20% darker */
+    --color-primary-darker: #B53E1F;     /* -40% darker */
+
+    /* === Semantic Colors === */
+    --color-success: #27AE60;            /* Green - 주문 완료 */
+    --color-warning: #F39C12;            /* Orange - 준비중 */
+    --color-error: #E74C3C;              /* Red - 취소/오류 */
+    --color-info: #3498DB;               /* Blue - 정보 */
+
+    /* === Neutral Colors (Grays) === */
+    --color-black: #1A1A1A;
+    --color-gray-900: #2D2D2D;
+    --color-gray-800: #3D3D3D;
+    --color-gray-700: #4D4D4D;
+    --color-gray-600: #666666;
+    --color-gray-500: #808080;
+    --color-gray-400: #999999;
+    --color-gray-300: #BDBDBD;
+    --color-gray-200: #E0E0E0;
+    --color-gray-100: #F5F5F5;
+    --color-white: #FFFFFF;
+
+    /* === Text Colors (WCAG AA 준수) === */
+    --text-primary: #1A1A1A;             /* 본문 텍스트 */
+    --text-secondary: #4D4D4D;           /* 부가 설명 */
+    --text-tertiary: #808080;            /* 메타 정보 */
+    --text-disabled: #BDBDBD;            /* 비활성화 */
+    --text-on-primary: #FFFFFF;          /* Primary 배경 위 텍스트 */
+    --text-link: #D95B3B;                /* 링크 */
+    --text-link-hover: #B53E1F;          /* 링크 호버 */
+
+    /* === Background Colors === */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F5F5F5;
+    --bg-tertiary: #E0E0E0;
+    --bg-overlay: rgba(0, 0, 0, 0.5);
+
+    /* === Border Colors === */
+    --border-primary: #E0E0E0;
+    --border-secondary: #F5F5F5;
+    --border-focus: #D95B3B;
+
+    /* === Typography (16px 기준, 가독성 최적화) === */
+    --font-size-xs: 0.75rem;     /* 12px - 최소 사용 */
+    --font-size-sm: 0.875rem;    /* 14px - 캡션/라벨 */
+    --font-size-base: 1rem;      /* 16px - 본문 (기본) */
+    --font-size-lg: 1.125rem;    /* 18px - 강조 본문 */
+    --font-size-xl: 1.25rem;     /* 20px - 소제목 */
+    --font-size-2xl: 1.5rem;     /* 24px - 제목 */
+    --font-size-3xl: 1.875rem;   /* 30px - 큰 제목 */
+    --font-size-4xl: 2.25rem;    /* 36px - 메인 타이틀 */
+
+    /* === Font Weights === */
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-black: 900;
+
+    /* === Line Heights (가독성 향상) === */
+    --line-height-tight: 1.25;   /* 제목용 */
+    --line-height-normal: 1.5;   /* 본문용 */
+    --line-height-relaxed: 1.75; /* 긴 본문용 */
+
+    /* === Spacing (8px 기준 시스템) === */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-8: 2rem;      /* 32px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    --space-16: 4rem;     /* 64px */
+
+    /* === Border Radius === */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+
+    /* === Shadows === */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+    /* === Transitions === */
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
+
+    /* === Touch Target Size (모바일 최적화) === */
+    --touch-target-min: 44px;    /* iOS/Android 최소 권장 크기 */
+    --touch-target-comfortable: 48px;  /* 편안한 크기 */
+}
+
+
+/* ========== 2. Typography Classes ========== */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-regular { font-weight: var(--font-weight-regular); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-black { font-weight: var(--font-weight-black); }
+
+.leading-tight { line-height: var(--line-height-tight); }
+.leading-normal { line-height: var(--line-height-normal); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+
+
+/* ========== 3. Color Classes ========== */
+/* Text Colors */
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+.text-brand { color: var(--color-primary) !important; }
+.text-success { color: var(--color-success) !important; }
+.text-warning { color: var(--color-warning) !important; }
+.text-error { color: var(--color-error) !important; }
+.text-white { color: var(--color-white) !important; }
+
+/* Background Colors */
+.bg-primary { background-color: var(--bg-primary) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-brand { background-color: var(--color-primary) !important; }
+.bg-success { background-color: var(--color-success) !important; }
+.bg-warning { background-color: var(--color-warning) !important; }
+.bg-error { background-color: var(--color-error) !important; }
+
+
+/* ========== 4. Button System (WCAG 준수) ========== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Primary Button - 접근성 개선 (흰색 텍스트) */
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--text-on-primary);
+}
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+.btn-primary:active {
+    background-color: var(--color-primary-darker);
+    transform: translateY(1px);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+}
+.btn-secondary:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+/* Outline Button */
+.btn-outline {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+}
+.btn-outline:hover {
+    background-color: var(--bg-secondary);
+}
+
+/* Disabled State */
+.btn:disabled,
+.btn.disabled {
+    background-color: var(--color-gray-200);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.btn:disabled:hover,
+.btn.disabled:hover {
+    background-color: var(--color-gray-200);
+    transform: none;
+}
+
+/* Button Sizes */
+.btn-sm {
+    min-height: 36px;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+}
+.btn-lg {
+    min-height: var(--touch-target-comfortable);
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--font-size-lg);
+}
+.btn-block {
+    width: 100%;
+}
+
+
+/* ========== 5. Touch Target Classes (모바일 최적화) ========== */
+.touch-target {
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+}
+.touch-target-comfortable {
+    min-width: var(--touch-target-comfortable);
+    min-height: var(--touch-target-comfortable);
+}
+
+/* Icon Button (44x44 최소 크기 보장) */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    transition: background-color var(--transition-fast);
+}
+.btn-icon:hover {
+    background-color: var(--bg-secondary);
+}
+.btn-icon:active {
+    background-color: var(--bg-tertiary);
+}
+
+
+/* ========== 6. Status Badges (브랜드 색상 기반) ========== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.badge-primary {
+    background-color: var(--color-primary-lighter);
+    color: var(--color-primary-darker);
+}
+.badge-success {
+    background-color: #D4EDDA;
+    color: #155724;
+}
+.badge-warning {
+    background-color: #FFF3CD;
+    color: #856404;
+}
+.badge-error {
+    background-color: #F8D7DA;
+    color: #721C24;
+}
+.badge-neutral {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-700);
+}
+
+
+/* ========== 7. Spacing Utilities ========== */
+/* Margin */
+.m-0 { margin: 0 !important; }
+.m-1 { margin: var(--space-1) !important; }
+.m-2 { margin: var(--space-2) !important; }
+.m-3 { margin: var(--space-3) !important; }
+.m-4 { margin: var(--space-4) !important; }
+.m-5 { margin: var(--space-5) !important; }
+.m-6 { margin: var(--space-6) !important; }
+.m-8 { margin: var(--space-8) !important; }
+
+.mt-0 { margin-top: 0 !important; }
+.mt-2 { margin-top: var(--space-2) !important; }
+.mt-4 { margin-top: var(--space-4) !important; }
+.mt-6 { margin-top: var(--space-6) !important; }
+.mt-8 { margin-top: var(--space-8) !important; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-2 { margin-bottom: var(--space-2) !important; }
+.mb-4 { margin-bottom: var(--space-4) !important; }
+.mb-6 { margin-bottom: var(--space-6) !important; }
+.mb-8 { margin-bottom: var(--space-8) !important; }
+
+/* Padding */
+.p-0 { padding: 0 !important; }
+.p-2 { padding: var(--space-2) !important; }
+.p-4 { padding: var(--space-4) !important; }
+.p-6 { padding: var(--space-6) !important; }
+.p-8 { padding: var(--space-8) !important; }
+
+.pt-4 { padding-top: var(--space-4) !important; }
+.pb-4 { padding-bottom: var(--space-4) !important; }
+.px-4 { padding-left: var(--space-4) !important; padding-right: var(--space-4) !important; }
+.py-4 { padding-top: var(--space-4) !important; padding-bottom: var(--space-4) !important; }
+
+
+/* ========== 8. Card Components ========== */
+.card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+}
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+.card-body {
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+
+/* ========== 9. Input Fields (접근성 개선) ========== */
+.input {
+    width: 100%;
+    min-height: var(--touch-target-min);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast);
+}
+.input:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+}
+.input::placeholder {
+    color: var(--text-tertiary);
+}
+
+
+/* ========== 10. Accessibility Helpers ========== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.focus-visible:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+
+/* ========== 11. Responsive Utilities ========== */
+@media (max-width: 768px) {
+    :root {
+        --font-size-base: 1rem;      /* 모바일에서도 16px 유지 */
+        --font-size-lg: 1.125rem;
+        --font-size-xl: 1.25rem;
+        --font-size-2xl: 1.375rem;   /* 모바일에서 약간 축소 */
+    }
+
+    .btn {
+        min-height: var(--touch-target-comfortable);  /* 모바일에서 더 크게 */
+    }
+}
+
+@media (min-width: 769px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+
+/* ========== 12. Animation Utilities ========== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn var(--transition-base);
+}
+
+.slide-up {
+    animation: slideUp var(--transition-slow);
+}
+
+
+/* ========== 13. Loading State ========== */
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-gray-200);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+/* ========== 14. Toast UI (Alert 대체) ========== */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 280px;
+    max-width: 400px;
+    padding: var(--space-4) var(--space-6);
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    pointer-events: auto;
+    animation: slideInRight 0.3s ease-out;
+    border-left: 4px solid var(--color-primary);
+}
+
+.toast.toast-success {
+    border-left-color: var(--color-success);
+}
+
+.toast.toast-error {
+    border-left-color: var(--color-error);
+}
+
+.toast.toast-warning {
+    border-left-color: var(--color-warning);
+}
+
+.toast.toast-info {
+    border-left-color: var(--color-info);
+}
+
+.toast-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.toast-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.toast-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    line-height: var(--line-height-tight);
+}
+
+.toast-message {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+}
+
+.toast-close {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+    font-size: 20px;
+    line-height: 1;
+    color: var(--text-tertiary);
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.toast.toast-exit {
+    animation: slideOutRight 0.3s ease-in forwards;
+}
+
+
+/* ========== 15. 추가 애니메이션 (미세한 효과들) ========== */
+
+/* 버튼 클릭 시 살짝 커졌다 작아지는 효과 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-pulse {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* 카드 추가 시 fade-in 효과 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Scale up 효과 (장바구니 담기 버튼용) */
+@keyframes scaleUp {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.scale-up {
+    animation: scaleUp 0.3s ease-in-out;
+}
+
+/* Bounce 효과 */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.bounce {
+    animation: bounce 0.5s ease-in-out;
+}
+
+/* 호버 시 살짝 위로 올라가는 효과 */
+.hover-lift {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+
+/* ========== 16. Letter Spacing (가독성 향상) ========== */
+:root {
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.02em;
+    --letter-spacing-wider: 0.05em;
+}
+
+.tracking-tight { letter-spacing: var(--letter-spacing-tight); }
+.tracking-normal { letter-spacing: var(--letter-spacing-normal); }
+.tracking-wide { letter-spacing: var(--letter-spacing-wide); }
+.tracking-wider { letter-spacing: var(--letter-spacing-wider); }
+
+
+/* ========== 17. 추가 Spacing (1.5배 간격) ========== */
+:root {
+    --space-1-5x: 0.375rem;   /* 6px */
+    --space-3-5x: 1.125rem;   /* 18px */
+    --space-4-5x: 1.5rem;     /* 24px (기존 space-6과 동일) */
+    --space-6-5x: 2.25rem;    /* 36px */
+    --space-9: 2.25rem;       /* 36px */
+    --space-12-5x: 3.75rem;   /* 60px */
+    --space-15: 3.75rem;      /* 60px */
+}
+
+.mt-9 { margin-top: var(--space-9) !important; }
+.mb-9 { margin-bottom: var(--space-9) !important; }
+.pt-9 { padding-top: var(--space-9) !important; }
+.pb-9 { padding-bottom: var(--space-9) !important; }
+.py-9 { padding-top: var(--space-9) !important; padding-bottom: var(--space-9) !important; }
+
+
+/* ========== 18. Depth & Shadow (깊이감 추가) ========== */
+:root {
+    /* 더 세밀한 shadow 시스템 */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-elevation-1: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-elevation-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-elevation-3: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-xs { box-shadow: var(--shadow-xs); }
+.shadow-subtle { box-shadow: var(--shadow-subtle); }
+.shadow-elevation-1 { box-shadow: var(--shadow-elevation-1); }
+.shadow-elevation-2 { box-shadow: var(--shadow-elevation-2); }
+.shadow-elevation-3 { box-shadow: var(--shadow-elevation-3); }
+
+/* 배경색 구역 구분용 (선 없이 깊이감으로만) */
+.section-elevated {
+    background-color: var(--bg-primary);
+    box-shadow: var(--shadow-subtle);
+    border-radius: var(--radius-lg);
+}
+
+.section-subtle {
+    background-color: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}

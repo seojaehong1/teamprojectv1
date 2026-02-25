@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>사용자 관리 - TORI COFFEE</title>
+
+    <!-- Fonts & Icons Only -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <style>
+        /* ========================================
+           Design System - CSS Custom Properties
+           ======================================== */
+        :root {
+            /* Primary Colors */
+            --primary: #D95B3B;
+            --primary-hover: #C74A2A;
+            --primary-light: #FFF5F2;
+            --primary-gradient: linear-gradient(135deg, #D95B3B, #E8734F);
+
+            /* Grayscale */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+
+            /* Status Colors */
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ========================================
+           Reset & Base Styles
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           Fixed Header
+           ======================================== */
+        .head_wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: #fff;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+        }
+
+        .head {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .head_logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .head_logo_img {
+            height: 45px;
+            width: auto;
+        }
+
+        /* Center Navigation */
+        .head_menu_wrap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .head_menu ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .head_menu ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius-full);
+            transition: var(--transition);
+        }
+
+        .head_menu ul li a:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .head_menu ul li.active a {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* User Menu */
+        .head_user_wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .head_login_wrap {
+            position: relative;
+        }
+
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .head_user_link:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .head_user_link i {
+            font-size: 18px;
+        }
+
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+
+        .head_login_dropdown ul {
+            list-style: none;
+        }
+
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .head_login_dropdown ul li a:hover {
+            background: var(--gray-50);
+            color: var(--primary);
+        }
+
+        /* ========================================
+           Main Content Area
+           ======================================== */
+        .admin_wrap {
+            padding-top: 70px;
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
+        .admin_content_wrap {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .admin_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .admin_title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        /* Navigation Pills */
+        .admin_nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .admin_nav_item {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-full);
+            background: #fff;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin_nav_item:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .admin_nav_item.active {
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
+        }
+
+        /* ========================================
+           Toolbar
+           ======================================== */
+        .user_toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .user_search {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .user_search_input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background: #fff;
+            transition: var(--transition);
+        }
+
+        .user_search_input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+        }
+
+        .user_search_btn {
+            padding: 12px 20px;
+            background: var(--gray-800);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user_search_btn:hover {
+            background: var(--gray-900);
+        }
+
+        .user_filter_select {
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+        }
+
+        .user_filter_select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* ========================================
+           User Table
+           ======================================== */
+        .cont_text_wrap {
+            background: #fff;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .user_list_table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user_list_table thead {
+            background: var(--gray-50);
+        }
+
+        .user_list_table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .user_list_table td {
+            padding: 18px 20px;
+            font-size: 14px;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .user_list_table tbody tr {
+            transition: var(--transition);
+        }
+
+        .user_list_table tbody tr:hover {
+            background: var(--gray-50);
+        }
+
+        .user_list_table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .user_badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .user_badge.admin {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: #fff;
+        }
+
+        .user_badge.owner {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: #fff;
+        }
+
+        .user_badge.member {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        /* Action Buttons */
+        .user_actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .user_action_btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            background: #fff;
+            color: var(--gray-600);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user_action_btn:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .user_action_btn.edit {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .user_action_btn.edit:hover {
+            background: var(--primary-hover);
+        }
+
+        .user_action_btn.delete {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: #fff;
+        }
+
+        .user_action_btn.delete:hover {
+            background: #DC2626;
+        }
+
+        .user_action_btn.promote {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: #fff;
+        }
+
+        .user_action_btn.promote:hover {
+            background: #D97706;
+        }
+
+        /* Empty State */
+        .user_empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--gray-400);
+            font-size: 15px;
+        }
+
+        /* ========================================
+           Pagination
+           ======================================== */
+        .board_page_wrap {
+            display: flex;
+            justify-content: center;
+            padding: 32px 0;
+        }
+
+        .board_page ul {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .board_page li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .board_page li a:hover {
+            background: var(--gray-100);
+            border-color: var(--gray-300);
+        }
+
+        .board_page li.active a {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        .board_page li.disabled a {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ========================================
+           Modal
+           ======================================== */
+        .modal_wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal_wrap.show {
+            display: flex;
+        }
+
+        .modal_content {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal_close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+        }
+
+        .modal_close:hover {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .modal_form_item {
+            margin-bottom: 20px;
+        }
+
+        .modal_form_label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .modal_form_input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .modal_form_input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 91, 59, 0.1);
+        }
+
+        .modal_form_hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 6px;
+        }
+
+        .modal_actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .modal_btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal_btn.cancel {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .modal_btn.cancel:hover {
+            background: var(--gray-200);
+        }
+
+        .modal_btn.primary {
+            background: var(--primary-gradient);
+            color: #fff;
+        }
+
+        .modal_btn.primary:hover {
+            box-shadow: 0 4px 12px rgba(217, 91, 59, 0.3);
+        }
+
+        .modal_btn.danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .modal_btn.danger:hover {
+            background: #DC2626;
+        }
+
+        /* Confirm Modal */
+        .modal_content.confirm {
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .modal_content.confirm .modal_header {
+            justify-content: center;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .modal_text {
+            font-size: 15px;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           Footer
+           ======================================== */
+        .foot_wrap {
+            background: var(--gray-800);
+            color: var(--gray-400);
+            padding: 40px 24px;
+            margin-top: 60px;
+        }
+
+        .foot_content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .foot_logo img {
+            height: 40px;
+            opacity: 0.8;
+        }
+
+        .foot_info {
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .foot_links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .foot_links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .foot_links a:hover {
+            color: #fff;
+        }
+
+        /* ========================================
+           Responsive
+           ======================================== */
+        @media (max-width: 1024px) {
+            .head_menu_wrap {
+                position: static;
+                transform: none;
+            }
+
+            .head {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 16px 24px;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin_content_wrap {
+                padding: 24px 16px;
+            }
+
+            .user_toolbar {
+                flex-direction: column;
+            }
+
+            .user_search {
+                width: 100%;
+                max-width: none;
+            }
+
+            .user_filter_select {
+                width: 100%;
+            }
+
+            .head_menu ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .admin_nav {
+                justify-content: center;
+            }
+
+            .user_list_table th,
+            .user_list_table td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            .user_action_btn {
+                padding: 6px 10px;
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+
+            .foot_content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .foot_links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="head_wrap">
+    <div class="head">
+        <div class="head_logo">
+            <a href="/admin/user">
+                <img alt="TORI COFFEE 로고" class="head_logo_img" th:src="@{/logo/logo.png}">
+            </a>
+        </div>
+        <div class="head_menu_wrap">
+            <div class="head_menu">
+                <ul>
+                    <li class="active"><a href="/admin/user">회원 관리</a></li>
+                    <li><a href="/admin/product">상품 관리</a></li>
+                    <li><a href="/admin/notice">공지사항 관리</a></li>
+                    <li><a href="/admin/inquiry">문의 관리</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="head_user_wrap">
+            <div class="head_user_menu">
+                <div class="head_user_item head_login_wrap">
+                    <div class="head_login_state head_login_state_member">
+                        <a href="#" class="head_user_link head_login_trigger">
+                            <i class="far fa-user"></i>
+                            <span class="head_user_text head_user_name">Admin</span>
+                        </a>
+                        <div class="head_login_dropdown">
+                            <ul>
+                                <li><a href="#" id="adminLogoutBtn">로그아웃</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 메인 콘텐츠 -->
+<div class="admin_wrap">
+    <div class="admin_content_wrap">
+        <div class="admin_header">
+            <div class="admin_title">회원 관리</div>
+        </div>
+
+        <!-- 네비게이션 -->
+        <div class="admin_nav">
+            <a href="/admin/user" class="admin_nav_item active">회원 관리</a>
+            <a href="/admin/product" class="admin_nav_item">상품 관리</a>
+            <a href="/admin/notice" class="admin_nav_item">공지사항 관리</a>
+            <a href="/admin/inquiry" class="admin_nav_item">문의 관리</a>
+        </div>
+
+        <!-- 검색 및 필터 -->
+        <div class="user_toolbar">
+            <div class="user_search">
+                <input type="text" class="user_search_input" id="searchInput" placeholder="이름, 이메일로 검색...">
+                <button class="user_search_btn" id="searchBtn">검색</button>
+            </div>
+            <select class="user_filter_select" id="roleFilter">
+                <option value="">전체 권한</option>
+                <option value="admin">관리자</option>
+                <option value="store_owner">점주</option>
+                <option value="member">일반 사용자</option>
+            </select>
+        </div>
+
+        <!-- 회원 목록 -->
+        <div class="cont_text_wrap">
+            <table class="user_list_table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>권한</th>
+                        <th>가입일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                </tbody>
+            </table>
+            <div class="user_empty" id="userEmpty" style="display: none;">
+                등록된 회원이 없습니다.
+            </div>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="board_page_wrap">
+            <div class="board_page">
+                <ul id="userPagination">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div class="foot_wrap">
+    <div class="foot_content">
+        <div class="foot_logo">
+            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+        </div>
+        <div class="foot_info">
+            <strong>팀 부리또</strong> | 대표 서재홍<br>
+            연락처 010-3030-7038 | 이메일 wtme3@naver.com<br>
+            주소 동서울대학교 | 팀원 이주희, 박윤호, 하성호
+        </div>
+        <div class="foot_links">
+            <a href="/policy/privacy_policy">개인정보처리방침</a>
+            <a href="/policy/service_policy">이용약관</a>
+        </div>
+    </div>
+</div>
+
+<!-- 수정 모달 -->
+<div class="modal_wrap" id="editModal">
+    <div class="modal_content">
+        <div class="modal_header">
+            <div class="modal_title">회원 수정</div>
+            <button class="modal_close" onclick="closeEditModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="editForm">
+            <div class="modal_form_item">
+                <label class="modal_form_label">이름</label>
+                <input type="text" class="modal_form_input" id="editName" required>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">이메일</label>
+                <input type="email" class="modal_form_input" id="editEmail" required>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">권한</label>
+                <select class="modal_form_input" id="editRole" required>
+                    <option value="">선택하세요</option>
+                    <option value="admin">관리자</option>
+                    <option value="store_owner">점주</option>
+                    <option value="member">일반 사용자</option>
+                </select>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">비밀번호 변경 (선택)</label>
+                <input type="password" class="modal_form_input" id="editPassword" placeholder="새 비밀번호">
+                <div class="modal_form_hint">변경하지 않으려면 비워두세요</div>
+            </div>
+            <div class="modal_form_item">
+                <label class="modal_form_label">비밀번호 확인</label>
+                <input type="password" class="modal_form_input" id="editPasswordConfirm" placeholder="비밀번호 확인">
+            </div>
+            <div class="modal_actions">
+                <button type="button" class="modal_btn cancel" onclick="closeEditModal()">취소</button>
+                <button type="submit" class="modal_btn primary">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 확인 모달 -->
+<div class="modal_wrap" id="confirmModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="confirmTitle">확인</div>
+        </div>
+        <div class="modal_text" id="confirmText">정말 진행하시겠습니까?</div>
+        <div class="modal_actions">
+            <button class="modal_btn cancel" onclick="closeConfirmModal()">취소</button>
+            <button class="modal_btn danger" id="confirmOkBtn">확인</button>
+        </div>
+    </div>
+</div>
+
+<!-- 알림 모달 -->
+<div class="modal_wrap" id="alertModal">
+    <div class="modal_content confirm">
+        <div class="modal_header">
+            <div class="modal_title" id="alertTitle">알림</div>
+        </div>
+        <div class="modal_text" id="alertText">메시지</div>
+        <div class="modal_actions">
+            <button class="modal_btn primary" id="alertOkBtn" style="flex: none; min-width: 120px; margin: 0 auto;">확인</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var currentPage = 0;
+    var totalPages = 0;
+    var editUserId = null;
+    var confirmCallback = null;
+    var alertCallback = null;
+
+    $(document).ready(function() {
+        var userRole = localStorage.getItem('userRole');
+        if (userRole !== 'admin' && userRole !== 'store_owner') {
+            showAlert('관리자 또는 점주 권한이 필요합니다.', function() {
+                window.location.href = '/';
+            });
+            return;
+        }
+
+        var userName = localStorage.getItem('userName') || 'Admin';
+        $('.head_user_name').text(userName);
+
+        $('.head_login_trigger').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $('.head_login_wrap').toggleClass('active');
+        });
+
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.head_login_wrap').length) {
+                $('.head_login_wrap').removeClass('active');
+            }
+        });
+
+        $('#adminLogoutBtn').click(function(e) {
+            e.preventDefault();
+            showConfirm('로그아웃하시겠습니까?', function() {
+                localStorage.clear();
+                window.location.href = '/';
+            }, '로그아웃');
+        });
+
+        $('#searchBtn').click(function() {
+            currentPage = 0;
+            loadUsers();
+        });
+
+        $('#searchInput').keypress(function(e) {
+            if (e.which === 13) {
+                currentPage = 0;
+                loadUsers();
+            }
+        });
+
+        $('#roleFilter').change(function() {
+            currentPage = 0;
+            loadUsers();
+        });
+
+        $('#editForm').submit(function(e) {
+            e.preventDefault();
+            saveUser();
+        });
+
+        loadUsers();
+    });
+
+    function loadUsers() {
+        var filterRole = $('#roleFilter').val();
+        var searchTerm = $('#searchInput').val().trim();
+        var token = localStorage.getItem('accessToken');
+
+        var url = '/api/admin/users?page=' + currentPage + '&size=10';
+        if (filterRole) url += '&userType=' + filterRole;
+        if (searchTerm) url += '&keyword=' + encodeURIComponent(searchTerm);
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('회원 목록을 불러오는데 실패했습니다.');
+            return response.json();
+        })
+        .then(function(data) {
+            var users = Array.isArray(data) ? data : (data.users || data.content || []);
+            totalPages = data.totalPages || Math.ceil(users.length / 10) || 1;
+            renderUsers(users);
+            renderPagination();
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert('회원 목록을 불러오는데 실패했습니다.');
+        });
+    }
+
+    function renderUsers(users) {
+        var tbody = $('#userTableBody');
+        tbody.empty();
+
+        if (!users || users.length === 0) {
+            $('#userEmpty').show();
+            return;
+        }
+
+        $('#userEmpty').hide();
+
+        users.forEach(function(user, index) {
+            var userType = (user.userType || user.role || 'member').toLowerCase();
+            var roleText = '', badgeClass = '';
+
+            switch(userType) {
+                case 'admin': roleText = '관리자'; badgeClass = 'admin'; break;
+                case 'store_owner': case 'owner': roleText = '점주'; badgeClass = 'owner'; break;
+                default: roleText = '일반 회원'; badgeClass = 'member'; break;
+            }
+
+            var userId = user.userId || user.id;
+            var actions = '<div class="user_actions">';
+            actions += '<button class="user_action_btn edit" onclick="editUser(\'' + userId + '\')">수정</button>';
+            if (userType !== 'admin') actions += '<button class="user_action_btn delete" onclick="deleteUser(\'' + userId + '\')">삭제</button>';
+            if (userType === 'member' || userType === 'user') actions += '<button class="user_action_btn promote" onclick="promoteToOwner(\'' + userId + '\')">점주 전환</button>';
+            actions += '</div>';
+
+            var row = '<tr>' +
+                '<td>' + (currentPage * 10 + index + 1) + '</td>' +
+                '<td>' + escapeHtml(user.name || user.username || '이름 없음') + '</td>' +
+                '<td>' + escapeHtml(user.email || '이메일 없음') + '</td>' +
+                '<td><span class="user_badge ' + badgeClass + '">' + roleText + '</span></td>' +
+                '<td>' + formatDate(user.createdAt) + '</td>' +
+                '<td>' + actions + '</td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+    }
+
+    function renderPagination() {
+        var ul = $('#userPagination');
+        ul.empty();
+        if (totalPages <= 1) return;
+
+        var firstClass = currentPage === 0 ? 'disabled' : '';
+        ul.append('<li class="' + firstClass + '"><a onclick="goToPage(0)">처음</a></li>');
+
+        var startPage = Math.max(0, currentPage - 2);
+        var endPage = Math.min(totalPages - 1, currentPage + 2);
+
+        for (var i = startPage; i <= endPage; i++) {
+            var activeClass = i === currentPage ? 'active' : '';
+            ul.append('<li class="' + activeClass + '"><a onclick="goToPage(' + i + ')">' + (i + 1) + '</a></li>');
+        }
+
+        var lastClass = currentPage >= totalPages - 1 ? 'disabled' : '';
+        ul.append('<li class="' + lastClass + '"><a onclick="goToPage(' + (totalPages - 1) + ')">마지막</a></li>');
+    }
+
+    function goToPage(page) {
+        if (page < 0 || page >= totalPages) return;
+        currentPage = page;
+        loadUsers();
+    }
+
+    function editUser(userId) {
+        var token = localStorage.getItem('accessToken');
+        fetch('/api/admin/users/' + userId, {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('사용자 정보를 불러오는데 실패했습니다.');
+            return response.json();
+        })
+        .then(function(user) {
+            editUserId = userId;
+            $('#editName').val(user.name || user.username || '');
+            $('#editEmail').val(user.email || '');
+            var roleValue = user.userType || user.role || 'member';
+            if (roleValue === 'owner') roleValue = 'store_owner';
+            $('#editRole').val(roleValue);
+            $('#editPassword').val('');
+            $('#editPasswordConfirm').val('');
+            $('#editModal').addClass('show');
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert('사용자 정보를 불러오는데 실패했습니다.');
+        });
+    }
+
+    function closeEditModal() {
+        $('#editModal').removeClass('show');
+        editUserId = null;
+        $('#editForm')[0].reset();
+    }
+
+    function saveUser() {
+        var password = $('#editPassword').val();
+        var passwordConfirm = $('#editPasswordConfirm').val();
+        if (password && password !== passwordConfirm) {
+            showAlert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+
+        var token = localStorage.getItem('accessToken');
+        var updateData = {
+            name: $('#editName').val(),
+            username: $('#editName').val(),
+            email: $('#editEmail').val(),
+            role: $('#editRole').val()
+        };
+        if (password) updateData.password = password;
+
+        fetch('/api/admin/users/' + editUserId, {
+            method: 'PUT',
+            headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error('수정에 실패했습니다.');
+            return response.json();
+        })
+        .then(function(data) {
+            closeEditModal();
+            showAlert('사용자 정보가 수정되었습니다.', function() { loadUsers(); });
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert(error.message || '수정에 실패했습니다.');
+        });
+    }
+
+    function deleteUser(userId) {
+        showConfirm('정말 이 사용자를 삭제하시겠습니까?', function() {
+            var token = localStorage.getItem('accessToken');
+            fetch('/api/admin/users/' + userId, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('삭제에 실패했습니다.');
+                return response.json();
+            })
+            .then(function(data) {
+                showAlert('사용자가 삭제되었습니다.', function() { loadUsers(); });
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showAlert(error.message || '삭제에 실패했습니다.');
+            });
+        }, '삭제 확인');
+    }
+
+    function promoteToOwner(userId) {
+        showConfirm('이 회원을 점주로 전환하시겠습니까?', function() {
+            var token = localStorage.getItem('accessToken');
+            fetch('/api/admin/users/' + userId + '/role', {
+                method: 'PATCH',
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userType: 'store_owner' })
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error('권한 변경에 실패했습니다.');
+                return response.json();
+            })
+            .then(function(data) {
+                showAlert('점주로 전환되었습니다.', function() { loadUsers(); });
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showAlert(error.message || '점주 전환에 실패했습니다.');
+            });
+        }, '점주 전환');
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '-';
+        try {
+            var date = new Date(dateStr);
+            return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+        } catch (e) { return dateStr; }
+    }
+
+    function showConfirm(message, callback, title) {
+        $('#confirmTitle').text(title || '확인');
+        $('#confirmText').text(message);
+        confirmCallback = callback;
+        $('#confirmModal').addClass('show');
+    }
+
+    function closeConfirmModal() {
+        $('#confirmModal').removeClass('show');
+        confirmCallback = null;
+    }
+
+    function showAlert(message, callback, title) {
+        $('#alertTitle').text(title || '알림');
+        $('#alertText').text(message);
+        alertCallback = callback;
+        $('#alertModal').addClass('show');
+    }
+
+    $(document).ready(function() {
+        $('#confirmOkBtn').click(function() {
+            $('#confirmModal').removeClass('show');
+            if (confirmCallback) confirmCallback();
+            confirmCallback = null;
+        });
+
+        $('#alertOkBtn').click(function() {
+            $('#alertModal').removeClass('show');
+            if (alertCallback) alertCallback();
+            alertCallback = null;
+        });
+
+        $('.modal_wrap').click(function(e) {
+            if ($(e.target).hasClass('modal_wrap')) {
+                $(this).removeClass('show');
+            }
+        });
+    });
+</script>
+</body>
+</html>

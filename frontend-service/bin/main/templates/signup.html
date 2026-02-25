@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>회원가입 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 회원가입 페이지 스타일 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 80px;
+        }
+        .signup_wrap {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 20px;
+        }
+        .signup_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .signup_logo {
+            display: flex;
+            align-items: center;
+        }
+        .signup_logo img {
+            height: 40px;
+            max-width: 100%;
+        }
+        .signup_content {
+            background: #fff;
+        }
+        .signup_form {
+            margin-bottom: 20px;
+        }
+        .signup_form_item {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .signup_form_label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .signup_form_label .required {
+            color: #D95B3B;
+            margin-left: 4px;
+        }
+        .signup_form_input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+        .signup_form_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .signup_form_input::placeholder {
+            color: #999;
+        }
+        .signup_form_input.error {
+            border-color: #D95B3B;
+        }
+        .signup_form_error {
+            font-size: 12px;
+            color: #D95B3B;
+            margin-top: 5px;
+            display: none;
+        }
+        .signup_form_error.show {
+            display: block;
+        }
+        .signup_form_success {
+            font-size: 12px;
+            color: #155724;
+            margin-top: 5px;
+            display: none;
+        }
+        .signup_form_success.show {
+            display: block;
+        }
+        .signup_email_code_input {
+            position: relative;
+        }
+        .signup_email_code_input.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .email_verified {
+            color: #155724;
+            font-weight: 600;
+        }
+        .email_verified i {
+            margin-right: 5px;
+        }
+        .signup_email_wrap {
+            display: flex;
+            gap: 10px;
+        }
+        .signup_email_input {
+            flex: 1;
+        }
+        .signup_email_btn {
+            padding: 14px 20px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .signup_email_btn:hover {
+            background: #C74A2A;
+        }
+        .signup_email_btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        .signup_submit_btn {
+            width: 100%;
+            padding: 16px;
+            background: #D95B3B;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+        .signup_submit_btn:hover {
+            background: #C74A2A;
+        }
+        .signup_submit_btn:disabled {
+            background: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+        .signup_links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .signup_links a {
+            font-size: 14px;
+            color: #666;
+            text-decoration: none;
+            position: relative;
+        }
+        .signup_links a:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -10px;
+            color: #ccc;
+        }
+        .signup_links a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .signup_wrap {
+                padding: 20px;
+            }
+            .signup_header {
+                margin-bottom: 30px;
+            }
+            .signup_email_wrap {
+                flex-direction: column;
+            }
+            .signup_email_btn {
+                width: 100%;
+            }
+        }
+        
+        /* 커스텀 모달 스타일 */
+        .custom_modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom_modal.show {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .custom_modal_content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .custom_modal_title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .custom_modal_message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        .custom_modal_buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .custom_modal_btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom_modal_btn_primary {
+            background: #D95B3B;
+            color: #fff;
+        }
+        .custom_modal_btn_primary:hover {
+            background: #C74A2A;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup_wrap">
+        <!-- 헤더 -->
+        <div class="signup_header">
+            <div class="signup_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+        </div>
+
+        <!-- 회원가입 콘텐츠 -->
+        <div class="signup_content">
+            <!-- 회원가입 폼 -->
+            <form class="signup_form" id="signupForm">
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        이름
+                        <span class="required">*</span>
+                    </label>
+                    <input type="text" class="signup_form_input" id="signupName" placeholder="이름을 입력해주세요" required>
+                    <div class="signup_form_error" id="nameError">이름을 입력해주세요.</div>
+                </div>
+
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        아이디
+                        <span class="required">*</span>
+                    </label>
+                    <input type="text" class="signup_form_input" id="signupId" placeholder="아이디를 입력해주세요" required>
+                    <div class="signup_form_error" id="idError">아이디를 입력해주세요.</div>
+                    <div class="signup_form_success" id="idSuccess">사용 가능한 아이디입니다.</div>
+                </div>
+
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        비밀번호
+                        <span class="required">*</span>
+                    </label>
+                    <input type="password" class="signup_form_input" id="signupPassword" placeholder="비밀번호를 입력해주세요" required>
+                    <div class="signup_form_error" id="passwordError">비밀번호를 입력해주세요.</div>
+                </div>
+
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        비밀번호 재확인
+                        <span class="required">*</span>
+                    </label>
+                    <input type="password" class="signup_form_input" id="signupPasswordConfirm" placeholder="비밀번호를 다시 입력해주세요" required>
+                    <div class="signup_form_error" id="passwordConfirmError">비밀번호가 일치하지 않습니다.</div>
+                    <div class="signup_form_success" id="passwordConfirmSuccess">비밀번호가 일치합니다.</div>
+                </div>
+
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        이메일
+                        <span class="required">*</span>
+                    </label>
+                    <div class="signup_email_wrap">
+                        <div class="signup_email_input">
+                            <input type="email" class="signup_form_input" id="signupEmail" placeholder="이메일을 입력해주세요" required>
+                        </div>
+                        <button type="button" class="signup_email_btn" id="emailSendBtn">인증번호 발송</button>
+                    </div>
+                    <div class="signup_form_error" id="emailError">이메일을 입력해주세요.</div>
+                </div>
+
+                <div class="signup_form_item">
+                    <label class="signup_form_label">
+                        인증번호
+                        <span class="required">*</span>
+                        <span class="email_verified" id="emailVerifiedStatus" style="display: none;">
+                            <i class="fas fa-check-circle"></i>인증 완료
+                        </span>
+                    </label>
+                    <div class="signup_email_wrap">
+                        <div class="signup_email_input signup_email_code_input" id="emailCodeInputWrap">
+                            <input type="text" class="signup_form_input" id="signupEmailCode" placeholder="인증번호를 입력해주세요" disabled>
+                        </div>
+                        <button type="button" class="signup_email_btn" id="emailVerifyBtn" disabled>인증번호 확인</button>
+                    </div>
+                    <div class="signup_form_error" id="emailCodeError">인증번호를 입력해주세요.</div>
+                    <div class="signup_form_success" id="emailCodeSuccess" style="display: none;">
+                        <i class="fas fa-check-circle"></i> 이메일 인증이 완료되었습니다.
+                    </div>
+                </div>
+
+                <button type="submit" class="signup_submit_btn" id="signupSubmitBtn" disabled>회원가입</button>
+            </form>
+
+            <!-- 하단 링크 -->
+            <div class="signup_links">
+                <a href="login.html">로그인</a>
+                <a href="find_id.html">아이디 찾기</a>
+                <a href="find_password.html">비밀번호 찾기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var emailAuthSent = false;
+            var emailAuthVerified = false;
+            var authCode = ''; // 발송된 인증번호 저장
+
+            // 이름 필드 검증
+            $('#signupName').on('blur', function() {
+                var name = $(this).val().trim();
+                if (!name) {
+                    $('#nameError').text('이름을 입력하세요').addClass('show');
+                    $(this).addClass('error');
+                } else {
+                    $('#nameError').removeClass('show');
+                    $(this).removeClass('error');
+                }
+            });
+
+            // 아이디 필드 검증
+            $('#signupId').on('blur', function() {
+                var id = $(this).val().trim();
+                if (!id) {
+                    $('#idError').text('아이디를 입력하세요').addClass('show');
+                    $('#idSuccess').removeClass('show');
+                    $(this).addClass('error');
+                } else if (id.length < 4) {
+                    $('#idError').text('아이디는 4자 이상 입력해주세요').addClass('show');
+                    $('#idSuccess').removeClass('show');
+                    $(this).addClass('error');
+                } else {
+                    $('#idError').removeClass('show');
+                    $('#idSuccess').addClass('show');
+                    $(this).removeClass('error');
+                }
+            });
+
+            // 비밀번호 필드 검증
+            $('#signupPassword').on('blur', function() {
+                var password = $(this).val();
+                if (!password) {
+                    $('#passwordError').text('비밀번호를 입력하세요').addClass('show');
+                    $(this).addClass('error');
+                } else if (password.length < 6) {
+                    $('#passwordError').text('비밀번호는 6자 이상 입력해주세요').addClass('show');
+                    $(this).addClass('error');
+                } else {
+                    $('#passwordError').removeClass('show');
+                    $(this).removeClass('error');
+                }
+                
+                // 비밀번호 변경 시 재확인 필드도 다시 검증
+                if ($('#signupPasswordConfirm').val()) {
+                    $('#signupPasswordConfirm').trigger('input');
+                }
+            });
+
+            // 비밀번호 재확인 검증
+            $('#signupPasswordConfirm').on('input', function() {
+                var password = $('#signupPassword').val();
+                var passwordConfirm = $(this).val();
+                
+                if (passwordConfirm === '') {
+                    $('#passwordConfirmError').removeClass('show');
+                    $('#passwordConfirmSuccess').removeClass('show');
+                    $(this).removeClass('error');
+                } else if (password === passwordConfirm) {
+                    $('#passwordConfirmError').removeClass('show');
+                    $('#passwordConfirmSuccess').addClass('show');
+                    $(this).removeClass('error');
+                } else {
+                    $('#passwordConfirmError').text('비밀번호가 일치하지 않습니다').addClass('show');
+                    $('#passwordConfirmSuccess').removeClass('show');
+                    $(this).addClass('error');
+                }
+            });
+
+            // 이메일 필드 검증
+            $('#signupEmail').on('blur', function() {
+                var email = $(this).val().trim();
+                if (!email) {
+                    $('#emailError').text('이메일을 입력하세요').addClass('show');
+                    $(this).addClass('error');
+                } else {
+                    // 이메일 형식 검증 (@ 포함)
+                    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        $('#emailError').text('올바른 이메일 형식을 입력해주세요').addClass('show');
+                        $(this).addClass('error');
+                    } else {
+                        $('#emailError').removeClass('show');
+                        $(this).removeClass('error');
+                    }
+                }
+            });
+
+            // 인증번호 발송 버튼 클릭
+            $('#emailSendBtn').on('click', function() {
+                var email = $('#signupEmail').val().trim();
+                
+                if (!email) {
+                    $('#emailError').text('이메일을 입력해주세요').addClass('show');
+                    $('#signupEmail').addClass('error').focus();
+                    return;
+                }
+                
+                // 이메일 형식 검증
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    $('#emailError').text('올바른 이메일 형식을 입력해주세요').addClass('show');
+                    $('#signupEmail').addClass('error').focus();
+                    return;
+                }
+                
+                $('#emailError').removeClass('show');
+                $('#signupEmail').removeClass('error');
+                
+                // 임시 인증번호 생성 및 발송
+                authCode = '123456'; // 임시 인증번호
+                emailAuthSent = true;
+                emailAuthVerified = false; // 재발송 시 인증 상태 초기화
+                
+                // 인증번호 발송 알림 (알럿창 제거)
+                // 인증번호는 자동으로 입력됨
+                
+                // 인증번호 입력란 활성화
+                $('#signupEmailCode').prop('disabled', false);
+                $('#emailVerifyBtn').prop('disabled', false);
+                $('#emailCodeInputWrap').removeClass('disabled');
+                $('#signupEmailCode').focus();
+                
+                // 인증 상태 초기화
+                $('#emailCodeError').removeClass('show');
+                $('#emailCodeSuccess').hide();
+                $('#emailVerifiedStatus').hide();
+                $('#signupEmailCode').val('');
+                $('#emailVerifyBtn').text('인증번호 확인');
+                
+                // 발송 버튼 텍스트 변경 및 일시 비활성화
+                $(this).text('재발송').prop('disabled', true);
+                
+                // 3초 후 재발송 버튼 활성화
+                setTimeout(function() {
+                    $('#emailSendBtn').prop('disabled', false);
+                }, 3000);
+            });
+
+            // 인증번호 확인 버튼 클릭
+            $('#emailVerifyBtn').on('click', function() {
+                var code = $('#signupEmailCode').val().trim();
+                
+                if (!code) {
+                    $('#emailCodeError').text('인증번호를 입력해주세요').addClass('show');
+                    $('#emailCodeSuccess').hide();
+                    $('#emailVerifiedStatus').hide();
+                    emailAuthVerified = false;
+                    return;
+                }
+                
+                // 인증번호 확인 (임시로 "123456"만 성공)
+                if (code === authCode && authCode === '123456') {
+                    emailAuthVerified = true;
+                    $('#emailCodeError').removeClass('show');
+                    $('#emailCodeSuccess').show();
+                    $('#emailVerifiedStatus').show();
+                    $(this).prop('disabled', true).text('인증완료');
+                    $('#signupEmailCode').prop('disabled', true);
+                    $('#signupSubmitBtn').prop('disabled', false);
+                    // 커스텀 모달로 인증 완료 표시
+                    showCustomModal('인증 완료', '이메일 인증이 완료되었습니다!');
+                } else {
+                    emailAuthVerified = false;
+                    $('#emailCodeError').text('인증번호가 일치하지 않습니다').addClass('show');
+                    $('#emailCodeSuccess').hide();
+                    $('#emailVerifiedStatus').hide();
+                    $('#signupSubmitBtn').prop('disabled', true);
+                }
+            });
+            
+            // 인증번호 입력란 엔터키 처리
+            $('#signupEmailCode').on('keypress', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#emailVerifyBtn').click();
+                }
+            });
+
+            // 회원가입 폼 제출
+            $('#signupForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // 모든 필드 값 가져오기
+                var name = $('#signupName').val().trim();
+                var id = $('#signupId').val().trim();
+                var password = $('#signupPassword').val();
+                var passwordConfirm = $('#signupPasswordConfirm').val();
+                var email = $('#signupEmail').val().trim();
+                var emailCode = $('#signupEmailCode').val().trim();
+                
+                var isValid = true;
+                var errorMessage = '';
+                
+                // 이름 검증
+                if (!name) {
+                    isValid = false;
+                    errorMessage = '이름을 입력하세요';
+                    alert(errorMessage);
+                    $('#signupName').focus();
+                    return false;
+                }
+                
+                // 아이디 검증
+                if (!id) {
+                    isValid = false;
+                    errorMessage = '아이디를 입력하세요';
+                    alert(errorMessage);
+                    $('#signupId').focus();
+                    return false;
+                }
+                
+                if (id.length < 4) {
+                    isValid = false;
+                    errorMessage = '아이디는 4자 이상 입력해주세요';
+                    alert(errorMessage);
+                    $('#signupId').focus();
+                    return false;
+                }
+                
+                // 비밀번호 검증
+                if (!password) {
+                    isValid = false;
+                    errorMessage = '비밀번호를 입력하세요';
+                    alert(errorMessage);
+                    $('#signupPassword').focus();
+                    return false;
+                }
+                
+                if (password.length < 6) {
+                    isValid = false;
+                    errorMessage = '비밀번호는 6자 이상 입력해주세요';
+                    alert(errorMessage);
+                    $('#signupPassword').focus();
+                    return false;
+                }
+                
+                // 비밀번호 확인 검증
+                if (!passwordConfirm) {
+                    isValid = false;
+                    errorMessage = '비밀번호 확인을 입력하세요';
+                    alert(errorMessage);
+                    $('#signupPasswordConfirm').focus();
+                    return false;
+                }
+                
+                if (password !== passwordConfirm) {
+                    isValid = false;
+                    errorMessage = '비밀번호가 일치하지 않습니다';
+                    alert(errorMessage);
+                    $('#signupPasswordConfirm').focus();
+                    return false;
+                }
+                
+                // 이메일 검증
+                if (!email) {
+                    isValid = false;
+                    errorMessage = '이메일을 입력하세요';
+                    alert(errorMessage);
+                    $('#signupEmail').focus();
+                    return false;
+                }
+                
+                // 이메일 형식 검증 (@ 포함)
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    isValid = false;
+                    errorMessage = '올바른 이메일 형식을 입력해주세요';
+                    alert(errorMessage);
+                    $('#signupEmail').focus();
+                    return false;
+                }
+                
+                // 이메일 인증 확인
+                if (!emailAuthSent) {
+                    isValid = false;
+                    errorMessage = '인증번호를 발송해주세요';
+                    alert(errorMessage);
+                    $('#emailSendBtn').focus();
+                    return false;
+                }
+                
+                if (!emailAuthVerified) {
+                    isValid = false;
+                    errorMessage = '이메일 인증을 완료해주세요';
+                    alert(errorMessage);
+                    $('#signupEmailCode').focus();
+                    return false;
+                }
+                
+                // 모든 검증 통과
+                if (isValid) {
+                    // localStorage에서 users 배열 가져오기 또는 생성
+                    var users = JSON.parse(localStorage.getItem('users') || '[]');
+                    
+                    // 중복 체크 (아이디 또는 이메일)
+                    var isDuplicate = users.some(function(user) {
+                        return (user.username && user.username.toLowerCase() === id.toLowerCase()) ||
+                               (user.email && user.email.toLowerCase() === email.toLowerCase());
+                    });
+                    
+                    if (isDuplicate) {
+                        alert('이미 등록된 아이디 또는 이메일입니다.');
+                        return false;
+                    }
+                    
+                    // 새 유저 정보 생성
+                    var newUser = {
+                        id: Date.now().toString(), // 고유 ID
+                        username: id, // 입력한 아이디
+                        password: password, // 입력한 비밀번호
+                        name: name, // 입력한 이름
+                        email: email, // 입력한 이메일
+                        role: 'user', // 기본값
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    // users 배열에 추가
+                    users.push(newUser);
+                    
+                    // localStorage에 저장
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // 회원가입 성공 알림 (커스텀 모달)
+                    showCustomModal('회원가입 성공', '회원가입이 완료되었습니다!', function() {
+                        window.location.href = 'login.html';
+                    });
+                }
+            });
+        });
+        
+        // 커스텀 모달 함수
+        function showCustomModal(title, message, onConfirm) {
+            var modal = $('#customModal');
+            $('#customModalTitle').text(title || '알림');
+            $('#customModalMessage').text(message || '');
+            
+            var confirmBtn = $('#customModalConfirm');
+            confirmBtn.off('click').on('click', function() {
+                modal.removeClass('show');
+                if (onConfirm) {
+                    onConfirm();
+                }
+            });
+            
+            modal.addClass('show');
+        }
+        
+        // 모달 외부 클릭 시 닫기
+        $('#customModal').on('click', function(e) {
+            if ($(e.target).is('#customModal')) {
+                $(this).removeClass('show');
+            }
+        });
+    </script>
+    
+    <!-- 커스텀 모달 -->
+    <div id="customModal" class="custom_modal">
+        <div class="custom_modal_content">
+            <div class="custom_modal_title" id="customModalTitle">알림</div>
+            <div class="custom_modal_message" id="customModalMessage"></div>
+            <div class="custom_modal_buttons">
+                <button class="custom_modal_btn custom_modal_btn_primary" id="customModalConfirm">확인</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

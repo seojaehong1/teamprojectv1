@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>주문 상세 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+
+    <!-- Global UI Kit -->
+    <link rel="stylesheet" th:href="@{/css/global-ui-kit.css}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown ul li {
+            margin: 0;
+        }
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .head_login_dropdown ul li a:hover {
+            background: #f5f5f5;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                right: 50px;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #D95B3B;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .mobile_menu_logo img {
+            height: 30px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+        /* 주문 상세 스타일 */
+        .cont_wrap.bbs_wrap {
+            background: #F8FAFC;
+            min-height: 100vh;
+        }
+        .order_detail_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+        .order_detail_back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .order_detail_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        .order_detail_refresh {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .order_detail_refresh:hover {
+            color: #333;
+        }
+        .order_store_info {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .order_status_message {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+        .order_status_message span {
+            font-size: 24px;
+            margin-left: 8px;
+        }
+
+        /* 주문 진행바 스타일 */
+        .order_progress_wrap {
+            margin-bottom: 40px;
+            background: transparent !important;
+        }
+        .order_progress_steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 0;
+            padding-top: 40px;
+            background: transparent !important;
+        }
+        /* 진행 바 배경 */
+        .order_progress_steps::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+        /* 진행 바 (동적으로 너비 변경) */
+        .order_progress_bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #D95B3B;
+            transition: width 0.5s ease;
+            z-index: 2;
+            border-radius: 0 10px 10px 0;
+        }
+        .order_progress_step {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            font-weight: 400;
+            padding-bottom: 12px;
+            cursor: default;
+            transition: all 0.2s ease;
+            position: relative;
+            background: transparent !important;
+            z-index: 3;
+        }
+        .order_progress_step.active {
+            color: #333;
+            font-weight: 700;
+        }
+        .order_progress_time {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            background: transparent !important;
+        }
+        .order_progress_step.active::before {
+            content: '';
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+        }
+        /* 진행 바가 첫 번째 자식이므로 nth-child(2, 3, 4) 사용 */
+        .order_progress_step:nth-child(2).active::before {
+            content: '✅';
+        }
+        .order_progress_step:nth-child(3).active::before {
+            content: '⏳';
+        }
+        .order_progress_step:nth-child(4).active::before {
+            content: '🎉';
+        }
+        .order_status_update_notice {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10000;
+            font-weight: 500;
+        }
+        .order_status_update_notice.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 섹션 카드 스타일 (배민 스타일) */
+        .order_detail_section {
+            margin-bottom: 20px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f8f9fa;
+        }
+        .order_detail_section_title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+        .order_detail_section_title h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c2c2c;
+            margin: 0;
+        }
+        .order_detail_section_title a {
+            font-size: 13px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .order_detail_section_title a:hover {
+            color: #D95B3B;
+        }
+
+        /* 상품 아이템 - 배민 스타일 */
+        .order_item_detail {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 2px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+        .order_item_detail:hover {
+            border-color: #ffd6cc;
+            background: #fffbfa;
+        }
+        .order_item_detail:last-child {
+            margin-bottom: 0;
+        }
+        .order_item_image {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        .order_item_image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .order_item_content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .order_item_name_wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .order_item_name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2c2c2c;
+            line-height: 1.4;
+        }
+        .order_item_quantity {
+            font-size: 13px;
+            color: #495057;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        /* 옵션 배지 스타일 */
+        .order_item_options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .order_item_option_badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: #fff3e0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #e65100;
+            font-weight: 600;
+            border: 1px solid #ffcc80;
+        }
+        .order_item_price {
+            font-size: 18px;
+            color: #D95B3B;
+            font-weight: 700;
+        }
+
+        /* 결제 정보 섹션 - 배민 스타일 */
+        .order_payment_section {
+            background: linear-gradient(135deg, #fffbfa 0%, #fff 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px dashed #ffd6cc;
+        }
+        .order_payment_item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+        .order_payment_item:last-child {
+            margin-bottom: 0;
+        }
+        .order_payment_total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            margin-top: 16px;
+            background: #fff3e0;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #D95B3B;
+        }
+
+        /* 주문 정보 섹션 - 배민 스타일 */
+        .order_info_box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 2px solid #e9ecef;
+        }
+        .order_info_item {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+        }
+        .order_info_item:last-child {
+            margin-bottom: 0;
+        }
+        .order_info_label {
+            font-size: 12px;
+            color: #868e96;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .order_info_value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c2c2c;
+        }
+        .order_info_value.highlight {
+            color: #D95B3B;
+            font-weight: 800;
+        }
+
+        /* 하단 버튼 - 배민 스타일 */
+        .order_detail_buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 28px;
+        }
+        .btn_home, .btn_history {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 36px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .btn_home {
+            background: #f8f9fa;
+            color: #495057;
+            border: 2px solid #e9ecef;
+        }
+        .btn_home:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+        .btn_history {
+            background: #D95B3B;
+            color: #fff;
+            border: 2px solid #D95B3B;
+        }
+        .btn_history:hover {
+            background: #C74A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(217, 91, 59, 0.4);
+        }
+
+        /* Empty State 디자인 개선 */
+        .order_not_found {
+            text-align: center;
+            padding: 80px 40px;
+            color: #64748b;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+        .order_not_found_icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .order_not_found_icon i {
+            font-size: 56px;
+            color: #D95B3B;
+        }
+        .order_not_found_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .order_not_found_text {
+            font-size: 15px;
+            font-weight: 400;
+            color: #64748b;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .order_not_found_button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: #D95B3B;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(217, 91, 59, 0.3);
+        }
+        .order_not_found_button:hover {
+            background: #C74A2A;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 91, 59, 0.4);
+            color: #fff;
+        }
+    </style>
+    <!-- 푸터 노란색 제거 (TORI COFFEE 색상 적용) -->
+    <style>
+        .foot_menu_wrap {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu_wrap *,
+        .foot_menu_wrap::before,
+        .foot_menu_wrap::after {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu a {
+            color: #fff !important;
+        }
+        .foot_menu a:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* 로그아웃 모달 스타일 (Admin 스타일) */
+        .logout_modal_wrap {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+            backdrop-filter: blur(4px);
+            z-index: 10000 !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .logout_modal_wrap.show { display: flex !important; }
+        .logout_modal_content {
+            background: #fff !important;
+            padding: 32px !important;
+            border-radius: 16px !important;
+            width: 90% !important;
+            max-width: 340px !important;
+            text-align: center !important;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+            animation: logoutModalSlideIn 0.3s ease !important;
+        }
+        @keyframes logoutModalSlideIn {
+            from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .logout_modal_header { display: flex !important; justify-content: center !important; align-items: center !important; margin-bottom: 16px !important; }
+        .logout_modal_title { font-size: 20px !important; font-weight: 700 !important; color: #111827 !important; }
+        .logout_modal_text { font-size: 15px !important; color: #6B7280 !important; margin-bottom: 24px !important; line-height: 1.6 !important; }
+        .logout_modal_actions { display: flex !important; gap: 12px !important; justify-content: center !important; }
+        .logout_modal_btn { flex: 1 !important; padding: 14px !important; border: none !important; border-radius: 10px !important; font-size: 14px !important; font-weight: 600 !important; cursor: pointer !important; transition: all 0.2s !important; }
+        .logout_modal_btn.cancel { background: #F3F4F6 !important; color: #6B7280 !important; }
+        .logout_modal_btn.cancel:hover { background: #E5E7EB !important; }
+        .logout_modal_btn.danger { background: #EF4444 !important; color: #fff !important; }
+        .logout_modal_btn.danger:hover { background: #DC2626 !important; }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body data-aos-easing="ease" data-aos-duration="1200" data-aos-delay="0">
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="/">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="/about/brand" class="pc">토리 스토리</a>
+                            <a class="m head_menu_down">토리 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="/about/brand">브랜드</a></li>
+                                    <li><a href="/about/bi">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/menu/drink" class="pc">메뉴</a>
+                            <a class="m head_menu_down">메뉴</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="/menu/drink">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/about/map" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="/about/map">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/bbs/notice" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="/bbs/notice">공지사항</a></li>
+                                    <li><a href="/bbs/faq">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/bbs/event" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="/bbs/event">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="/order/cart" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="/login" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="/mypage/index">마이페이지</a></li>
+                                    <li><a href="/order/history">주문조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_header">
+            <div class="mobile_menu_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+            <button class="mobile_menu_close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile_menu_content">
+            <div class="mobile_menu_left">
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메가 스토리</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메뉴소개</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">매장</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">소식</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=1">공지사항</a>
+                        <a href="/bbs/?bbs_category=4">FAQ</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">이벤트</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=3">이벤트</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_right">
+                <!-- 추가 메뉴가 필요하면 여기에 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="cont_wrap bbs_wrap">
+        <div class="cont">
+            <!-- 주문 상세 헤더 -->
+            <div class="order_detail_header">
+                <button class="order_detail_back" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="order_detail_title">주문내역</div>
+                <button class="order_detail_refresh" type="button">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+
+            <div class="cont_box">
+                <div class="cont_boxs">
+                    <!-- 주문 정보 (동적으로 생성됨) -->
+                    <div id="orderInfoContainer">
+                        <!-- 주문 정보가 여기에 표시됨 -->
+                    </div>
+
+                    <!-- 주문을 찾을 수 없음 메시지 -->
+                    <div id="orderNotFoundMessage" class="order_not_found" style="display: none;">
+                        <div class="order_not_found_icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="order_not_found_title">주문을 찾을 수 없습니다</div>
+                        <div class="order_not_found_text">입력하신 주문번호를 다시 확인해주세요.<br>주문 내역에서 확인하실 수 있습니다.</div>
+                        <a href="/order/history" class="order_not_found_button">
+                            <i class="fas fa-list"></i>
+                            주문내역 보기
+                        </a>
+                    </div>
+
+                        </div>
+                            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a href="/policy/terms_of_service"><b>이용약관</b></a></li>
+                    <li><a href="/policy/privacy_policy"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/policy/service_policy"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>팀 부리또</b></li>
+                                    <li>대표 서재홍</li>
+                                    <li>연락처 010-3030-7038</li>
+                                    <li>이메일 wtme3@naver.com</li>
+                                    <li>주소 동서울대학교</li>
+                                    <li>팀원 이주희, 박윤호, 하성호</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        // 네비바 드롭다운 hover 이벤트
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(this).find(".head_menu_down_menu").stop().slideDown("fast");
+            }
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+            $(this).find(".head_menu_down_menu").stop().slideUp("fast");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if (!$(".head_menu_wrap").is(".right0")) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        $(document).ready(function() {
+            // 1. URL에서 주문번호 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+
+            if (!orderId) {
+                $('#orderInfoContainer').hide();
+                $('#orderNotFoundMessage').show();
+                return;
+            }
+
+            // 실시간 주문 상태 업데이트를 위한 변수 (전역 스코프)
+            let previousStatus = null;
+            let pollingInterval = null;
+
+            // 2. 초기 로드
+            loadOrderDetailFromServer(orderId);
+            checkLoginStatus();
+
+            // 페이지 로드 시 장바구니 카운트 업데이트
+            updateCartBadge();
+
+            // 3. 서버 API로부터 데이터 가져오기
+            async function loadOrderDetailFromServer(id) {
+                try {
+                    // 주소를 아래와 같이 정확히 입력하세요.
+                    // /api/order/detail/3 형태가 되어야 합니다.
+                    const response = await fetch(`/api/order/detail/${id}`);
+
+                    if (!response.ok) {
+                        throw new Error('주문 정보를 찾을 수 없습니다.');
+                    }
+
+                    const order = await response.json();
+                    console.log("받은 데이터:", order); // 데이터가 잘 오는지 확인용
+
+                    $('#orderNotFoundMessage').hide();
+                    $('#orderInfoContainer').show();
+                    renderOrderDetail(order);
+
+                    // 초기 상태 저장 (polling 비교용)
+                    if (!previousStatus) {
+                        previousStatus = order.status;
+                    }
+                } catch (error) {
+                    console.error("데이터 로드 에러:", error);
+                    showToast('오류 발생', '주문 정보를 불러올 수 없습니다', 'error');
+                    $('#orderInfoContainer').hide();
+                    $('#orderNotFoundMessage').show();
+                }
+            }
+
+            // 주문 상태 정보 매핑 함수
+            function getStatusInfo(status) {
+                const statusMap = {
+                    // Enum 이름
+                    'PENDING': { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' },
+                    'PREPARING': { step: 2, progress: 66, displayText: '준비중', emoji: '⏳' },
+                    'COMPLETED': { step: 3, progress: 100, displayText: '준비완료', emoji: '🎉' },
+                    'CANCELED': { step: 1, progress: 33, displayText: '주문취소', emoji: '❌' },
+                    // Enum description (API가 반환하는 값)
+                    '결제 완료': { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' },
+                    '주문 접수': { step: 2, progress: 66, displayText: '준비중', emoji: '⏳' },
+                    '주문 완료': { step: 3, progress: 100, displayText: '준비완료', emoji: '🎉' },
+                    '주문 취소': { step: 1, progress: 33, displayText: '주문취소', emoji: '❌' }
+                };
+                return statusMap[status] || { step: 1, progress: 33, displayText: '주문완료', emoji: '✅' };
+            }
+
+            // 4. 화면 렌더링 함수 (서버 DTO 구조에 최적화)
+            function renderOrderDetail(order) {
+                const container = $('#orderInfoContainer');
+                container.empty();
+
+                // 상태 메시지 설정
+                let statusInfo = getStatusInfo(order.status);
+
+                let orderInfoHtml = `
+                <div class="order_store_info">주문번호 ${order.orderId}</div>
+                <div class="order_status_message">
+                    ${statusInfo.displayText} <span style="font-size: 28px;">${statusInfo.emoji}</span>
+                </div>
+
+                <div class="order_progress_wrap">
+                    <div class="order_progress_steps">
+                        <div class="order_progress_bar" style="width: ${(statusInfo.step / 3) * 100}%;"></div>
+                        <div class="order_progress_step ${statusInfo.step >= 1 ? 'active' : ''}" data-step="1">
+                            주문완료
+                            <div class="order_progress_time">${formatOrderDate(order.orderDate)}</div>
+                        </div>
+                        <div class="order_progress_step ${statusInfo.step >= 2 ? 'active' : ''}" data-step="2">
+                            준비중
+                        </div>
+                        <div class="order_progress_step ${statusInfo.step >= 3 ? 'active' : ''}" data-step="3">
+                            준비완료
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title">
+                        <h3>주문 상품</h3>
+                    </div>
+            `;
+
+                // 상품 목록 반복문
+                if (order.items) {
+                    order.items.forEach(function(item) {
+                        // 1. 옵션 정보 처리 (배지 스타일로 변경)
+                        let optionsHtml = '';
+                        if (item.options && item.options.length > 0) {
+                            optionsHtml = '<div class="order_item_options">';
+                            item.options.forEach(function(option) {
+                                optionsHtml += `<span class="order_item_option_badge">+ ${option.optionName} +${option.optionPriceAtOrder.toLocaleString()}원</span>`;
+                            });
+                            optionsHtml += '</div>';
+                        }
+
+                        const dynamicImagePath = `/src/tem/${item.menuName}.png`;
+
+                        const itemHtml = `
+                            <div class="order_item_detail">
+                                <div class="order_item_image">
+                                    <img src="${dynamicImagePath}"
+                                         onerror="this.src='/src/tem/logo.png'"
+                                         alt="${item.menuName}">
+                                </div>
+                                <div class="order_item_content">
+                                    <div class="order_item_name_wrap">
+                                        <div class="order_item_name">${item.menuName}</div>
+                                    </div>
+                                    <div class="order_item_quantity">수량 ${item.quantity}개</div>
+                                    ${optionsHtml}
+                                    <div class="order_item_price">${item.totalItemPrice.toLocaleString()}원</div>
+                                </div>
+                            </div>
+                        `;
+                        orderInfoHtml += itemHtml;
+                    });
+                }
+
+                // 결제 정보 섹션
+                orderInfoHtml += `
+                </div>
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title"><h3>결제 정보</h3></div>
+                    <div class="order_payment_section">
+                        <div class="order_payment_total">
+                            <span>총 결제금액</span>
+                            <span>${order.totalAmount.toLocaleString()}원</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order_detail_section">
+                    <div class="order_detail_section_title"><h3>수령인 정보</h3></div>
+                    <div class="order_info_box">
+                        <div class="order_info_item">
+                            <div class="order_info_label">주문자</div>
+                            <div class="order_info_value">${order.customerName}님</div>
+                        </div>
+                        <div class="order_info_item">
+                            <div class="order_info_label">주문일시</div>
+                            <div class="order_info_value">${formatOrderDate(order.orderDate)}</div>
+                        </div>
+                        <div class="order_info_item">
+                            <div class="order_info_label">요청사항</div>
+                            <div class="order_info_value highlight">${order.request || '없음'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order_detail_buttons">
+                    <a href="/index.html" class="btn_home">홈으로</a>
+                    <a href="/order/history" class="btn_history">주문내역보기</a>
+                </div>
+            `;
+
+                container.html(orderInfoHtml);
+            }
+
+            // 실시간 주문 상태 업데이트 함수
+            function startStatusPolling() {
+                console.log('[Polling] 실시간 상태 업데이트 시작');
+                // 기존 polling이 있으면 중지
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                }
+
+                // 3초마다 상태 체크
+                pollingInterval = setInterval(async () => {
+                    try {
+                        console.log('[Polling] 상태 확인 중...');
+                        const response = await fetch(`/api/order/detail/${orderId}`);
+                        console.log('[Polling] API 응답:', response.status);
+                        if (response.ok) {
+                            const order = await response.json();
+                            const currentStatus = order.status;
+                            console.log('[Polling] 현재 상태:', currentStatus, '/ 이전 상태:', previousStatus);
+
+                            // 상태가 변경되었을 때만 업데이트
+                            if (previousStatus && previousStatus !== currentStatus) {
+                                console.log('[Polling] 상태 변경 감지! 알림 표시');
+                                showStatusUpdateNotice(currentStatus);
+                                updateProgressBar(currentStatus);
+                            }
+
+                            previousStatus = currentStatus;
+                        } else {
+                            console.error('[Polling] API 응답 실패:', response.status);
+                        }
+                    } catch (error) {
+                        console.error('[Polling] 에러:', error);
+                    }
+                }, 3000); // 3초마다
+            }
+
+            // 진행 바 선택적 업데이트 (애니메이션 적용)
+            function updateProgressBar(newStatus) {
+                console.log('[ProgressBar] 진행 바 업데이트 시작, 상태:', newStatus);
+                const statusInfo = getStatusInfo(newStatus);
+                console.log('[ProgressBar] 상태 정보:', statusInfo);
+
+                const progressBarElement = $('.order_progress_bar');
+                console.log('[ProgressBar] 진행 바 요소 개수:', progressBarElement.length);
+
+                if (progressBarElement.length === 0) {
+                    console.error('[ProgressBar] 진행 바 요소를 찾을 수 없습니다!');
+                    return;
+                }
+
+                // 현재 너비 확인
+                const currentWidth = progressBarElement.css('width');
+                console.log('[ProgressBar] 현재 너비:', currentWidth);
+
+                // 새로운 너비 계산
+                const newWidth = `${(statusInfo.step / 3) * 100}%`;
+                console.log('[ProgressBar] 새로운 너비:', newWidth);
+
+                // 강제로 reflow를 트리거하여 transition이 작동하도록 함
+                progressBarElement[0].offsetHeight; // 강제 reflow
+
+                // 너비 업데이트
+                progressBarElement.attr('style', 'width: ' + newWidth + ' !important;');
+
+                // 업데이트 후 너비 확인
+                setTimeout(() => {
+                    const updatedWidth = progressBarElement.css('width');
+                    console.log('[ProgressBar] 업데이트 후 너비:', updatedWidth);
+                }, 100);
+
+                // 스텝 active 클래스 업데이트
+                $('.order_progress_step').removeClass('active');
+                for (let i = 1; i <= statusInfo.step; i++) {
+                    $(`.order_progress_step[data-step="${i}"]`).addClass('active');
+                    console.log('[ProgressBar] 스텝', i, 'active 추가');
+                }
+
+                // 상태 메시지 업데이트
+                $('.order_status_message').html(`${statusInfo.displayText} <span style="font-size: 28px;">${statusInfo.emoji}</span>`);
+                console.log('[ProgressBar] 진행 바 업데이트 완료');
+            }
+
+            // 상태 변경 알림 표시
+            function showStatusUpdateNotice(newStatus) {
+                const statusInfo = getStatusInfo(newStatus);
+                const notice = $('<div class="order_status_update_notice">')
+                    .html(`주문 상태가 <b>${statusInfo.displayText}</b>(으)로 변경되었습니다 ${statusInfo.emoji}`)
+                    .appendTo('body');
+
+                setTimeout(() => notice.addClass('show'), 100);
+                setTimeout(() => {
+                    notice.removeClass('show');
+                    setTimeout(() => notice.remove(), 300);
+                }, 3000);
+            }
+
+            // 페이지가 보일 때 polling 시작, 숨겨질 때 중지
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    if (pollingInterval) {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                    }
+                } else {
+                    loadOrderDetailFromServer(orderId);
+                    startStatusPolling();
+                }
+            });
+
+            // 초기 polling 시작
+            setTimeout(() => {
+                startStatusPolling();
+            }, 3000);
+
+            // 날짜 포맷팅 (ISO 타임스탬프 대응)
+            function formatOrderDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return (date.getMonth() + 1) + '.' + date.getDate() + ' ' +
+                    String(date.getHours()).padStart(2, '0') + ':' +
+                    String(date.getMinutes()).padStart(2, '0');
+            }
+
+            // 로그인 상태 체크
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '고객';
+                if (isLoggedIn) {
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 로그인 드롭다운 토글
+            $('.head_login_trigger').on('click', function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 드롭다운 외부 클릭 시 닫기
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 로그아웃 처리
+            $('.head_login_dropdown a:contains("로그아웃")').on('click', function(e) {
+                e.preventDefault();
+                openLogoutModal();
+            });
+
+            $('.order_detail_back').on('click', function() { history.back(); });
+            $('.order_detail_refresh').on('click', function() { location.reload(); });
+
+            // 장바구니 카운트 API 호출 함수
+            async function updateCartBadge() {
+                try {
+                    const response = await fetch('/api/order/cart/count');
+                    if (response.ok) {
+                        const data = await response.json();
+                        $('.head_user_badge').text(data.count);
+                    }
+                } catch (e) {
+                    console.error("배지 업데이트 실패:", e);
+                }
+            }
+        });
+    </script>
+
+    <!-- Logout Modal -->
+    <div class="logout_modal_wrap" id="logoutModal">
+        <div class="logout_modal_content">
+            <div class="logout_modal_header">
+                <span class="logout_modal_title">로그아웃</span>
+            </div>
+            <div class="logout_modal_text">로그아웃하시겠습니까?</div>
+            <div class="logout_modal_actions">
+                <button class="logout_modal_btn cancel" onclick="closeLogoutModal()">취소</button>
+                <button class="logout_modal_btn danger" onclick="confirmLogout()">로그아웃</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast UI Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Toast UI JavaScript -->
+    <script>
+        // Toast UI 헬퍼 함수
+        function showToast(title, message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            const iconMap = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconMap[type] || '✓'}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    ${message ? `<div class="toast-message">${message}</div>` : ''}
+                </div>
+                <button class="toast-close" aria-label="닫기">×</button>
+            `;
+
+            const container = document.getElementById('toastContainer');
+            container.appendChild(toast);
+
+            // 닫기 버튼 이벤트
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            });
+
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('toast-exit');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 3000);
+        }
+
+        // 로그아웃 모달 함수
+        function openLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userId');
+            window.location.href = '/';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
+    </script>
+</body>
+</html>
+

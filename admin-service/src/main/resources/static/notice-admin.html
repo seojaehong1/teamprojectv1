@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 관리</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #c0392b;
+        }
+        
+        .btn-primary:hover {
+            background: #f0f0f0;
+        }
+        
+        .btn-edit {
+            background: #3498db;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        
+        .btn-important {
+            background: #f39c12;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        
+        .notice-table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .notice-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .notice-table th,
+        .notice-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .notice-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .notice-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .notice-table tr.important {
+            background: #fff8e7;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+        
+        .badge-important {
+            background: #f0ad4e;
+            color: white;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+        
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.3em;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #888;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #c0392b;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-cancel {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-submit {
+            background: #c0392b;
+            color: white;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: #333;
+        }
+        
+        .login-required {
+            text-align: center;
+            padding: 100px 20px;
+            background: white;
+            border-radius: 15px;
+        }
+        
+        .login-required h2 {
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 관리자 확인 전 표시 -->
+        <div id="loginRequired" class="login-required" style="display: none;">
+            <h2>⚠️ 접근 권한 없음</h2>
+            <p>관리자만 접근할 수 있는 페이지입니다.</p>
+            <a href="/" class="back-link">← 홈으로 돌아가기</a>
+        </div>
+        
+        <!-- 관리자 페이지 -->
+        <div id="adminPage" style="display: none;">
+            <div class="header">
+                <div>
+                    <h1>🔧 공지사항 관리</h1>
+                    <p>관리자 전용 페이지</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">+ 새 공지사항</button>
+            </div>
+            
+            <div class="notice-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">번호</th>
+                            <th>제목</th>
+                            <th style="width: 100px;">작성자</th>
+                            <th style="width: 120px;">작성일</th>
+                            <th style="width: 80px;">조회수</th>
+                            <th style="width: 200px;">관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="noticeTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-message">공지사항을 불러오는 중...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <a href="/notice.html" class="back-link">← 사용자 공지사항 페이지로</a>
+        </div>
+    </div>
+    
+    <!-- 작성/수정 모달 -->
+    <div class="modal" id="noticeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">공지사항 작성</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="noticeId">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" placeholder="공지사항 제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" placeholder="공지사항 내용을 입력하세요"></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isImportant">
+                        <label for="isImportant">중요 공지로 설정 (상단 고정)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="closeModal()">취소</button>
+                <button class="btn btn-submit" onclick="saveNotice()">저장</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let isEditMode = false;
+        
+        // 페이지 로드시 관리자 확인
+        async function checkAdmin() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                showLoginRequired();
+                return;
+            }
+            
+            try {
+                // JWT에서 role 확인 (간단한 방법)
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                
+                if (payload.role !== 'ADMIN') {
+                    showLoginRequired();
+                    return;
+                }
+                
+                // 관리자 페이지 표시
+                document.getElementById('adminPage').style.display = 'block';
+                loadNotices();
+            } catch (error) {
+                showLoginRequired();
+            }
+        }
+        
+        function showLoginRequired() {
+            document.getElementById('loginRequired').style.display = 'block';
+        }
+        
+        // 공지사항 목록 로드
+        async function loadNotices() {
+            try {
+                const response = await fetch('/api/notices');
+                const notices = await response.json();
+                
+                renderNotices(notices);
+            } catch (error) {
+                console.error('공지사항 로드 실패:', error);
+            }
+        }
+        
+        // 테이블 렌더링
+        function renderNotices(notices) {
+            const tbody = document.getElementById('noticeTableBody');
+            
+            if (!notices || notices.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-message">등록된 공지사항이 없습니다.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = notices.map((notice, index) => `
+                <tr class="${notice.isImportant ? 'important' : ''}">
+                    <td>${notices.length - index}</td>
+                    <td>
+                        ${notice.isImportant ? '<span class="badge badge-important">중요</span> ' : ''}
+                        ${escapeHtml(notice.title)}
+                    </td>
+                    <td>${escapeHtml(notice.author)}</td>
+                    <td>${formatDate(notice.createdAt)}</td>
+                    <td>${notice.viewCount}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-important" onclick="toggleImportant(${notice.id})">
+                                ${notice.isImportant ? '중요해제' : '중요'}
+                            </button>
+                            <button class="btn btn-edit" onclick="openEditModal(${notice.id})">수정</button>
+                            <button class="btn btn-delete" onclick="deleteNotice(${notice.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // 새 공지사항 모달 열기
+        function openCreateModal() {
+            isEditMode = false;
+            document.getElementById('modalTitle').textContent = '공지사항 작성';
+            document.getElementById('noticeId').value = '';
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('isImportant').checked = false;
+            document.getElementById('noticeModal').classList.add('show');
+        }
+        
+        // 수정 모달 열기
+        async function openEditModal(id) {
+            try {
+                const response = await fetch(`/api/notices/${id}`);
+                const notice = await response.json();
+                
+                isEditMode = true;
+                document.getElementById('modalTitle').textContent = '공지사항 수정';
+                document.getElementById('noticeId').value = notice.id;
+                document.getElementById('title').value = notice.title;
+                document.getElementById('content').value = notice.content;
+                document.getElementById('isImportant').checked = notice.isImportant;
+                document.getElementById('noticeModal').classList.add('show');
+            } catch (error) {
+                alert('공지사항을 불러오는데 실패했습니다.');
+            }
+        }
+        
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('noticeModal').classList.remove('show');
+        }
+        
+        // 공지사항 저장
+        async function saveNotice() {
+            const token = localStorage.getItem('token');
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const isImportant = document.getElementById('isImportant').checked;
+            
+            if (!title) {
+                alert('제목을 입력해주세요.');
+                return;
+            }
+            
+            if (!content) {
+                alert('내용을 입력해주세요.');
+                return;
+            }
+            
+            try {
+                let url = '/api/notices/admin';
+                let method = 'POST';
+                
+                if (isEditMode) {
+                    const id = document.getElementById('noticeId').value;
+                    url = `/api/notices/admin/${id}`;
+                    method = 'PUT';
+                }
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title, content, isImportant })
+                });
+                
+                if (response.ok) {
+                    alert(isEditMode ? '공지사항이 수정되었습니다.' : '공지사항이 등록되었습니다.');
+                    closeModal();
+                    loadNotices();
+                } else {
+                    const error = await response.text();
+                    alert(error);
+                }
+            } catch (error) {
+                alert('저장에 실패했습니다.');
+            }
+        }
+        
+        // 공지사항 삭제
+        async function deleteNotice(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) {
+                return;
+            }
+            
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`/api/notices/admin/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('공지사항이 삭제되었습니다.');
+                    loadNotices();
+                } else {
+                    const error = await response.text();
+                    alert(error);
+                }
+            } catch (error) {
+                alert('삭제에 실패했습니다.');
+            }
+        }
+        
+        // 중요 공지 토글
+        async function toggleImportant(id) {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`/api/notices/admin/${id}/important`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    loadNotices();
+                } else {
+                    const error = await response.text();
+                    alert(error);
+                }
+            } catch (error) {
+                alert('변경에 실패했습니다.');
+            }
+        }
+        
+        // 날짜 포맷팅
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR');
+        }
+        
+        // HTML 이스케이프
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 페이지 로드시 실행
+        checkAdmin();
+    </script>
+</body>
+</html>

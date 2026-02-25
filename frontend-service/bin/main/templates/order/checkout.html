@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>주문하기 - TORI COFFEE</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/bootstrap.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/style.css?ver=202508271051">
+    <link rel="stylesheet" th:href="@{/v2/v2_theme.css}">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/animate.css">
+    <link rel="stylesheet" href="https://img.79plus.co.kr/megahp/common/css/aos.css?ver=202508271045">
+    
+    <!-- 로그인/장바구니 영역 스타일 -->
+    <style>
+        .head_wrap .head {
+            position: relative;
+        }
+        /* 로고 표시 보장 */
+        .head_logo {
+            display: block !important;
+            visibility: visible !important;
+        }
+        .head_logo img {
+            display: block !important;
+            visibility: visible !important;
+            max-height: 60px;
+            height: auto;
+        }
+        .head_user_wrap {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .head_user_menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .head_user_item {
+            position: relative;
+        }
+        .head_user_link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+        }
+        .head_user_link:hover {
+            color: #000;
+        }
+        .head_user_link i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .head_user_text {
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .head_user_badge {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .head_login_wrap {
+            position: relative;
+        }
+        .head_login_dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 150px;
+            display: none;
+            z-index: 1001;
+        }
+        .head_login_wrap.active .head_login_dropdown {
+            display: block;
+        }
+        .head_login_dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #fff;
+        }
+        .head_login_dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+        .head_login_dropdown ul li {
+            margin: 0;
+        }
+        .head_login_dropdown ul li a {
+            display: block;
+            padding: 10px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .head_login_dropdown ul li a:hover {
+            background: #f5f5f5;
+        }
+        @media (max-width: 768px) {
+            .head_user_wrap {
+                right: 50px;
+            }
+        }
+        
+        /* 네비게이션 메뉴 hover 스타일 */
+        .head_menu > ul > li > a.pc:hover,
+        .head_menu > ul > li.check > a.pc,
+        .head_menu > ul > li > a.pc.active {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 드롭다운 서브메뉴 hover 스타일 */
+        .head_menu_down_menu a:hover,
+        .head_menu_down_menu li:hover > a {
+            background: #D95B3B !important;
+            color: #ffffff !important;
+        }
+        
+        /* 모바일 메뉴 오버레이 */
+        .mobile_menu_overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 9999;
+            display: none;
+            overflow-y: auto;
+        }
+        .mobile_menu_overlay.active {
+            display: block;
+        }
+        .mobile_menu_overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #D95B3B;
+        }
+        .mobile_menu_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .mobile_menu_logo img {
+            height: 30px;
+        }
+        .mobile_menu_close {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile_menu_close:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_content {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .mobile_menu_left {
+            flex: 0 0 200px;
+        }
+        .mobile_menu_right {
+            flex: 1;
+        }
+        .mobile_menu_item {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_main {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .mobile_menu_main:hover {
+            color: #D95B3B;
+        }
+        .mobile_menu_sub {
+            margin-bottom: 30px;
+        }
+        .mobile_menu_sub a {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 8px 20px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .mobile_menu_sub a:hover {
+            color: #D95B3B;
+        }
+        @media (max-width: 768px) {
+            .mobile_menu_content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .mobile_menu_left {
+                flex: none;
+            }
+            .mobile_menu_right {
+                flex: none;
+            }
+        }
+    </style>
+    <!-- 푸터 노란색 제거 (TORI COFFEE 색상 적용) -->
+    <style>
+        .foot_menu_wrap {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu_wrap *,
+        .foot_menu_wrap::before,
+        .foot_menu_wrap::after {
+            background-color: #D95B3B !important;
+            background: #D95B3B !important;
+            background-image: none !important;
+        }
+        .foot_menu a {
+            color: #fff !important;
+        }
+        .foot_menu a:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+    </style>
+    <!-- 주문하기 스타일 -->
+    <style>
+        .checkout_wrap {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            background: #fff;
+            min-height: calc(100vh - 200px);
+        }
+        .checkout_content_wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px 120px;
+        }
+        .checkout_header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .checkout_back {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        .checkout_title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        .checkout_section {
+            margin-bottom: 40px;
+        }
+        .checkout_section_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .checkout_item_card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .checkout_item_image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .checkout_item_image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .checkout_item_info {
+            flex: 1;
+        }
+        .checkout_item_name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .checkout_item_option {
+            font-size: 14px;
+            color: #0066cc;
+            margin-bottom: 8px;
+        }
+        .checkout_item_price {
+            font-size: 14px;
+            color: #333;
+        }
+        .checkout_method_buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        /* 이용방법 버튼 초기화 */
+        .checkout_method_btn,
+        button.checkout_method_btn,
+        .checkout_method_buttons .checkout_method_btn {
+            background: white !important;
+            background-color: white !important;
+            color: #D95B3B !important;
+            border: 2px solid #ddd !important;
+            padding: 15px 40px !important;
+            border-radius: 8px !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            cursor: pointer !important;
+            margin: 5px !important;
+            flex: 1 !important;
+            transition: all 0.3s !important;
+        }
+        /* active 상태만 주황색 */
+        .checkout_method_btn.active,
+        button.checkout_method_btn.active,
+        .checkout_method_buttons .checkout_method_btn.active {
+            background: #D95B3B !important;
+            background-color: #D95B3B !important;
+            color: white !important;
+            border: 2px solid #D95B3B !important;
+        }
+        .checkout_method_instruction {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .checkout_option_buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .checkout_option_btn {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f5f5f5;
+            cursor: pointer;
+        }
+        .checkout_option_btn.active {
+            background: #fff;
+            border-color: #D95B3B;
+        }
+        .checkout_option_checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #D95B3B;
+            border-radius: 4px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .checkout_option_checkbox i {
+            color: #fff;
+            font-size: 12px;
+            display: none;
+        }
+        .checkout_option_btn.active .checkout_option_checkbox {
+            background: #D95B3B;
+        }
+        .checkout_option_btn.active .checkout_option_checkbox i {
+            display: block;
+        }
+        .checkout_option_text {
+            font-size: 16px;
+            color: #333;
+        }
+        .checkout_request_input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .checkout_request_input:focus {
+            outline: none;
+            border-color: #D95B3B;
+        }
+        .checkout_pay_btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: #D95B3B;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .checkout_pay_btn:active {
+            background: #C74A2A;
+        }
+        @media (min-width: 769px) {
+            .checkout_content_wrap {
+                max-width: 600px;
+                padding: 40px 40px 40px;
+            }
+            .checkout_pay_btn {
+                position: relative;
+                margin-top: 30px;
+                width: 100%;
+                border-radius: 8px;
+            }
+        }
+        /* 커스텀 Alert 모달 스타일 */
+        #customAlertModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+        }
+        .modal_overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .modal_content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            min-width: 300px;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .modal_header h3 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .modal_body p {
+            margin: 0 0 30px 0;
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .modal_footer {
+            text-align: center;
+        }
+        .alert_btn {
+            background: #D95B3B;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .alert_btn:hover {
+            background: #C74A2A;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/bootstrap.js"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/common.js?ver=202307100846"></script>
+    <script src="https://img.79plus.co.kr/megahp/common/js/aos.js"></script>
+</head>
+<body>
+    
+    <!-- 헤더 -->
+    <div class="head_wrap">
+        <div class="head">
+            <div class="head_logo">
+                <a href="../index.html">
+                    <img alt="TORI COFFEE 로고" class="head_logo_img" style="display: block !important; visibility: visible !important; max-height: 60px;" th:src="@{/logo/logo.png}">
+                </a>
+            </div>
+            <div class="head_menu_wrap">
+                <div class="head_menu">
+                    <ul>
+                        <li>
+                            <a href="../about/brand.html" class="pc">메가 스토리</a>
+                            <a class="m head_menu_down">메가 스토리</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/brand.html">브랜드</a></li>
+                                    <li><a href="../about/bi.html">BI</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../menu/drink.html" class="pc">메뉴소개</a>
+                            <a class="m head_menu_down">메뉴소개</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../menu/drink.html">음료</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../about/map.html" class="pc">매장</a>
+                            <a class="m head_menu_down">매장</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../about/map.html">오시는 길</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/notice.html" class="pc">소식</a>
+                            <a class="m head_menu_down">소식</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/notice.html">공지사항</a></li>
+                                    <li><a href="../bbs/faq.html">FAQ</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="../bbs/event.html" class="pc">이벤트</a>
+                            <a class="m head_menu_down">이벤트</a>
+                            <div class="head_menu_down_menu cont_list cont_list1 cont_list_small cont_list_small1">
+                                <ul>
+                                    <li><a href="../bbs/event.html">이벤트</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 로그인/장바구니 영역 -->
+            <div class="head_user_wrap">
+                <div class="head_user_menu">
+                    <!-- 장바구니 아이콘 -->
+                    <div class="head_user_item head_cart">
+                        <a href="cart.html" class="head_user_link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="head_user_badge">0</span>
+                        </a>
+                    </div>
+                    <!-- 로그인/사용자 영역 -->
+                    <div class="head_user_item head_login_wrap">
+                        <!-- 비로그인 상태 -->
+                        <div class="head_login_state head_login_state_guest">
+                            <a href="../login.html" class="head_user_link">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text">로그인</span>
+                            </a>
+                        </div>
+                        <!-- 로그인 상태 (숨김 처리) -->
+                        <div class="head_login_state head_login_state_member" style="display:none;">
+                            <a href="#" class="head_user_link head_login_trigger">
+                                <i class="far fa-user"></i>
+                                <span class="head_user_text head_user_name">사용자명님</span>
+                            </a>
+                            <div class="head_login_dropdown">
+                                <ul>
+                                    <li><a href="../mypage/index.html">마이페이지</a></li>
+                                    <li><a href="history.html">주문/배송조회</a></li>
+                                    <li><a href="#">로그아웃</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_icon_wrap m t">
+                <div class="mobile_menu_icon">
+                    <div class="mobile_menu_icon_bar bar_black"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="mobile_menu_overlay">
+        <div class="mobile_menu_header">
+            <div class="mobile_menu_logo">
+                <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+            </div>
+            <button class="mobile_menu_close" type="button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile_menu_content">
+            <div class="mobile_menu_left">
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메가 스토리</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/brand/">브랜드</a>
+                        <a href="/about/bi/">BI</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">메뉴소개</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/menu/?menu_category1=1&menu_category2=1">음료</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">매장</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/about/map/">오시는 길</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">소식</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=1">공지사항</a>
+                        <a href="/bbs/?bbs_category=4">FAQ</a>
+                    </div>
+                </div>
+                <div class="mobile_menu_item">
+                    <div class="mobile_menu_main">이벤트</div>
+                    <div class="mobile_menu_sub">
+                        <a href="/bbs/?bbs_category=3">이벤트</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile_menu_right">
+                <!-- 추가 메뉴가 필요하면 여기에 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout_wrap">
+        <div class="checkout_content_wrap">
+            <!-- 주문하기 헤더 -->
+            <div class="checkout_header">
+                <button class="checkout_back" type="button">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="checkout_title">주문하기</div>
+                <div style="width: 40px;"></div>
+            </div>
+
+            <!-- 주문내역 -->
+            <div class="checkout_section">
+                <div class="checkout_section_title">주문내역</div>
+                <div class="checkout_section" style="margin-bottom: 20px;">
+                    <div class="checkout_section_title" style="font-size: 16px; margin-bottom: 10px;">주문자</div>
+                    <div id="checkoutCustomerName" style="font-size: 16px; color: #333; padding: 10px 0;">
+                        <!-- 동적으로 표시됨 -->
+                    </div>
+                </div>
+                <div id="checkoutItemsContainer">
+                    <!-- 동적으로 생성됨 -->
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-size: 18px; font-weight: 700; color: #333;">총 결제 금액</div>
+                        <div id="checkoutTotalPrice" style="font-size: 20px; font-weight: 700; color: #D95B3B;">
+                            <!-- 동적으로 표시됨 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 이용방법 -->
+            <div class="checkout_section">
+                <div class="checkout_section_title">이용방법</div>
+                <div class="checkout_method_buttons">
+                    <button class="checkout_method_btn" type="button" data-method="takeout">포장주문</button>
+                    <button class="checkout_method_btn" type="button" data-method="dinein">매장이용</button>
+                </div>
+                <div class="checkout_method_instruction">포장 옵션을 선택해 주세요!</div>
+                <div class="checkout_option_buttons">
+                    <div class="checkout_option_btn" data-option="straw">
+                        <div class="checkout_option_checkbox">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="checkout_option_text">빨대/스틱</div>
+                    </div>
+                    <div class="checkout_option_btn" data-option="bag">
+                        <div class="checkout_option_checkbox">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="checkout_option_text">캐리어/봉투</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 요청사항 -->
+            <div class="checkout_section">
+                <div class="checkout_section_title">요청사항</div>
+                <textarea id="checkoutRequest" class="checkout_request_input" placeholder="요청사항을 입력해주세요."></textarea>
+            </div>
+
+            <!-- 결제하기 버튼 -->
+            <button id="checkoutPayBtn" class="checkout_pay_btn" type="button">
+                결제하기
+            </button>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <div class="foot_menu_wrap">
+        <div class="foot_menu">
+            <div class="cont_list">
+                <ul>
+                    <li><a class="modal_open modal_open_policy1"><b>이용약관</b></a></li>
+                    <li><a href="/common/policy/privacy_policy.php"><b>개인정보처리방침</b></a></li>
+                    <li><a href="/common/policy/service_policy.php"><b>멤버십 이용약관</b></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="foot_wrap">
+        <div class="foot">
+            <div class="cont_list cont_list_content">
+                <ul>
+                    <li>
+                        <div class="cont_text">
+                            <div class="cont_list cont_list_m cont_list_m1">
+                                <ul>
+                                    <li>
+                                        <div class="foot_logo">
+                                            <img alt="TORI COFFEE 로고" th:src="@{/logo/logo.png}">
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cont_text foot_info">
+                            <div class="cont_list cont_list_small cont_list_width_m">
+                                <ul>
+                                    <li><b>주식회사 앤하우스</b></li>
+                                    <li>대표자 김대영</li>
+                                    <li>창업상담 1588-0656</li>
+                                    <li>고객센터 1588-8298</li>
+                                    <li>FAX 02-325-5199</li>
+                                    <li>사업자등록번호 105-87-51367</li>
+                                    <li>서울특별시 강남구 강남대로 518 11층, 13층 (주)앤하우스</li>
+                                    <li>개인정보보호 책임자 이종원</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상단 이동 버튼 -->
+    <a href="javascript:go_top()">
+        <div class="go_top_wrap">
+            <div class="go_top"></div>
+        </div>
+    </a>
+
+    <script>
+        AOS.init({
+            duration: 1200,
+        });
+
+        // 헤더 메뉴 호버
+        $(".head_wrap .head .head_menu > ul > li").hover(function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(this).addClass("check");
+                $(".head_menu_down_menu").stop().slideDown("fast");
+            };
+        }, function() {
+            $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+        });
+
+        $(".head_wrap").hover(function() {
+            $(this).addClass("head_over");
+        }, function() {
+            if ( $(".head_menu_wrap").is(".right0") == false ) {
+                $(this).removeClass("head_over");
+                $(".head_wrap .head .head_menu > ul > li").removeClass("check");
+                $(".head_menu_down_menu").stop().slideUp("fast");
+            }
+        });
+
+        // 모바일 메뉴
+        $(".mobile_menu_icon").click(function(){
+            $(".head_wrap").addClass("head_over");
+            $(this).toggleClass("mobile_menu_icon_open");
+            if ( $(this).is(".mobile_menu_icon_open") ) {
+                $(".head_menu_wrap").addClass("right0");
+                $(".mobile_menu_overlay").addClass("active");
+                $("body").css("overflow", "hidden");
+            } else {
+                $(".head_menu_wrap").removeClass("right0");
+                $(".mobile_menu_overlay").removeClass("active");
+                $("body").css("overflow", "");
+            }
+        });
+
+        // 로그인 드롭다운 토글
+        $(document).ready(function() {
+            $('.head_login_trigger').click(function(e) {
+                e.preventDefault();
+                $('.head_login_wrap').toggleClass('active');
+            });
+
+            // 외부 클릭 시 드롭다운 닫기
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.head_login_wrap').length) {
+                    $('.head_login_wrap').removeClass('active');
+                }
+            });
+
+            // 모바일 메뉴 오버레이 닫기
+            $('.mobile_menu_close').click(function() {
+                $('.mobile_menu_overlay').removeClass('active');
+                $('body').css('overflow', '');
+                $('.head_wrap').removeClass('head_over');
+                $('.head_menu_wrap').removeClass('right0');
+                $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+            });
+
+            // 모바일 메뉴 오버레이 외부 클릭 시 닫기
+            $('.mobile_menu_overlay').click(function(e) {
+                if ($(e.target).hasClass('mobile_menu_overlay')) {
+                    $('.mobile_menu_overlay').removeClass('active');
+                    $('body').css('overflow', '');
+                    $('.head_wrap').removeClass('head_over');
+                    $('.head_menu_wrap').removeClass('right0');
+                    $('.mobile_menu_icon').removeClass('mobile_menu_icon_open');
+                }
+            });
+
+            // 화면 회전 시 뷰포트 리셋
+            window.addEventListener('orientationchange', function() {
+                setTimeout(function() {
+                    var viewport = document.querySelector('meta[name="viewport"]');
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+                }, 100);
+            });
+        });
+    </script>
+    <script>
+        // 이용방법 버튼 토글 (포장주문/매장이용)
+        $(document).ready(function() {
+            console.log('페이지 로드됨');
+            
+            // 초기화: 모든 active 제거
+            $('.checkout_method_btn').removeClass('active');
+            console.log('active 클래스 전체 제거');
+            
+            // 포장주문만 active 추가
+            var takeoutBtn = $('.checkout_method_btn[data-method="takeout"]');
+            takeoutBtn.addClass('active');
+            console.log('포장주문 active 추가:', takeoutBtn.hasClass('active'));
+            
+            // 클릭 이벤트
+            $('.checkout_method_btn').on('click', function() {
+                console.log('버튼 클릭:', $(this).data('method'));
+                
+                // 모든 버튼 active 제거
+                $('.checkout_method_btn').removeClass('active');
+                
+                // 클릭한 버튼만 active 추가
+                $(this).addClass('active');
+                
+                console.log('포장주문 active:', $('.checkout_method_btn[data-method="takeout"]').hasClass('active'));
+                console.log('매장이용 active:', $('.checkout_method_btn[data-method="dinein"]').hasClass('active'));
+            });
+        });
+
+        // 포장 옵션 버튼 토글
+        $('.checkout_option_btn').click(function() {
+            $(this).toggleClass('active');
+        });
+
+        // 뒤로가기
+        $('.checkout_back').click(function() {
+            history.back();
+        });
+
+        // 페이지 로드 시 장바구니 데이터 불러오기 및 렌더링
+        $(document).ready(function() {
+            // 장바구니 데이터 불러오기
+            const cartData = localStorage.getItem('cart');
+            const cart = cartData ? JSON.parse(cartData) : [];
+            
+            // userName 불러오기
+            const userName = localStorage.getItem('userName') || '고객';
+            
+            // 주문자 이름 표시
+            $('#checkoutCustomerName').text(userName + '님');
+            
+            // 주문 상품 목록 렌더링
+            const itemsContainer = $('#checkoutItemsContainer');
+            itemsContainer.empty();
+            
+            if (cart.length === 0) {
+                // 장바구니가 비어있으면 장바구니 페이지로 이동
+                showCustomAlert('장바구니가 비어있습니다.', function() {
+                    window.location.href = 'cart.html';
+                });
+                return;
+            }
+            
+            let totalPrice = 0;
+            
+            // 각 상품 렌더링
+            cart.forEach(function(item) {
+                // 단가 계산 (price는 총가격이므로)
+                const unitPrice = Math.floor(item.price / item.quantity);
+                // 소계는 price (이미 총가격)
+                const subtotal = item.price;
+                totalPrice += subtotal;
+                
+                // 상세설명 표시 (description이 있는 경우)
+                let descriptionHtml = '';
+                if (item.description) {
+                    descriptionHtml = '<div style="font-size: 12px; color: #666; margin-top: 5px; line-height: 1.4;">' + escapeHtml(item.description) + '</div>';
+                }
+                
+                const itemHtml = `
+                    <div class="checkout_item_card">
+                        <div class="checkout_item_image">
+                            <img src="${item.image || '../logo.png'}" alt="${item.name}">
+                        </div>
+                        <div class="checkout_item_info">
+                            <div class="checkout_item_name">${item.name}</div>
+                            <div class="checkout_item_option">${item.size || '기본'}</div>
+                            ${descriptionHtml}
+                            <div class="checkout_item_price">${item.quantity}개 | ${subtotal.toLocaleString()}원</div>
+                        </div>
+                    </div>
+                `;
+                
+                itemsContainer.append(itemHtml);
+            });
+            
+            // 총 결제 금액 표시
+            $('#checkoutTotalPrice').text(totalPrice.toLocaleString() + '원');
+            $('#checkoutPayBtn').text(totalPrice.toLocaleString() + '원 결제하기');
+            
+            // 주문하기 버튼 클릭 이벤트
+            $('#checkoutPayBtn').on('click', function() {
+                // 요청사항 가져오기
+                const request = $('#checkoutRequest').val().trim();
+                
+                // 주문 정보 객체 생성
+                const orderId = 'ORD' + Date.now();
+                const now = new Date();
+                const orderDate = now.getFullYear() + '-' + 
+                                 String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                                 String(now.getDate()).padStart(2, '0') + ' ' + 
+                                 String(now.getHours()).padStart(2, '0') + ':' + 
+                                 String(now.getMinutes()).padStart(2, '0') + ':' + 
+                                 String(now.getSeconds()).padStart(2, '0');
+                
+                const order = {
+                    orderId: orderId,
+                    items: cart,
+                    totalPrice: totalPrice,
+                    customerName: userName,
+                    request: request,
+                    orderDate: orderDate,
+                    status: '주문완료'
+                };
+                
+                // localStorage 'orders' 배열에 추가
+                const ordersData = localStorage.getItem('orders');
+                const orders = ordersData ? JSON.parse(ordersData) : [];
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // localStorage 'cart' 삭제
+                localStorage.removeItem('cart');
+                
+                // 장바구니 배지 업데이트
+                $('.head_user_badge').text('0');
+                
+                // 주문 완료 알림
+                showCustomAlert('주문이 완료되었습니다!', function() {
+                    window.location.href = 'detail.html?orderId=' + orderId;
+                });
+            });
+
+            // 로그인 상태 체크 및 UI 업데이트
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                const userName = localStorage.getItem('userName') || '사용자명';
+
+                if (isLoggedIn) {
+                    // 로그인 상태일 때
+                    $('.head_login_state_guest').hide();
+                    $('.head_login_state_member').show();
+                    $('.head_user_name').text(userName + '님');
+                } else {
+                    // 비로그인 상태일 때
+                    $('.head_login_state_guest').show();
+                    $('.head_login_state_member').hide();
+                }
+            }
+
+            // 페이지 로드 시 로그인 상태 체크
+            checkLoginStatus();
+
+            // 로그아웃 버튼 클릭 이벤트
+            $(document).on('click', '.head_login_dropdown a:contains("로그아웃")', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                showCustomAlert('로그아웃되었습니다', function() {
+                    window.location.href = '../login.html';
+                });
+            });
+        });
+        
+        // HTML 이스케이프 함수
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+    
+    <!-- 커스텀 Alert 모달 -->
+    <div id="customAlertModal" style="display: none;">
+        <div class="modal_overlay"></div>
+        <div class="modal_content">
+            <div class="modal_header">
+                <h3 id="alertTitle">알림</h3>
+            </div>
+            <div class="modal_body">
+                <p id="alertMessage"></p>
+            </div>
+            <div class="modal_footer">
+                <button id="alertConfirmBtn" class="alert_btn">확인</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 커스텀 Alert 함수
+        function showCustomAlert(message, callback, title) {
+            title = title || '알림';
+            $('#alertTitle').text(title);
+            $('#alertMessage').text(message);
+            $('#customAlertModal').fadeIn(200);
+            
+            // 기존 이벤트 제거
+            $('#alertConfirmBtn').off('click');
+            $('.modal_overlay').off('click');
+            
+            // 확인 버튼 클릭 시
+            $('#alertConfirmBtn').on('click', function() {
+                $('#customAlertModal').fadeOut(200, function() {
+                    // 모달 닫힌 후 콜백 실행
+                    if (callback && typeof callback === 'function') {
+                        callback();
+                    }
+                });
+            });
+            
+            // 배경 클릭 시 (콜백 없이 닫기만)
+            $('.modal_overlay').on('click', function() {
+                $('#customAlertModal').fadeOut(200);
+            });
+        }
+    </script>
+</body>
+</html>
+
