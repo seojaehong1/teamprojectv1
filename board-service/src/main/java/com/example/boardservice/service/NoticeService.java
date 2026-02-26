@@ -2,6 +2,8 @@ package com.example.boardservice.service;
 
 import com.example.boardservice.model.Notice;
 import com.example.boardservice.repository.NoticeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class NoticeService {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(NoticeService.class);
+
     private final NoticeRepository noticeRepository;
     
     public NoticeService(NoticeRepository noticeRepository) {
@@ -31,27 +35,27 @@ public class NoticeService {
     // 제목으로 공지사항 검색
     public Page<Notice> searchNoticesByTitle(String keyword, Pageable pageable) {
         String searchPattern = "%" + keyword + "%";
-        System.out.println("[NoticeService] 제목 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        log.debug("제목 검색 - keyword: {}, pattern: {}", keyword, searchPattern);
         Page<Notice> result = noticeRepository.searchByTitleContaining(searchPattern, pageable);
-        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건, 내용: " + result.getContent().size() + "건");
+        log.debug("검색 결과 - 총 {}건, 내용: {}건", result.getTotalElements(), result.getContent().size());
         return result;
     }
 
     // 내용으로 공지사항 검색
     public Page<Notice> searchNoticesByContent(String keyword, Pageable pageable) {
         String searchPattern = "%" + keyword + "%";
-        System.out.println("[NoticeService] 내용 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        log.debug("내용 검색 - keyword: {}, pattern: {}", keyword, searchPattern);
         Page<Notice> result = noticeRepository.searchByContentContaining(searchPattern, pageable);
-        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건");
+        log.debug("검색 결과 - 총 {}건", result.getTotalElements());
         return result;
     }
 
     // 작성자로 공지사항 검색
     public Page<Notice> searchNoticesByAuthor(String keyword, Pageable pageable) {
         String searchPattern = "%" + keyword + "%";
-        System.out.println("[NoticeService] 작성자 검색 - keyword: " + keyword + ", pattern: " + searchPattern);
+        log.debug("작성자 검색 - keyword: {}, pattern: {}", keyword, searchPattern);
         Page<Notice> result = noticeRepository.searchByAuthorContaining(searchPattern, pageable);
-        System.out.println("[NoticeService] 검색 결과 - 총 " + result.getTotalElements() + "건");
+        log.debug("검색 결과 - 총 {}건", result.getTotalElements());
         return result;
     }
     

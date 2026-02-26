@@ -3,6 +3,8 @@ package com.example.boardservice.controller;
 import com.example.boardservice.model.Notice;
 import com.example.boardservice.service.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/notices")
 public class NoticeController {
-    
+
+    private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
+
     private final NoticeService noticeService;
     
     public NoticeController(NoticeService noticeService) {
@@ -48,8 +52,8 @@ public class NoticeController {
         if (keyword != null && !keyword.trim().isEmpty()) {
             // URL 디코딩 처리 (한글 검색어 지원)
             String decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
-            System.out.println("[NoticeController] 검색 요청 - keyword: " + decodedKeyword + ", searchType: " + searchType);
-            
+            log.debug("검색 요청 - keyword: {}, searchType: {}", decodedKeyword, searchType);
+
             // 검색 타입에 따라 다른 검색 수행
             switch (searchType.toLowerCase()) {
                 case "content":
@@ -63,10 +67,10 @@ public class NoticeController {
                     noticePage = noticeService.searchNoticesByTitle(decodedKeyword, pageable);
                     break;
             }
-            System.out.println("[NoticeController] 검색 결과 - 총 " + noticePage.getTotalElements() + "건");
+            log.debug("검색 결과 - 총 {}건", noticePage.getTotalElements());
         } else {
             noticePage = noticeService.getAllNoticesWithPaging(pageable);
-            System.out.println("[NoticeController] 전체 목록 조회 - 총 " + noticePage.getTotalElements() + "건");
+            log.debug("전체 목록 조회 - 총 {}건", noticePage.getTotalElements());
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -75,7 +79,7 @@ public class NoticeController {
         response.put("totalPages", noticePage.getTotalPages());
         response.put("totalItems", noticePage.getTotalElements());
 
-        System.out.println("[NoticeController] 응답 데이터 - notices 개수: " + noticePage.getContent().size());
+        log.debug("응답 데이터 - notices 개수: {}", noticePage.getContent().size());
         return ResponseEntity.ok(response);
     }
     

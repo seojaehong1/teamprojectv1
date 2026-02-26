@@ -1,6 +1,8 @@
 package com.toricoffee.frontend.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class ApiProxyController {
+
+    private static final Logger log = LoggerFactory.getLogger(ApiProxyController.class);
 
     private final RestTemplate restTemplate;
 
@@ -63,12 +67,8 @@ public class ApiProxyController {
 
     @RequestMapping(value = "/notices", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
     public ResponseEntity<?> proxyNoticesRoot(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body) {
-        System.out.println("[Proxy] ========================================");
-        System.out.println("[Proxy] Notices Root - routing to BOARD_SERVICE: " + boardServiceUrl);
-        System.out.println("[Proxy] Method: " + request.getMethod());
-        System.out.println("[Proxy] URI: " + request.getRequestURI());
-        System.out.println("[Proxy] Query: " + request.getQueryString());
-        System.out.println("[Proxy] ========================================");
+        log.debug("Notices Root - routing to BOARD_SERVICE: {}", boardServiceUrl);
+        log.debug("Method: {}, URI: {}, Query: {}", request.getMethod(), request.getRequestURI(), request.getQueryString());
         return proxyRequest(request, body, boardServiceUrl);
     }
 
@@ -92,31 +92,22 @@ public class ApiProxyController {
     // 회원 관리 API는 member-service로 프록시 (AdminController가 member-service에 있음)
     @RequestMapping(value = "/admin/users", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
     public ResponseEntity<?> proxyAdminUsersRoot(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body) {
-        System.out.println("[Proxy] ========================================");
-        System.out.println("[Proxy] Admin Users Root - routing to MEMBER_SERVICE: " + memberServiceUrl);
-        System.out.println("[Proxy] Method: " + request.getMethod());
-        System.out.println("[Proxy] URI: " + request.getRequestURI());
-        System.out.println("[Proxy] ========================================");
+        log.debug("Admin Users Root - routing to MEMBER_SERVICE: {}", memberServiceUrl);
+        log.debug("Method: {}, URI: {}", request.getMethod(), request.getRequestURI());
         return proxyRequest(request, body, memberServiceUrl);
     }
 
     @RequestMapping(value = "/admin/users/{id}", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
     public ResponseEntity<?> proxyAdminUsersById(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body, @PathVariable String id) {
-        System.out.println("[Proxy] ========================================");
-        System.out.println("[Proxy] Admin Users By ID: " + id + " - routing to MEMBER_SERVICE: " + memberServiceUrl);
-        System.out.println("[Proxy] Method: " + request.getMethod());
-        System.out.println("[Proxy] URI: " + request.getRequestURI());
-        System.out.println("[Proxy] ========================================");
+        log.debug("Admin Users By ID: {} - routing to MEMBER_SERVICE: {}", id, memberServiceUrl);
+        log.debug("Method: {}, URI: {}", request.getMethod(), request.getRequestURI());
         return proxyRequest(request, body, memberServiceUrl);
     }
 
     @RequestMapping(value = "/admin/users/{id}/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.PATCH})
     public ResponseEntity<?> proxyAdminUsersSub(HttpServletRequest request, @RequestBody(required = false) Map<String, Object> body, @PathVariable String id) {
-        System.out.println("[Proxy] ========================================");
-        System.out.println("[Proxy] Admin Users Sub path for ID: " + id + " - routing to MEMBER_SERVICE: " + memberServiceUrl);
-        System.out.println("[Proxy] Method: " + request.getMethod());
-        System.out.println("[Proxy] URI: " + request.getRequestURI());
-        System.out.println("[Proxy] ========================================");
+        log.debug("Admin Users Sub path for ID: {} - routing to MEMBER_SERVICE: {}", id, memberServiceUrl);
+        log.debug("Method: {}, URI: {}", request.getMethod(), request.getRequestURI());
         return proxyRequest(request, body, memberServiceUrl);
     }
 
@@ -182,9 +173,9 @@ public class ApiProxyController {
             String queryString = request.getQueryString();
             String targetUrl = targetServiceUrl + uri + (queryString != null ? "?" + queryString : "");
 
-            System.out.println("[Proxy] Request: " + request.getMethod() + " " + targetUrl);
+            log.debug("Request: {} {}", request.getMethod(), targetUrl);
             if (body != null) {
-                System.out.println("[Proxy] Body: " + body);
+                log.debug("Body: {}", body);
             }
 
             // 헤더 복사
@@ -213,8 +204,8 @@ public class ApiProxyController {
             // 요청 전송 - URI 객체를 사용해서 이중 인코딩 방지
             URI targetUri = URI.create(targetUrl);
             ResponseEntity<Object> response = restTemplate.exchange(targetUri, method, entity, Object.class);
-            System.out.println("[Proxy] Response Status: " + response.getStatusCode());
-            System.out.println("[Proxy] Response Body: " + response.getBody());
+            log.debug("Response Status: {}", response.getStatusCode());
+            log.debug("Response Body: {}", response.getBody());
             return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
 
         } catch (HttpClientErrorException e) {
@@ -239,17 +230,17 @@ public class ApiProxyController {
             return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
         } catch (ResourceAccessException e) {
             // 연결 실패 - 대상 서비스가 실행 중이지 않음
-            System.err.println("[Proxy Error] 서비스 연결 실패: " + targetServiceUrl + " - " + e.getMessage());
+            log.error("서비스 연결 실패: {} - {}", targetServiceUrl, e.getMessage());
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
-            errorResponse.put("message", "서비스에 연결할 수 없습니다. 서비스가 실행 중인지 확인해주세요. (" + targetServiceUrl + ")");
+            errorResponse.put("message", "서비스에 연결할 수 없습니다. 서비스가 실행 중인지 확인해주세요.");
             errorResponse.put("errorCode", "SERVICE_UNAVAILABLE");
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("요청 처리 중 오류 발생", e);
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
-            errorResponse.put("message", "요청 처리 중 오류가 발생했습니다: " + e.getMessage());
+            errorResponse.put("message", "요청 처리 중 오류가 발생했습니다.");
             errorResponse.put("errorCode", "INTERNAL_ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

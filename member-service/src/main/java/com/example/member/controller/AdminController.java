@@ -3,6 +3,8 @@ package com.example.member.controller;
 import com.example.member.model.Member;
 import com.example.member.service.MemberService;
 import com.example.member.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/admin/users")
 public class AdminController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
@@ -72,11 +76,7 @@ public class AdminController {
             }
 
             // 디버그 로그
-            System.out.println("[AdminController] ========================================");
-            System.out.println("[AdminController] keyword (원본): " + keyword);
-            System.out.println("[AdminController] keyword (디코딩): " + decodedKeyword);
-            System.out.println("[AdminController] userType: " + userType);
-            System.out.println("[AdminController] ========================================");
+            log.debug("keyword (원본): {}, (디코딩): {}, userType: {}", keyword, decodedKeyword, userType);
 
             // 회원 목록 조회 (검색 및 필터 적용)
             List<Member> members;
@@ -84,19 +84,19 @@ public class AdminController {
             if (userType != null && !userType.trim().isEmpty()) {
                 // 회원 유형 필터가 있는 경우
                 if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
-                    System.out.println("[AdminController] Searching by userType AND keyword");
+                    log.debug("Searching by userType AND keyword");
                     members = memberService.searchByUserTypeAndKeyword(userType, decodedKeyword);
                 } else {
-                    System.out.println("[AdminController] Filtering by userType only");
+                    log.debug("Filtering by userType only");
                     members = memberService.findByUserTypeOrderByAdminFirst(userType);
                 }
             } else {
                 // 전체 조회
                 if (decodedKeyword != null && !decodedKeyword.isEmpty()) {
-                    System.out.println("[AdminController] Searching by keyword only");
+                    log.debug("Searching by keyword only");
                     members = memberService.searchByKeyword(decodedKeyword);
                 } else {
-                    System.out.println("[AdminController] Getting all users");
+                    log.debug("Getting all users");
                     members = memberService.findAllOrderByAdminFirst();
                 }
             }

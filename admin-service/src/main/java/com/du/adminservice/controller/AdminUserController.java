@@ -3,6 +3,8 @@ package com.du.adminservice.controller;
 import com.du.adminservice.model.Member;
 import com.du.adminservice.repository.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin/users")
 public class AdminUserController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminUserController.class);
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -42,7 +46,7 @@ public class AdminUserController {
                 decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
             }
 
-            System.out.println("[AdminUserController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
+            log.debug("keyword (원본): {}, (디코딩): {}", keyword, decodedKeyword);
 
             // 페이지 크기 제한 (최대 50)
             if (size > 50) size = 50;

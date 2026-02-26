@@ -2,11 +2,15 @@ package com.example.boardservice.config;
 
 import com.example.boardservice.model.Notice;
 import com.example.boardservice.repository.NoticeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
     private final NoticeRepository noticeRepository;
 
@@ -66,7 +70,7 @@ public class DataLoader implements CommandLineRunner {
             "개인정보 처리방침이 개정되었습니다.\n\n주요 개정 내용:\n- 수집하는 개인정보 항목 명확화\n- 개인정보 보관 기간 조정\n- 제3자 제공 동의 절차 개선\n\n자세한 내용은 개인정보처리방침 페이지를 확인해 주세요.",
             "관리자", false);
 
-        System.out.println(">>> 임시 공지사항 11개 생성 완료");
+        log.info("임시 공지사항 11개 생성 완료");
     }
 
     private void createNotice(String title, String content, String author, boolean isPinned) {

@@ -2,6 +2,8 @@ package com.du.adminservice.controller;
 
 import com.du.adminservice.model.Product;
 import com.du.adminservice.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,8 @@ import java.util.UUID;
 @RequestMapping("/api/admin/products")
 public class AdminProductController {
 
+    private static final Logger log = LoggerFactory.getLogger(AdminProductController.class);
+
     private final ProductRepository productRepository;
 
     @Value("${file.upload-dir}")
@@ -50,7 +54,7 @@ public class AdminProductController {
                 decodedKeyword = URLDecoder.decode(keyword.trim(), StandardCharsets.UTF_8);
             }
 
-            System.out.println("[AdminProductController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
+            log.debug("keyword (원본): {}, (디코딩): {}", keyword, decodedKeyword);
 
             // 페이지 크기 제한 (최대 50)
             if (size > 50) size = 50;

@@ -3,12 +3,14 @@ package com.example.cust.service;
 import com.example.cust.model.CartHeader;
 import com.example.cust.repository.CartHeaderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MakeCart {
@@ -23,7 +25,7 @@ public class MakeCart {
 
         // 2. 기존 헤더가 존재하면 그것을 반환합니다. (중복 생성 방지)
         if (existingHeader.isPresent()) {
-            System.out.println("[CartService] 기존 CartHeader 사용. ID: " + existingHeader.get().getCartId());
+            log.debug("기존 CartHeader 사용. ID: {}", existingHeader.get().getCartId());
             return existingHeader.orElse(null);
         }
 
@@ -37,7 +39,7 @@ public class MakeCart {
         // 4. 데이터베이스에 저장합니다.
         CartHeader savedHeader = cartHeaderRepository.save(newHeader);
 
-        System.out.println("[CartService] 새로운 CartHeader 생성 완료. ID: " + savedHeader.getCartId());
+        log.debug("새로운 CartHeader 생성 완료. ID: {}", savedHeader.getCartId());
 
         return savedHeader;
     }

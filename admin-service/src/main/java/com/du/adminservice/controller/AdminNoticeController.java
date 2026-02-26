@@ -1,6 +1,8 @@
 package com.du.adminservice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +15,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin/notices")
 public class AdminNoticeController {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminNoticeController.class);
 
     private final RestTemplate restTemplate;
 
@@ -55,16 +59,16 @@ public class AdminNoticeController {
                 // 다시 인코딩해서 board-service로 전달
                 String encodedKeyword = URLEncoder.encode(decodedKeyword, StandardCharsets.UTF_8);
                 url += "&keyword=" + encodedKeyword + "&searchType=" + searchType;
-                System.out.println("[AdminNoticeController] keyword (원본): " + keyword + ", (디코딩): " + decodedKeyword);
+                log.debug("keyword (원본): {}, (디코딩): {}", keyword, decodedKeyword);
             }
 
-            System.out.println("[AdminNoticeController] Calling board-service: " + url);
+            log.debug("Calling board-service: {}", url);
 
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("공지사항 목록 조회 중 오류 발생", e);
             return ResponseEntity.status(500).body("공지사항 목록 조회 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
@@ -94,7 +98,7 @@ public class AdminNoticeController {
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("오류 발생", e);
             return ResponseEntity.status(500).body("공지사항 등록 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
@@ -111,7 +115,7 @@ public class AdminNoticeController {
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("오류 발생", e);
             return ResponseEntity.status(500).body("공지사항 수정 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
@@ -126,7 +130,7 @@ public class AdminNoticeController {
             return ResponseEntity.ok(Map.of("message", "공지사항이 삭제되었습니다."));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("오류 발생", e);
             return ResponseEntity.status(500).body("공지사항 삭제 중 오류가 발생했습니다: " + e.getMessage());
         }
     }
@@ -141,7 +145,7 @@ public class AdminNoticeController {
             return ResponseEntity.ok(response.getBody());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("오류 발생", e);
             return ResponseEntity.status(500).body("공지 고정 중 오류가 발생했습니다: " + e.getMessage());
         }
     }

@@ -2,12 +2,16 @@ package com.example.member.config;
 
 import com.example.member.model.Member;
 import com.example.member.repository.MemberRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataLoader implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -19,7 +23,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("초기 회원 데이터 확인 중...");
+        log.info("초기 회원 데이터 확인 중...");
 
         int created = 0;
 
@@ -32,7 +36,7 @@ public class DataLoader implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setUserType("admin");
             memberRepository.save(admin);
-            System.out.println("- 관리자 계정 생성: admin / admin123");
+            log.info("관리자 계정 생성: admin");
             created++;
         }
 
@@ -45,7 +49,7 @@ public class DataLoader implements CommandLineRunner {
             member1.setPassword(passwordEncoder.encode("1234"));
             member1.setUserType("member");
             memberRepository.save(member1);
-            System.out.println("- 홍길동 계정 생성: hong / 1234");
+            log.info("홍길동 계정 생성: hong");
             created++;
         }
 
@@ -58,7 +62,7 @@ public class DataLoader implements CommandLineRunner {
             storeOwner.setPassword(passwordEncoder.encode("1234"));
             storeOwner.setUserType("store_owner");
             memberRepository.save(storeOwner);
-            System.out.println("- 김점주 계정 생성: kimstore / 1234");
+            log.info("김점주 계정 생성: kimstore");
             created++;
         }
 
@@ -71,7 +75,7 @@ public class DataLoader implements CommandLineRunner {
             member2.setPassword(passwordEncoder.encode("1234"));
             member2.setUserType("member");
             memberRepository.save(member2);
-            System.out.println("- 이사용자 계정 생성: lee / 1234");
+            log.info("이사용자 계정 생성: lee");
             created++;
         }
 
@@ -84,14 +88,14 @@ public class DataLoader implements CommandLineRunner {
             member3.setPassword(passwordEncoder.encode("1234"));
             member3.setUserType("member");
             memberRepository.save(member3);
-            System.out.println("- 박고객 계정 생성: park / 1234");
+            log.info("박고객 계정 생성: park");
             created++;
         }
 
         if (created > 0) {
-            System.out.println("초기 회원 데이터 " + created + "개 생성 완료!");
+            log.info("초기 회원 데이터 {}개 생성 완료!", created);
         } else {
-            System.out.println("모든 초기 회원 데이터가 이미 존재합니다.");
+            log.info("모든 초기 회원 데이터가 이미 존재합니다.");
         }
     }
 }

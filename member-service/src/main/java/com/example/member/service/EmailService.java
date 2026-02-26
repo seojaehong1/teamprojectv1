@@ -1,5 +1,7 @@
 package com.example.member.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class EmailService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
     private final JavaMailSender mailSender;
 
@@ -33,11 +37,8 @@ public class EmailService {
         verificationCodes.put(toEmail, new VerificationCode(code, expiryTime));
         lastSendTime.put(toEmail, System.currentTimeMillis());
 
-        System.out.println("========================================");
-        System.out.println("Email: " + toEmail);
-        System.out.println("Verification Code: " + code);
-        System.out.println("========================================");
-
+        log.info("Verification code generated for email: {}", toEmail);
+        log.debug("Verification Code: {}", code);
 
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -49,11 +50,11 @@ public class EmailService {
                     + "본인이 요청하지 않은 경우 이 메일을 무시해주세요.");
 
             mailSender.send(message);
-            System.out.println("Email sent successfully!");
+            log.info("Email sent successfully to: {}", toEmail);
 
         } catch (Exception e) {
             // 이메일 발송 실패해도 인증코드는 저장됨 (개발 모드에서 콘솔로 확인 가능)
-            System.out.println("Email sending failed (check console for code): " + e.getMessage());
+            log.warn("Email sending failed (check logs for code): {}", e.getMessage());
         }
     }
 
@@ -71,7 +72,7 @@ public class EmailService {
             mailSender.send(message);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("임시 비밀번호 이메일 발송 실패", e);
             throw new RuntimeException("이메일 발송 실패: " + e.getMessage(), e);
         }
     }

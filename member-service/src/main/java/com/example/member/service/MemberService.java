@@ -3,6 +3,8 @@ package com.example.member.service;
 import com.example.member.model.Member;
 import com.example.member.repository.MemberRepository;
 import com.example.member.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import java.util.Optional;
 
 @Service
 public class MemberService {
+
+    private static final Logger log = LoggerFactory.getLogger(MemberService.class);
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -182,7 +186,7 @@ public class MemberService {
     // 키워드로 검색 (이름, 이메일)
     public List<Member> searchByKeyword(String keyword) {
         String pattern = "%" + keyword + "%";
-        System.out.println("[MemberService] searchByKeyword - keyword: " + keyword + ", pattern: " + pattern);
+        log.debug("searchByKeyword - keyword: {}, pattern: {}", keyword, pattern);
         return memberRepository.searchByKeyword(pattern);
     }
 
@@ -194,7 +198,7 @@ public class MemberService {
     // 회원 유형 + 키워드 검색
     public List<Member> searchByUserTypeAndKeyword(String userType, String keyword) {
         String pattern = "%" + keyword + "%";
-        System.out.println("[MemberService] searchByUserTypeAndKeyword - userType: " + userType + ", keyword: " + keyword + ", pattern: " + pattern);
+        log.debug("searchByUserTypeAndKeyword - userType: {}, keyword: {}, pattern: {}", userType, keyword, pattern);
         return memberRepository.searchByUserTypeAndKeyword(userType, pattern);
     }
 

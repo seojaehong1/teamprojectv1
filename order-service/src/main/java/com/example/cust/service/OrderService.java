@@ -6,6 +6,7 @@ import com.example.cust.repository.CartHeaderRepository;
 import com.example.cust.repository.OrdersRepository;
 import com.example.cust.config.RabbitConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -103,8 +105,8 @@ public class OrderService {
             rabbitTemplate.convertAndSend(RabbitConfig.ORDER_EXCHANGE, RabbitConfig.ORDER_PLACED_ROUTING_KEY, msg);
         } catch (Exception e) {
             // 메시지 전송 실패 시 로깅만 하고 주문 저장은 유지합니다.
-            // 추후에는 DLQ나 재시도 정책을 도입하세요.
-            System.err.println("Failed to publish order stock message: " + e.getMessage());
+            // TODO: DLQ(Dead Letter Queue)나 재시도 정책을 도입해야 합니다.
+            log.error("Failed to publish order stock message: {}", e.getMessage(), e);
         }
 
         // 8. 장바구니 비우기 (CartHeader 삭제)
