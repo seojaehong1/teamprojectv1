@@ -60,8 +60,8 @@ for SERVICE in "${SERVICES[@]}"; do
   echo -e "\n${YELLOW}[${CURRENT}/${TOTAL}] ${SERVICE} 처리 중...${NC}"
 
   # ECR 리포지토리 생성 (없으면)
-  aws ecr describe-repositories --repository-names "tori-app/${SERVICE}" --region ${AWS_REGION} 2>/dev/null || \
-    aws ecr create-repository --repository-name "tori-app/${SERVICE}" --region ${AWS_REGION}
+  aws ecr describe-repositories --repository-names "${SERVICE}" --region ${AWS_REGION} 2>/dev/null || \
+    aws ecr create-repository --repository-name "${SERVICE}" --region ${AWS_REGION}
 
   # Docker 이미지 빌드
   echo "  🔨 빌드 중..."
@@ -69,8 +69,8 @@ for SERVICE in "${SERVICES[@]}"; do
 
   # 태그 및 푸시
   echo "  📤 푸시 중..."
-  docker tag ${SERVICE}:latest ${ECR_REGISTRY}/tori-app/${SERVICE}:latest
-  docker push ${ECR_REGISTRY}/tori-app/${SERVICE}:latest
+  docker tag ${SERVICE}:latest ${ECR_REGISTRY}/${SERVICE}:latest
+  docker push ${ECR_REGISTRY}/${SERVICE}:latest
 
   echo -e "  ${GREEN}✅ ${SERVICE} 완료!${NC}"
 done

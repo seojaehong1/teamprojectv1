@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: admin-service
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/admin-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/admin-service:latest
           ports:
             - containerPort: 8007
           env:

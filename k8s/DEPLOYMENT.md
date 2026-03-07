@@ -507,8 +507,8 @@ aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS
 # 2. 각 서비스별로 빌드 & 푸시 (예: frontend-service)
 ./gradlew :frontend-service:clean :frontend-service:build -x test
 docker build --no-cache -t frontend-service -f frontend-service/Dockerfile .
-docker tag frontend-service:latest 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/frontend-service:latest
-docker push 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/frontend-service:latest
+docker tag frontend-service:latest 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/frontend-service:latest
+docker push 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/frontend-service:latest
 ```
 
 ### 9.2 서비스 재배포 (코드 수정 후)
@@ -597,7 +597,7 @@ eksctl scale nodegroup --cluster=teamproject-cluster --name=tori-nodes --nodes=5
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com
 
 # 이미지 존재 확인
-aws ecr describe-images --repository-name tori-app/frontend-service --region ap-northeast-2
+aws ecr describe-images --repository-name frontend-service --region ap-northeast-2
 ```
 
 ### 10.5 메뉴 페이지에 데이터가 안 보임

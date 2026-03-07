@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/eureka-server:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/eureka-server:latest
           ports:
             - containerPort: 8761
           resources:

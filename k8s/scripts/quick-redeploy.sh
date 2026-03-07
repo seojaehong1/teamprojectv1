@@ -56,8 +56,8 @@ echo -e "\n${YELLOW}🐳 [3/5] Docker 이미지 빌드...${NC}"
 docker build --no-cache -t ${SERVICE_NAME} -f ${SERVICE_NAME}/Dockerfile .
 
 echo -e "\n${YELLOW}📤 [4/5] ECR 푸시...${NC}"
-docker tag ${SERVICE_NAME}:latest ${ECR_REGISTRY}/tori-app/${SERVICE_NAME}:latest
-docker push ${ECR_REGISTRY}/tori-app/${SERVICE_NAME}:latest
+docker tag ${SERVICE_NAME}:latest ${ECR_REGISTRY}/${SERVICE_NAME}:latest
+docker push ${ECR_REGISTRY}/${SERVICE_NAME}:latest
 
 echo -e "\n${YELLOW}🔄 [5/5] K8s 재배포...${NC}"
 kubectl rollout restart deployment/${SERVICE_NAME} -n ${NAMESPACE}

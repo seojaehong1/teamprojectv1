@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/order-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/order-service:latest
           ports:
             - containerPort: 8002
           env:

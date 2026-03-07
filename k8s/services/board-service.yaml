@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: board-service
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/board-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/board-service:latest
           ports:
             - containerPort: 8006
           env:

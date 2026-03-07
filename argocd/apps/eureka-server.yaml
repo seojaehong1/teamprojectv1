@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eureka-server
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/seojaehong1/teamprojectv1  # 본인 레포 주소
+    targetRevision: HEAD
+    path: k8s/services
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tori-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
