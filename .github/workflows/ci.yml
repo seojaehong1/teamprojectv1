@@ -25,4 +25,4 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Docker 빌드 - ${{ matrix.service }}
-        run: docker build -t tori-coffee/${{ matrix.service }} ./${{ matrix.service }}
+        run: docker build -f ${{ matrix.service }}/Dockerfile -t tori-coffee/${{ matrix.service }} .
