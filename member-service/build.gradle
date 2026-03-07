@@ -21,4 +21,9 @@ dependencies {
     
     // .env 파일 읽기
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    // 각 서비스에 Prometheus 메트릭 엔드포인트 추가
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //Prometheus가 그 주소로 메트릭 수집하도록 설정
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 }

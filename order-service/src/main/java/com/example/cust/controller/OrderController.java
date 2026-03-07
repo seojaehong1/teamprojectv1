@@ -115,9 +115,14 @@ public class OrderController {
 
     /**
      * 7. 주문하기 API
+     *
+     * 비동기 처리를 위해 202 Accepted 응답을 반환합니다.
+     * - 202 Accepted: 요청이 접수되었으나 처리가 완료되지 않음을 의미
+     * - 재고 차감은 RabbitMQ를 통해 비동기로 처리됨
+     * - 클라이언트는 주문 상태를 폴링하거나 푸시 알림을 통해 최종 결과 확인
      */
     @PostMapping("/place")
-    public ResponseEntity<String> placeOrder(@RequestBody Map<String, String> requestBody) {
+    public ResponseEntity<Map<String, Object>> placeOrder(@RequestBody Map<String, String> requestBody) {
         try {
             // 프론트엔드에서 보낸 "request", "customerName" 키값을 추출
             String requestMessage = requestBody.get("request");
@@ -129,13 +134,23 @@ public class OrderController {
             // 서비스 메서드에 customerId, customerName, 요청사항 전달
             Orders savedOrder = orderService.placeOrder("1", customerName, requestMessage);
 
-            log.info("[주문] 주문 완료 - orderId: {}, customerName: {}", savedOrder.getOrderId(), savedOrder.getCustomerName());
+            log.info("[주문] 주문 접수 완료 - orderId: {}, customerName: {}, status: PENDING",
+                    savedOrder.getOrderId(), savedOrder.getCustomerName());
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("주문 완료 ID: " + savedOrder.getOrderId());
+            // 202 Accepted: 비동기 처리를 위한 적절한 응답 코드
+            // 주문은 접수되었으나, 재고 확인 및 최종 확정은 비동기로 처리됨
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(Map.of(
+                            "message", "주문이 접수되었습니다. 재고 확인 후 최종 확정됩니다.",
+                            "orderId", savedOrder.getOrderId(),
+                            "status", "PENDING"
+                    ));
         } catch (Exception e) {
             log.error("[주문] 주문 실패: ", e);
-            return ResponseEntity.internalServerError().body("주문 실패: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "message", "주문 실패: " + e.getMessage(),
+                    "status", "FAILED"
+            ));
         }
     }
 
