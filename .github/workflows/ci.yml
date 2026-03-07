@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  AWS_REGION: ap-northeast-2  # 서울 리전
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,5 +27,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Docker 빌드 - ${{ matrix.service }}
-        run: docker build -f ${{ matrix.service }}/Dockerfile -t tori-coffee/${{ matrix.service }} .
+      - name: AWS 인증
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: ECR 로그인
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: ECR 레포지토리 자동 생성
+        run: |
+          aws ecr describe-repositories --repository-names ${{ matrix.service }} || \
+          aws ecr create-repository --repository-name ${{ matrix.service }}
+
+      - name: Docker 빌드 & ECR 푸시 - ${{ matrix.service }}
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f ${{ matrix.service }}/Dockerfile -t $ECR_REGISTRY/${{ matrix.service }}:latest .
+          docker push $ECR_REGISTRY/${{ matrix.service }}:latest
