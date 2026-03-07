@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: member-service
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/member-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/member-service:latest
           ports:
             - containerPort: 8004
           env:

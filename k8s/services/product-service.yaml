@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/tori-app/product-service:latest
+          image: 490866675691.dkr.ecr.ap-northeast-2.amazonaws.com/product-service:latest
           ports:
             - containerPort: 8001
           env:
