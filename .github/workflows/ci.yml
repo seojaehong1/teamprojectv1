@@ -2,14 +2,27 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]  # main 브랜치에 push할 때 실행
+    branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 어떤 환경에서 돌릴지
+    runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        service:
+          - admin-service
+          - board-service
+          - eureka-server
+          - frontend-service
+          - gateway-service
+          - inventory-service
+          - member-service
+          - order-service
+          - product-service
+
     steps:
-      - uses: actions/checkout@v3  # 코드 체크아웃
-      
-      - name: 빌드 테스트
-        run: echo "Hello GitHub Actions!"
+      - uses: actions/checkout@v3
+
+      - name: Docker 빌드 - ${{ matrix.service }}
+        run: docker build -t tori-coffee/${{ matrix.service }} ./${{ matrix.service }}
