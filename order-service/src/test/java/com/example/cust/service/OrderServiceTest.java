@@ -68,7 +68,6 @@ class OrderServiceTest {
                 .menuName("아메리카노")
                 .quantity(2)
                 .unitPrice(4500)
-                .totalItemPrice(10000)
                 .cartOptions(new ArrayList<>(List.of(cartOption)))
                 .build();
 
@@ -185,7 +184,7 @@ class OrderServiceTest {
                 .quantity(2)
                 .priceAtOrder(4500)
                 .totalItemPrice(10000)
-                .orderOptions(new ArrayList<>(List.of(orderOption)))
+                .orderOptions(new HashSet<>(Set.of(orderOption)))
                 .build();
 
         testOrder.setOrderItems(new HashSet<>(Set.of(orderItem)));
