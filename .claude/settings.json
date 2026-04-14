@@ -1,0 +1,92 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "filePattern": "**/*.java",
+        "command": "./gradlew compileJava --quiet 2>&1 | head -20",
+        "description": "Java 파일 수정 시 컴파일 체크"
+      },
+      {
+        "matcher": "Edit|Write",
+        "filePattern": "**/build.gradle",
+        "command": "./gradlew dependencies --quiet 2>&1 | head -10",
+        "description": "Gradle 설정 변경 시 의존성 확인"
+      },
+      {
+        "matcher": "Edit|Write",
+        "filePattern": "**/application*.properties",
+        "command": "echo '설정 파일 변경됨 - 서비스 재시작 필요'",
+        "description": "설정 파일 변경 알림"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "./gradlew test --quiet 2>&1 | tail -30",
+        "description": "작업 완료 시 전체 테스트 실행"
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "gradlew *",
+      "./gradlew *",
+      "gradle *",
+      "./gradlew build*",
+      "./gradlew test*",
+      "./gradlew compileJava*",
+      "./gradlew bootRun*",
+      "./gradlew clean*",
+      "./gradlew :*:build*",
+      "./gradlew :*:test*",
+      "./gradlew :*:bootRun*",
+      "docker build *",
+      "docker-compose *",
+      "docker compose *",
+      "kubectl get *",
+      "kubectl describe *",
+      "kubectl logs *",
+      "kubectl apply *",
+      "kubectl delete *",
+      "git status*",
+      "git diff*",
+      "git log*",
+      "git add *",
+      "git commit *",
+      "git push*",
+      "git pull*",
+      "git checkout*",
+      "git branch*",
+      "cat *",
+      "ls *",
+      "pwd",
+      "echo *",
+      "mkdir *",
+      "cp *",
+      "mv *"
+    ],
+    "deny": [
+      "rm -rf /",
+      "rm -rf /*",
+      "rm -rf ~",
+      "rm -rf ~/*",
+      "sudo *",
+      "chmod 777 *",
+      "> /dev/sda*",
+      "mkfs.*",
+      ":(){:|:&};:",
+      "dd if=/dev/zero*",
+      "curl * | bash",
+      "wget * | bash",
+      "kubectl delete namespace*",
+      "kubectl delete all --all*",
+      "docker system prune -a -f",
+      "git push --force origin main",
+      "git push -f origin main",
+      "git reset --hard origin/*",
+      "DROP DATABASE*",
+      "DROP TABLE*",
+      "TRUNCATE*"
+    ]
+  }
+}
