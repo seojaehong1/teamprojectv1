@@ -15,8 +15,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -62,7 +64,7 @@ class OrderServiceTest {
         // 테스트용 CartItem 생성
         testCartItem = CartItem.builder()
                 .cartItemId(1)
-                .menuCode("COFFEE001")
+                .menuCode(1001L)
                 .menuName("아메리카노")
                 .quantity(2)
                 .unitPrice(4500)
@@ -122,7 +124,7 @@ class OrderServiceTest {
         verify(rabbitTemplate).convertAndSend(
                 eq(RabbitConfig.ORDER_EXCHANGE),
                 eq(RabbitConfig.ORDER_PLACED_ROUTING_KEY),
-                any()
+                any(Object.class)
         );
 
         // 장바구니 삭제 확인
@@ -178,7 +180,7 @@ class OrderServiceTest {
 
         OrderItem orderItem = OrderItem.builder()
                 .orderItemId(1)
-                .menuCode("COFFEE001")
+                .menuCode(1001L)
                 .menuName("아메리카노")
                 .quantity(2)
                 .priceAtOrder(4500)
@@ -186,7 +188,7 @@ class OrderServiceTest {
                 .orderOptions(new ArrayList<>(List.of(orderOption)))
                 .build();
 
-        testOrder.setOrderItems(new ArrayList<>(List.of(orderItem)));
+        testOrder.setOrderItems(new HashSet<>(Set.of(orderItem)));
 
         when(ordersRepository.findDetailByIdWithItemsAndOptions(orderId))
                 .thenReturn(Optional.of(testOrder));
@@ -230,7 +232,7 @@ class OrderServiceTest {
 
         // RabbitMQ 전송 시 예외 발생
         doThrow(new RuntimeException("RabbitMQ connection failed"))
-                .when(rabbitTemplate).convertAndSend(anyString(), anyString(), any());
+                .when(rabbitTemplate).convertAndSend(anyString(), anyString(), any(Object.class));
 
         // when
         Orders result = orderService.placeOrder(customerId, "테스트유저", "요청사항");
