@@ -1,0 +1,86 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build and test
+        run: ./gradlew build --no-daemon --parallel
+
+  claude-review:
+    name: Claude AI Review
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            이 PR을 리뷰해줘. 특히:
+
+            1. **null 처리, 예외 처리 누락**
+               - NullPointerException 가능성
+               - try-catch 누락 또는 부적절한 예외 처리
+               - Optional 사용 여부
+
+            2. **SQL 인젝션, XSS 보안**
+               - 사용자 입력 검증 누락
+               - Prepared Statement 미사용
+               - HTML 이스케이프 누락
+
+            3. **N+1 쿼리**
+               - JPA 연관관계에서 Lazy Loading으로 인한 N+1
+               - Fetch Join 필요 여부
+               - @EntityGraph 사용 권장 여부
+
+            4. **기존 코드 패턴과 일관성**
+               - 패키지 구조 (com.example.{service})
+               - 네이밍 컨벤션 (Controller, Service, Repository)
+               - 응답 포맷 ({success, message, data})
+               - Lombok 사용 패턴
+
+            5. **docs/ 업데이트 필요 여부**
+               - API 변경 시 docs/api-changelog.md 업데이트 필요
+               - 아키텍처 변경 시 docs/architecture.md 업데이트 필요
+               - CLAUDE.md 규칙 위반 여부
+
+            각 이슈의 심각도를 다음과 같이 표시해줘:
+            - [CRITICAL] 반드시 수정 필요 (보안, 데이터 손실 위험)
+            - [WARNING] 수정 권장 (성능, 유지보수 영향)
+            - [INFO] 참고 사항 (개선 제안)
+
+            한국어로 리뷰해줘.
