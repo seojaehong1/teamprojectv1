@@ -34,6 +34,8 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: RABBITMQ_HOST
+            - name: RABBITMQ_PORT
+              value: "5672"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:mysql://mysql-inventory:3306/inventory_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
             - name: SPRING_DATASOURCE_USERNAME
@@ -80,3 +82,5 @@ spec:
   ports:
     - port: 8008
       targetPort: 8008
+
+
