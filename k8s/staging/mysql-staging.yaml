@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+  namespace: tori-staging
+data:
+  init.sql: |
+    -- 4개 데이터베이스 생성
+    CREATE DATABASE IF NOT EXISTS member_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CREATE DATABASE IF NOT EXISTS product_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CREATE DATABASE IF NOT EXISTS order_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CREATE DATABASE IF NOT EXISTS inventory_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+    -- 사용자 생성 및 권한 부여
+    CREATE USER IF NOT EXISTS 'member_user'@'%' IDENTIFIED BY 'staging-password-change-me';
+    CREATE USER IF NOT EXISTS 'product_user'@'%' IDENTIFIED BY 'staging-password-change-me';
+    CREATE USER IF NOT EXISTS 'order_user'@'%' IDENTIFIED BY 'staging-password-change-me';
+    CREATE USER IF NOT EXISTS 'inventory_user'@'%' IDENTIFIED BY 'staging-password-change-me';
+
+    GRANT ALL PRIVILEGES ON member_db.* TO 'member_user'@'%';
+    GRANT ALL PRIVILEGES ON product_db.* TO 'product_user'@'%';
+    GRANT ALL PRIVILEGES ON order_db.* TO 'order_user'@'%';
+    GRANT ALL PRIVILEGES ON inventory_db.* TO 'inventory_user'@'%';
+
+    FLUSH PRIVILEGES;
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-staging-pvc
+  namespace: tori-staging
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp2
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-staging
+  namespace: tori-staging
+spec:
+  serviceName: mysql-staging
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-staging
+  template:
+    metadata:
+      labels:
+        app: mysql-staging
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: MYSQL_ROOT_PASSWORD
+          args:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --skip-character-set-client-handshake
+            - --init-connect=SET NAMES utf8mb4
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-staging-pvc
+        - name: init-scripts
+          configMap:
+            name: mysql-init-scripts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-staging
+  namespace: tori-staging
+spec:
+  selector:
+    app: mysql-staging
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None
